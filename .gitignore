@@ -1,4 +1,6 @@
 .vscode/
+wisecaller_modules/nodejs/
+wisecaller_modules/nodejs.zip
 
 auth-service/node_modules
 call-service/node_modules
