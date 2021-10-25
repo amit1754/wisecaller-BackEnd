@@ -1,5 +1,12 @@
-
-import express, { Express, Request, Response, NextFunction, json, urlencoded, text } from "express";
+import express, {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  json,
+  urlencoded,
+  text,
+} from "express";
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
@@ -8,8 +15,6 @@ import passport from "passport";
 import swaggerDocs from "./swagger-docs";
 import "./config/strategies/passport-local";
 import "./config/strategies/passport-jwt";
-
-
 
 export default class App {
   app: Express = express();
@@ -47,7 +52,7 @@ export default class App {
   async setupRoutes() {
     try {
       let router = express.Router();
-      this.app.use(`/api/v1`, router);
+      this.app.use(`/package-service/api/v1`, router);
       router.use("/", routes);
       this.app.use(function (req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");
@@ -63,4 +68,3 @@ export default class App {
     return this.app;
   }
 }
-

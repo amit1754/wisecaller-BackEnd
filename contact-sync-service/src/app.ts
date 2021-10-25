@@ -1,5 +1,12 @@
-
-import express, { Express, Request, Response, NextFunction, json, urlencoded, text } from "express";
+import express, {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  json,
+  urlencoded,
+  text,
+} from "express";
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
@@ -46,7 +53,7 @@ export default class App {
   async setupRoutes() {
     try {
       let router = express.Router();
-      this.app.use(`/api/v1`, [this.auth], router);
+      this.app.use(`/contact-sync-service/api/v1`, [this.auth], router);
       router.use("/", routes);
       this.app.use(function (req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");
@@ -62,4 +69,3 @@ export default class App {
     return this.app;
   }
 }
-

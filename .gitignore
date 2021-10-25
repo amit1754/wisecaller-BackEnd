@@ -1,3 +1,5 @@
+.vscode/
+
 auth-service/node_modules
 call-service/node_modules
 contact-sync-service/node_modules
@@ -6,6 +8,7 @@ event-service/node_modules
 order-service/node_modules
 package-service/node_modules
 status-service/node_modules
+api-doc-service/node_modules
 
 
 auth-service/package-lock.json
@@ -16,6 +19,7 @@ event-service/package-lock.json
 order-service/package-lock.json
 package-service/package-lock.json
 status-service/package-lock.json
+api-doc-service/package-lock.json
 
 
 auth-service/yarn.lock
@@ -25,6 +29,7 @@ event-service/yarn.lock
 order-service/yarn.lock
 package-service/yarn.lock
 status-service/yarn.lock
+api-doc-service/yarn.lock
 
 
 auth-service/yarn-error.log
@@ -35,6 +40,7 @@ event-service/yarn-error.log
 order-service/yarn-error.log
 package-service/yarn-error.log
 status-service/yarn-error.log
+api-doc-service/yarn-error.log
 
 
 auth-service/bin
@@ -45,6 +51,8 @@ event-service/bin
 order-service/bin
 package-service/bin
 status-service/bin
+api-doc-service/bin
+
 
 
 auth-service/.serverless
@@ -55,6 +63,7 @@ event-service/.serverless
 order-service/.serverless
 package-service/.serverless
 status-service/.serverless
+api-doc-service/.serverless
 
 auth-service/build
 call-service/build
@@ -64,6 +73,7 @@ event-service/build
 order-service/build
 package-service/build
 status-service/build
+api-doc-service/build
 
 
 
