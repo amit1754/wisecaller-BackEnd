@@ -20,7 +20,6 @@ status-service/package-lock.json
 
 auth-service/yarn.lock
 call-service/yarn.lock
-contact-sync-service/yarn.lock
 notification-service/yarn.lock
 event-service/yarn.lock
 order-service/yarn.lock
