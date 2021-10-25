@@ -31,6 +31,7 @@ order-service/yarn.lock
 package-service/yarn.lock
 status-service/yarn.lock
 api-doc-service/yarn.lock
+contact-sync-service/yarn.lock
 
 
 auth-service/yarn-error.log
