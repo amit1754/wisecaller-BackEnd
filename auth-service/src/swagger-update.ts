@@ -6,11 +6,11 @@ export default
     "title": "wisecaller",
     "contact": {}
   },
-  "host": "example.com",
-  "basePath": "/",
+  "host": "rgzh2q3z72.execute-api.us-east-1.amazonaws.com/dev",
+  "basePath": "/api/v1",
   "securityDefinitions": {},
   "schemes": [
-    "http"
+    "https"
   ],
   "consumes": [
     "application/json"
