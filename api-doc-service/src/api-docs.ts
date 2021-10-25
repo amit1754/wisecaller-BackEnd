@@ -251,7 +251,7 @@ export default {
             "name": "profileImage",
             "in": "formData",
             "required": true,
-            "type": "string",
+            "type": "file",
             "description": ""
           },
           {
@@ -499,141 +499,145 @@ export default {
       }
     },
   
-    "/call-service/api/v1/callhistory/get": {
-      post: {
-        summary: "Call History",
-        tags: ["Call Service"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/CallHistoryRequest",
-            },
-          },
+    "call-service/api/v1/add": {
+      "post": {
+        "summary": "call history",
+        "tags": [
+          "Misc"
         ],
-        responses: {
-          200: {
-            description: "OK",
-            schema: {
-              $ref: "#/definitions/CallHistoryResponse",
-            },
-          },
-          500: {
-            description: "Internal server error",
-            schema: {
-              $ref: "#/definitions/InternalServerError",
-            },
-          },
-        },
-      },
-    },
-    "/call-service/api/v1/callhistory/call-details": {
-      post: {
-        summary: "Call Details",
-        tags: ["Call Service"],
-        operationId: "calldetails",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/CallDetailsRequest",
-            },
-          },
+        "operationId": "callhistory",
+        "deprecated": false,
+        "produces": [
+          "application/json"
         ],
-        responses: {
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/callhistoryrequest"
+            }
+          }
+        ],
+        "responses": {
           "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
-      },
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
     },
-    "/call-service/api/v1/callhistory/favorite-add": {
-      post: {
-        summary: "Add to Favourites",
-        tags: ["Call Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/AddfavoriteRequest",
-            },
-          },
+    "call-service/api/v1/get": {
+      "get": {
+        "summary": "call details",
+        "tags": [
+          "Misc"
         ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
+        "operationId": "calldetails",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
           },
-        },
-      },
+         
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
     },
-    "/call-service/api/v1/callhistory/block-add": {
-      post: {
-        summary: "Add Block contact",
-        tags: ["Call Service"],
-        operationId: "AddBlockcontact",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/AddBlockcontactRequest",
-            },
-          },
+    "call-service/api/v1/favorite-add": {
+      "post": {
+        "summary": "Add favorite",
+        "tags": [
+          "Misc"
         ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
+        "operationId": "Addfavorite",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
           },
-        },
-      },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/AddfavoriteRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "call-service/api/v1/block-add": {
+      "post": {
+        "summary": "Add Block contact",
+        "tags": [
+          "Misc"
+        ],
+        "operationId": "AddBlockcontact",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/AddBlockcontactRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
     },
     "/notification-service/api/v1/sms/send": {
       post: {
@@ -1684,100 +1688,146 @@ export default {
         "mobileNo"
       ]
     },
-    CallHistoryRequest: {
-      type: "object",
-      properties: {
-        contact: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-              },
-              number: {
-                type: "string",
-              },
-            },
-          },
-        },
-      },
-      example: {
-        contact: [
+    "callhistoryrequest": {
+      "title": "callhistoryrequest",
+      "example": {
+        "contact": [
           {
-            name: "abc",
-            number: "+918980514085",
+            "name": "abc",
+            "number": "+918980514085"
           },
           {
-            name: "abc",
-            number: "+911122554455",
-          },
-        ],
+            "name": "abc",
+            "number": "+911122554455"
+          }
+        ]
       },
+      "type": "object",
+      "properties": {
+        "contact": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Contact"
+          }
+        }
+      },
+      "required": [
+        "contact"
+      ]
     },
-    CallHistoryResponse: {
-      description: "OK",
+    "Contact": {
+      "title": "Contact",
+      "example": {
+        "name": "abc",
+        "number": "+918980514085"
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "number"
+      ]
     },
-    CallDetailsRequest: {
-      type: "object",
-      properties: {
-        contact: {
-          properties: {
-            name: {
-              type: "string",
-            },
-            number: {
-              type: "string",
-            },
-            isfavourite: {
-              type: "boolean",
-            },
-          },
-        },
+    "calldetailsrequest": {
+      "title": "calldetailsrequest",
+      "example": {
+        "contact": {
+          "name": "abc",
+          "number": "+918980514085",
+          "isfavourite": false
+        }
       },
-      example: {
-        name: "abc",
-        number: "+918980514085",
-        isfavourite: false,
+      "type": "object",
+      "properties": {
+        "contact": {
+          "$ref": "#/definitions/Contact1"
+        }
       },
+      "required": [
+        "contact"
+      ]
     },
-    AddfavoriteRequest: {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        number: {
-          type: "string",
-        },
-        isFavorite: {
-          type: "boolean",
-        },
+    "Contact1": {
+      "title": "Contact1",
+      "example": {
+        "name": "abc",
+        "number": "+918980514085",
+        "isfavourite": false
       },
-      example: {
-        name: "abc",
-        number: "+918849455045",
-        isFavorite: true,
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "isfavourite": {
+          "type": "boolean"
+        }
       },
+      "required": [
+        "name",
+        "number",
+        "isfavourite"
+      ]
     },
-    AddBlockcontactRequest: {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        number: {
-          type: "string",
-        },
-        isBlock: {
-          type: "boolean",
-        },
+    "AddfavoriteRequest": {
+      "title": "AddfavoriteRequest",
+      "example": {
+        "name": "abc",
+        "number": "+918849455045",
+        "isFavorite": true
       },
-      example: {
-        name: "abc",
-        number: "+918849455045",
-        isBlock: true,
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "isFavorite": {
+          "type": "boolean"
+        }
       },
+      "required": [
+        "name",
+        "number",
+        "isFavorite"
+      ]
+    },
+    "AddBlockcontactRequest": {
+      "title": "AddBlockcontactRequest",
+      "example": {
+        "name": "abc",
+        "number": "+918849455045",
+        "isBlock": true
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "isBlock": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "number",
+        "isBlock"
+      ]
     },
     NotificationSmsRequest: {
       type: "object",

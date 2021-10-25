@@ -1,10 +1,10 @@
 import express from "express";
 
-import { authenticate } from "passport";
+import passport from "passport";
 import { CallHistorotRoutes } from './call';
 const router = express.Router();
 
-const auth = authenticate("jwt", { session: false });
+const auth = passport.authenticate("jwt", { session: false });
 
 router.use("/callhistory", CallHistorotRoutes);
 

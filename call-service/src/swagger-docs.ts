@@ -5,11 +5,11 @@ export default {
     "title": "wisecaller call servicce",
     "contact": {}
   },
-  "host": "okfeyhobj3.execute-api.us-east-1.amazonaws.com/dev/api/v1",
+  "host": "localhost:5000/call-service/api/v1",
   "basePath": "/callhistory",
   "securityDefinitions": {},
   "schemes": [
-    "https"
+    "http"
   ],
   "consumes": [
     "application/json"
@@ -18,7 +18,7 @@ export default {
     "application/json"
   ],
   "paths": {
-    "/get": {
+    "/add": {
       "post": {
         "summary": "call history",
         "tags": [
@@ -55,8 +55,8 @@ export default {
         }
       }
     },
-    "/call-details": {
-      "post": {
+    "call-service/api/v1/get": {
+      "get": {
         "summary": "call details",
         "tags": [
           "Misc"
@@ -74,15 +74,7 @@ export default {
             "default": "Bearer {token}",
             "type": "string"
           },
-          {
-            "name": "Body",
-            "in": "body",
-            "required": true,
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/calldetailsrequest"
-            }
-          }
+         
         ],
         "responses": {
           "200": {
@@ -92,7 +84,7 @@ export default {
         }
       }
     },
-    "/favorite-add": {
+    "call-service/api/v1/favorite-add": {
       "post": {
         "summary": "Add favorite",
         "tags": [
@@ -129,7 +121,7 @@ export default {
         }
       }
     },
-    "/block-add": {
+    "call-service/api/v1/block-add": {
       "post": {
         "summary": "Add Block contact",
         "tags": [

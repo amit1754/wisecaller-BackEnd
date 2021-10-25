@@ -7,7 +7,7 @@ class UserController {
       const loggedInUser: any = req.user;
       let user = await User.findOne({ _id: loggedInUser._id });
       return res.status(200).json({ success: true, data: user });
-    } catch (error) {
+    } catch (error:any) {
       return res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -28,7 +28,7 @@ class UserController {
         }
       );
       return res.status(200).json({ success: true, data: user });
-    } catch (error) {
+    } catch (error:any) {
       return res.status(500).json({ success: false, message: error.message });
     }
   }

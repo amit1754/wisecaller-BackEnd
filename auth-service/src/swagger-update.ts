@@ -6,7 +6,7 @@ export default
     "title": "wisecaller",
     "contact": {}
   },
-  "host": "rgzh2q3z72.execute-api.us-east-1.amazonaws.com/dev",
+  "host": "rgzh2q3z72.execute-api.us-east-1.amazonaws.com/dev/auth-service",
   "basePath": "/api/v1",
   "securityDefinitions": {},
   "schemes": [

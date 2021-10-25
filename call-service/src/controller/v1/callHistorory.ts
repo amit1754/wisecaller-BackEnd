@@ -2,11 +2,14 @@ import { Request, Response } from "express";
 import { map } from "lodash";
 import { UserContact } from "../../models/contactsync";
 import { User } from '../../models/user'
+import { CallHistory } from '../../models/callHistory'
+import {IcallHistory} from '../../interfaces/callHistory'
 
 class callHistory {
   async add(req: Request, res: Response) {
 
     try {
+      const loginUser: any = req.user
       const { contact }: any = req.body
       const data = await User.find({}, { mobileNo: 1, _id: 0 })
       const mNo = map(data, function (o) {
@@ -28,9 +31,15 @@ class callHistory {
         }
         contactUpdate.push(a)
       });
+      let payload :IcallHistory={
+        user:loginUser._id,
+        contact:contactUpdate
+      }
+      const callHistoryAdd:any= new CallHistory(payload)
+     const saveResp=await  callHistoryAdd.save()
 
 
-      res.status(200).json({ success: true, message: "Sucess", data: contactUpdate });
+      res.status(200).json({ success: true, message: "Sucess", data: saveResp });
 
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
@@ -39,24 +48,10 @@ class callHistory {
 
   async callDetails(req: Request, res: Response) {
     try {
-      let contactDetails = {}
-      const { contact } = req.body;
-      const { number } = contact;
-      const data = await User.find({ mobileNo: number })
-      if (data) {
+      const loginUser: any = req.user
 
-        contactDetails = {
-          ...contact,
-          iswisecaller: true,
-          basicDetails: data
-        }
-      }
-      else {
-        contactDetails = {
-          ...contact,
-          iswisecaller: false
-        }
-      }
+      const contactDetails = await CallHistory.findOne({user:loginUser._id})
+      
       res.status(200).json({ success: true, message: "Sucess", data: contactDetails });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
