@@ -45,7 +45,7 @@ export default class App {
   async setupRoutes() {
     try {
       let router = express.Router();
-      this.app.use(`/api/v1`, router);
+      this.app.use(`/auth-service/api/v1`, router);
       router.use("/", routes);
       this.app.use(function (req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");
