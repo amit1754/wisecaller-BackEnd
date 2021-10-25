@@ -1,0 +1,29 @@
+service: wisecallerContactSync
+
+frameworkVersion: '2'
+useDotenv: true
+configValidationMode: warn
+environment:
+  NODE_ENV: dev
+plugins:
+  - serverless-plugin-typescript
+  
+package:
+  patterns:
+  - 'env.dev'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: '20201221'
+
+functions:
+  api:
+    handler: bin/handler.api
+    events:
+      - http:
+          path: /
+          method: ANY
+      - http:
+          path: /{proxy+}
+          method: ANY
