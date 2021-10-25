@@ -1,70 +1,70 @@
 auth-service/node_modules
-callmanagement-service/node_modules
+call-service/node_modules
 contact-sync-service/node_modules
-customSMS-service/node_modules
-eventManament-service/node_modules
-ordermanagement-service/node_modules
-packageManagement-service/node_modules
-wisecallerContactStatus-service/node_modules
+notification-service/node_modules
+event-service/node_modules
+order-service/node_modules
+package-service/node_modules
+status-service/node_modules
 
 
 auth-service/package-lock.json
-callmanagement-service/package-lock.json
+call-service/package-lock.json
 contact-sync-service/package-lock.json
-customSMS-service/package-lock.json
-eventManament-service/package-lock.json
-ordermanagement-service/package-lock.json
-packageManagement-service/package-lock.json
-wisecallerContactStatus-service/package-lock.json
+notification-service/package-lock.json
+event-service/package-lock.json
+order-service/package-lock.json
+package-service/package-lock.json
+status-service/package-lock.json
 
 
 auth-service/yarn.lock
-callmanagement-service/yarn.lock
+call-service/yarn.lock
 contact-sync-service/yarn.lock
-customSMS-service/yarn.lock
-eventManament-service/yarn.lock
-ordermanagement-service/yarn.lock
-packageManagement-service/yarn.lock
-wisecallerContactStatus-service/yarn.lock
+notification-service/yarn.lock
+event-service/yarn.lock
+order-service/yarn.lock
+package-service/yarn.lock
+status-service/yarn.lock
 
 
 auth-service/yarn-error.log
-callmanagement-service/yarn-error.log
+call-service/yarn-error.log
 contact-sync-service/yarn-error.log
-customSMS-service/yarn-error.log
-eventManament-service/yarn-error.log
-ordermanagement-service/yarn-error.log
-packageManagement-service/yarn-error.log
-wisecallerContactStatus-service/yarn-error.log
+notification-service/yarn-error.log
+event-service/yarn-error.log
+order-service/yarn-error.log
+package-service/yarn-error.log
+status-service/yarn-error.log
 
 
 auth-service/bin
-callmanagement-service/bin
+call-service/bin
 contact-sync-service/bin
-customSMS-service/bin
-eventManament-service/bin
-ordermanagement-service/bin
-packageManagement-service/bin
-wisecallerContactStatus-service/bin
+notification-service/bin
+event-service/bin
+order-service/bin
+package-service/bin
+status-service/bin
 
 
 auth-service/.serverless
-callmanagement-service/.serverless
+call-service/.serverless
 contact-sync-service/.serverless
-customSMS-service/.serverless
-eventManament-service/.serverless
-ordermanagement-service/.serverless
-packageManagement-service/.serverless
-wisecallerContactStatus-service/.serverless
+notification-service/.serverless
+event-service/.serverless
+order-service/.serverless
+package-service/.serverless
+status-service/.serverless
 
 auth-service/build
-callmanagement-service/build
+call-service/build
 contact-sync-service/build
-customSMS-service/build
-eventManament-service/build
-ordermanagement-service/build
-packageManagement-service/build
-wisecallerContactStatus-service/build
+notification-service/build
+event-service/build
+order-service/build
+package-service/build
+status-service/build
 
 
 
