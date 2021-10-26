@@ -5,7 +5,7 @@ export const validate = (schema:any) => {
     try {
       await schema.validate(req.body);
       return next();
-    } catch (error) {
+    } catch (error:any) {
       return res.status(422).json({ success: false, message: error.message });
     }
   };

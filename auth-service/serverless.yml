@@ -1,4 +1,4 @@
-service: aws-wisecaller-auth-service-update
+service: aws-wisecaller-auth-service
 
 frameworkVersion: '2'
 useDotenv: true

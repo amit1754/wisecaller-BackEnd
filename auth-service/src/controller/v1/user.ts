@@ -27,11 +27,20 @@ class UserController {
     const reqPayload: any = req;
     try {
       const loggedInUser: any = req.user;
-      const payload: any = {
+      let payload: any;
+      if(reqPayload.file){
+       payload = {
         ...req.body,
         profileImage: reqPayload.file.key
       };
-      console.log(`loggedInUser.profileImage`, loggedInUser.profileImage)
+    }
+    else{
+       payload = {
+        ...req.body,
+        
+      };
+    }
+  
       if (loggedInUser.profileImage != null) {
         await deletefile(loggedInUser.profileImage)
       }

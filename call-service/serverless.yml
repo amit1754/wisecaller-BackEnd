@@ -1,4 +1,4 @@
-service: wisecallerCallService
+service: aws-wisecaller-call-service
 
 frameworkVersion: '2'
 useDotenv: true
@@ -9,8 +9,7 @@ plugins:
   - serverless-plugin-typescript
   
 package:
-  patterns:
-  - 'node_modules'
+  individually: true
 
 provider:
   name: aws

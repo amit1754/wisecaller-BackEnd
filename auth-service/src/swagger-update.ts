@@ -7,6 +7,7 @@ export default
     "contact": {}
   },
   "host": "rgzh2q3z72.execute-api.us-east-1.amazonaws.com/dev/auth-service",
+  // "host": "localhost:8000/auth-service",
   "basePath": "/api/v1",
   "securityDefinitions": {},
   "schemes": [

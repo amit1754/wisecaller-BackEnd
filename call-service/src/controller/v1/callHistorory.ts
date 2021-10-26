@@ -12,6 +12,9 @@ class callHistory {
       const loginUser: any = req.user
       const { contact }: any = req.body
       const data = await User.find({}, { mobileNo: 1, _id: 0 })
+
+      const contactDetails = await CallHistory.findOne({user:loginUser._id})
+
       const mNo = map(data, function (o) {
         return o.mobileNo
       })
@@ -31,15 +34,33 @@ class callHistory {
         }
         contactUpdate.push(a)
       });
-      let payload :IcallHistory={
-        user:loginUser._id,
-        contact:contactUpdate
+     
+      if(!contactDetails){
+        let payload :IcallHistory={
+          user:loginUser._id,
+          contact:contactUpdate
+        }
+        const callHistoryAdd:any= new CallHistory(payload)
+        await  callHistoryAdd.save()
       }
-      const callHistoryAdd:any= new CallHistory(payload)
-     const saveResp=await  callHistoryAdd.save()
+      else{
+
+        let payloadData:any ={
+          contact:contactUpdate
+        }
+        let StatusUpdate = await CallHistory.findOneAndUpdate(
+          { user:loginUser._id, },
+          payloadData,
+          {
+            upsert: true,
+            new: true,
+          }
+        );
+      }
+      
 
 
-      res.status(200).json({ success: true, message: "Sucess", data: saveResp });
+      res.status(200).json({ success: true, message: "Sucess", data: [] });
 
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });

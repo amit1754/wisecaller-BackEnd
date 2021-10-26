@@ -1,2103 +1,2081 @@
-export default {
-  openapi: "3.0.3",
-  info: {
-    version: 1.0,
-    title: "Wisecaller APIs",
+export default{
+  "openapi": "3.0.0",
+  "info": {
+      "title": "wisecaller",
+      "contact": {},
+      "version": "1.0"
   },
-  servers: [
-    {
-      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
-    },
+  "servers": [
+      {
+          "url": "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
+          "variables": {}
+      }
   ],
-  securityDefinitions: {},
-  consumes: ["application/json"],
-  produces: ["application/json"],
-  paths: {
-    "/auth-service/api/v1/auth/login": {
-      post: {
-        description:
-          "| Name     |Type    | M/o   | Example\n| ---      | ---    | ---   | ---\n|mobileNo  | string | M     | +911212121212",
-        summary: "Login user",
-        tags: ["Authentication Service"],
-        operationId: "Loginuser",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/LoginuserRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m200",
-            },
-            examples: {
-              "application/json": {
-                success: true,
-                data: {
-                  expiresAt: "2021-07-19T15:47:14.673Z",
-                  isActive: true,
-                  isDeleted: false,
-                  _id: "60f5a4c1c3d25497a170f5cb",
-                  otp: 1965,
-                  user: "60f5a039c3d25497a170f5b3",
-                  createdAt: "2021-07-19T16:13:53.277Z",
-                  updatedAt: "2021-07-19T16:13:53.277Z",
-                  __v: 0,
-                },
-              },
-            },
-            headers: {},
-          },
-          "422": {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m4221",
-            },
-            examples: {
-              "application/json": {
-                success: false,
-                message: "Mobile number is required",
-              },
-            },
-            headers: {},
-          },
-        },
-      },
-    },
-    "/auth-service/api/v1/auth/verify-otp": {
-      post: {
-        description:
-          "| Name     |Type    | M/o   | Example\n| ---      | ---    | ---   | ---\n| mobileNo | string | M     | +911212121212\n| otp      | number | M     | 1234",
-        summary: "verify otp",
-        tags: ["Authentication Service"],
-        operationId: "verifyotp",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/verifyotprequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m2001",
-            },
-            examples: {
-              "application/json": {
-                success: true,
-                data: {
-                  token:
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1YTAzOWMzZDI1NDk3YTE3MGY1YjMiLCJtb2JpbGVObyI6Ijg5ODA1MTQwODUiLCJpYXQiOjE2MjY3MTE3MzIsImV4cCI6MTYyNjc5ODEzMn0.0MaUUo_2zEYcO4sxoEB7mPE4-DjxP3ye4-kaLsUNeGI",
-                  user: {
-                    isActive: true,
-                    isDeleted: false,
-                    _id: "60f5a039c3d25497a170f5b3",
-                    mobileNo: "8980514085",
-                    createdAt: "2021-07-19T15:54:33.292Z",
-                    updatedAt: "2021-07-19T15:54:33.292Z",
-                    __v: 0,
+  "paths": {
+      "/auth-service/api/v1/auth/login": {
+          "post": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "Login user",
+              "description": "| Name     |Type    | M/o   | Example\n| ---      | ---    | ---   | ---\n|mobileNo  | string | M     | +911212121212",
+              "operationId": "Loginuser",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/LoginuserRequest"
+                          },
+                          "example": {
+                              "mobileNo": "+918980514085"
+                          }
+                      }
                   },
-                },
+                  "required": true
               },
-            },
-            headers: {},
-          },
-          "422": {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m4221",
-            },
-            examples: {
-              "application/json": {
-                success: false,
-                message: "Token expired!",
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
               },
-            },
-            headers: {},
-          },
-        },
+              "deprecated": false
+          }
       },
-    },
-    "/auth-service/api/v1/user/get-profile": {
-      get: {
-        summary: "get user profile",
-        tags: ["Authentication Service"],
-        operationId: "getuserprofile",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m2002",
-            },
-            examples: {
-              "application/json": {
-                success: true,
-                data: {
-                  role: "ADMIN",
-                  isActive: true,
-                  isDeleted: false,
-                  _id: "6161872b43430600096f3fee",
-                  mobileNo: "+918980514085",
-                  createdAt: "2021-10-09T12:12:27.303Z",
-                  updatedAt: "2021-10-12T04:08:28.401Z",
-                  __v: 0,
-                  email: "savaliyatushar2197@gmail.com",
-                  firstName: "tushar",
-                  lastName: "savaliya",
-                  profileImage: "1633781736878.png",
-                  modes: {
-                    workLifeBalanceStatus: "true",
-                    roadSafetyStatus: "false",
+      "/auth-service/api/v1/auth/verify-otp": {
+          "post": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "verify otp",
+              "description": "| Name     |Type    | M/o   | Example\n| ---      | ---    | ---   | ---\n| mobileNo | string | M     | +911212121212\n| otp      | number | M     | 1234",
+              "operationId": "verifyotp",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/verifyotprequest"
+                          },
+                          "example": {
+                              "mobileNo": "+918980514085",
+                              "otp": 1628
+                          }
+                      }
                   },
-                },
+                  "required": true
               },
-            },
-            headers: {},
-          },
-        },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/auth-service/api/v1/user/update-profile": {
-      put: {
-        description:
-          "| Name      |Type    | M/o   | Example\n| ---       | ---    | ---   | ---\n| firstName | string | M     | abc\n| lastName  | string | M     | abc\n| email     | string | M     | abc@abc.com\n| status    | string | M     | 61211f1ef34e5900080a6812",
-        summary: "update user profile",
-        tags: ["Authentication Service"],
-        operationId: "updateuserprofile",
-        deprecated: false,
-        produces: ["application/json"],
-        consumes: ["application/x-www-form-urlencoded"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "firstName",
-            in: "formData",
-            required: true,
-            type: "string",
-            description: "",
-          },
-          {
-            name: "lastName",
-            in: "formData",
-            required: true,
-            type: "string",
-            description: "",
-          },
-          {
-            name: "email",
-            in: "formData",
-            required: true,
-            type: "string",
-            description: "",
-          },
-          {
-            name: "status",
-            in: "formData",
-            required: true,
-            type: "string",
-            description: "",
-          },
-          {
-            name: "profileImage",
-            in: "formData",
-            required: true,
-            type: "file",
-            description: "",
-          },
-          {
-            name: "workLifeBalanceStatus",
-            in: "formData",
-            required: true,
-            type: "boolean",
-            description: "",
-          },
-          {
-            name: "roadSafetyStatus",
-            in: "formData",
-            required: true,
-            type: "boolean",
-            description: "",
-          },
-          {
-            name: "syncCalender",
-            in: "formData",
-            required: true,
-            type: "boolean",
-            description: "",
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m2003",
-            },
-            examples: {
-              "application/json": {
-                success: true,
-                data: {
-                  role: "ADMIN",
-                  isActive: true,
-                  isDeleted: false,
-                  status: "612e3103185624e6a914bd55",
-                  _id: "6161872b43430600096f3fee",
-                  mobileNo: "+918980514085",
-                  createdAt: "2021-10-09T12:12:27.303Z",
-                  updatedAt: "2021-10-12T04:08:28.401Z",
-                  __v: 0,
-                  email: "savaliyatushar2197@gmail.com",
-                  firstName: "tushar",
-                  lastName: "savaliya",
-                  profileImage: "1633781736878.png",
-                  modes: {
-                    workLifeBalanceStatus: "true",
-                    roadSafetyStatus: "false",
+      "/auth-service/api/v1/user/get-profile": {
+          "get": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "get user profile",
+              "operationId": "getuserprofile",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/auth-service/api/v1/user/update-profile": {
+          "put": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "update user profile",
+              "description": "| Name      |Type    | M/o   | Example\n| ---       | ---    | ---   | ---\n| firstName | string | M     | abc\n| lastName  | string | M     | abc\n| email     | string | M     | abc@abc.com\n| status    | string | M     | 61211f1ef34e5900080a6812",
+              "operationId": "updateuserprofile",
+              "parameters": [],
+              "requestBody": {
+                  "content": {
+                      "application/x-www-form-urlencoded": {
+                          "encoding": {},
+                          "schema": {
+                              "required": [
+                                  
+                              ],
+                              "type": "object",
+                              "properties": {
+                                  "firstName": {
+                                      "type": "string",
+                                      "example": "tushar"
+                                  },
+                                  "lastName": {
+                                      "type": "string",
+                                      "example": "savaliya"
+                                  },
+                                  "email": {
+                                      "type": "string",
+                                      "example": "savaliyatushar2197@gmail.com"
+                                  },
+                                  "status": {
+                                      "type": "string",
+                                      "example": "612e3103185624e6a914bd55"
+                                  },
+                                  "profileImage": {
+                                      "type": "file"
+                                  },
+                                  "workLifeBalanceStatus": {
+                                      "type": "boolean",
+                                      "example": true
+                                  },
+                                  "roadSafetyStatus": {
+                                      "type": "boolean",
+                                      "example": false
+                                  },
+                                  "syncCalender": {
+                                      "type": "boolean",
+                                      "example": true
+                                  }
+                              }
+                          }
+                      }
                   },
-                },
+                  "required": false
               },
-            },
-            headers: {},
-          },
-        },
-      },
-    },
-    "/auth-service/api/v1/contact-us": {
-      post: {
-        summary: "contactUs",
-        tags: ["Authentication Service"],
-        operationId: "contactUs",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/contactUsRequest",
-            },
-          },
-        ],
-        responses: {
-          default: {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m2004",
-            },
-            examples: {
-              "application/json": {
-                success: true,
-                message: "success",
-                data: [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
               },
-            },
-            headers: {},
-          },
-        },
+              "deprecated": false
+          }
       },
-    },
-    "/auth-service/api/v1/contact-us/get": {
-      get: {
-        summary: "get contact us details",
-        tags: ["Authentication Service"],
-        operationId: "getcontactusdetails",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-        ],
-        responses: {
-          default: {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m2005",
-            },
-            examples: {
-              "application/json": {
-                success: true,
-                data: [
+      "/auth-service/api/v1/contact-us": {
+          "post": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "contactUs",
+              "operationId": "contactUs",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/contactUsRequest"
+                          },
+                          "example": {
+                              "email": "savaliyatushar2197@gmail.com",
+                              "message": "systme is not working"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/auth-service/api/v1/contact-us/get": {
+          "get": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "get contact us details",
+              "operationId": "getcontactusdetails",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/auth-service/api/v1/user/add-devices": {
+          "post": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "add devices",
+              "operationId": "adddevices",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/adddevicesrequest"
+                          },
+                          "example": {
+                              "devices": [
+                                  "speaket",
+                                  "blutooth"
+                              ]
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/auth-service/api/v1/auth/resend-otp": {
+          "post": {
+              "tags": [
+                  "Auth Service"
+              ],
+              "summary": "resend otp",
+              "operationId": "resendotp",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/resendotprequest"
+                          },
+                          "example": {
+                              "mobileNo": "+919898803674"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/call-service/api/v1/callhistory/add": {
+          "post": {
+              "tags": [
+                  "Call Service"
+              ],
+              "summary": "call history",
+              "operationId": "callhistory",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/callhistoryrequest"
+                          },
+                          "example": {
+                              "contact": [
+                                  {
+                                      "name": "abc",
+                                      "number": "+918980514085"
+                                  },
+                                  {
+                                      "name": "abc",
+                                      "number": "+911122554455"
+                                  }
+                              ]
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/call-service/api/v1/callhistory/get": {
+          "get": {
+              "tags": [
+                  "Call Service"
+              ],
+              "summary": "call details",
+              "operationId": "calldetails",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/call-service/api/v1/callhistory/favorite-add": {
+          "post": {
+              "tags": [
+                  "Call Service"
+              ],
+              "summary": "Add favorite",
+              "operationId": "Addfavorite",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/AddfavoriteRequest"
+                          },
+                          "example": {
+                              "name": "abc",
+                              "number": "+918849455045",
+                              "isFavorite": true
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/call-service/api/v1/callhistory/block-add": {
+          "post": {
+              "tags": [
+                  "Call Service"
+              ],
+              "summary": "Add Block contact",
+              "operationId": "AddBlockcontact",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/AddBlockcontactRequest"
+                          },
+                          "example": {
+                              "name": "abc",
+                              "number": "+918849455045",
+                              "isBlock": true
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/notification-service/api/v1/sms/send": {
+          "post": {
+              "tags": [
+                  "Notification Service"
+              ],
+              "summary": "send custom message",
+              "operationId": "sendcustommessage",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/sendcustommessagerequest"
+                          },
+                          "example": {
+                              "mobileNo": "+918849455045",
+                              "message": "custom message"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/contact-service/api/v1/contact/sync": {
+          "post": {
+              "tags": [
+                  "Contact Service"
+              ],
+              "summary": "contact sync",
+              "operationId": "contactsync",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/contactsyncrequest"
+                          },
+                          "example": {
+                              "mobileNO": "+918980514085",
+                              "contact": [
+                                  {
+                                      "name": "abc",
+                                      "number": "+918849455045",
+                                      "isFavorite": true,
+                                      "isBlock": true,
+                                      "note": "aaaa"
+                                  },
+                                  {
+                                      "name": "abc1",
+                                      "number": "+911234567889",
+                                      "isFavorite": true,
+                                      "note": "aaaa"
+                                  },
+                                  {
+                                      "name": "abcd",
+                                      "number": "+911234567888",
+                                      "isFavorite": true
+                                  },
+                                  {
+                                      "name": "abcd1",
+                                      "number": "+911234567889",
+                                      "isFavorite": true
+                                  },
+                                  {
+                                      "name": "abcd3",
+                                      "number": "+911234567810",
+                                      "isFavorite": true
+                                  }
+                              ]
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/contact-service/api/v1/contact/get": {
+          "get": {
+              "tags": [
+                  "Contact Service"
+              ],
+              "summary": "Get contact details",
+              "operationId": "Getcontactdetails",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/contact-service/api/v1/calender/sync": {
+          "post": {
+              "tags": [
+                  "Contact Service"
+              ],
+              "summary": "Calendar sync",
+              "operationId": "Calendarsync",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/CalendarsyncRequest"
+                          },
+                          "example": {
+                              "email": "savaliyatushar2197@gmail.com",
+                              "calenderEvent": [
+                                  {
+                                      "eventName": "abc",
+                                      "allDay": true,
+                                      "startDate": "24-05-2021",
+                                      "endDay": "24-05-2021"
+                                  },
+                                  {
+                                      "eventName": "abc1",
+                                      "allDay": true,
+                                      "startDate": "24-05-2021",
+                                      "endDay": "24-05-2021"
+                                  }
+                              ]
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/contact-service/api/v1/calender/get": {
+          "get": {
+              "tags": [
+                  "Contact Service"
+              ],
+              "summary": "get calendar Event",
+              "operationId": "getcalendarEvent",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/contact-service/api/v1/calender/update/{id}": {
+          "put": {
+              "tags": [
+                  "Contact Service"
+              ],
+              "summary": "update email address into calendar event",
+              "operationId": "updateemailaddressintocalendarevent",
+              "parameters": [
                   {
-                    _id: "6159a52a45419a83759c620b",
-                    email: "saveliyatushar143@gmail.com",
-                    Message: "systme is not working",
-                    createdAt: "2021-10-03T12:42:18.705Z",
-                    updatedAt: "2021-10-03T12:42:18.705Z",
-                    __v: 0,
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
                   },
-                ],
-                message: "contactUs details get sucess fully",
+              ],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
               },
-            },
-            headers: {},
-          },
-        },
+              "deprecated": false
+          }
       },
-    },
-    "/auth-service/api/v1/user/add-devices": {
-      post: {
-        summary: "add devices",
-        tags: ["Authentication Service"],
-        operationId: "adddevices",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/adddevicesrequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-      },
-    },
-    "/auth-service/api/v1/auth/resend-otp": {
-      post: {
-        summary: "resend otp if otp is already send",
-        tags: ["Authentication Service"],
-        operationId: "resendotp",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/resendotprequest",
-            },
-          },
-        ],
-        responses: {
-          default: {
-            description: "",
-            schema: {
-              $ref: "#/definitions/m200",
-            },
-            examples: {
-              "application/json": {
-                success: true,
-                data: {
-                  expiresAt: "2021-10-25T11:03:23.469Z",
-                  isActive: true,
-                  isDeleted: false,
-                  _id: "61768f29ebb1b457ded07cd9",
-                  otp: 1628,
-                  user: "6161872b43430600096f3fee",
-                  createdAt: "2021-10-25T11:04:09.200Z",
-                  updatedAt: "2021-10-25T11:07:37.351Z",
-                  __v: 0,
-                },
+      "/status-service/api/v1/event/add": {
+          "post": {
+              "tags": [
+                  "Status Service"
+              ],
+              "summary": "Add Event status",
+              "operationId": "AddEventstatus",
+              "parameters": [],
+              "requestBody": {
+                  "content": {
+                      "application/x-www-form-urlencoded": {
+                          "encoding": {},
+                          "schema": {
+                              "required": [
+                                  "status",
+                                  "logo"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                  "status": {
+                                      "type": "string",
+                                      "example": "DND2"
+                                  },
+                                  "logo": {
+                                      "type": "string"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": false
               },
-            },
-            headers: {},
-          },
-        },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-
-    "call-service/api/v1/add": {
-      post: {
-        summary: "call history",
-        tags: ["Call Service"],
-        operationId: "callhistory",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/callhistoryrequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
+      "/status-service/api/v1/event/get": {
+          "get": {
+              "tags": [
+                  "Status Service"
+              ],
+              "summary": "Get All Event status",
+              "operationId": "GetAllEventstatus",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "call-service/api/v1/get": {
-      get: {
-        summary: "call details",
-        tags: ["Call Service"],
-        operationId: "calldetails",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
+      "/status-service/api/v1/event/update/{id}": {
+          "put": {
+              "tags": [
+                  "Status Service"
+              ],
+              "summary": "update Event Details",
+              "operationId": "updateEventDetails",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "requestBody": {
+                  "content": {
+                      "application/x-www-form-urlencoded": {
+                          "encoding": {},
+                          "schema": {
+                              "required": [
+                                  "status",
+                                  "logo"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                  "status": {
+                                      "type": "string",
+                                      "example": "DND"
+                                  },
+                                  "logo": {
+                                      "type": "string"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": false
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "call-service/api/v1/favorite-add": {
-      post: {
-        summary: "Add favorite",
-        tags: ["Call Service"],
-        operationId: "Addfavorite",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/AddfavoriteRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
+      "/status-service/api/v1/event/delete/{id}": {
+          "delete": {
+              "tags": [
+                  "Status Service"
+              ],
+              "summary": "Delete Event Status",
+              "operationId": "DeleteEventStatus",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "call-service/api/v1/block-add": {
-      post: {
-        summary: "Add Block contact",
-        tags: ["Call Service"],
-        operationId: "AddBlockcontact",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/AddBlockcontactRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
+      "/status-service/api/v1/event/add-sub": {
+          "post": {
+              "tags": [
+                  "Status Service"
+              ],
+              "summary": "add sub status",
+              "operationId": "addsubstatus",
+              "parameters": [],
+              "requestBody": {
+                  "content": {
+                      "application/x-www-form-urlencoded": {
+                          "encoding": {},
+                          "schema": {
+                              "required": [
+                                  "status",
+                                  "parentId",
+                                  "logo"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                  "status": {
+                                      "type": "string",
+                                      "example": "DND2"
+                                  },
+                                  "parentId": {
+                                      "type": "string",
+                                      "example": "61670b887a7764f6a360db28"
+                                  },
+                                  "logo": {
+                                      "type": "string"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": false
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/notification-service/api/v1/sms/send": {
-      post: {
-        summary: "Send SMS",
-        tags: ["Notification Service"],
-        operationId: "AddBlockcontact",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/NotificationSmsRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/status-service/api/v1/event/sub-update/{id}": {
+          "put": {
+              "tags": [
+                  "Status Service"
+              ],
+              "summary": "update Event subStatus",
+              "operationId": "updateEventsubStatus",
+              "parameters": [],
+              "requestBody": {
+                  "content": {
+                      "application/x-www-form-urlencoded": {
+                          "encoding": {},
+                          "schema": {
+                              "required": [
+                                  "status",
+                                  "logo",
+                                  "parentId"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                  "status": {
+                                      "type": "string",
+                                      "example": "DND11111"
+                                  },
+                                  "logo": {
+                                      "type": "string"
+                                  },
+                                  "parentId": {
+                                      "type": "string",
+                                      "example": "61670e7633b5790416bcfc03"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": false
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/contact-service/api/v1/contact/sync": {
-      post: {
-        summary: "Sync Contact",
-        tags: ["Contact Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/SyncContactRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/work-hrs-service/api/v1/work-life/add": {
+          "post": {
+              "tags": [
+                  "Work Hrs Service"
+              ],
+              "summary": "Add working Hrs",
+              "operationId": "AddworkingHrs",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/AddworkingHrsRequest"
+                          },
+                          "example": {
+                              "Monday": false,
+                              "Tuesday": true,
+                              "Wednesday": true,
+                              "Thursday": true,
+                              "Friday": true,
+                              "Saturday": true,
+                              "Sunday": true,
+                              "startTime": "09:00 AM",
+                              "endTime": "10:00 PM",
+                              "otherStatus": "612e310c185624e6a914bd57"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/contact-service/api/v1/contact/get": {
-      get: {
-        summary: "Get Contact Details",
-        tags: ["Contact Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/work-hrs-service/api/v1/work-life/update/{id}": {
+          "put": {
+              "tags": [
+                  "Work Hrs Service"
+              ],
+              "summary": "update working Hrs",
+              "operationId": "updateworkingHrs",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/updateworkingHrsRequest"
+                          },
+                          "example": {
+                              "Monday": false,
+                              "Tuesday": true,
+                              "Wednesday": true,
+                              "Thursday": true,
+                              "Friday": true,
+                              "Saturday": true,
+                              "Sunday": true,
+                              "startTime": "09:00 AM",
+                              "endTime": "10:00 PM",
+                              "otherStatus": "612e310c185624e6a914bd57"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/contact-service/api/v1/calender/sync": {
-      post: {
-        summary: "Sync Calender",
-        tags: ["Contact Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/CalenderSyncRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/work-hrs-service/api/v1/work-life/get": {
+          "get": {
+              "tags": [
+                  "Work Hrs Service"
+              ],
+              "summary": "Get working Hrs",
+              "operationId": "GetworkingHrs",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/contact-service/api/v1/calender/get": {
-      get: {
-        summary: "Get Calender Details",
-        tags: ["Contact Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/work-hrs-service/api/v1/work-life/get/{id}": {
+          "delete": {
+              "tags": [
+                  "Work Hrs Service"
+              ],
+              "summary": "delete working Hrs",
+              "operationId": "deleteworkingHrs",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/status-service/api/v1/event/add": {
-      post: {
-        summary: "Set Event status",
-        tags: ["Status Service"],
-        operationId: "GetEventstatus",
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/NewEventStatusRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/package-service/api/v1/packages/add": {
+          "post": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "add  packages",
+              "operationId": "addpackages",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/addpackagesrequest"
+                          },
+                          "example": {
+                              "name": "abac",
+                              "duration": 12,
+                              "price": 500
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/status-service/api/v1/event/get": {
-      get: {
-        summary: "Get Event status",
-        tags: ["Status Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/package-service/api/v1/packages/get": {
+          "get": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "Get packages",
+              "operationId": "Getpackages",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/status-service/api/v1/event/update/${id}": {
-      put: {
-        summary: "Update Event Status",
-        tags: ["Status Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/UpdateEventStatusRequest",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/package-service/api/v1/packages/update/{id}": {
+          "put": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "update packages",
+              "operationId": "updatepackages",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/updatepackagesrequest"
+                          },
+                          "example": {
+                              "name": "abac",
+                              "duration": 12,
+                              "price": 400
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/status-service/api/v1/event/delete/${id}": {
-      delete: {
-        summary: "Delete Event Status",
-        tags: ["Status Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-          },
-        },
+      "/package-service/api/v1/packages/delete/{id}": {
+          "delete": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "delete packages",
+              "operationId": "deletepackages",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/work-hrs-service/api/v1/work-life/add": {
-      post: {
-        summary: "Add hrs",
-        tags: ["Work Hrs Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/AddhrsRequest",
-            },
-          },
-        ],
-        responses: {
-          "500": {
-            description: "Internal Server Error",
-            schema: {
-              $ref: "#/definitions/InternalServerError",
-            },
-          },
-          "200": {
-            description: "OK",
-            schema: {
-              $ref: "#/definitions/AddHrsResponse",
-            },
-          },
-        },
+      "/package-service/api/v1/woucher/add": {
+          "post": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "Add woucher",
+              "operationId": "Addwoucher",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/AddwoucherRequest"
+                          },
+                          "example": {
+                              "name": "abac",
+                              "code": "aaa",
+                              "amount": 10,
+                              "minAmount": 100,
+                              "discountType": "FLAT",
+                              "startDate": "2021-12-15",
+                              "endDate": "2021-12-20"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/work-hrs-service/api/v1/work-life/update/{id}": {
-      post: {
-        summary: "Update hrs",
-        tags: ["Work Hrs Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-          {
-            name: "Body",
-            in: "body",
-            required: true,
-            description: "",
-            schema: {
-              $ref: "#/definitions/UpdatehrsRequest",
-            },
-          },
-        ],
-        responses: {
-          "500": {
-            description: "Internal Server Error",
-            schema: {
-              $ref: "#/definitions/InternalServerError",
-            },
-          },
-          "200": {
-            description: "OK",
-            schema: {
-              $ref: "#/definitions/UpdateHrsResponse",
-            },
-          },
-        },
+      "/package-service/api/v1/woucher/get": {
+          "get": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "Get Wouchers",
+              "operationId": "GetWouchers",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/work-hrs-service/api/v1/work-life/get": {
-      get: {
-        summary: "Get Hrs",
-        tags: ["Work Hrs Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            schema: {
-              $ref: "#/definitions/GetHrsResponse",
-            },
-            headers: {},
-          },
-        },
+      "/package-service/api/v1/woucher/update/{id}": {
+          "put": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "update woucher",
+              "operationId": "updatewoucher",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/updatewoucherrequest"
+                          },
+                          "example": {
+                              "name": "abac",
+                              "code": "aaa",
+                              "amount": 100,
+                              "minAmount": 100,
+                              "discountType": "FLAT"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
-    "/work-hrs-service/api/v1/get/${id}": {
-      delete: {
-        summary: "Delete working days",
-        tags: ["Work Hrs Service"],
-        deprecated: false,
-        produces: ["application/json"],
-        parameters: [
-          {
-            name: "Authorization",
-            in: "header",
-            required: false,
-            default: "Bearer {token}",
-            type: "string",
-          },
-        ],
-        responses: {
-          "200": {
-            description: "OK",
-            schema: {
-              $ref: "#/definitions/m2001",
-            },
-          },
-          "500": {
-            description: "Internal Server Error",
-            schema: {
-              $ref: "#/definitions/InternalServerError",
-            },
-          },
-        },
+      "/package-service/api/v1/woucher/delete/{id}": {
+          "delete": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "delete Woucher",
+              "operationId": "deleteWoucher",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
       },
-    },
+      "/package-service/api/v1/payment/add": {
+          "post": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "payment Add",
+              "operationId": "paymentAdd",
+              "parameters": [],
+              "requestBody": {
+                  "description": "",
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/paymentAddRequest"
+                          },
+                          "example": {
+                              "packageId": "613bc118bc2da97b67b2ee17",
+                              "paymentId": "pay_HxHEX7lHP9E2Em"
+                          }
+                      }
+                  },
+                  "required": true
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/package-service/api/v1/payment/get": {
+          "get": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "payment Get",
+              "operationId": "paymentGet",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/cms/add": {
+          "post": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "create page",
+              "operationId": "createpage",
+              "parameters": [],
+              "requestBody": {
+                  "content": {
+                      "application/x-www-form-urlencoded": {
+                          "encoding": {},
+                          "schema": {
+                              "required": [
+                                  "pageName",
+                                  "content"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                  "pageName": {
+                                      "type": "string",
+                                      "example": " policy2"
+                                  },
+                                  "content": {
+                                      "type": "string",
+                                      "example": " <div class=\"container\"><div id=\"left-sidebar\" data-is-here-when=\"md lg\" class=\"left-sidebar js-pinned-left-sidebar ps-relative\"><div class=\"left-sidebar--sticky-container js-sticky-leftnav\"><nav role=\"navigation\"><ol class=\"nav-links\"><li class=\"\"><a href=\"/\" class=\"pl8 js-gps-track nav-links--link\" data-gps-track=\"top_nav.click({is_current: false, location: 2, destination: 8})\" aria-controls=\"\" data-controller=\"\" data-s-popover-placement=\"right\" data-s-popover-auto-show=\"true\" data-s-popover-hide-on-outside-click=\"never\"><div class=\"d-flex ai-center\"><div class=\"flex--item truncate\"> Home </div></div></a></li><li><ol class=\"nav-links\"><li class=\"fs-fine tt-uppercase ml8 mt16 mb4 fc-light\">Public</li><li class=\" youarehere\">"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": false
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/package-service/api/v1/cms/get": {
+          "get": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "get cms page",
+              "operationId": "getcmspage",
+              "parameters": [],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/package-service/api/v1/cms/update/{id}": {
+          "put": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "update CMS page",
+              "operationId": "updateCMSpage",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "requestBody": {
+                  "content": {
+                      "application/x-www-form-urlencoded": {
+                          "encoding": {},
+                          "schema": {
+                              "required": [
+                                  "pageName",
+                                  "content"
+                              ],
+                              "type": "object",
+                              "properties": {
+                                  "pageName": {
+                                      "type": "string",
+                                      "example": "policy22"
+                                  },
+                                  "content": {
+                                      "type": "string",
+                                      "example": "<div class=\"container\"><div id=\"left-sidebar\" data-is-here-when=\"md lg\" class=\"left-sidebar js-pinned-left-sidebar ps-relative\"><div class=\"left-sidebar--sticky-container js-sticky-leftnav\"><nav role=\"navigation\"><ol class=\"nav-links\"><li class=\"\"><a href=\"/\" class=\"pl8 js-gps-track nav-links--link\" data-gps-track=\"top_nav.click({is_current: false, location: 2, destination: 8})\" aria-controls=\"\" data-controller=\"\" data-s-popover-placement=\"right\" data-s-popover-auto-show=\"true\" data-s-popover-hide-on-outside-click=\"never\"><div class=\"d-flex ai-center\"><div class=\"flex--item truncate\"> Home </div></div></a></li><li><ol class=\"nav-links\"><li class=\"fs-fine tt-uppercase ml8 mt16 mb4 fc-light\">Public</li><li class=\" youarehere\">"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "required": false
+              },
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      },
+      "/package-service/api/v1/cms/delete/{id}": {
+          "delete": {
+              "tags": [
+                  "Package Service"
+              ],
+              "summary": "delete cms page",
+              "operationId": "deletecmspage",
+              "parameters": [
+                  {
+                      "in": "path",
+                      "name": "id",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  },
+              ],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  }
+              },
+              "deprecated": false
+          }
+      }
   },
-  definitions: {
-    LoginuserRequest: {
-      title: "LoginuserRequest",
-      example: {
-        mobileNo: "+918980514085",
-      },
-      type: "object",
-      properties: {
-        mobileNo: {
-          type: "string",
-        },
-      },
-      required: ["mobileNo"],
-    },
-    m200: {
-      title: "m200",
-      example: {
-        success: true,
-        data: {
-          expiresAt: "2021-07-19T15:47:14.673Z",
-          isActive: true,
-          isDeleted: false,
-          _id: "60f5a4c1c3d25497a170f5cb",
-          otp: 1965,
-          user: "60f5a039c3d25497a170f5b3",
-          createdAt: "2021-07-19T16:13:53.277Z",
-          updatedAt: "2021-07-19T16:13:53.277Z",
-          __v: 0,
-        },
-      },
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        data: {
-          $ref: "#/definitions/Data",
-        },
-      },
-      required: ["success", "data"],
-    },
-    Data: {
-      title: "Data",
-      example: {
-        expiresAt: "2021-07-19T15:47:14.673Z",
-        isActive: true,
-        isDeleted: false,
-        _id: "60f5a4c1c3d25497a170f5cb",
-        otp: 1965,
-        user: "60f5a039c3d25497a170f5b3",
-        createdAt: "2021-07-19T16:13:53.277Z",
-        updatedAt: "2021-07-19T16:13:53.277Z",
-        __v: 0,
-      },
-      type: "object",
-      properties: {
-        expiresAt: {
-          type: "string",
-        },
-        isActive: {
-          type: "boolean",
-        },
-        isDeleted: {
-          type: "boolean",
-        },
-        _id: {
-          type: "string",
-        },
-        otp: {
-          type: "integer",
-          format: "int32",
-        },
-        user: {
-          type: "string",
-        },
-        createdAt: {
-          type: "string",
-        },
-        updatedAt: {
-          type: "string",
-        },
-        __v: {
-          type: "integer",
-          format: "int32",
-        },
-      },
-      required: [
-        "expiresAt",
-        "isActive",
-        "isDeleted",
-        "_id",
-        "otp",
-        "user",
-        "createdAt",
-        "updatedAt",
-        "__v",
-      ],
-    },
-    m4221: {
-      title: "m4221",
-      example: {
-        success: false,
-        message: "Mobile number is required",
-      },
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        message: {
-          type: "string",
-        },
-      },
-      required: ["success", "message"],
-    },
-    verifyotprequest: {
-      title: "verifyotprequest",
-      example: {
-        mobileNo: "+918980514085",
-        otp: 1628,
-      },
-      type: "object",
-      properties: {
-        mobileNo: {
-          type: "string",
-        },
-        otp: {
-          type: "integer",
-          format: "int32",
-        },
-      },
-      required: ["mobileNo", "otp"],
-    },
-    m2001: {
-      title: "m2001",
-      example: {
-        success: true,
-        data: {
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1YTAzOWMzZDI1NDk3YTE3MGY1YjMiLCJtb2JpbGVObyI6Ijg5ODA1MTQwODUiLCJpYXQiOjE2MjY3MTE3MzIsImV4cCI6MTYyNjc5ODEzMn0.0MaUUo_2zEYcO4sxoEB7mPE4-DjxP3ye4-kaLsUNeGI",
-          user: {
-            isActive: true,
-            isDeleted: false,
-            _id: "60f5a039c3d25497a170f5b3",
-            mobileNo: "8980514085",
-            createdAt: "2021-07-19T15:54:33.292Z",
-            updatedAt: "2021-07-19T15:54:33.292Z",
-            __v: 0,
+  "components": {
+      "schemas": {
+          "LoginuserRequest": {
+              "title": "LoginuserRequest",
+              "required": [
+                  "mobileNo"
+              ],
+              "type": "object",
+              "properties": {
+                  "mobileNo": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "mobileNo": "+918980514085"
+              }
           },
-        },
-      },
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        data: {
-          $ref: "#/definitions/Data1",
-        },
-      },
-      required: ["success", "data"],
-    },
-    Data1: {
-      title: "Data1",
-      example: {
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGY1YTAzOWMzZDI1NDk3YTE3MGY1YjMiLCJtb2JpbGVObyI6Ijg5ODA1MTQwODUiLCJpYXQiOjE2MjY3MTE3MzIsImV4cCI6MTYyNjc5ODEzMn0.0MaUUo_2zEYcO4sxoEB7mPE4-DjxP3ye4-kaLsUNeGI",
-        user: {
-          isActive: true,
-          isDeleted: false,
-          _id: "60f5a039c3d25497a170f5b3",
-          mobileNo: "8980514085",
-          createdAt: "2021-07-19T15:54:33.292Z",
-          updatedAt: "2021-07-19T15:54:33.292Z",
-          __v: 0,
-        },
-      },
-      type: "object",
-      properties: {
-        token: {
-          type: "string",
-        },
-        user: {
-          $ref: "#/definitions/User",
-        },
-      },
-      required: ["token", "user"],
-    },
-    User: {
-      title: "User",
-      example: {
-        isActive: true,
-        isDeleted: false,
-        _id: "60f5a039c3d25497a170f5b3",
-        mobileNo: "8980514085",
-        createdAt: "2021-07-19T15:54:33.292Z",
-        updatedAt: "2021-07-19T15:54:33.292Z",
-        __v: 0,
-      },
-      type: "object",
-      properties: {
-        isActive: {
-          type: "boolean",
-        },
-        isDeleted: {
-          type: "boolean",
-        },
-        _id: {
-          type: "string",
-        },
-        mobileNo: {
-          type: "string",
-        },
-        createdAt: {
-          type: "string",
-        },
-        updatedAt: {
-          type: "string",
-        },
-        __v: {
-          type: "integer",
-          format: "int32",
-        },
-      },
-      required: [
-        "isActive",
-        "isDeleted",
-        "_id",
-        "mobileNo",
-        "createdAt",
-        "updatedAt",
-        "__v",
-      ],
-    },
-    m2002: {
-      title: "m2002",
-      example: {
-        success: true,
-        data: {
-          role: "ADMIN",
-          isActive: true,
-          isDeleted: false,
-          _id: "6161872b43430600096f3fee",
-          mobileNo: "+918980514085",
-          createdAt: "2021-10-09T12:12:27.303Z",
-          updatedAt: "2021-10-12T04:08:28.401Z",
-          __v: 0,
-          email: "savaliyatushar2197@gmail.com",
-          firstName: "tushar",
-          lastName: "savaliya",
-          profileImage: "1633781736878.png",
-          modes: {
-            workLifeBalanceStatus: "true",
-            roadSafetyStatus: "false",
+          "verifyotprequest": {
+              "title": "verifyotprequest",
+              "required": [
+                  "mobileNo",
+                  "otp"
+              ],
+              "type": "object",
+              "properties": {
+                  "mobileNo": {
+                      "type": "string"
+                  },
+                  "otp": {
+                      "type": "integer",
+                      "format": "int32"
+                  }
+              },
+              "example": {
+                  "mobileNo": "+918980514085",
+                  "otp": 1628
+              }
           },
-        },
-      },
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        data: {
-          $ref: "#/definitions/Data2",
-        },
-      },
-      required: ["success", "data"],
-    },
-    Data2: {
-      title: "Data2",
-      example: {
-        role: "ADMIN",
-        isActive: true,
-        isDeleted: false,
-        _id: "6161872b43430600096f3fee",
-        mobileNo: "+918980514085",
-        createdAt: "2021-10-09T12:12:27.303Z",
-        updatedAt: "2021-10-12T04:08:28.401Z",
-        __v: 0,
-        email: "savaliyatushar2197@gmail.com",
-        firstName: "tushar",
-        lastName: "savaliya",
-        profileImage: "1633781736878.png",
-        modes: {
-          workLifeBalanceStatus: "true",
-          roadSafetyStatus: "false",
-        },
-      },
-      type: "object",
-      properties: {
-        role: {
-          type: "string",
-        },
-        isActive: {
-          type: "boolean",
-        },
-        isDeleted: {
-          type: "boolean",
-        },
-        _id: {
-          type: "string",
-        },
-        mobileNo: {
-          type: "string",
-        },
-        createdAt: {
-          type: "string",
-        },
-        updatedAt: {
-          type: "string",
-        },
-        __v: {
-          type: "integer",
-          format: "int32",
-        },
-        email: {
-          type: "string",
-        },
-        firstName: {
-          type: "string",
-        },
-        lastName: {
-          type: "string",
-        },
-        profileImage: {
-          type: "string",
-        },
-        modes: {
-          $ref: "#/definitions/Modes",
-        },
-      },
-      required: [
-        "role",
-        "isActive",
-        "isDeleted",
-        "_id",
-        "mobileNo",
-        "createdAt",
-        "updatedAt",
-        "__v",
-        "email",
-        "firstName",
-        "lastName",
-        "profileImage",
-        "modes",
-      ],
-    },
-    Modes: {
-      title: "Modes",
-      example: {
-        workLifeBalanceStatus: "true",
-        roadSafetyStatus: "false",
-      },
-      type: "object",
-      properties: {
-        workLifeBalanceStatus: {
-          type: "string",
-        },
-        roadSafetyStatus: {
-          type: "string",
-        },
-      },
-      required: ["workLifeBalanceStatus", "roadSafetyStatus"],
-    },
-    m2003: {
-      title: "m2003",
-      example: {
-        success: true,
-        data: {
-          role: "ADMIN",
-          isActive: true,
-          isDeleted: false,
-          status: "612e3103185624e6a914bd55",
-          _id: "6161872b43430600096f3fee",
-          mobileNo: "+918980514085",
-          createdAt: "2021-10-09T12:12:27.303Z",
-          updatedAt: "2021-10-12T04:08:28.401Z",
-          __v: 0,
-          email: "savaliyatushar2197@gmail.com",
-          firstName: "tushar",
-          lastName: "savaliya",
-          profileImage: "1633781736878.png",
-          modes: {
-            workLifeBalanceStatus: "true",
-            roadSafetyStatus: "false",
+          "contactUsRequest": {
+              "title": "contactUsRequest",
+              "required": [
+                  "email",
+                  "message"
+              ],
+              "type": "object",
+              "properties": {
+                  "email": {
+                      "type": "string"
+                  },
+                  "message": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "email": "savaliyatushar2197@gmail.com",
+                  "message": "systme is not working"
+              }
           },
-        },
-      },
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        data: {
-          $ref: "#/definitions/Data3",
-        },
-      },
-      required: ["success", "data"],
-    },
-    Data3: {
-      title: "Data3",
-      example: {
-        role: "ADMIN",
-        isActive: true,
-        isDeleted: false,
-        status: "612e3103185624e6a914bd55",
-        _id: "6161872b43430600096f3fee",
-        mobileNo: "+918980514085",
-        createdAt: "2021-10-09T12:12:27.303Z",
-        updatedAt: "2021-10-12T04:08:28.401Z",
-        __v: 0,
-        email: "savaliyatushar2197@gmail.com",
-        firstName: "tushar",
-        lastName: "savaliya",
-        profileImage: "1633781736878.png",
-        modes: {
-          workLifeBalanceStatus: "true",
-          roadSafetyStatus: "false",
-        },
-      },
-      type: "object",
-      properties: {
-        role: {
-          type: "string",
-        },
-        isActive: {
-          type: "boolean",
-        },
-        isDeleted: {
-          type: "boolean",
-        },
-        status: {
-          type: "string",
-        },
-        _id: {
-          type: "string",
-        },
-        mobileNo: {
-          type: "string",
-        },
-        createdAt: {
-          type: "string",
-        },
-        updatedAt: {
-          type: "string",
-        },
-        __v: {
-          type: "integer",
-          format: "int32",
-        },
-        email: {
-          type: "string",
-        },
-        firstName: {
-          type: "string",
-        },
-        lastName: {
-          type: "string",
-        },
-        profileImage: {
-          type: "string",
-        },
-        modes: {
-          $ref: "#/definitions/Modes",
-        },
-      },
-      required: [
-        "role",
-        "isActive",
-        "isDeleted",
-        "status",
-        "_id",
-        "mobileNo",
-        "createdAt",
-        "updatedAt",
-        "__v",
-        "email",
-        "firstName",
-        "lastName",
-        "profileImage",
-        "modes",
-      ],
-    },
-    contactUsRequest: {
-      title: "contactUsRequest",
-      example: {
-        email: "savaliyatushar2197@gmail.com",
-        message: "systme is not working",
-      },
-      type: "object",
-      properties: {
-        email: {
-          type: "string",
-        },
-        message: {
-          type: "string",
-        },
-      },
-      required: ["email", "message"],
-    },
-    m2004: {
-      title: "m2004",
-      example: {
-        success: true,
-        message: "success",
-        data: [],
-      },
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        message: {
-          type: "string",
-        },
-        data: {
-          type: "array",
-          items: {
-            type: "string",
+          "adddevicesrequest": {
+              "title": "adddevicesrequest",
+              "required": [
+                  "devices"
+              ],
+              "type": "object",
+              "properties": {
+                  "devices": {
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      },
+                      "description": ""
+                  }
+              },
+              "example": {
+                  "devices": [
+                      "speaket",
+                      "blutooth"
+                  ]
+              }
           },
-        },
-      },
-      required: ["success", "message", "data"],
-    },
-    m2005: {
-      title: "m2005",
-      example: {
-        success: true,
-        data: [
-          {
-            _id: "6159a52a45419a83759c620b",
-            email: "saveliyatushar143@gmail.com",
-            Message: "systme is not working",
-            createdAt: "2021-10-03T12:42:18.705Z",
-            updatedAt: "2021-10-03T12:42:18.705Z",
-            __v: 0,
+          "resendotprequest": {
+              "title": "resendotprequest",
+              "required": [
+                  "mobileNo"
+              ],
+              "type": "object",
+              "properties": {
+                  "mobileNo": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "mobileNo": "+919898803674"
+              }
           },
-        ],
-        message: "contactUs details get sucess fully",
-      },
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        data: {
-          type: "array",
-          items: {
-            $ref: "#/definitions/Data4",
+          "callhistoryrequest": {
+              "title": "callhistoryrequest",
+              "required": [
+                  "contact"
+              ],
+              "type": "object",
+              "properties": {
+                  "contact": {
+                      "type": "array",
+                      "items": {
+                          "$ref": "#/components/schemas/Contact"
+                      },
+                      "description": ""
+                  }
+              },
+              "example": {
+                  "contact": [
+                      {
+                          "name": "abc",
+                          "number": "+918980514085"
+                      },
+                      {
+                          "name": "abc",
+                          "number": "+911122554455"
+                      }
+                  ]
+              }
           },
-        },
-        message: {
-          type: "string",
-        },
-      },
-      required: ["success", "data", "message"],
-    },
-    Data4: {
-      title: "Data4",
-      example: {
-        _id: "6159a52a45419a83759c620b",
-        email: "saveliyatushar143@gmail.com",
-        Message: "systme is not working",
-        createdAt: "2021-10-03T12:42:18.705Z",
-        updatedAt: "2021-10-03T12:42:18.705Z",
-        __v: 0,
-      },
-      type: "object",
-      properties: {
-        _id: {
-          type: "string",
-        },
-        email: {
-          type: "string",
-        },
-        Message: {
-          type: "string",
-        },
-        createdAt: {
-          type: "string",
-        },
-        updatedAt: {
-          type: "string",
-        },
-        __v: {
-          type: "integer",
-          format: "int32",
-        },
-      },
-      required: ["_id", "email", "Message", "createdAt", "updatedAt", "__v"],
-    },
-    adddevicesrequest: {
-      title: "adddevicesrequest",
-      example: {
-        devices: ["speaket", "blutooth"],
-      },
-      type: "object",
-      properties: {
-        devices: {
-          type: "array",
-          items: {
-            type: "string",
+          "Contact": {
+              "title": "Contact",
+              "required": [
+                  "name",
+                  "number"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "number": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "name": "abc",
+                  "number": "+918980514085"
+              }
           },
-        },
-      },
-      required: ["devices"],
-    },
-    resendotprequest: {
-      title: "resendotprequest",
-      example: {
-        mobileNo: "+918980514085",
-      },
-      type: "object",
-      properties: {
-        mobileNo: {
-          type: "string",
-        },
-      },
-      required: ["mobileNo"],
-    },
-    callhistoryrequest: {
-      title: "callhistoryrequest",
-      example: {
-        contact: [
-          {
-            name: "abc",
-            number: "+918980514085",
+          "calldetailsrequest": {
+              "title": "calldetailsrequest",
+              "required": [
+                  "contact"
+              ],
+              "type": "object",
+              "properties": {
+                  "contact": {
+                      "$ref": "#/components/schemas/Contact1"
+                  }
+              },
+              "example": {
+                  "contact": {
+                      "name": "abc",
+                      "number": "+918980514085",
+                      "isfavourite": false
+                  }
+              }
           },
-          {
-            name: "abc",
-            number: "+911122554455",
+          "Contact1": {
+              "title": "Contact1",
+              "required": [
+                  "name",
+                  "number",
+                  "isfavourite"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "number": {
+                      "type": "string"
+                  },
+                  "isfavourite": {
+                      "type": "boolean"
+                  }
+              },
+              "example": {
+                  "name": "abc",
+                  "number": "+918980514085",
+                  "isfavourite": false
+              }
           },
-        ],
-      },
-      type: "object",
-      properties: {
-        contact: {
-          type: "array",
-          items: {
-            $ref: "#/definitions/Contact",
+          "AddfavoriteRequest": {
+              "title": "AddfavoriteRequest",
+              "required": [
+                  "name",
+                  "number",
+                  "isFavorite"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "number": {
+                      "type": "string"
+                  },
+                  "isFavorite": {
+                      "type": "boolean"
+                  }
+              },
+              "example": {
+                  "name": "abc",
+                  "number": "+918849455045",
+                  "isFavorite": true
+              }
           },
-        },
-      },
-      required: ["contact"],
-    },
-    Contact: {
-      title: "Contact",
-      example: {
-        name: "abc",
-        number: "+918980514085",
-      },
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        number: {
-          type: "string",
-        },
-      },
-      required: ["name", "number"],
-    },
-    calldetailsrequest: {
-      title: "calldetailsrequest",
-      example: {
-        contact: {
-          name: "abc",
-          number: "+918980514085",
-          isfavourite: false,
-        },
-      },
-      type: "object",
-      properties: {
-        contact: {
-          $ref: "#/definitions/Contact1",
-        },
-      },
-      required: ["contact"],
-    },
-    Contact1: {
-      title: "Contact1",
-      example: {
-        name: "abc",
-        number: "+918980514085",
-        isfavourite: false,
-      },
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        number: {
-          type: "string",
-        },
-        isfavourite: {
-          type: "boolean",
-        },
-      },
-      required: ["name", "number", "isfavourite"],
-    },
-    AddfavoriteRequest: {
-      title: "AddfavoriteRequest",
-      example: {
-        name: "abc",
-        number: "+918849455045",
-        isFavorite: true,
-      },
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        number: {
-          type: "string",
-        },
-        isFavorite: {
-          type: "boolean",
-        },
-      },
-      required: ["name", "number", "isFavorite"],
-    },
-    AddBlockcontactRequest: {
-      title: "AddBlockcontactRequest",
-      example: {
-        name: "abc",
-        number: "+918849455045",
-        isBlock: true,
-      },
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-        },
-        number: {
-          type: "string",
-        },
-        isBlock: {
-          type: "boolean",
-        },
-      },
-      required: ["name", "number", "isBlock"],
-    },
-    NotificationSmsRequest: {
-      type: "object",
-      properties: {
-        mobileNo: {
-          type: "string",
-        },
-        message: {
-          type: "string",
-        },
-      },
-      example: {
-        mobileNo: "+918849455045",
-        message: "Welcome to wisecaller",
-      },
-    },
-    SyncContactRequest: {
-      type: "object",
-      properties: {
-        mobileNO: {
-          type: "string",
-        },
-        contact: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
+          "AddBlockcontactRequest": {
+              "title": "AddBlockcontactRequest",
+              "required": [
+                  "name",
+                  "number",
+                  "isBlock"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "number": {
+                      "type": "string"
+                  },
+                  "isBlock": {
+                      "type": "boolean"
+                  }
               },
-              number: {
-                type: "string",
-              },
-              isFavorite: {
-                type: "boolean",
-              },
-              isBlock: {
-                type: "boolean",
-              },
-              nummber: {
-                type: "string",
-              },
-            },
+              "example": {
+                  "name": "abc",
+                  "number": "+918849455045",
+                  "isBlock": true
+              }
           },
-        },
-      },
-      example: {
-        mobileNO: "+918980514085",
-        contact: [
-          {
-            name: "abc",
-            number: "+918849455045",
-            isFavorite: true,
-            isBlock: true,
+          "sendcustommessagerequest": {
+              "title": "sendcustommessagerequest",
+              "required": [
+                  "mobileNo",
+                  "message"
+              ],
+              "type": "object",
+              "properties": {
+                  "mobileNo": {
+                      "type": "string"
+                  },
+                  "message": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "mobileNo": "+918849455045",
+                  "message": "custom message"
+              }
           },
-          {
-            name: "abc1",
-            nummber: "+911234567889",
-            isFavorite: true,
+          "contactsyncrequest": {
+              "title": "contactsyncrequest",
+              "required": [
+                  "mobileNO",
+                  "contact"
+              ],
+              "type": "object",
+              "properties": {
+                  "mobileNO": {
+                      "type": "string"
+                  },
+                  "contact": {
+                      "type": "array",
+                      "items": {
+                          "$ref": "#/components/schemas/Contact2"
+                      },
+                      "description": ""
+                  }
+              },
+              "example": {
+                  "mobileNO": "+918980514085",
+                  "contact": [
+                      {
+                          "name": "abc",
+                          "number": "+918849455045",
+                          "isFavorite": true,
+                          "isBlock": true,
+                          "note": "aaaa"
+                      },
+                      {
+                          "name": "abc1",
+                          "number": "+911234567889",
+                          "isFavorite": true,
+                          "note": "aaaa"
+                      },
+                      {
+                          "name": "abcd",
+                          "number": "+911234567888",
+                          "isFavorite": true
+                      },
+                      {
+                          "name": "abcd1",
+                          "number": "+911234567889",
+                          "isFavorite": true
+                      },
+                      {
+                          "name": "abcd3",
+                          "number": "+911234567810",
+                          "isFavorite": true
+                      }
+                  ]
+              }
           },
-          {
-            name: "abcd",
-            nummber: "+911234567888",
-            isFavorite: true,
+          "Contact2": {
+              "title": "Contact2",
+              "required": [
+                  "name",
+                  "number",
+                  "isFavorite"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "number": {
+                      "type": "string"
+                  },
+                  "isFavorite": {
+                      "type": "boolean"
+                  },
+                  "isBlock": {
+                      "type": "boolean"
+                  },
+                  "note": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "name": "abc",
+                  "number": "+918849455045",
+                  "isFavorite": true,
+                  "isBlock": true,
+                  "note": "aaaa"
+              }
           },
-          {
-            name: "abcd1",
-            nummber: "+911234567889",
-            isFavorite: true,
+          "CalendarsyncRequest": {
+              "title": "CalendarsyncRequest",
+              "required": [
+                  "email",
+                  "calenderEvent"
+              ],
+              "type": "object",
+              "properties": {
+                  "email": {
+                      "type": "string"
+                  },
+                  "calenderEvent": {
+                      "type": "array",
+                      "items": {
+                          "$ref": "#/components/schemas/CalenderEvent"
+                      },
+                      "description": ""
+                  }
+              },
+              "example": {
+                  "email": "savaliyatushar2197@gmail.com",
+                  "calenderEvent": [
+                      {
+                          "eventName": "abc",
+                          "allDay": true,
+                          "startDate": "24-05-2021",
+                          "endDay": "24-05-2021"
+                      },
+                      {
+                          "eventName": "abc1",
+                          "allDay": true,
+                          "startDate": "24-05-2021",
+                          "endDay": "24-05-2021"
+                      }
+                  ]
+              }
           },
-          {
-            name: "abcd3",
-            nummber: "+911234567810",
-            isFavorite: true,
+          "CalenderEvent": {
+              "title": "CalenderEvent",
+              "required": [
+                  "eventName",
+                  "allDay",
+                  "startDate",
+                  "endDay"
+              ],
+              "type": "object",
+              "properties": {
+                  "eventName": {
+                      "type": "string"
+                  },
+                  "allDay": {
+                      "type": "boolean"
+                  },
+                  "startDate": {
+                      "type": "string"
+                  },
+                  "endDay": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "eventName": "abc",
+                  "allDay": true,
+                  "startDate": "24-05-2021",
+                  "endDay": "24-05-2021"
+              }
           },
-        ],
-      },
-    },
-    CalenderSyncRequest: {
-      type: "object",
-      properties: {
-        calenderEvent: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              eventName: {
-                type: "string",
+          "AddworkingHrsRequest": {
+              "title": "AddworkingHrsRequest",
+              "required": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
+                  "startTime",
+                  "endTime",
+                  "otherStatus"
+              ],
+              "type": "object",
+              "properties": {
+                  "Monday": {
+                      "type": "boolean"
+                  },
+                  "Tuesday": {
+                      "type": "boolean"
+                  },
+                  "Wednesday": {
+                      "type": "boolean"
+                  },
+                  "Thursday": {
+                      "type": "boolean"
+                  },
+                  "Friday": {
+                      "type": "boolean"
+                  },
+                  "Saturday": {
+                      "type": "boolean"
+                  },
+                  "Sunday": {
+                      "type": "boolean"
+                  },
+                  "startTime": {
+                      "type": "string"
+                  },
+                  "endTime": {
+                      "type": "string"
+                  },
+                  "otherStatus": {
+                      "type": "string"
+                  }
               },
-              allDay: {
-                type: "boolean",
-              },
-              startDate: {
-                type: "string",
-              },
-              endDay: {
-                type: "string",
-              },
-            },
+              "example": {
+                  "Monday": false,
+                  "Tuesday": true,
+                  "Wednesday": true,
+                  "Thursday": true,
+                  "Friday": true,
+                  "Saturday": true,
+                  "Sunday": true,
+                  "startTime": "09:00 AM",
+                  "endTime": "10:00 PM",
+                  "otherStatus": "612e310c185624e6a914bd57"
+              }
           },
-        },
-      },
-      example: {
-        calenderEvent: [
-          {
-            eventName: "abc",
-            allDay: true,
-            startDate: "24-05-2021",
-            endDay: "24-05-2021",
+          "updateworkingHrsRequest": {
+              "title": "updateworkingHrsRequest",
+              "required": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday",
+                  "startTime",
+                  "endTime",
+                  "otherStatus"
+              ],
+              "type": "object",
+              "properties": {
+                  "Monday": {
+                      "type": "boolean"
+                  },
+                  "Tuesday": {
+                      "type": "boolean"
+                  },
+                  "Wednesday": {
+                      "type": "boolean"
+                  },
+                  "Thursday": {
+                      "type": "boolean"
+                  },
+                  "Friday": {
+                      "type": "boolean"
+                  },
+                  "Saturday": {
+                      "type": "boolean"
+                  },
+                  "Sunday": {
+                      "type": "boolean"
+                  },
+                  "startTime": {
+                      "type": "string"
+                  },
+                  "endTime": {
+                      "type": "string"
+                  },
+                  "otherStatus": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "Monday": false,
+                  "Tuesday": true,
+                  "Wednesday": true,
+                  "Thursday": true,
+                  "Friday": true,
+                  "Saturday": true,
+                  "Sunday": true,
+                  "startTime": "09:00 AM",
+                  "endTime": "10:00 PM",
+                  "otherStatus": "612e310c185624e6a914bd57"
+              }
           },
-          {
-            eventName: "abc1",
-            allDay: true,
-            startDate: "24-05-2021",
-            endDay: "24-05-2021",
+          "addpackagesrequest": {
+              "title": "addpackagesrequest",
+              "required": [
+                  "name",
+                  "duration",
+                  "price"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "duration": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "price": {
+                      "type": "integer",
+                      "format": "int32"
+                  }
+              },
+              "example": {
+                  "name": "abac",
+                  "duration": 12,
+                  "price": 500
+              }
           },
-        ],
-      },
-    },
-    NewEventStatusRequest: {
-      type: "object",
-      properties: {
-        status: {
-          type: "string",
-        },
-      },
-      example: {
-        status: "Do not Disturb",
-      },
-    },
-    UpdateEventStatusRequest: {
-      properties: {
-        status: {
-          type: "string",
-        },
-      },
-    },
-    AddhrsRequest: {
-      type: "object",
-      properties: {
-        Monday: {
-          type: "boolean",
-        },
-        Tuesday: {
-          type: "boolean",
-        },
-        Wednesday: {
-          type: "boolean",
-        },
-        Thursday: {
-          type: "boolean",
-        },
-        Friday: {
-          type: "boolean",
-        },
-        Saturday: {
-          type: "boolean",
-        },
-        Sunday: {
-          type: "boolean",
-        },
-        startTime: {
-          type: "string",
-        },
-        endTime: {
-          type: "string",
-        },
-        otherStatus: {
-          type: "string",
-        },
-      },
-      example: {
-        Monday: false,
-        Tuesday: true,
-        Wednesday: true,
-        Thursday: true,
-        Friday: true,
-        Saturday: true,
-        Sunday: true,
-        startTime: "09:00 AM",
-        endTime: "10:00 PM",
-        otherStatus: "612e310c185624e6a914bd57",
-      },
-    },
-    AddHrsResponse: {
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        message: {
-          type: "string",
-        },
-      },
-    },
-    UpdatehrsRequest: {
-      type: "object",
-      properties: {
-        Monday: {
-          type: "boolean",
-        },
-        Tuesday: {
-          type: "boolean",
-        },
-        Wednesday: {
-          type: "boolean",
-        },
-        Thursday: {
-          type: "boolean",
-        },
-        Friday: {
-          type: "boolean",
-        },
-        Saturday: {
-          type: "boolean",
-        },
-        Sunday: {
-          type: "boolean",
-        },
-        startTime: {
-          type: "string",
-        },
-        endTime: {
-          type: "string",
-        },
-        otherStatus: {
-          type: "string",
-        },
-      },
-      example: {
-        Monday: false,
-        Tuesday: true,
-        Wednesday: true,
-        Thursday: true,
-        Friday: true,
-        Saturday: true,
-        Sunday: true,
-        startTime: "09:00 AM",
-        endTime: "10:00 PM",
-        otherStatus: "612e310c185624e6a914bd57",
-      },
-    },
-    UpdateHrsResponse: {
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        message: {
-          type: "string",
-        },
-      },
-    },
-    GetHrsResponse: {
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        message: {
-          type: "string",
-        },
-        data: {
-          type: "array",
-          items: {
-            properties: {
-              _id: {
-                type: "string",
+          "updatepackagesrequest": {
+              "title": "updatepackagesrequest",
+              "required": [
+                  "name",
+                  "duration",
+                  "price"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "duration": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "price": {
+                      "type": "integer",
+                      "format": "int32"
+                  }
               },
-              Monday: {
-                type: "boolean",
-              },
-              Tuesday: {
-                type: "boolean",
-              },
-              Wednesday: {
-                type: "boolean",
-              },
-              Thursday: {
-                type: "boolean",
-              },
-              Friday: {
-                type: "boolean",
-              },
-              Saturday: {
-                type: "boolean",
-              },
-              startTime: {
-                type: "string",
-              },
-              endTime: {
-                type: "string",
-              },
-              otherStatus: {
-                $ref: "#/definitions/OtherStatus",
-              },
-              user: {
-                type: "string",
-              },
-              createdAt: {
-                type: "string",
-              },
-              updatedAt: {
-                type: "string",
-              },
-              __v: {
-                type: "integer",
-                format: "int32",
-              },
-            },
+              "example": {
+                  "name": "abac",
+                  "duration": 12,
+                  "price": 400
+              }
           },
-        },
-      },
-      example: {
-        success: true,
-        message: "workingdays get successfully",
-        data: [
-          {
-            _id: "613b608065f6f2404e2dd33f",
-            Monday: false,
-            Tuesday: true,
-            Wednesday: true,
-            Thursday: true,
-            Friday: true,
-            Saturday: true,
-            startTime: "09:00 AM",
-            endTime: "10:00 PM",
-            otherStatus: {
-              _id: "612e310c185624e6a914bd57",
-              isDeleted: false,
-              status: "Do not Disturb",
-              createdAt: "2021-08-31T13:39:24.778Z",
-              updatedAt: "2021-08-31T13:39:24.778Z",
-              __v: 0,
-            },
-            user: "61211f1ef34e5900080a6812",
-            createdAt: "2021-09-10T13:41:20.086Z",
-            updatedAt: "2021-09-10T13:41:20.086Z",
-            __v: 0,
+          "AddwoucherRequest": {
+              "title": "AddwoucherRequest",
+              "required": [
+                  "name",
+                  "code",
+                  "amount",
+                  "minAmount",
+                  "discountType",
+                  "startDate",
+                  "endDate"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "code": {
+                      "type": "string"
+                  },
+                  "amount": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "minAmount": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "discountType": {
+                      "type": "string"
+                  },
+                  "startDate": {
+                      "type": "string"
+                  },
+                  "endDate": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "name": "abac",
+                  "code": "aaa",
+                  "amount": 10,
+                  "minAmount": 100,
+                  "discountType": "FLAT",
+                  "startDate": "2021-12-15",
+                  "endDate": "2021-12-20"
+              }
           },
-        ],
-      },
-    },
-    DeleteWorkingResponse: {
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        message: {
-          type: "string",
-        },
-        data: {
-          type: "array",
-          items: {
-            type: "string",
+          "updatewoucherrequest": {
+              "title": "updatewoucherrequest",
+              "required": [
+                  "name",
+                  "code",
+                  "amount",
+                  "minAmount",
+                  "discountType"
+              ],
+              "type": "object",
+              "properties": {
+                  "name": {
+                      "type": "string"
+                  },
+                  "code": {
+                      "type": "string"
+                  },
+                  "amount": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "minAmount": {
+                      "type": "integer",
+                      "format": "int32"
+                  },
+                  "discountType": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "name": "abac",
+                  "code": "aaa",
+                  "amount": 100,
+                  "minAmount": 100,
+                  "discountType": "FLAT"
+              }
           },
-        },
+          "paymentAddRequest": {
+              "title": "paymentAddRequest",
+              "required": [
+                  "packageId",
+                  "paymentId"
+              ],
+              "type": "object",
+              "properties": {
+                  "packageId": {
+                      "type": "string"
+                  },
+                  "paymentId": {
+                      "type": "string"
+                  }
+              },
+              "example": {
+                  "packageId": "613bc118bc2da97b67b2ee17",
+                  "paymentId": "pay_HxHEX7lHP9E2Em"
+              }
+          }
       },
-      example: {
-        success: true,
-        message: "workingdays update successfully",
-        data: [],
-      },
-    },
-    InternalServerError: {
-      type: "object",
-      properties: {
-        success: {
-          type: "boolean",
-        },
-        message: {
-          type: "string",
-        },
-      },
-    },
+      "securitySchemes": {
+          "httpBearer": {
+              "type": "http",
+              "scheme": "bearer"
+          }
+      }
   },
-  components: {
-    securitySchemes: {
-      jwt: {
-        type: "http",
-        scheme: "bearer",
-        in: "header",
-        bearerFormat: "JWT",
-      },
-    },
-  },
-  security: {
-    jwt: [],
-  },
+  "security": [
+      {
+          "httpBearer": []
+      }
+  ],
+  "tags": [
+      {
+          "name": "Package Service",
+          "description": ""
+      }
+  ]
 };
