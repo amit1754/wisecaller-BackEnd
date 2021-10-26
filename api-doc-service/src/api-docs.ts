@@ -6,7 +6,7 @@ export default {
   },
   servers: [
     {
-      url: "http://localhost:5000",
+      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
     },
   ],
   securityDefinitions: {},
