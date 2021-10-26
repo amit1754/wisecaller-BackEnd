@@ -1,4 +1,4 @@
-service: aws-wisecaller-auth-service
+service: aws-wisecaller-auth-service-update
 
 frameworkVersion: '2'
 useDotenv: true
@@ -9,8 +9,7 @@ plugins:
   - serverless-plugin-typescript
   
 package:
-  patterns:
-  - 'env.dev'
+  individually: true
 
 provider:
   name: aws

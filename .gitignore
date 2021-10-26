@@ -12,6 +12,7 @@ package-service/node_modules
 status-service/node_modules
 api-doc-service/node_modules
 wisecaller_modules/node_modules
+callmanagement-service/node_modules
 
 
 auth-service/package-lock.json
@@ -23,7 +24,7 @@ order-service/package-lock.json
 package-service/package-lock.json
 status-service/package-lock.json
 api-doc-service/package-lock.json
-
+callmanagement-service/package-lock.json
 
 auth-service/yarn.lock
 call-service/yarn.lock
