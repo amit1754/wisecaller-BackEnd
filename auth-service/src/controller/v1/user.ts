@@ -112,6 +112,31 @@ class UserController {
       return res.status(500).json({ success: false, message: error.message });
     }
   }
+
+
+  async addDevices(req: Request, res: Response){
+    const reqPayload: any = req;
+    try {
+      const loggedInUser: any = req.user;
+      let payload:any = {
+        devices:req.body.devices
+      };
+
+
+      let user = await User.findOneAndUpdate(
+        { _id: loggedInUser._id },
+        payload,
+        {
+          upsert: true,
+          new: true,
+        }
+      );
+      return res.status(200).json({ success: true,message:"devices added successfully", data: [] });
+    } catch (error: any) {
+      console.log("error", error)
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
 }
 
 

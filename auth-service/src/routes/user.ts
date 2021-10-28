@@ -6,5 +6,6 @@ import upload from '../middlewares/uploadService';
 
 router.put("/update-profile", upload.single('profileImage'), User.update);
 router.get("/get-profile", User.show);
+router.post("/add-devices", User.addDevices);
 
 export const UserRoutes = router;

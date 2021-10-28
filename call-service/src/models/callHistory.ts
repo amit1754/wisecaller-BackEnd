@@ -6,10 +6,24 @@ const CallHistorySchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "User",
         },
-        contact: {
-            type: Object,
-            required: true
-        },
+        callLogs: [
+            {
+                dateId:{
+                    type:Date
+                },
+                callList:[
+                    {
+                        wiseCallerId:{type: Schema.Types.ObjectId,ref: "User",default:null},
+                        phoneNumber:{type: String},
+                        name:{type: String,default:null},
+                        callType:{type: String},
+                        time:{type: String},
+                        message:{type: String},
+                        simId:{type: String},
+                    }
+                ]
+            }
+        ]
     },
     { timestamps: true }
 );

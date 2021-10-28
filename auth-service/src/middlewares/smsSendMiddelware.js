@@ -1,8 +1,6 @@
 require("dotenv").config();
 const AWS = require("aws-sdk");
-console.log("object :>> ", process.env.AWS_ACCESS_KEY_ID);
-console.log("object :>> ", process.env.AWS_SECRET_ACCESS_KEY);
-console.log("object :>> ", process.env.AWS_REGION);
+
 const sendSMS1 = async (mobileNo, otp) => {
   var params = {
     Message: `Your verification message is ${otp}`,

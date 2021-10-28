@@ -7,7 +7,7 @@ export default{
   },
   "servers": [
       {
-          "url": "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
+          "url": "http://localhost:8000",
           "variables": {}
       }
   ],
@@ -274,61 +274,230 @@ export default{
           }
       },
       "/call-service/api/v1/callhistory/add": {
-          "post": {
-              "tags": [
-                  "Call Service"
-              ],
-              "summary": "call history",
-              "operationId": "callhistory",
-              "parameters": [],
-              "requestBody": {
-                  "description": "",
-                  "content": {
-                      "application/json": {
-                          "schema": {
-                              "$ref": "#/components/schemas/callhistoryrequest"
-                          },
-                          "example": {
-                              "contact": [
-                                  {
-                                      "name": "abc",
-                                      "number": "+918980514085"
-                                  },
-                                  {
-                                      "name": "abc",
-                                      "number": "+911122554455"
-                                  }
-                              ]
-                          }
-                      }
-                  },
-                  "required": true
-              },
-              "responses": {
-                  "200": {
-                      "description": "",
-                      "headers": {}
-                  }
-              },
-              "deprecated": false
-          }
+        "post": {
+          "tags": [
+            "Call Service"
+          ],
+          "summary": "call hISTORY",
+          "operationId": "callhISTORY",
+          "parameters": [],
+          "requestBody": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/callhISTORYRequest"
+                },
+                "example": {
+                  "callLogs": [
+                    {
+                      "dateId": "2021-10-27",
+                      "callList": [
+                        {
+                          "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        },
+                        {
+                          "wiseCallerId": "6161872b43430600096f3fee",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        },
+                        {
+                          "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        }
+                      ]
+                    },
+                    {
+                      "dateId": "2020-10-23",
+                      "callList": [
+                        {
+                          "wiseCallerId": "617690a6c294d45bd496d176",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        },
+                        {
+                          "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        },
+                        {
+                          "wiseCallerId": "6177a25b8a2ccc03fc481270",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        }
+                      ]
+                    },
+                    {
+                      "dateId": "2020-10-22",
+                      "callList": [
+                        {
+                          "wiseCallerId": "6177a25b8a2ccc03fc481270",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        },
+                        {
+                          "wiseCallerId": "6177b82712131f000acc444b",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        },
+                        {
+                          "wiseCallerId": "6177b82712131f000acc444b",
+                          "phoneNumber": "9876543212",
+                          "name": "PRIYA",
+                          "status": "busy",
+                          "callType": "incoming",
+                          "time": "5:00pm",
+                          "message": "will call you later",
+                          "simId": "SIM1"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "headers": {}
+            }
+          },
+          "deprecated": false
+        }
       },
       "/call-service/api/v1/callhistory/get": {
-          "get": {
-              "tags": [
-                  "Call Service"
-              ],
-              "summary": "call details",
-              "operationId": "calldetails",
-              "parameters": [],
-              "responses": {
-                  "200": {
-                      "description": "",
-                      "headers": {}
+        "get": {
+          "tags": [
+            "Call Service"
+          ],
+          "summary": "call history",
+          "operationId": "callhistory",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "",
+              "headers": {}
+            }
+          },
+          "deprecated": false
+        }
+      },
+      "/call-service/api/v1/callhistory/add-number": {
+        "post": {
+          "tags": [
+            "Call Service"
+          ],
+          "summary": "add number from call history",
+          "operationId": "addnumberfromcallhistory",
+          "parameters": [],
+          "requestBody": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addnumberfromcallhistoryrequest"
+                },
+                "example": {
+                  "callLogId": "617a3468c0182323f296cf9b",
+                  "callDetails": {
+                    "wiseCallerId": "617949e2917167caf3ad3e23",
+                    "name": "TUSHAR0dfgg07",
+                    "phoneNumber": "9876543212",
+                    "callType": "incoming",
+                    "time": "5:00pm",
+                    "message": "will call you later",
+                    "simId": "SIM1"
                   }
-              },
-              "deprecated": false
-          }
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "headers": {}
+            }
+          },
+          "deprecated": false
+        }
+      },
+      "/call-service/api/v1/callhistory/delete-number": {
+        "post": {
+          "tags": [
+            "Call Service"
+          ],
+          "summary": "delete number from call history",
+          "operationId": "deletenumberfromcallhistory",
+          "parameters": [],
+          "requestBody": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/deletenumberfromcallhistoryrequest"
+                },
+                "example": {
+                  "callLogId": "617a3468c0182323f296cf9b",
+                  "callId": "617949e2917167caf3ad3e23"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "headers": {}
+            }
+          },
+          "deprecated": false
+        }
       },
       "/call-service/api/v1/callhistory/favorite-add": {
           "post": {
@@ -1466,33 +1635,328 @@ export default{
                   "mobileNo": "+919898803674"
               }
           },
-          "callhistoryrequest": {
-              "title": "callhistoryrequest",
-              "required": [
-                  "contact"
-              ],
-              "type": "object",
-              "properties": {
-                  "contact": {
-                      "type": "array",
-                      "items": {
-                          "$ref": "#/components/schemas/Contact"
-                      },
-                      "description": ""
-                  }
-              },
-              "example": {
-                  "contact": [
-                      {
-                          "name": "abc",
-                          "number": "+918980514085"
-                      },
-                      {
-                          "name": "abc",
-                          "number": "+911122554455"
-                      }
-                  ]
+          "callhISTORYRequest": {
+            "title": "callhISTORYRequest",
+            "required": [
+              "callLogs"
+            ],
+            "type": "object",
+            "properties": {
+              "callLogs": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CallLog"
+                },
+                "description": ""
               }
+            },
+            "example": {
+              "callLogs": [
+                {
+                  "dateId": "2021-10-27",
+                  "callList": [
+                    {
+                      "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    },
+                    {
+                      "wiseCallerId": "6161872b43430600096f3fee",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    },
+                    {
+                      "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    }
+                  ]
+                },
+                {
+                  "dateId": "2020-10-23",
+                  "callList": [
+                    {
+                      "wiseCallerId": "617690a6c294d45bd496d176",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    },
+                    {
+                      "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    },
+                    {
+                      "wiseCallerId": "6177a25b8a2ccc03fc481270",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    }
+                  ]
+                },
+                {
+                  "dateId": "2020-10-22",
+                  "callList": [
+                    {
+                      "wiseCallerId": "6177a25b8a2ccc03fc481270",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    },
+                    {
+                      "wiseCallerId": "6177b82712131f000acc444b",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    },
+                    {
+                      "wiseCallerId": "6177b82712131f000acc444b",
+                      "phoneNumber": "9876543212",
+                      "name": "PRIYA",
+                      "status": "busy",
+                      "callType": "incoming",
+                      "time": "5:00pm",
+                      "message": "will call you later",
+                      "simId": "SIM1"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "CallLog": {
+            "title": "CallLog",
+            "required": [
+              "dateId",
+              "callList"
+            ],
+            "type": "object",
+            "properties": {
+              "dateId": {
+                "type": "string"
+              },
+              "callList": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CallList"
+                },
+                "description": ""
+              }
+            },
+            "example": {
+              "dateId": "2021-10-27",
+              "callList": [
+                {
+                  "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                  "phoneNumber": "9876543212",
+                  "name": "PRIYA",
+                  "status": "busy",
+                  "callType": "incoming",
+                  "time": "5:00pm",
+                  "message": "will call you later",
+                  "simId": "SIM1"
+                },
+                {
+                  "wiseCallerId": "6161872b43430600096f3fee",
+                  "phoneNumber": "9876543212",
+                  "name": "PRIYA",
+                  "status": "busy",
+                  "callType": "incoming",
+                  "time": "5:00pm",
+                  "message": "will call you later",
+                  "simId": "SIM1"
+                },
+                {
+                  "wiseCallerId": "6174ccf5ba15ff00084330f3",
+                  "phoneNumber": "9876543212",
+                  "name": "PRIYA",
+                  "status": "busy",
+                  "callType": "incoming",
+                  "time": "5:00pm",
+                  "message": "will call you later",
+                  "simId": "SIM1"
+                }
+              ]
+            }
+          },
+          "CallList": {
+            "title": "CallList",
+            "required": [
+              "wiseCallerId",
+              "phoneNumber",
+              "name",
+              "status",
+              "callType",
+              "time",
+              "message",
+              "simId"
+            ],
+            "type": "object",
+            "properties": {
+              "wiseCallerId": {
+                "type": "string"
+              },
+              "phoneNumber": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "callType": {
+                "type": "string"
+              },
+              "time": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "simId": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "wiseCallerId": "6174ccf5ba15ff00084330f3",
+              "phoneNumber": "9876543212",
+              "name": "PRIYA",
+              "status": "busy",
+              "callType": "incoming",
+              "time": "5:00pm",
+              "message": "will call you later",
+              "simId": "SIM1"
+            }
+          },
+          "addnumberfromcallhistoryrequest": {
+            "title": "addnumberfromcallhistoryrequest",
+            "required": [
+              "callLogId",
+              "callDetails"
+            ],
+            "type": "object",
+            "properties": {
+              "callLogId": {
+                "type": "string"
+              },
+              "callDetails": {
+                "$ref": "#/components/schemas/CallDetails"
+              }
+            },
+            "example": {
+              "callLogId": "617a3468c0182323f296cf9b",
+              "callDetails": {
+                "wiseCallerId": "617949e2917167caf3ad3e23",
+                "name": "TUSHAR0dfgg07",
+                "phoneNumber": "9876543212",
+                "callType": "incoming",
+                "time": "5:00pm",
+                "message": "will call you later",
+                "simId": "SIM1"
+              }
+            }
+          },
+          "CallDetails": {
+            "title": "CallDetails",
+            "required": [
+              "wiseCallerId",
+              "name",
+              "phoneNumber",
+              "callType",
+              "time",
+              "message",
+              "simId"
+            ],
+            "type": "object",
+            "properties": {
+              "wiseCallerId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "phoneNumber": {
+                "type": "string"
+              },
+              "callType": {
+                "type": "string"
+              },
+              "time": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "simId": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "wiseCallerId": "617949e2917167caf3ad3e23",
+              "name": "TUSHAR0dfgg07",
+              "phoneNumber": "9876543212",
+              "callType": "incoming",
+              "time": "5:00pm",
+              "message": "will call you later",
+              "simId": "SIM1"
+            }
+          },
+          "deletenumberfromcallhistoryrequest": {
+            "title": "deletenumberfromcallhistoryrequest",
+            "required": [
+              "callLogId",
+              "callId"
+            ],
+            "type": "object",
+            "properties": {
+              "callLogId": {
+                "type": "string"
+              },
+              "callId": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "callLogId": "617a3468c0182323f296cf9b",
+              "callId": "617949e2917167caf3ad3e23"
+            }
           },
           "Contact": {
               "title": "Contact",

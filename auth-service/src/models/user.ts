@@ -25,6 +25,11 @@ const UserSchema = new Schema(
       enum: ['ADMIN', 'USER'],
       default: 'USER'
     },
+    devices: {
+      type: Object,
+      default:null
+      
+    },
     isActive: {
       type: Boolean,
       default: true,
