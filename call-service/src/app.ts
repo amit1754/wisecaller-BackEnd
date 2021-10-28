@@ -11,10 +11,10 @@ import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
 import swaggerUI from "swagger-ui-express";
-import passport from "passport";
+
 import swaggerDocs from "./swagger-docs";
-import "./config/strategies/passport-local";
-import "./config/strategies/passport-jwt";
+import {authorization} from './middlewares'
+
 export default class App {
   app: Express = express();
 
@@ -38,12 +38,10 @@ export default class App {
     this.app.use(text());
     this.app.use(morgan("dev"));
     this.app.use(cors());
-    this.app.use(passport.initialize());
-    this.app.use(passport.session());
-    // passportLocal(passport);
+ 
     this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   }
-  auth: any = passport.authenticate("jwt", { session: false });
+
   async setupDbConnection() {
     import("./config/db/connection");
   }
@@ -52,7 +50,7 @@ export default class App {
     try {
       let router = express.Router();
       this.app.use(`/call-service/api/v1`, router);
-      router.use("/", [this.auth], routes);
+      router.use("/", [authorization], routes);
       this.app.use(function (req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");
         res.status(404);
