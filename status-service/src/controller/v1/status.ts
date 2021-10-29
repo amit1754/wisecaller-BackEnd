@@ -7,21 +7,33 @@ class StatusController {
   async addStatus(req: Request, res: Response) {
     try {
       const reqPayload: any = req;
+      const loggedInUser: any = req.user;
+    console.log("loggedInUser",loggedInUser)
       const payload: IStatus = {
         ...req.body,
-        logo: reqPayload.file ? reqPayload.file.key : null
+        logo: reqPayload.file ? reqPayload.file.key : null,
+        user:loggedInUser.role==='ADMIN'?null:loggedInUser._id
       };
-      console.log("payload",)
+      
       const status = new UserStatus(payload);
       await status.save();
-      res.status(200).json({ success: true, message: "Sucess", data: [] });
+      res.status(200).json({ success: true, message: "User status added successfully", data: [] });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
   }
   async getAll(req: Request, res: Response) {
     try {
+      const loggedInUser: any = req.user;
       let userEvent = await UserStatus.aggregate([
+        {
+          $match:{
+            $or:[
+              {'user':null},
+              {'user':loggedInUser._id}
+            ]
+          }
+        },
         {
           "$lookup": {
             "from": 'usersubstatuses',
@@ -33,6 +45,7 @@ class StatusController {
       ]);
       res.status(200).json({ success: true, message: "event get successfully", data: userEvent });
     } catch (error: any) {
+      console.log(error)
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -90,15 +103,17 @@ class StatusController {
 
   async addSubStatus(req: Request, res: Response) {
     try {
-      console.log("aasdj")
+      const loggedInUser: any = req.user;
+
       const reqPayload: any = req
       const payload: ISubStatus = {
         ...req.body,
-        logo: reqPayload.file ? reqPayload.file.key : null
+        logo: reqPayload.file ? reqPayload.file.key : null,
+        user:loggedInUser.role==='ADMIN'?null:loggedInUser._id
       };
       const status = new UserSubStatus(payload)
       status.save()
-      res.status(200).json({ success: true, message: "Event Status delete sucessfully", data: [] });
+      res.status(200).json({ success: true, message: "Event Sub-Status added sucessfully", data: [] });
 
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });

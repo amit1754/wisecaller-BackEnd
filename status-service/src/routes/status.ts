@@ -5,7 +5,7 @@ const router = express.Router();
 import upload from '../middlewares/uploadService';
 
 router.post("/add",authorization, upload.single('logo'), status_Controller.addStatus);
-router.get("/get", status_Controller.getAll);
+router.get("/get",authorization, status_Controller.getAll);
 router.post("/add-sub",authorization, upload.single('logo'), status_Controller.addSubStatus);
 router.delete("/delete/:id",authorization, status_Controller.delete);
 router.put("/update/:id",authorization, upload.single('logo'), status_Controller.update);

@@ -8,7 +8,11 @@ const SatusSchema = new Schema(
         logo: {
             type: String,
         },
-     
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+          },
         isDeleted: {
             type: Boolean,
             default: false,
