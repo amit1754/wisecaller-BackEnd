@@ -2,15 +2,14 @@ import express from "express";
 import { woucherController } from "../controller";
 import { validate } from "../middlewares/validations";
 import { woucher } from "../middlewares/schema/auth";
-import passport from "passport";
-const auth: any = passport.authenticate("jwt", { session: false });
+import {authorization} from '../middlewares'
 
 const router = express.Router();
 
-router.post("/add", [validate(woucher)], [auth], woucherController.add);
+router.post("/add", [validate(woucher)], [authorization], woucherController.add);
 router.get("/get", woucherController.show);
-router.put("/update/:id", [validate(woucher)], [auth], woucherController.update);
-router.delete("/delete/:id", [auth], woucherController.deleteWoucher);
+router.put("/update/:id", [validate(woucher)], [authorization], woucherController.update);
+router.delete("/delete/:id", [authorization], woucherController.deleteWoucher);
 
 
 export const WoucherRoutes = router;

@@ -1,12 +1,10 @@
 import express from "express";
 import { calenderSync_Controller } from "../controller";
 const router = express.Router();
+import{authorization} from '../middlewares'
 
-import passport from 'passport'
-const auth: any = passport.authenticate("jwt", { session: false });
-
-router.post("/sync", [auth], calenderSync_Controller.add);
-router.get("/get", [auth], calenderSync_Controller.getAll);
-router.put("/update/:id", [auth], calenderSync_Controller.deleteEmail)
+router.post("/sync", [authorization], calenderSync_Controller.add);
+router.get("/get", [authorization], calenderSync_Controller.getAll);
+router.put("/update/:id", [authorization], calenderSync_Controller.deleteEmail)
 
 export const calanderSyncRoutes = router;

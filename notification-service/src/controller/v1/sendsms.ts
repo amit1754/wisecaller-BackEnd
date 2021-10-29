@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 require("dotenv").config();
 import smsSendMiddelware from '../../middlewares/smsSendMiddelware'
 import { MobileNoCheckUtils } from '../../utils'
-const AWS = require("aws-sdk");
+
 
 class SMSController {
     async sendSMS(req: Request, res: Response) {
@@ -17,8 +17,8 @@ class SMSController {
             else {
                 throw new Error("message not send")
             }
-        } catch (error) {
-            res.status(400).send({ success: false, message: error.message })
+        } catch (error:any) {
+            res.status(500).send({ success: false, message: error.message })
 
         }
 

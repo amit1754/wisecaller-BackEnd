@@ -111,11 +111,8 @@ class callHistory {
       const a=map(contactDetailsGet.callLogs, function(o:any) {
         if(o._id==requestData.callLogId)
         { 
-          
             o.callList.push(callDetails)
-     
         }
-        
         return o;
       })
     const data=await   CallHistory.findOneAndUpdate(
