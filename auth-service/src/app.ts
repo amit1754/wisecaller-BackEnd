@@ -24,8 +24,9 @@ export default class App {
   }
 
   async setupMiddleware() {
-    this.app.use(json());
-    this.app.use(urlencoded({ extended: false }));
+    this.app.use(json({limit: '50mb'}));
+    this.app.use(urlencoded({ extended: false,limit: '50mb' }));
+    
     this.app.use(text());
     this.app.use(morgan("dev"));
     this.app.use(cors());

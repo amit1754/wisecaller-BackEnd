@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { IStatus, ISubStatus } from "../../interfaces/status";
 import { UserStatus } from '../../models/status'
 import { UserSubStatus } from '../../models/subStatus'
@@ -11,6 +11,7 @@ class StatusController {
         ...req.body,
         logo: reqPayload.file ? reqPayload.file.key : null
       };
+      console.log("payload",)
       const status = new UserStatus(payload);
       await status.save();
       res.status(200).json({ success: true, message: "Sucess", data: [] });
@@ -39,19 +40,21 @@ class StatusController {
     try {
       const reqPayload: any = req;
       const { id }: any = req.params;
+      let statusFind = await UserStatus.findById(id)
       let payload: any = {
-        ...req.body,
+        ...reqPayload.body,
       };
       if (reqPayload.file) {
+        if (statusFind.logo) {
+          await deletefile(statusFind.logo)
+        }
         payload = {
           ...payload,
           logo: reqPayload.file.key
         }
-        let statusFind = await UserStatus.findById(id)
-        if (statusFind.logo) {
-          await deletefile(statusFind.logo)
-        }
+     
       }
+      console.log("payload",payload)
 
       let StatusUpdate = await UserStatus.findOneAndUpdate(
         { _id: id },
@@ -69,11 +72,17 @@ class StatusController {
 
   async delete(req: Request, res: Response) {
     try {
+      const loginUser: any = req.user
+      if(loginUser.role!='ADMIN'){
+        res.status(401).json({success: false, message: "you are not access to this resource"})
+      }
+      else{
       const { id }: any = req.params;
 
 
       let user = await UserStatus.findByIdAndDelete(id);
       res.status(200).json({ success: true, message: "Event Status delete sucessfully", data: user });
+      }
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -131,9 +140,17 @@ class StatusController {
   }
   async deleteSub(req: Request, res: Response) {
     try {
+      const loginUser: any = req.user
+      if(loginUser.role!='ADMIN'){
+        res.status(401).json({success: false, message: "you are not access to this resource"})
+      }
+      else{
+
+      
       const { id }: any = req.params;
       let user = await UserSubStatus.findByIdAndDelete(id);
       res.status(200).json({ success: true, message: "Event Sub Status delete sucessfully", data: [] });
+      }
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }

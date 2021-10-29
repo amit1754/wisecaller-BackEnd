@@ -8,16 +8,37 @@ import {deletefile} from '../../middlewares/uploadService'
 
 class UserController {
   async show(req: Request, res: Response) {
+    console.log("show")
     try {
       const loggedInUser: any = req.user;
-      let user = await User.findOne({ _id: loggedInUser._id })
-      const status = await UserStatus.findOne({ _id: user.status }, { status: 1, _id: 0 })
-      res.status(200).json({
-        success: true, data: {
-          ...user._doc,
-          status: status?.status,
-        }
-      });
+
+
+
+      let user =await User.aggregate([
+        {
+          $match:{_id: loggedInUser._id}
+        },
+        {
+          $lookup:{
+            from: 'usersatus',
+            localField: 'status',
+            foreignField: '_id',
+            as: 'userStatus'
+          }
+        },
+        { $unwind:"$userStatus"},
+        {
+          $lookup:{
+            from: 'usersubstatuses',
+            localField: 'subStatus',
+            foreignField: '_id',
+            as: 'userSubStatus'
+          }
+      },
+      { $unwind:"$userSubStatus"}
+    ])
+    res.status(200).json({user})
+    
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }

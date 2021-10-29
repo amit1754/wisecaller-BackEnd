@@ -1,4 +1,5 @@
-service: wisecallerContactStatus
+service: aws-wisecaller-contact-status
+
 
 frameworkVersion: '2'
 useDotenv: true

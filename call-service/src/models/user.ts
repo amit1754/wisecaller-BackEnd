@@ -17,6 +17,19 @@ const UserSchema = new Schema(
     contryCode: {
       type: String,
     },
+    profileImage: {
+      type: String,
+    },
+    role: {
+      type: String,
+      enum: ['ADMIN', 'USER'],
+      default: 'USER'
+    },
+    devices: {
+      type: Object,
+      default:null
+      
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -25,6 +38,16 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: Schema.Types.ObjectId,
+      ref: "UserSatus",
+      default: null
+    },
+    substatus: {
+        type: Schema.Types.ObjectId,
+        ref: "UserSubStatus",
+        default: null
+      }
   },
   { timestamps: true }
 );

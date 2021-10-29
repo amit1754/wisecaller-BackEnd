@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const SatusSchema = new Schema(
+const SatusSubSchema = new Schema(
     {
         status: {
             type: String,
@@ -8,7 +8,11 @@ const SatusSchema = new Schema(
         logo: {
             type: String,
         },
-     
+        parentId: {
+            type: Schema.Types.ObjectId,
+            ref:"UserSatus"
+
+        },
         isDeleted: {
             type: Boolean,
             default: false,
@@ -17,4 +21,4 @@ const SatusSchema = new Schema(
     { timestamps: true }
 );
 
-export const UserStatus = model("UserSatus", SatusSchema);
+export const UserSubStatus = model("UserSubStatus", SatusSubSchema);

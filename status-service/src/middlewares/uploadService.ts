@@ -53,9 +53,9 @@ const upload = multer({
 
 export const deletefile = async (filename: string) => {
     const s3 = new aws.S3({
-        secretAccessKey: "moq7cgspYRxpw656cAMz1F6FBD/G9Grh7wN5F9CJ",
-        accessKeyId: "AKIATBDK2RTMG3EWA6W6",
-        region: process.env.AWS_REGION,
+        secretAccessKey: process.env.secretAccessKey,
+        accessKeyId: process.env.accessKeyId,
+        region: process.env.region,
     });
     s3.deleteObject({ Bucket: 'wisecaller-images', Key: filename }, (err:any, data:any) => {
         console.error(err);

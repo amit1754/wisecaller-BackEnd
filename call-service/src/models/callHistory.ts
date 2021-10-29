@@ -20,6 +20,7 @@ const CallHistorySchema = new Schema(
                         time:{type: String},
                         message:{type: String},
                         simId:{type: String},
+                        status:{type: String},
                     }
                 ]
             }

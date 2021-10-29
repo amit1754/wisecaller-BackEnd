@@ -105,7 +105,7 @@ export default{
               "parameters": [],
               "requestBody": {
                   "content": {
-                      "application/x-www-form-urlencoded": {
+                      "multipart/form-data": {
                           "encoding": {},
                           "schema": {
                               "required": [
@@ -129,6 +129,10 @@ export default{
                                       "type": "string",
                                       "example": "612e3103185624e6a914bd55"
                                   },
+                                  "subStatus": {
+                                    "type": "string",
+                                    "example": "612e3103185624e6a914bd55"
+                                },
                                   "profileImage": {
                                       "type": "file"
                                   },
@@ -773,7 +777,7 @@ export default{
               "parameters": [],
               "requestBody": {
                   "content": {
-                      "application/x-www-form-urlencoded": {
+                      "multipart/form-data": {
                           "encoding": {},
                           "schema": {
                               "required": [
@@ -787,7 +791,7 @@ export default{
                                       "example": "DND2"
                                   },
                                   "logo": {
-                                      "type": "string"
+                                      "type": "file"
                                   }
                               }
                           }
@@ -840,7 +844,7 @@ export default{
               ],
               "requestBody": {
                   "content": {
-                      "application/x-www-form-urlencoded": {
+                      "multipart/form-data": {
                           "encoding": {},
                           "schema": {
                               "required": [
@@ -854,7 +858,7 @@ export default{
                                       "example": "DND"
                                   },
                                   "logo": {
-                                      "type": "string"
+                                      "type": "file"
                                   }
                               }
                           }
@@ -907,7 +911,7 @@ export default{
               "parameters": [],
               "requestBody": {
                   "content": {
-                      "application/x-www-form-urlencoded": {
+                      "multipart/form-data": {
                           "encoding": {},
                           "schema": {
                               "required": [
@@ -926,7 +930,7 @@ export default{
                                       "example": "61670b887a7764f6a360db28"
                                   },
                                   "logo": {
-                                      "type": "string"
+                                      "type": "file"
                                   }
                               }
                           }
@@ -953,7 +957,7 @@ export default{
               "parameters": [],
               "requestBody": {
                   "content": {
-                      "application/x-www-form-urlencoded": {
+                      "multipart/form-data": {
                           "encoding": {},
                           "schema": {
                               "required": [
@@ -968,7 +972,7 @@ export default{
                                       "example": "DND11111"
                                   },
                                   "logo": {
-                                      "type": "string"
+                                      "type": "file"
                                   },
                                   "parentId": {
                                       "type": "string",
@@ -1403,7 +1407,7 @@ export default{
               "deprecated": false
           }
       },
-      "/cms/add": {
+      "/package-service/api/v1/cms/add": {
           "post": {
               "tags": [
                   "Package Service"
@@ -1538,7 +1542,40 @@ export default{
               },
               "deprecated": false
           }
+      },
+      "/refresh-token": {
+        "post": {
+          "tags": [
+            "Auth Service"
+          ],
+          "summary": "refresh token",
+          "operationId": "refreshtoken",
+          "parameters": [],
+          "requestBody": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/refreshtokenrequest"
+                },
+                "example": {
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0OTA5NTUsImV4cCI6MTYzNTQ5MTAxNX0.7mDc3RwACVbSiBamoGGhZW4XRPVFq-Gzc18EvJ-XbQc",
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0ODkyMTcsImV4cCI6MTYzNTU3NTYxN30.gXjRlkdVMELgFGfXd7sX7WGb4pnssrJTVxCEZCPzR5c"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "headers": {}
+            }
+          },
+          "deprecated": false
+        }
       }
+     
   },
   "components": {
       "schemas": {
@@ -2522,6 +2559,26 @@ export default{
                   "packageId": "613bc118bc2da97b67b2ee17",
                   "paymentId": "pay_HxHEX7lHP9E2Em"
               }
+          },
+          "refreshtokenrequest": {
+            "title": "refreshtokenrequest",
+            "required": [
+              "token",
+              "refreshToken"
+            ],
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string"
+              },
+              "refreshToken": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0OTA5NTUsImV4cCI6MTYzNTQ5MTAxNX0.7mDc3RwACVbSiBamoGGhZW4XRPVFq-Gzc18EvJ-XbQc",
+              "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0ODkyMTcsImV4cCI6MTYzNTU3NTYxN30.gXjRlkdVMELgFGfXd7sX7WGb4pnssrJTVxCEZCPzR5c"
+            }
           }
       },
       "securitySchemes": {
