@@ -45,7 +45,7 @@ const upload = multer({
             cb(null, { fieldName: file.fieldname });
         },
         key: function (req: Request, file: any, cb: (arg0: null, arg1: string) => void) {
-            cb(null, Date.now().toString() + FILE_EXTENSION_MAPPING[file.mimetype].extension);
+            cb(null, "status_images/"+Date.now().toString() + FILE_EXTENSION_MAPPING[file.mimetype].extension);
 
         },
     }),

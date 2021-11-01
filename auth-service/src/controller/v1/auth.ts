@@ -110,12 +110,12 @@ class AuthController {
         let token = jwt.sign(
           { _id: user.id, mobileNo: user.mobileNo },
           secret,
-          { expiresIn: "10m" }
+          { expiresIn: "30m" }
         );
         const refreshToken = jwt.sign(
           { _id: user.id, mobileNo: user.mobileNo },
           secret,
-          { expiresIn: "30m" }
+          { expiresIn: "60m" }
         );
         await auth_token.remove();
         return res.status(200).json({ success: true, data: { token,refreshToken } });
@@ -155,7 +155,7 @@ class AuthController {
   async refreshToken(req: Request, res: Response){
     try{
       const postData = req.body
-      let token,refreshToken;
+      let token;
       const decodedMainToken:any = jwt.decode(postData.token, {
         complete: true
        });
@@ -172,33 +172,19 @@ class AuthController {
          token = jwt.sign(
           { _id: decodedMainToken?.payload?._id, mobileNo: decodedMainToken?.payload.mobileNo },
           secret,
-          { expiresIn: "10m" }
-        );
-         refreshToken = jwt.sign(
-          { _id: decodedMainToken?.payload?._id, mobileNo: decodedMainToken?.payload.mobileNo },
-          secret,
-          { expiresIn: "20m" }
+          { expiresIn: "30m" }
         );
       }
       else{
         token =postData.refreshToken;
-        refreshToken =jwt.sign(
-          { _id: decodedMainToken?.payload?._id, mobileNo: decodedMainToken?.payload.mobileNo },
-          secret,
-          { expiresIn: "20m" })  
       }
 		}
     else{
       token=postData.token;
-      refreshToken =postData.refreshToken;
+      
     }
-    
-      // if refresh token exists
-      res.status(200).json({token,refreshToken});
-    
-      
+      res.status(200).json({success:true,message:"token refresh sucessfully",token:token});
     } catch (error: any) {
-      
       return res.status(500).json({ success: false, message: error.message });
     }
   }

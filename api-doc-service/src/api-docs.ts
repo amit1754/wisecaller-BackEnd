@@ -1099,7 +1099,7 @@ export default{
               "deprecated": false
           }
       },
-      "/work-hrs-service/api/v1/work-life/get/{id}": {
+      "/work-hrs-service/api/v1/work-life/delete/{id}": {
           "delete": {
               "tags": [
                   "Work Hrs Service"
@@ -1543,7 +1543,7 @@ export default{
               "deprecated": false
           }
       },
-      "/refresh-token": {
+      "/auth-service/api/v1/auth/refresh-token": {
         "post": {
           "tags": [
             "Auth Service"

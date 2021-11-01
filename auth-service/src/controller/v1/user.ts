@@ -8,7 +8,7 @@ import {deletefile} from '../../middlewares/uploadService'
 
 class UserController {
   async show(req: Request, res: Response) {
-    console.log("show")
+    
     try {
       const loggedInUser: any = req.user;
 
@@ -26,7 +26,6 @@ class UserController {
             as: 'userStatus'
           }
         },
-        { $unwind:"$userStatus"},
         {
           $lookup:{
             from: 'usersubstatuses',
@@ -35,9 +34,10 @@ class UserController {
             as: 'userSubStatus'
           }
       },
-      { $unwind:"$userSubStatus"}
+      
     ])
-    res.status(200).json({user})
+    
+    res.status(200).json({sucess: true,message:"User Profile details get successfully",data:user})
     
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });

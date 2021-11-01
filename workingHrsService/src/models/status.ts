@@ -5,14 +5,6 @@ const SatusSchema = new Schema(
         status: {
             type: String,
         },
-        logo: {
-            type: String,
-        },
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            default: null
-          },
         isDeleted: {
             type: Boolean,
             default: false,

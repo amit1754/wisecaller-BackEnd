@@ -13,6 +13,11 @@ const SatusSubSchema = new Schema(
             ref:"UserSatus"
 
         },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+          },
         isDeleted: {
             type: Boolean,
             default: false,

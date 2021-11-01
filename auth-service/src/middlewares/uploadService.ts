@@ -41,11 +41,12 @@ const upload = multer({
         bucket,
         acl: "public-read",
         contentType: multerS3.AUTO_CONTENT_TYPE,
+        contentEncoding: 'gzip',
         metadata: function (req: Request, file: any, cb: (arg0: null, arg1: { fieldName: any; }) => void) {
             cb(null, { fieldName: file.fieldname });
         },
         key: function (req: Request, file: any, cb: (arg0: null, arg1: string) => void) {
-            cb(null, Date.now().toString() + FILE_EXTENSION_MAPPING[file.mimetype].extension);
+            cb(null, 'profile_images/'+Date.now().toString() + FILE_EXTENSION_MAPPING[file.mimetype].extension);
 
         },
     }),

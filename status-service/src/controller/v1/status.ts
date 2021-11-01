@@ -67,7 +67,6 @@ class StatusController {
         }
      
       }
-      console.log("payload",payload)
 
       let StatusUpdate = await UserStatus.findOneAndUpdate(
         { _id: id },
