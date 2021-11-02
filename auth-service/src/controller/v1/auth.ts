@@ -99,26 +99,37 @@ class AuthController {
     try {
       const { mobileNo, otp } = req.body
       let user = await User.findOne({ mobileNo });
-      console.log("user",user)
+      
 
       let auth_token: any = await AuthToken.findOne({ user: user?._id });
       if (auth_token) {
         if (auth_token?.otp != otp) {
           throw new Error("otp is invalid")
         }
-        let secret:any = process.env.JWT_SECRET
+        let secret:any = process.env.JWT_SECRET,
+            tokenTime:any=process.env.TOKENTIME,
+            tokenRefreshTime=process.env.REFRESHTOKENTIME
+
         let token = jwt.sign(
           { _id: user.id, mobileNo: user.mobileNo },
           secret,
-          { expiresIn: "30m" }
+          { expiresIn: tokenTime }
         );
         const refreshToken = jwt.sign(
           { _id: user.id, mobileNo: user.mobileNo },
           secret,
-          { expiresIn: "60m" }
+          { expiresIn: tokenRefreshTime}
         );
+
+        let hrs:any=tokenTime.substr(0,(tokenTime.length-1))
+        let now :any= new Date();
+        let expiryTime:any=now.setHours( now.getHours() + parseInt(hrs) )
+        console.log("expiryTime",expiryTime)
+        
+
+
         await auth_token.remove();
-        return res.status(200).json({ success: true, data: { token,refreshToken } });
+        return res.status(200).json({ success: true, data: { token,refreshToken ,expiryTime} });
       } else {
         return res
           .status(500)
@@ -165,14 +176,15 @@ class AuthController {
        const currentDate = Math.floor(Date.now() / 1000);
 
 		if (currentDate > decodedMainToken?.payload.exp) {
-      let secret:any = process.env.JWT_SECRET
+      let secret:any = process.env.JWT_SECRET,
+      tokentime =process.env.TOKENTIME
      
       if(currentDate>decodedRefreshToken?.payload?.exp){
 
          token = jwt.sign(
           { _id: decodedMainToken?.payload?._id, mobileNo: decodedMainToken?.payload.mobileNo },
           secret,
-          { expiresIn: "30m" }
+          { expiresIn: tokentime }
         );
       }
       else{

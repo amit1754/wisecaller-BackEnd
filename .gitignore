@@ -14,6 +14,7 @@ api-doc-service/node_modules
 wisecaller_modules/node_modules
 callmanagement-service/node_modules
 wisecaller-all/node_modules
+workingHrsService/node_modules
 
 
 auth-service/package-lock.json
@@ -26,6 +27,8 @@ package-service/package-lock.json
 status-service/package-lock.json
 api-doc-service/package-lock.json
 callmanagement-service/package-lock.json
+workingHrsService/package-lock.json
+wisecaller_modules/package-lock.json
 
 auth-service/yarn.lock
 call-service/yarn.lock
@@ -36,6 +39,7 @@ package-service/yarn.lock
 status-service/yarn.lock
 api-doc-service/yarn.lock
 contact-sync-service/yarn.lock
+workingHrsService/yarn.lock
 
 
 auth-service/yarn-error.log
@@ -47,7 +51,7 @@ order-service/yarn-error.log
 package-service/yarn-error.log
 status-service/yarn-error.log
 api-doc-service/yarn-error.log
-
+workingHrsService/yarn-error.log
 
 auth-service/bin
 call-service/bin
@@ -58,7 +62,7 @@ order-service/bin
 package-service/bin
 status-service/bin
 api-doc-service/bin
-
+workingHrsService/bin
 
 
 auth-service/.serverless
@@ -70,6 +74,7 @@ order-service/.serverless
 package-service/.serverless
 status-service/.serverless
 api-doc-service/.serverless
+workingHrsService/.serverless
 
 auth-service/build
 call-service/build
@@ -80,6 +85,7 @@ order-service/build
 package-service/build
 status-service/build
 api-doc-service/build
+workingHrsService/build
 
 auth-service/.serverless
 call-service/.serverless
@@ -92,7 +98,7 @@ status-service/.serverless
 api-doc-service/.serverless
 wisecaller_modules/.serverless
 callmanagement-service/.serverless
-
+workingHrsService/.serverless
 
 auth-service/.build
 call-service/.build
@@ -103,7 +109,7 @@ order-service/.build
 package-service/.build
 status-service/.build
 api-doc-service/.build
-
+workingHrsService/.build
 
 
 api-doc-service/document.zip

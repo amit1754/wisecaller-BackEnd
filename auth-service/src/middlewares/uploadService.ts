@@ -4,7 +4,7 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 
 const bucket = "wisecaller-images";
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 aws.config.update({
     secretAccessKey: "moq7cgspYRxpw656cAMz1F6FBD/G9Grh7wN5F9CJ",
@@ -23,12 +23,12 @@ const FILE_EXTENSION_MAPPING: any = {
 };
 
 const s3 = new aws.S3({ signatureVersion: "v4" });
-
 const fileFilter = (req: Request, file: any, cb: any) => {
     if (MIME_TYPES_ALLOWED.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        console.log("invalid mine type")
+        
+        
         cb(new Error("Invalid Mime Type, only JPEG/PNG allowed"), false);
     }
 };
@@ -42,13 +42,24 @@ const upload = multer({
         acl: "public-read",
         contentType: multerS3.AUTO_CONTENT_TYPE,
         contentEncoding: 'gzip',
+       
         metadata: function (req: Request, file: any, cb: (arg0: null, arg1: { fieldName: any; }) => void) {
             cb(null, { fieldName: file.fieldname });
         },
-        key: function (req: Request, file: any, cb: (arg0: null, arg1: string) => void) {
+        key: function (req: Request, file: any, cb: any,res: Response) {
+            let requestData:any =req
+            const fileSize = parseInt(requestData.headers['content-length']);
+            if(fileSize >  MAX_FILE_SIZE){
+                cb("err",Error("file is big"))
+                // res.status(400).json({success:false,message:"file size is learge"})
+                // cb(new Error('I don\'t have a clue!'))
+            }
+            else{
+          
             cb(null, 'profile_images/'+Date.now().toString() + FILE_EXTENSION_MAPPING[file.mimetype].extension);
+            }
 
-        },
+        }
     }),
 });
 

@@ -8,16 +8,21 @@ class StatusController {
     try {
       const reqPayload: any = req;
       const loggedInUser: any = req.user;
-    console.log("loggedInUser",loggedInUser)
+      if(loggedInUser.role==='ADMIN'){
+
       const payload: IStatus = {
         ...req.body,
         logo: reqPayload.file ? reqPayload.file.key : null,
-        user:loggedInUser.role==='ADMIN'?null:loggedInUser._id
+        user:null
       };
       
       const status = new UserStatus(payload);
       await status.save();
       res.status(200).json({ success: true, message: "User status added successfully", data: [] });
+    }
+    else{
+      throw new Error("you are not authorize person to access this resource")
+    }
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -30,7 +35,6 @@ class StatusController {
           $match:{
             $or:[
               {'user':null},
-              {'user':loggedInUser._id}
             ]
           }
         },
@@ -52,6 +56,9 @@ class StatusController {
   async update(req: Request, res: Response) {
     try {
       const reqPayload: any = req;
+      const loggedInUser: any = req.user;
+      if(loggedInUser.role==='ADMIN'){
+      
       const { id }: any = req.params;
       let statusFind = await UserStatus.findById(id)
       let payload: any = {
@@ -77,6 +84,10 @@ class StatusController {
         }
       );
       res.status(200).json({ success: true, message: "user Event Status update successfully", data: StatusUpdate });
+    }
+    else{
+      throw new Error("you are not authorize person to access this resource")
+    }
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -103,17 +114,20 @@ class StatusController {
   async addSubStatus(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-
-      const reqPayload: any = req
-      const payload: ISubStatus = {
-        ...req.body,
-        logo: reqPayload.file ? reqPayload.file.key : null,
-        user:loggedInUser.role==='ADMIN'?null:loggedInUser._id
-      };
-      const status = new UserSubStatus(payload)
-      status.save()
-      res.status(200).json({ success: true, message: "Event Sub-Status added sucessfully", data: [] });
-
+      if(loggedInUser?.role==='ADMIN'){
+        const reqPayload: any = req
+        const payload: ISubStatus = {
+          ...req.body,
+          logo: reqPayload.file ? reqPayload.file.key : null,
+          user:null
+        };
+        const status = new UserSubStatus(payload)
+        status.save()
+        res.status(200).json({ success: true, message: "Event Sub-Status added sucessfully", data: [] });
+      }
+      else{
+        throw new Error("you are not authorize person to access this resource")
+      }
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -122,6 +136,9 @@ class StatusController {
   async updateSubStatus(req: Request, res: Response) {
     try {
       const reqPayload: any = req;
+      const loggedInUser: any = req.user;
+      if(loggedInUser?.role==='ADMIN'){
+
       const { id }: any = req.params;
       let payload: any = {
         ...req.body,
@@ -146,6 +163,10 @@ class StatusController {
         }
       );
       res.status(200).json({ success: true, message: "Sub Event Status update successfully", data: StatusUpdate });
+    }
+    else{
+      throw new Error("you are not authorize person to access this resource")
+    }
     } catch (error: any) {
       console.log(error.message);
       res.status(500).json({ success: false, message: error.message });

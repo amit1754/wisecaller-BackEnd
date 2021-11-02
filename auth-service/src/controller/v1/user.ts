@@ -45,6 +45,7 @@ class UserController {
   }
 
   async update(req: Request, res: Response) {
+    
     const reqPayload: any = req;
     try {
       const loggedInUser: any = req.user;
@@ -78,7 +79,7 @@ class UserController {
       return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
       console.log("error", error)
-      return res.status(500).json({ success: false, message: error.message });
+      return res.status(200).json({ success: false, message: error.message });
     }
   }
   async contactUs(req: Request, res: Response) {

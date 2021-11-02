@@ -4,7 +4,7 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 
 const bucket = "wisecaller-images";
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 aws.config.update({
     secretAccessKey: process.env.secretAccessKey,
