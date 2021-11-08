@@ -12,7 +12,6 @@ const authorization = async (req: Request, res: Response, next: NextFunction) =>
 				? authorization.slice(7, authorization.length)
 				: authorization;
 		const verifyToken:any = jwtVerify(token);
-		console.log("verifyToken",verifyToken)
 
 		if (!verifyToken) throw new Error("token is invalid");
 

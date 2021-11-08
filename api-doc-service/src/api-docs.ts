@@ -1009,17 +1009,18 @@ export default{
                               "$ref": "#/components/schemas/AddworkingHrsRequest"
                           },
                           "example": {
-                              "Monday": false,
-                              "Tuesday": true,
-                              "Wednesday": true,
-                              "Thursday": true,
-                              "Friday": true,
-                              "Saturday": true,
-                              "Sunday": true,
-                              "startTime": "09:00 AM",
-                              "endTime": "10:00 PM",
-                              "otherStatus": "612e310c185624e6a914bd57"
-                          }
+                            "Monday": false,
+                            "Tuesday": true,
+                            "Wednesday": true,
+                            "Thursday": true,
+                            "Friday": true,
+                            "Saturday": true,
+                            "Sunday": true,
+                            "startTime": "09:00 AM",
+                            "endTime": "10:00 PM",
+                            "userStatus":"61670b887a7764f6a360db28",
+                            "userSubStatus":"6167128a37ecb90f33f6f924"
+                        }
                       }
                   },
                   "required": true
@@ -1057,18 +1058,19 @@ export default{
                           "schema": {
                               "$ref": "#/components/schemas/updateworkingHrsRequest"
                           },
-                          "example": {
-                              "Monday": false,
-                              "Tuesday": true,
-                              "Wednesday": true,
-                              "Thursday": true,
-                              "Friday": true,
-                              "Saturday": true,
-                              "Sunday": true,
-                              "startTime": "09:00 AM",
-                              "endTime": "10:00 PM",
-                              "otherStatus": "612e310c185624e6a914bd57"
-                          }
+                          "example":{
+                            "Monday": false,
+                            "Tuesday": true,
+                            "Wednesday": true,
+                            "Thursday": true,
+                            "Friday": true,
+                            "Saturday": true,
+                            "Sunday": true,
+                            "startTime": "09:00 AM",
+                            "endTime": "10:00 PM",
+                            "userStatus":"61670b887a7764f6a360db28",
+                            "userSubStatus":"6167128a37ecb90f33f6f924"
+                        }
                       }
                   },
                   "required": true

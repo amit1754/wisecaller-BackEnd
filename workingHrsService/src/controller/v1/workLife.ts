@@ -51,14 +51,23 @@ class WorklifeController {
                 {
                     $lookup: {
                         from: 'usersatus',
-                        localField: 'otherStatus',
+                        localField: 'userStatus',
                         foreignField: '_id',
-                        as: 'otherStatus'
+                        as: 'userStatus'
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'usersubstatuses',
+                        localField: 'userSubStatus',
+                        foreignField: '_id',
+                        as: 'userSubStatus'
                     },
                 },
             ])
             return res.status(200).json({ success: true, message: "workingdays get successfully", data: userWorkingHrs[0]?userWorkingHrs[0]:[] });
         } catch (error:any) {
+            console.log("error",error);
             return res.status(500).json({ success: false, message: error.message });
         }
     }

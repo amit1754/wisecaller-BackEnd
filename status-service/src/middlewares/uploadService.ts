@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response ,NextFunction} from "express";
 const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
@@ -63,4 +63,19 @@ export const deletefile = async (filename: string) => {
     });
 }
 
-export default upload;
+const filesizeChecker =(req: Request, res: Response,next: NextFunction)=>{
+    try{
+        let requestData:any =req
+        const fileSize = parseInt(requestData.headers['content-length']);
+        if(fileSize >  MAX_FILE_SIZE){
+            throw new Error("file is less than 3 mb")
+        }
+        else{
+            next()
+        }
+    }
+    catch(error:any){
+        res.status(400).json({success:false,message:error.message})
+    }
+}
+    export default {upload,filesizeChecker};

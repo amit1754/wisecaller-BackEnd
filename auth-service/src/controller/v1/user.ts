@@ -50,6 +50,7 @@ class UserController {
     try {
       const loggedInUser: any = req.user;
       let payload: any;
+      
       if(reqPayload.file){
        payload = {
         ...req.body,
@@ -78,7 +79,7 @@ class UserController {
       );
       return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
-      console.log("error", error)
+  
       return res.status(200).json({ success: false, message: error.message });
     }
   }
@@ -90,7 +91,7 @@ class UserController {
       let ContactUsEmail: any = process.env.CONTACTUSEMAIL
       let subject: any = process.env.SUPPORTSUBJECT
       const sendEmail = await sendMailUtils.Send(email, ContactUsEmail, subject, contactUsMessage)
-      console.log(`sendEmail`, sendEmail)
+      
       // if (sendEmail.error) {
       //   throw new Error("email sending failed")
       // }
@@ -115,7 +116,7 @@ class UserController {
   }
   async getcontactUs(req: Request, res: Response) {
     try {
-      console.log(req.user)
+      
       const role: any = req?.user
       if (role.role != 'ADMIN') {
         res.status(401).send("Unauthorized")
@@ -155,7 +156,7 @@ class UserController {
       );
       return res.status(200).json({ success: true,message:"devices added successfully", data: [] });
     } catch (error: any) {
-      console.log("error", error)
+      
       return res.status(500).json({ success: false, message: error.message });
     }
   }

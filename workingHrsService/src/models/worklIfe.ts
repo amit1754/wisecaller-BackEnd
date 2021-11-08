@@ -36,9 +36,15 @@ const WorkLifeSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "User",
         },
-        otherStatus: {
+        userStatus: {
             type: Schema.Types.ObjectId,
             ref: "UserSatus",
+            default: null
+        },
+        userSubStatus: {
+            type: Schema.Types.ObjectId,
+            ref: "UserSubStatus",
+            default: null
         }
     },
     { timestamps: true }
