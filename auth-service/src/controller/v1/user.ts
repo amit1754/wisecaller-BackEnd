@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../../models/user";
-import { UserStatus } from "../../models/status";
+import { customStatus } from "../../models/customStatus";
 import { ContactUs } from '../../models/contactUs'
 import { sendMailUtils } from '../../utils'
 import {deletefile} from '../../middlewares/uploadService'
@@ -12,9 +12,7 @@ class UserController {
     try {
       const loggedInUser: any = req.user;
 
-
-
-      let user =await User.aggregate([
+      let user:any =await User.aggregate([
         {
           $match:{_id: loggedInUser._id}
         },
@@ -36,8 +34,35 @@ class UserController {
       },
       
     ])
+
+    const custom_status:any=await customStatus.aggregate([ 
+      {
+          $match:{user: loggedInUser._id}
+        },
+        {
+          $lookup:{
+            from: 'usersatus',
+            localField: 'status',
+            foreignField: '_id',
+            as: 'userStatus'
+          }
+        },
+        {$unwind:{ path: "$userStatus", preserveNullAndEmptyArrays: true }},
+        {
+          $lookup:{
+            from: 'usersubstatuses',
+            localField: 'substatus`',
+            foreignField: '_id',
+            as: 'userSubStatus'
+          }
+      },
+      {$unwind:{ path: "$userSubStatus", preserveNullAndEmptyArrays: true }},
+      
+      
+    ])
+    user[0].customStatus=custom_status
     
-    res.status(200).json({sucess: true,message:"User Profile details get successfully",data:user})
+    res.status(200).json({sucess: true,message:"User Profile details get successfully",data:user[0]})
     
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
@@ -160,6 +185,15 @@ class UserController {
       return res.status(500).json({ success: false, message: error.message });
     }
   }
+  // async updateCustomStatus(req: Request, res: Response){
+  //   try{ 
+  //       const loggedInUser: any = req.user;
+
+  //   } catch (error: any) {
+      
+  //     return res.status(500).json({ success: false, message: error.message });
+  //   }
+  // }
 }
 
 

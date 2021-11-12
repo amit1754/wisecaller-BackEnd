@@ -1,10 +1,11 @@
 export interface IWorkingDays {
-    Monday: Boolean;
-    Tuesday: Boolean;
-    Wednesday: Boolean;
-    Thursday: Boolean;
-    Friday: Boolean;
-    Saturday: Boolean;
-    startTime: String;
-    endTime: String;
+  Monday: Boolean;
+  Tuesday: Boolean;
+  Wednesday: Boolean;
+  Thursday: Boolean;
+  Friday: Boolean;
+  Saturday: Boolean;
+  startTime: String;
+  endTime: String;
+  Excluded_dates: Object;
 }

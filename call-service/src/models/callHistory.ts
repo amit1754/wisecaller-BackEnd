@@ -2,29 +2,35 @@ import { Schema, model } from "mongoose";
 
 const CallHistorySchema = new Schema(
     {
-        user: {
+        wisecallerId:{
             type: Schema.Types.ObjectId,
             ref: "User",
+            default:null
         },
-        callLogs: [
+        callerId:{
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            default:null
+        },
+        name:{
+            type: Schema.Types.String,
+        },
+        number:{
+            type: Schema.Types.String,
+        },
+     
+        callHistory:[
             {
-                dateId:{
-                    type:Date
-                },
-                callList:[
-                    {
-                        wiseCallerId:{type: Schema.Types.ObjectId,ref: "User",default:null},
-                        phoneNumber:{type: String},
-                        name:{type: String,default:null},
-                        callType:{type: String},
-                        time:{type: String},
-                        message:{type: String},
-                        simId:{type: String},
-                        status:{type: String},
-                    }
-                ]
+                time:{type:String},
+                type:{type:String},
+                simId:{type:String},
             }
-        ]
+        ],
+      
+        date:{
+            type:Schema.Types.Number,
+        }
+
     },
     { timestamps: true }
 );

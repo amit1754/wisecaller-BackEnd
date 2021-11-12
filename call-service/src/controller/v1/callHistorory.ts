@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { map } from "lodash";
 import { UserContact } from "../../models/contactsync";
-import { User } from '../../models/user'
-import { CallHistory } from '../../models/callHistory'
-import {IcallHistory} from '../../interfaces/callHistory'
+import { User } from '../../models/user';
+import { CallHistory } from '../../models/callHistory';
 
 
 class callHistory {
@@ -12,33 +11,29 @@ class callHistory {
 
     try {
       const loginUser: any = req.user
-      const { callLogs }: any = req.body
-      const data = await User.find({}, { mobileNo: 1, _id: 0 })
-
-      const contactDetails = await CallHistory.findOne({user:loginUser._id})
-
-      const mNo = map(data, function (o) {
-        return o.mobileNo
-      })
-    
-    
-    
-     const updateR :any= map(callLogs, function (o:any) {
-      
-      o.dateId=new Date(o.dateId)
-      return o
-    })
-      
-    let payload:any={
-      user:loginUser._id,
-      callLogs:updateR,
-    }
+      let { body }: any = req
    
 
-      const callHistorySave= new CallHistory(payload)
-      const saveresponse=callHistorySave.save()
+      for(let i = 0; i < body.length; i++){
+        
+        let data=await User.findOne({mobileNo:body[i].callerId})
+        if(data)
+        {
+          body[i].number=body.callerId
+          body[i].callerId=data._id
+        }
+        else{
+          body[i].number=body[i].callerId
+          body[i].callerId=null
+        }
 
-      res.status(200).json({ success: true, message: "Sucess", data: saveresponse });
+        body[i].wisecallerId=loginUser._id
+        
+        const callHistorySave= new CallHistory(body[i])
+        await callHistorySave.save()
+      }
+      
+      res.status(200).json({ success: true, message: "Sucess", data: [] });
 
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
@@ -49,7 +44,10 @@ class callHistory {
     try {
       const loginUser: any = req.user
 
-      const contactDetails = await CallHistory.findOne({user:loginUser._id})
+      const contactDetails = await CallHistory.find({wisecallerId:loginUser._id}).sort({ updatedAt: -1 })
+                      
+                        
+
       
       res.status(200).json({ success: true, message: "Sucess", data: contactDetails });
     } catch (error: any) {
@@ -103,26 +101,59 @@ class callHistory {
 
   async addNumber(req: Request, res: Response){
     try {
-      const requestData =req.body
+      let reqestData:any =req.body
       const loginUser: any = req.user
-      const {callDetails}=requestData
-
-      const contactDetailsGet = await CallHistory.findOne({callLogs: {$elemMatch: {_id:requestData.callLogId}}})
-      const a=map(contactDetailsGet.callLogs, function(o:any) {
-        if(o._id==requestData.callLogId)
-        { 
-            o.callList.push(callDetails)
+      let callerHistory:any = await CallHistory.findOne({number:reqestData.callerId})
+      if(callerHistory){
+        let callerUpdate={
+          time:reqestData.time,
+          type:reqestData.type,
+          simId:reqestData.simId
         }
-        return o;
-      })
-    const data=await   CallHistory.findOneAndUpdate(
-        { user: loginUser._id},
-        {callLogs:a},
-        {upsert:true,new:true})
-      
+        callerHistory.callHistory.push(callerUpdate)
+         let user = await CallHistory.findOneAndUpdate(
+            { _id: callerHistory._id },
+            callerHistory,
+            {
+              upsert: true,
+              new: true,
+            }
+          );
+      return res.status(200).json({ success: true, data: user });
+        
+      }
+      else{
+        
+        reqestData.callHistory={
+          time:reqestData.time,
+          type:reqestData.type,
+          simId:reqestData.simId
+        }
+        
+
+        let data=await User.findOne({mobileNo:reqestData.callerId})
+        if(data)
+        {
+          reqestData.number=reqestData.callerId
+          reqestData.callerId=data._id
+        }
+        else{
+          reqestData.number=reqestData.callerId
+          reqestData.callerId=null
+        }
+
+        reqestData.wisecallerId=loginUser._id
+        
+        const callHistorySave= new CallHistory(reqestData)
+        await callHistorySave.save()
+      }
+
 
       
-      res.status(200).json({ success: true, message: "success",callLogs:data });
+
+   
+      
+      res.status(200).json({ success: true, message: "success",callLogs:reqestData });
       
     } catch (error:any) {
       res.status(500).json({ success: false, message: error.message });

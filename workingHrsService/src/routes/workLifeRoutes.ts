@@ -5,7 +5,7 @@ import { validate } from "../middlewares/validations";
 const router = express.Router();
 
 router.post("/add", [validate(workLife)], Worklife.add);
-router.put("/update/:id", [validate(workLife)], Worklife.updateWorkdays);
+router.put("/update/:id", Worklife.updateWorkdays);
 router.get("/get", Worklife.getWorkdays);
 router.delete("/delete/:id", Worklife.deleteWorkdays);
 

@@ -123,13 +123,13 @@ class AuthController {
 
         let hrs:any=tokenTime.substr(0,(tokenTime.length-1))
         let now :any= new Date();
-        let expiryTime:any=now.setHours( now.getHours() + parseInt(hrs) )
-        console.log("expiryTime",expiryTime)
+        let token_expires_at:any=now.setHours( now.getHours() + parseInt(hrs) )
+     
         
 
 
         await auth_token.remove();
-        return res.status(200).json({ success: true, data: { token,refreshToken ,expiryTime} });
+        return res.status(200).json({ success: true, data: { token,refreshToken ,token_expires_at} });
       } else {
         return res
           .status(500)
