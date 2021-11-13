@@ -79,7 +79,7 @@ class CustomStatusController {
       // });
       await customStatus.findOneAndUpdate(
         { _id: req.params.id, user: loggedInUser._id },
-        { is_deleted: new Date() },
+        { is_deleted: true },
         {
           upsert: true,
           new: true,
@@ -99,7 +99,7 @@ class CustomStatusController {
       const loggedInUser: any = req.user;
       const getStatus: any = await customStatus.aggregate([
         {
-          $match: { $and: [{ user: loggedInUser._id }, { is_deleted: null }] },
+          $match: { $and: [{ user: loggedInUser._id }, { is_deleted: false }] },
         },
         {
           $lookup: {

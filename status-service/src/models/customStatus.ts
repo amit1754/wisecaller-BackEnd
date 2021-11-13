@@ -34,11 +34,11 @@ const customStatusSchema = new Schema(
     auto_sms: { type: Boolean, default: false },
     is_enabled: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     is_deleted: {
-      type: Date,
-      default: null,
+      type: Boolean,
+      default: false,
     },
   },
 

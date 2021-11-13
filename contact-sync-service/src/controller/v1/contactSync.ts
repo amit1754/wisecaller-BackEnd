@@ -1,98 +1,159 @@
 import { Request, Response } from "express";
 import { IContactSync } from "../../interfaces/contactSync";
-import { UserContact } from '../../models/contactsync'
-import { User } from '../../models/user'
-import { map, find } from 'lodash';
+import { UserContact } from "../../models/contactsync";
+import { User } from "../../models/user";
 
 class ContactSyncController {
-    async add(req: Request, res: Response) {
-        try {
-            const loginUser: any = req.user
-            const { contact }: any = req.body
-            const data = await User.find({}, { mobileNo: 1, _id: 0 })
-            const mNo = map(data, function (o) {
-                return o.mobileNo
-            })
-            let contactUpdate: any = []
-            map(contact, function (o) {
-                const data: any = mNo.includes(o.number)
-                let iswisecaller: any;
-                if (data) {
-                    iswisecaller = true
-                }
-                else {
-                    iswisecaller = false
-                }
-                let a = {
-                    ...o,
-                    iswisecaller,
-                }
-                contactUpdate.push(a)
+  async sync(req: Request, res: Response) {
+    try {
+      const loginUser: any = req.user;
+      const userFind = await UserContact.findOne({
+        user: loginUser._id,
+      });
+
+      if (userFind) {
+        throw new Error("user contact already avaliable");
+      } else {
+        let data: any = req.body;
+        let length = data.length;
+        for (let i = 0; i < length; i++) {
+          data[i].user = loginUser._id;
+          let contact: any = data[i];
+          for (let j = 0; j < contact.phones.length; j++) {
+            const userContactFind = await User.findOne({
+              mobileNo: contact.phones[j].ph_no,
             });
+            if (userContactFind)
+              contact.phones[j].wisecallerId = userContactFind._id;
+            else contact.phones[j].wisecallerId = null;
+          }
+          console.log("userContactFind", contact);
 
-            let userContactFind = await UserContact.findOne({ user: loginUser._id })
-            if (userContactFind != null) {
-
-                let userUpdate = await UserContact.findOneAndUpdate({ user: loginUser._id }, { contact: contactUpdate })
-                if (userUpdate) {
-                    res.status(200).json({ success: true, message: "Sucess", data: [] });
-                }
-                else {
-                    throw new Error('contact sync failed')
-                }
-            }
-            else {
-                const payload: IContactSync = {
-                    ...req.body,
-                    user: loginUser._id
-                };
-                const user = new UserContact(payload);
-                await user.save();
-                res.status(200).json({ success: true, message: "Sucess", data: [] });
-            }
-        } catch (error: any) {
-            res.status(500).json({ success: false, message: error.message });
+          const contactSave = new UserContact(contact);
+          await contactSave.save();
         }
+      }
+      res.status(200).json({
+        success: true,
+        message: "contact sync successfully",
+        data: [],
+      });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
     }
-    async getAll(req: Request, res: Response) {
-        try {
-            const loginUser: any = req.user
-            let { number, isFavourite }: any = req.query
-           
-            const userContactFind = await UserContact.findOne(
+  }
 
-                { user: loginUser?._id },
-            )
-            console.log("userContactFind",userContactFind)
-            let updateContact: any = [];
-            if (number) {
-                find(userContactFind.contact, function (x) {
-                    console.log(x.number)
-                    if (x.number.search(number) != -1) {
-                        updateContact.push(x)
-                    }
-                })
+  async addContact(req: Request, res: Response) {
+    try {
+      const loggedInUser: any = req.user;
+      const contact: any = req.body;
+      const findContact = await UserContact.find({
+        $and: [{ first_name: contact.first_name }, { user: loggedInUser._id }],
+      });
+      if (findContact.length >= 1) {
+        throw new Error(
+          "contact is avaliable with same name in youe contact list"
+        );
+      } else {
+        contact.user = loggedInUser._id;
+        let contactupdate: IContactSync = contact;
 
-            }
-            else if (isFavourite) {
-                find(userContactFind.contact, function (x) {
-                    console.log(x.isFavorite)
-                    if (x.isFavorite === true) {
-                        updateContact.push(x)
-                    }
-                })
+        const contactSave = new UserContact(contactupdate);
+        await contactSave.save();
+        res.status(200).json({
+          success: true,
+          message: "contact added successfully",
+          data: [],
+        });
+      }
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
 
-            }
-            else {
-                updateContact = userContactFind
-            }
-            res.status(200).json({ success: true, message: "contact list get successfully", data: updateContact});
-        } catch (error: any) {
-            res.status(500).json({ success: false, message: error.message });
+  async getAll(req: Request, res: Response) {
+    try {
+      const loggedInUser: any = req.user;
+
+      const userContactFind = await UserContact.aggregate([
+        {
+          $match: { user: loggedInUser._id },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "phones.wisecallerId",
+            foreignField: "_id",
+            as: "wisecallerUser",
+          },
+        },
+        {
+          $lookup: {
+            from: "usersatus",
+            localField: "wisecallerUser.status",
+            foreignField: "_id",
+            as: "userStatus",
+          },
+        },
+        {
+          $lookup: {
+            from: "usersubstatuses",
+            localField: "wisecallerUser.subStatus",
+            foreignField: "_id",
+            as: "userSubStatus",
+          },
+        },
+      ]);
+
+      res.status(200).json({
+        success: true,
+        message: "contact list get successfully",
+        data: userContactFind,
+      });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async updtateContact(req: Request, res: Response) {
+    try {
+      let data: any = req.body;
+      const loginUser: any = req.user;
+      let length = data.length;
+      for (let i = 0; i < length; i++) {
+        data[i].user = loginUser._id;
+        let contact: any = data[i];
+        for (let j = 0; j < contact.phones.length; j++) {
+          const userContactFind = await User.findOne({
+            mobileNo: contact.phones[j].ph_no,
+          });
+          if (userContactFind)
+            contact.phones[j].wisecallerId = userContactFind._id;
+          else contact.phones[j].wisecallerId = null;
         }
+        let customId = contact.customId;
+        delete contact.customId;
+        console.log(contact);
+        await UserContact.findOneAndUpdate(
+          {
+            customId: customId,
+          },
+          contact,
+          {
+            upsert: true,
+            new: true,
+          }
+        );
+      }
+      res.status(200).json({
+        success: true,
+        messgae: "contact update successful",
+        data: [],
+      });
+    } catch (err: any) {
+      res.status(500).json({ success: false, message: err.message });
     }
-
-
+  }
 }
 
 export default ContactSyncController;
