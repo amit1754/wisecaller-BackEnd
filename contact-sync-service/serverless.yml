@@ -1,4 +1,4 @@
-service: wisecallerContactSync
+service: aws-wisecaller-contact-service
 
 frameworkVersion: '2'
 useDotenv: true

@@ -3,6 +3,7 @@ import { IContactSync } from "../../interfaces/contactSync";
 import { UserContact } from "../../models/contactsync";
 import { User } from "../../models/user";
 
+
 class ContactSyncController {
   async sync(req: Request, res: Response) {
     try {
@@ -74,7 +75,6 @@ class ContactSyncController {
   async getAll(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-
       const userContactFind = await UserContact.aggregate([
         {
           $match: { user: loggedInUser._id },
@@ -103,6 +103,7 @@ class ContactSyncController {
             as: "userSubStatus",
           },
         },
+        { $sort: { first_name: 1 } },
       ]);
 
       res.status(200).json({
@@ -133,7 +134,7 @@ class ContactSyncController {
         }
         let customId = contact.customId;
         delete contact.customId;
-        console.log(contact);
+
         await UserContact.findOneAndUpdate(
           {
             customId: customId,
@@ -152,6 +153,111 @@ class ContactSyncController {
       });
     } catch (err: any) {
       res.status(500).json({ success: false, message: err.message });
+    }
+  }
+
+  async searchContact(req: Request, res: Response) {
+    try {
+      let search = req.body.phone_number;
+      const loggedInUser: any = req.user;
+      const userContactFind = await UserContact.aggregate([
+        {
+          $match: {
+            $and: [
+              { "phones.ph_no": { $regex: search, $options: "ig" } },
+              { user: loggedInUser._id },
+            ],
+          },
+        },
+
+        {
+          $lookup: {
+            from: "users",
+            localField: "phones.wisecallerId",
+            foreignField: "_id",
+            as: "wisecallerUser",
+          },
+        },
+        {
+          $lookup: {
+            from: "usersatus",
+            localField: "wisecallerUser.status",
+            foreignField: "_id",
+            as: "userStatus",
+          },
+        },
+        {
+          $lookup: {
+            from: "usersubstatuses",
+            localField: "wisecallerUser.subStatus",
+            foreignField: "_id",
+            as: "userSubStatus",
+          },
+        },
+        { $sort: { first_name: 1 } },
+      ]);
+      res.status(200).json({
+        success: true,
+        message: "data get successful",
+        data: userContactFind,
+      });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
+  async searchWisecaller(req: Request, res: Response) {
+    try {
+      let search = req.body.phone_number;
+      const loggedInUser: any = req.user;
+      const userContactFind = await User.aggregate([
+        {
+          $match: {
+            mobileNo: { $regex: search, $options: "ig" },
+          },
+        },
+
+        {
+          $lookup: {
+            from: "usersatus",
+            localField: "status",
+            foreignField: "_id",
+            as: "userStatus",
+          },
+        },
+        {
+          $lookup: {
+            from: "usersubstatuses",
+            localField: "subStatus",
+            foreignField: "_id",
+            as: "userSubStatus",
+          },
+        },
+      ]);
+      res.status(200).json({
+        success: true,
+        message: "data get successful",
+        data: userContactFind,
+      });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  async deleteContact(req: Request, res: Response) {
+    try {
+      const loggedInUser: any = req.user;
+      const { id } = req.params;
+      const deleteContact = await UserContact.findOneAndRemove({
+        _id: id,
+        user: loggedInUser._id,
+      });
+      res.status(200).json({
+        success: true,
+        message: "contact delete successfully",
+        data: [],
+      });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message });
     }
   }
 }

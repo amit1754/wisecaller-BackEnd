@@ -1875,6 +1875,280 @@ export default {
         deprecated: false,
       },
     },
+    "/contact-sync-service/api/v1/contact/update": {
+      put: {
+        tags: ["Contact Service"],
+        summary: "contact update",
+        operationId: "contactupdate",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/contactupdaterequest",
+                },
+                description: "",
+                example: [
+                  {
+                    customId: 150,
+                    first_name: "tushar1",
+                    last_name: "savaliya2",
+                    profile_image: null,
+                    local_profile_image_path: "contacts/abc.png",
+                    phones: [
+                      {
+                        wisecallerId: "618f6146385c780009f97e21",
+                        _id: "618fa6ae2ac1e05fd9709d97",
+                        ph_no: "+911234567890",
+                        type: "PRIMARY",
+                      },
+                      {
+                        wisecallerId: null,
+                        _id: "618fa6ae2ac1e05fd9709d98",
+                        ph_no: "+913216549870",
+                        type: "SECONDARY",
+                      },
+                      {
+                        wisecallerId: null,
+                        _id: "618fa6ae2ac1e05fd9709d99",
+                        ph_no: "+911236547890",
+                        type: "OFFICE",
+                      },
+                      {
+                        wisecallerId: null,
+                        _id: "618fa6ae2ac1e05fd9709d9a",
+                        ph_no: "+917412589630",
+                        type: "HOME",
+                      },
+                    ],
+                  },
+                  {
+                    customId: 151,
+                    first_name: "mehul",
+                    last_name: "mehul",
+                    profile_image: null,
+                    local_profile_image_path: "contacts/abc.png",
+                    phones: [
+                      {
+                        wisecallerId: null,
+                        _id: "618fa6b02ac1e05fd9709da1",
+                        ph_no: "+911237896540",
+                        type: "PRIMARY",
+                      },
+                      {
+                        wisecallerId: null,
+                        _id: "618fa6b02ac1e05fd9709da2",
+                        ph_no: "+919874563210",
+                        type: "SECONDARY",
+                      },
+                      {
+                        wisecallerId: null,
+                        _id: "618fa6b02ac1e05fd9709da3",
+                        ph_no: "+915478963210",
+                        type: "OFFICE",
+                      },
+                      {
+                        wisecallerId: null,
+                        _id: "618fa6b02ac1e05fd9709da4",
+                        ph_no: "+918756941230",
+                        type: "HOME",
+                      },
+                    ],
+                  },
+                  {
+                    customId: 152,
+                    first_name: "jignesh",
+                    last_name: "jignesh",
+                    profile_image: null,
+                    local_profile_image_path: "contacts/abc.png",
+                    phones: [
+                      {
+                        ph_no: "+919854671230",
+                        type: "PRIMARY",
+                      },
+                      {
+                        ph_no: "+912567894130",
+                        type: "SECONDARY",
+                      },
+                      {
+                        ph_no: "+919568732410",
+                        type: "OFFICE",
+                      },
+                      {
+                        ph_no: "+919496782117",
+                        type: "HOME",
+                      },
+                    ],
+                  },
+                ],
+              },
+              example: [
+                {
+                  customId: 150,
+                  first_name: "tushar1",
+                  last_name: "savaliya2",
+                  profile_image: null,
+                  local_profile_image_path: "contacts/abc.png",
+                  phones: [
+                    {
+                      wisecallerId: "618f6146385c780009f97e21",
+                      _id: "618fa6ae2ac1e05fd9709d97",
+                      ph_no: "+911234567890",
+                      type: "PRIMARY",
+                    },
+                    {
+                      wisecallerId: null,
+                      _id: "618fa6ae2ac1e05fd9709d98",
+                      ph_no: "+913216549870",
+                      type: "SECONDARY",
+                    },
+                    {
+                      wisecallerId: null,
+                      _id: "618fa6ae2ac1e05fd9709d99",
+                      ph_no: "+911236547890",
+                      type: "OFFICE",
+                    },
+                    {
+                      wisecallerId: null,
+                      _id: "618fa6ae2ac1e05fd9709d9a",
+                      ph_no: "+917412589630",
+                      type: "HOME",
+                    },
+                  ],
+                },
+                {
+                  customId: 151,
+                  first_name: "mehul",
+                  last_name: "mehul",
+                  profile_image: null,
+                  local_profile_image_path: "contacts/abc.png",
+                  phones: [
+                    {
+                      wisecallerId: null,
+                      _id: "618fa6b02ac1e05fd9709da1",
+                      ph_no: "+911237896540",
+                      type: "PRIMARY",
+                    },
+                    {
+                      wisecallerId: null,
+                      _id: "618fa6b02ac1e05fd9709da2",
+                      ph_no: "+919874563210",
+                      type: "SECONDARY",
+                    },
+                    {
+                      wisecallerId: null,
+                      _id: "618fa6b02ac1e05fd9709da3",
+                      ph_no: "+915478963210",
+                      type: "OFFICE",
+                    },
+                    {
+                      wisecallerId: null,
+                      _id: "618fa6b02ac1e05fd9709da4",
+                      ph_no: "+918756941230",
+                      type: "HOME",
+                    },
+                  ],
+                },
+                {
+                  customId: 152,
+                  first_name: "jignesh",
+                  last_name: "jignesh",
+                  profile_image: null,
+                  local_profile_image_path: "contacts/abc.png",
+                  phones: [
+                    {
+                      ph_no: "+919854671230",
+                      type: "PRIMARY",
+                    },
+                    {
+                      ph_no: "+912567894130",
+                      type: "SECONDARY",
+                    },
+                    {
+                      ph_no: "+919568732410",
+                      type: "OFFICE",
+                    },
+                    {
+                      ph_no: "+919496782117",
+                      type: "HOME",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/contact-sync-service/api/v1/contact/search": {
+      post: {
+        tags: ["Contact Service"],
+        summary: "search contact in list",
+        operationId: "searchcontactinlist",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/searchcontactinlistrequest",
+              },
+              example: {
+                phone_number: "911234567890",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/contact-sync-service/api/v1/contact/search-wisecaller": {
+      post: {
+        tags: ["Contact Service"],
+        summary: "search in wiseccaller contact in list",
+        operationId: "searchinwiseccallercontactinlist",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/searchinwiseccallercontactinlistrequest",
+              },
+              example: {
+                phone_number: "911234567890",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
   },
   components: {
     schemas: {
@@ -3154,6 +3428,103 @@ export default {
             "618fb8e614842f8284d028dd",
             "618fb99bc8ba53856cbf0459",
           ],
+        },
+      },
+      updatecontactrequest: {
+        title: "updatecontactrequest",
+        required: [
+          "customId",
+          "first_name",
+          "last_name",
+          "profile_image",
+          "local_profile_image_path",
+          "phones",
+        ],
+        type: "object",
+        properties: {
+          customId: {
+            type: "integer",
+            format: "int32",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          profile_image: {
+            type: "string",
+            nullable: true,
+          },
+          local_profile_image_path: {
+            type: "string",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone1",
+            },
+            description: "",
+          },
+        },
+        example: {
+          customId: 150,
+          first_name: "tushar1",
+          last_name: "savaliya2",
+          profile_image: null,
+          local_profile_image_path: "contacts/abc.png",
+          phones: [
+            {
+              wisecallerId: "618f6146385c780009f97e21",
+              _id: "618fa6ae2ac1e05fd9709d97",
+              ph_no: "+911234567890",
+              type: "PRIMARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d98",
+              ph_no: "+913216549870",
+              type: "SECONDARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d99",
+              ph_no: "+911236547890",
+              type: "OFFICE",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d9a",
+              ph_no: "+917412589630",
+              type: "HOME",
+            },
+          ],
+        },
+      },
+      searchcontactinlistrequest: {
+        title: "searchcontactinlistrequest",
+        required: ["phone_number"],
+        type: "object",
+        properties: {
+          phone_number: {
+            type: "string",
+          },
+        },
+        example: {
+          phone_number: "911234567890",
+        },
+      },
+      searchinwiseccallercontactinlistrequest: {
+        title: "searchinwiseccallercontactinlistrequest",
+        required: ["phone_number"],
+        type: "object",
+        properties: {
+          phone_number: {
+            type: "string",
+          },
+        },
+        example: {
+          phone_number: "911234567890",
         },
       },
     },
