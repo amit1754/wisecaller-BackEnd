@@ -22,13 +22,12 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ['ADMIN', 'USER'],
-      default: 'USER'
+      enum: ["ADMIN", "USER"],
+      default: "USER",
     },
     devices: {
       type: Object,
-      default:null
-      
+      default: null,
     },
     isActive: {
       type: Boolean,
@@ -41,13 +40,17 @@ const UserSchema = new Schema(
     status: {
       type: Schema.Types.ObjectId,
       ref: "UserSatus",
-      default: null
+      default: null,
     },
     subStatus: {
-        type: Schema.Types.ObjectId,
-        ref: "UserSubStatus",
-        default: null
-      }
+      type: Schema.Types.ObjectId,
+      ref: "UserSubStatus",
+      default: null,
+    },
+    is_new_user: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

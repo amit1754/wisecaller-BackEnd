@@ -39,14 +39,11 @@ class AuthController {
         const payload: IUser = {
           ...req.body,
         };
-
         const user = new User(payload);
         userCreater = await user.save();
         req.body.user = userCreater;
-        req.body.is_new_user = true;
       } else {
-        req.body.user = user;
-        req.body.is_new_user = false;
+        req.body.user = user;        
       }
 
       next();
@@ -90,7 +87,6 @@ class AuthController {
         success: true,
         message: "message send successful",
         otp: token.otp,
-        is_new_user: reqData.body?.is_new_user === true ? true : false,
       });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
@@ -101,12 +97,13 @@ class AuthController {
     try {
       const { mobileNo, otp } = req.body;
       let user = await User.findOne({ mobileNo });
-
+      let is_new_user = user.is_new_user;
       let auth_token: any = await AuthToken.findOne({ user: user?._id });
       if (auth_token) {
         if (auth_token?.otp != otp) {
           throw new Error("otp is invalid");
         }
+        await User.findOneAndUpdate({ mobileNo }, { is_new_user :false});
         let secret: any = process.env.JWT_SECRET,
           tokenTime: any = process.env.TOKENTIME,
           tokenRefreshTime = process.env.REFRESHTOKENTIME;
@@ -131,7 +128,7 @@ class AuthController {
         await auth_token.remove();
         return res.status(200).json({
           success: true,
-          data: { token, refreshToken, token_expires_at },
+          data: { token, refreshToken, token_expires_at, is_new_user },
         });
       } else {
         return res
