@@ -1,10 +1,11 @@
 export interface IUser {
-  mobileNo: Number;
+  phones: Object;
+  phone: String;
 }
 
 export interface IOtp {
   otp: Number;
-  user: String;
+  mobileNo: String;
 }
 
 export interface IAuthToken {

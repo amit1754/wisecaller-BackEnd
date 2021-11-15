@@ -17,7 +17,7 @@ class UserController {
         {
           $lookup: {
             from: "usersatus",
-            localField: "status",
+            localField: "user_status",
             foreignField: "_id",
             as: "userStatus",
           },
@@ -25,7 +25,7 @@ class UserController {
         {
           $lookup: {
             from: "usersubstatuses",
-            localField: "subStatus",
+            localField: "user_sub_status",
             foreignField: "_id",
             as: "userSubStatus",
           },
@@ -81,18 +81,49 @@ class UserController {
     try {
       const loggedInUser: any = req.user;
       let payload: any;
+      let phones: any;
 
-      if (reqPayload.file) {
-        payload = {
-          ...req.body,
-          profileImage: reqPayload.file.key,
+      let data: any;
+      if (reqPayload.body?.phone) {
+        data = {
+          no: reqPayload.body?.phone,
+          used_for_login: false,
         };
-      } else {
+        phones = { ...phones, ...data }
+      }
+      if (reqPayload.body.secondary_no) {
+        data = {
+          no: reqPayload.body.secondary_no,
+          used_for_login: false,
+        };
+        phones = { ...phones, ...data };
+      }
+
+      console.log("phones", phones);
+
+
+
+
+      if (phones) {
         payload = {
-          ...req.body,
+          ...payload,
+          phones,
         };
       }
 
+      if (reqPayload.file) {
+        payload = {
+          ...payload,
+          ...req.body,
+          profile_image: reqPayload.file.key,
+        };
+      } else {
+        payload = {
+          ...payload,
+          ...req.body,
+        };
+      }
+      console.log(payload);
       if (loggedInUser.profileImage != null) {
         await deletefile(loggedInUser.profileImage);
       }
@@ -102,12 +133,13 @@ class UserController {
         payload,
         {
           upsert: true,
-          new: true,
+          new: false,
         }
       );
-      return res.status(200).json({ success: true, data: user });
+      return res.status(200).json({ success: true, data: [] });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      console.error(error);
+      return res.status(500).json({ success: false, message: error.message });
     }
   }
   async contactUs(req: Request, res: Response) {

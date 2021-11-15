@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { map } from "lodash";
-import { UserContact } from "../../models/contactsync";
+import { UserContact } from "../../models/contactsync ";
 import { User } from "../../models/user";
 import { CallHistory } from "../../models/callHistory";
 
@@ -11,16 +11,14 @@ class callHistory {
       let { body }: any = req;
 
       for (let i = 0; i < body.length; i++) {
-        let data = await User.findOne({ mobileNo: body[i].callerId });
-
-        if (data) {
-          body[i].number = body[i].callerId;
-          body[i].callerId = data._id;
+        const wisecallerSerarch = await User.findOne({
+          mobileNo: body[i].phone,
+        });
+        if (wisecallerSerarch) {
+          body[i].callerId = wisecallerSerarch._id;
         } else {
-          body[i].number = body[i].callerId;
           body[i].callerId = null;
         }
-
         body[i].wisecallerId = loginUser._id;
 
         const callHistorySave = new CallHistory(body[i]);
@@ -41,40 +39,57 @@ class callHistory {
         { $match: { wisecallerId: loginUser._id } },
         {
           $lookup: {
-            from: "customstatuses",
-            localField: "callerId",
-            foreignField: "user",
-            as: "status",
-          },
-        },
-        {
-          $unwind: {
-            path: "$status",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $lookup: {
-            from: "customstatuses",
-            localField: "callerId",
-            foreignField: "user",
-            as: "status",
-          },
-        },
-        {
-          $unwind: {
-            path: "$status",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $lookup: {
             from: "users",
             localField: "callerId",
             foreignField: "_id",
             as: "userDetails",
           },
         },
+        {
+          $unwind: {
+            path: "$userDetails",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: "usersatus",
+            localField: "userDetails.status",
+            foreignField: "_id",
+            as: "userStatus",
+          },
+        },
+        {
+          $unwind: {
+            path: "$userStatus",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: "usersubstatuses",
+            localField: "userDetails.subStatus",
+            foreignField: "_id",
+            as: "subStatus",
+          },
+        },
+
+        {
+          $lookup: {
+            from: "user_contacts",
+            localField: "contactId",
+            foreignField: "_id",
+            as: "userContact",
+          },
+        },
+        // {
+        //   $lookup: {
+        //     from: "customstatuses",
+        //     localField: "callerId",
+        //     foreignField: "user",
+        //     as: "customstatuses",
+        //   },
+        // },
 
         {
           $group: {
@@ -83,20 +98,20 @@ class callHistory {
           },
         },
         { $sort: { _id: -1 } },
-        {
-          $project: {
-            "list.wisecallerId": 1,
-            "list.callerId": 1,
-            "list.name": 1,
-            "list.callHistory": 1,
-            "list.date": 1,
-            "list.createdAt": 1,
-            "list.updatedAt": 1,
-            "list.number": 1,
-            "list.notes": "$list.status.notes",
-            "list.userDetails": 1,
-          },
-        },
+        // {
+        //   $project: {
+        //     "list.wisecallerId": 1,
+        //     "list.callerId": 1,
+        //     "list.name": 1,
+        //     "list.callHistory": 1,
+        //     "list.date": 1,
+        //     "list.createdAt": 1,
+        //     "list.updatedAt": 1,
+        //     "list.number": 1,
+        //     "list.notes": "$list.status.notes",
+        //     "list.userDetails": 1,
+        //   },
+        // },
       ]);
 
       res

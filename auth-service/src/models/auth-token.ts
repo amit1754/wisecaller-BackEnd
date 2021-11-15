@@ -5,6 +5,9 @@ const AuthTokenSchema = new Schema(
     otp: {
       type: Number,
     },
+    mobileNo: {
+      type: String,
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

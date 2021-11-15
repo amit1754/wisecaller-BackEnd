@@ -2,23 +2,40 @@ import { Schema, model } from "mongoose";
 
 const UserSchema = new Schema(
   {
-    firstName: {
+    first_name: {
       type: String,
+      default: null,
     },
-    lastName: {
+    last_name: {
       type: String,
+      default: null,
     },
-    mobileNo: {
+    phone: {
       type: String,
+      default: null,
     },
-    email: {
+    secondary_no: {
       type: String,
+      default: null,
     },
-    contryCode: {
+    phones: [
+      {
+        no: { type: String },
+        used_for_login: { type: Boolean, default: false },
+      },
+    ],
+
+    profile_image: {
       type: String,
+      default: null,
     },
-    profileImage: {
+    is_profile_from_social_media: {
       type: String,
+      default: false,
+    },
+    media_profile_url: {
+      type: String,
+      default: null,
     },
     role: {
       type: String,
@@ -37,19 +54,20 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    status: {
+    user_status: {
       type: Schema.Types.ObjectId,
       ref: "UserSatus",
       default: null,
     },
-    subStatus: {
+    user_sub_status: {
       type: Schema.Types.ObjectId,
       ref: "UserSubStatus",
       default: null,
     },
-    is_new_user: {
-      type: Boolean,
-      default: true,
+    custom_status: {
+      type: Schema.Types.ObjectId,
+      ref: "UserSubStatus",
+      default: null,
     },
   },
   { timestamps: true }

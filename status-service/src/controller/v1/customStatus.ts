@@ -39,14 +39,21 @@ class CustomStatusController {
       let body: any = req.body;
       const length: number = body.status.length;
       for (let i = 0; i < length; i++) {
-        await customStatus.findOneAndUpdate(
-          { customId: body.status[i].customId, user: loggedInUser._id },
-          body.status[i],
-          {
-            upsert: true,
-            new: true,
-          }
-        );
+        if (body.status[i].is_deleted) {
+          await customStatus.findOneAndRemove({
+            customId: body.status[i].customId,
+            user: loggedInUser._id,
+          });
+        } else {
+          await customStatus.findOneAndUpdate(
+            { customId: body.status[i].customId, user: loggedInUser._id },
+            body.status[i],
+            {
+              upsert: true,
+              new: true,
+            }
+          );
+        }
       }
 
       const worklifeData: any = body.workLife;
@@ -99,7 +106,7 @@ class CustomStatusController {
       const loggedInUser: any = req.user;
       const getStatus: any = await customStatus.aggregate([
         {
-          $match: { $and: [{ user: loggedInUser._id }, { is_deleted: false }] },
+          $match: { user: loggedInUser._id },
         },
         {
           $lookup: {
@@ -132,7 +139,9 @@ class CustomStatusController {
         message: "getdata successfully",
         data: {
           status: getStatus,
-          worklife: { Excluded_dates: worklife.Excluded_dates },
+          worklife: {
+            Excluded_dates: worklife ? worklife.Excluded_dates : null,
+          },
         },
       });
     } catch (error: any) {

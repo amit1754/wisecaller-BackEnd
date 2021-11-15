@@ -12,10 +12,16 @@ const CallHistorySchema = new Schema(
       ref: "User",
       default: null,
     },
+    contactId: {
+      type: Schema.Types.ObjectId,
+      ref: "user_contact",
+      default: null,
+    },
+
     name: {
       type: Schema.Types.String,
     },
-    number: {
+    phone: {
       type: Schema.Types.String,
     },
 

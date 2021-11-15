@@ -94,8 +94,7 @@ export default {
       put: {
         tags: ["Auth Service"],
         summary: "update user profile",
-        description:
-          "| Name      |Type    | M/o   | Example\n| ---       | ---    | ---   | ---\n| firstName | string | M     | abc\n| lastName  | string | M     | abc\n| email     | string | M     | abc@abc.com\n| status    | string | M     | 61211f1ef34e5900080a6812",
+        description: "",
         operationId: "updateuserprofile",
         parameters: [],
         requestBody: {
@@ -106,40 +105,43 @@ export default {
                 required: [],
                 type: "object",
                 properties: {
-                  firstName: {
+                  first_name: {
                     type: "string",
-                    example: "tushar",
+                    example: " nithin1",
                   },
-                  lastName: {
+                  last_name: {
                     type: "string",
-                    example: "savaliya",
+                    example: " paul",
                   },
-                  email: {
-                    type: "string",
-                    example: "savaliyatushar2197@gmail.com",
-                  },
-                  status: {
-                    type: "string",
-                    example: "612e3103185624e6a914bd55",
-                  },
-                  subStatus: {
-                    type: "string",
-                    example: "612e3103185624e6a914bd55",
-                  },
-                  profileImage: {
+                  profile_image: {
                     type: "file",
                   },
-                  workLifeBalanceStatus: {
-                    type: "boolean",
-                    example: true,
-                  },
-                  roadSafetyStatus: {
+                  is_profile_from_social_media: {
                     type: "boolean",
                     example: false,
                   },
-                  syncCalender: {
-                    type: "boolean",
-                    example: true,
+                  media_profile_url: {
+                    type: "string",
+                  },
+                  user_status: {
+                    type: "string",
+                    example: "617bdc232e8a70362c05b6ef",
+                  },
+                  user_sub_status: {
+                    type: "string",
+                    example: "617bdef62349463cba0aaf9b",
+                  },
+                  custom_status: {
+                    type: "string",
+                    example: "6191f857f01b8beeb2bdd32f",
+                  },
+                  phone: {
+                    type: "string",
+                    example: "+918585858586",
+                  },
+                  secondary_no: {
+                    type: "string",
+                    example: "+918585858586",
                   },
                 },
               },

@@ -33,19 +33,6 @@ class AuthController {
       const checkMobileNo = await MobileNoCheckUtils.verify(mobileNo);
       if (!checkMobileNo) throw new Error("mobile number is not valid");
 
-      let user = await User.findOne({ mobileNo: mobileNo });
-      let userCreater;
-      if (!user) {
-        const payload: IUser = {
-          ...req.body,
-        };
-        const user = new User(payload);
-        userCreater = await user.save();
-        req.body.user = userCreater;
-      } else {
-        req.body.user = user;        
-      }
-
       next();
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
@@ -55,23 +42,21 @@ class AuthController {
   async generateOtp(req: Request, res: Response) {
     try {
       const otp = Math.floor(1000 + Math.random() * 9000);
-      const requestedUser = req.body.user;
-      const reqData: any = req;
+      const reqData: any = req.body;
 
-      const user = await User.findOne({ mobileNo: requestedUser._id });
       let payload: IOtp = {
         otp: otp,
-        user: user ? user._id : requestedUser._id,
+        mobileNo: reqData.mobileNo,
       };
 
-      await sendSMS1(requestedUser?.mobileNo, otp);
+      await sendSMS1(reqData.mobileNo, otp);
       let token;
       const userOtpDe = await AuthToken.findOne({
-        user: user ? user._id : requestedUser._id,
+        mobileNo: reqData.mobileNo,
       });
       if (userOtpDe) {
         token = await AuthToken.findOneAndUpdate(
-          { user: requestedUser._id },
+          { mobileNo: reqData.mobileNo },
           payload,
           {
             upsert: true,
@@ -96,25 +81,38 @@ class AuthController {
   async verifyOtp(req: Request, res: Response) {
     try {
       const { mobileNo, otp } = req.body;
-      let user = await User.findOne({ mobileNo });
-      let is_new_user = user.is_new_user;
-      let auth_token: any = await AuthToken.findOne({ user: user?._id });
+
+      let userDetails: any;
+      let userFind: any = await User.findOne({ "phones.no": mobileNo });
+
+      let auth_token: any = await AuthToken.findOne({ mobileNo: mobileNo });
       if (auth_token) {
-        if (auth_token?.otp != otp) {
+        if (auth_token?.otp === otp) {
+          const payload: IUser = {
+            phones: {
+              no: mobileNo,
+              used_for_login: false,
+            },
+            phone: mobileNo,
+          };
+
+          const user = new User(payload);
+          userDetails = await user.save();
+        } else {
           throw new Error("otp is invalid");
         }
-        await User.findOneAndUpdate({ mobileNo }, { is_new_user :false});
+
         let secret: any = process.env.JWT_SECRET,
           tokenTime: any = process.env.TOKENTIME,
           tokenRefreshTime = process.env.REFRESHTOKENTIME;
 
         let token = jwt.sign(
-          { _id: user.id, mobileNo: user.mobileNo },
+          { _id: userDetails.id, mobileNo: userDetails.mobileNo },
           secret,
           { expiresIn: tokenTime }
         );
         const refreshToken = jwt.sign(
-          { _id: user.id, mobileNo: user.mobileNo },
+          { _id: userDetails.id, mobileNo: userDetails.mobileNo },
           secret,
           { expiresIn: tokenRefreshTime }
         );
@@ -128,7 +126,12 @@ class AuthController {
         await auth_token.remove();
         return res.status(200).json({
           success: true,
-          data: { token, refreshToken, token_expires_at, is_new_user },
+          data: {
+            token,
+            refreshToken,
+            token_expires_at,
+            is_new_user: userFind ? false : true,
+          },
         });
       } else {
         return res
@@ -145,13 +148,8 @@ class AuthController {
       const { mobileNo } = req.body;
       const checkMobileNo = await MobileNoCheckUtils.verify(mobileNo);
       if (!checkMobileNo) throw new Error("mobile number is not valid");
-      let user = await User.findOne({ mobileNo: mobileNo });
-      if (user) {
-        req.body.user = user;
-        next();
-      } else {
-        throw new Error("user is not found");
-      }
+      let user = await AuthToken.findOne({ mobileNo: mobileNo });
+      next();
     } catch (error: any) {
       console.log(error);
       return res.status(500).json({ success: false, message: error.message });
