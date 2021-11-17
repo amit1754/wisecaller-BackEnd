@@ -13,10 +13,12 @@ const UserSchema = new Schema(
     phone: {
       type: String,
       default: null,
+      unique: true,
     },
     secondary_no: {
       type: String,
       default: null,
+      unique: true,
     },
     phones: [
       {
@@ -55,8 +57,8 @@ const UserSchema = new Schema(
       default: false,
     },
     user_status: {
-      type: Schema.Types.Mixed
-    }
+      type: Schema.Types.Mixed,
+    },
     // user_status: {
     //   type: Schema.Types.ObjectId,
     //   ref: "UserSatus",

@@ -16,57 +16,7 @@ class UserController {
         {
           $match: { _id: loggedInUser._id },
         },
-        {
-          $lookup: {
-            from: "usersatus",
-            localField: "user_status",
-            foreignField: "_id",
-            as: "userStatus",
-          },
-        },
-        {
-          $lookup: {
-            from: "usersubstatuses",
-            localField: "user_sub_status",
-            foreignField: "_id",
-            as: "userSubStatus",
-          },
-        },
       ]);
-
-      const custom_status: any = await customStatus.aggregate([
-        {
-          $match: {
-            user: loggedInUser._id,
-          },
-        },
-        {
-          $lookup: {
-            from: "usersatus",
-            localField: "status",
-            foreignField: "_id",
-            as: "userStatus",
-          },
-        },
-        {
-          $unwind: {
-            path: "$userStatus",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $lookup: {
-            from: "usersubstatuses",
-            localField: "substatus`",
-            foreignField: "_id",
-            as: "userSubStatus",
-          },
-        },
-        {
-          $unwind: { path: "$userSubStatus", preserveNullAndEmptyArrays: true },
-        },
-      ]);
-      user[0].customStatus = custom_status;
 
       res.status(200).json({
         sucess: true,

@@ -122,7 +122,16 @@ class AuthController {
         let token_expires_at: any = now.setHours(
           now.getHours() + parseInt(hrs)
         );
-
+        token_expires_at = new Date(token_expires_at).toLocaleString("en-us", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        });
+        console.log("token_expires_at", token_expires_at);
         await auth_token.remove();
         return res.status(200).json({
           success: true,
