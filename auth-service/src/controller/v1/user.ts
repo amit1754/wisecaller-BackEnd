@@ -32,35 +32,41 @@ class UserController {
     const reqPayload: any = req;
     try {
       const loggedInUser: any = req.user;
+
       let payload: any;
-      let phones: any;
 
-      let data: any;
-      if (reqPayload.body?.phone) {
-        data = {
-          no: reqPayload.body?.phone,
-          used_for_login: false,
-        };
-        phones = { ...phones, ...data }
-      }
       if (reqPayload.body.secondary_no) {
-        data = {
-          no: reqPayload.body.secondary_no,
-          used_for_login: false,
-        };
-        phones = { ...phones, ...data };
-      }
-
-      console.log("phones", phones);
-
-
-
-
-      if (phones) {
+        const findSecondaryNO: any = await User.findOne({
+          "phones.no": reqPayload.body.secondary_no,
+        });
         payload = {
           ...payload,
-          phones,
+          phones: loggedInUser.phones,
         };
+        if (findSecondaryNO) {
+          if ((findSecondaryNO.phone = loggedInUser.phone)) {
+            let updatePhone = {
+              no: reqPayload.body.secondary_no,
+              type : "SECONDARY",
+              used_for_login: false,
+            };
+            payload.phones.length===2?payload.phones.pop():"";
+            payload.phones.push(updatePhone);
+          } else {
+            throw new Error("second phoneno already exist!");
+          }
+        } else {
+          let phonesLength = loggedInUser.phones.length;
+          if (phonesLength <= 2) {
+            let updatePhone = {
+              no: reqPayload.body.secondary_no,
+              type: "SECONDARY",
+              used_for_login: false,
+            };
+            payload.phones.length === 2 ? payload.phones.pop() : "";
+            payload.phones.push(updatePhone);
+          }
+        }
       }
 
       if (reqPayload.file) {
@@ -75,20 +81,21 @@ class UserController {
           ...req.body,
         };
       }
-      console.log(payload);
+
       if (loggedInUser.profileImage != null) {
         await deletefile(loggedInUser.profileImage);
       }
+      console.log("payload", payload);
+      delete payload.phone;
+      delete payload.role;
+      await User.findOneAndUpdate({ _id: loggedInUser._id }, payload, {
+        upsert: true,
+        new: false,
+      });
 
-      let user = await User.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        payload,
-        {
-          upsert: true,
-          new: false,
-        }
-      );
-      return res.status(200).json({ success: true, data: [] });
+      return res
+        .status(200)
+        .json({ success: true, message: "user update successfully", data: [] });
     } catch (error: any) {
       console.error(error);
       return res.status(500).json({ success: false, message: error.message });
@@ -173,38 +180,52 @@ class UserController {
 
   async updateUserStatus(req: Request, res: Response) {
     try {
-      let loggedInUser: any = req.user
+      let loggedInUser: any = req.user;
       let payload = {
         name: "",
         status: {
-          sub_status: {}
+          sub_status: {},
         },
-      }
-      if(req.body.customStatusId) {
-        let userCustomStatus = await customStatus.findById(req.body.customStatusId)
-        let userStatus = await UserStatus.findById(userCustomStatus.status).lean()
-        Object.assign(payload, {name: userCustomStatus.custom_name, status: {...payload.status, ...userStatus}})
-        if(userCustomStatus.substatus) {
-          let userSubStatus = await UserSubStatus.findById(req.body.subStatusId)
-          Object.assign(payload, {sub_status: userSubStatus})
+      };
+      if (req.body.customStatusId) {
+        let userCustomStatus = await customStatus.findById(
+          req.body.customStatusId
+        );
+        let userStatus = await UserStatus.findById(
+          userCustomStatus.status
+        ).lean();
+        Object.assign(payload, {
+          name: userCustomStatus.custom_name,
+          status: { ...payload.status, ...userStatus },
+        });
+        if (userCustomStatus.substatus) {
+          let userSubStatus = await UserSubStatus.findById(
+            req.body.subStatusId
+          );
+          Object.assign(payload, { sub_status: userSubStatus });
         }
       }
 
-
-      if(req.body.statusId) {
-        let userStatus = await UserStatus.findById(req.body.statusId).lean()
-        Object.assign(payload, {status: {...payload.status, ...userStatus}})
+      if (req.body.statusId) {
+        let userStatus = await UserStatus.findById(req.body.statusId).lean();
+        Object.assign(payload, {
+          status: { ...payload.status, ...userStatus },
+        });
       }
 
-      if(req.body.subStatusId) {
-        let userSubStatus = await UserSubStatus.findById(req.body.subStatusId)
-        Object.assign(payload.status, {sub_status: userSubStatus})
+      if (req.body.subStatusId) {
+        let userSubStatus = await UserSubStatus.findById(req.body.subStatusId);
+        Object.assign(payload.status, { sub_status: userSubStatus });
       }
 
-      let user = await User.findOneAndUpdate({_id: loggedInUser._id}, {user_status: payload}, {upsert: true, new: true})
-      return res.status(200).json({success: true, data: user})
+      let user = await User.findOneAndUpdate(
+        { _id: loggedInUser._id },
+        { user_status: payload },
+        { upsert: true, new: true }
+      );
+      return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
-      return res.status(500).json({success: false, error: error.message})
+      return res.status(500).json({ success: false, error: error.message });
     }
   }
   // async updateCustomStatus(req: Request, res: Response){

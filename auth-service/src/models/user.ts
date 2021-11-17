@@ -24,6 +24,7 @@ const UserSchema = new Schema(
       {
         no: { type: String },
         used_for_login: { type: Boolean, default: false },
+        type: { type: String },
       },
     ],
 

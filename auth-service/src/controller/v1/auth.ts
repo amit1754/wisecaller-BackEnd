@@ -88,16 +88,36 @@ class AuthController {
       let auth_token: any = await AuthToken.findOne({ mobileNo: mobileNo });
       if (auth_token) {
         if (auth_token?.otp === otp) {
-          const payload: IUser = {
-            phones: {
-              no: mobileNo,
-              used_for_login: false,
-            },
-            phone: mobileNo,
-          };
+          if (!userFind) {
+            const payload: IUser = {
+              phones: {
+                no: mobileNo,
+                used_for_login: false,
+                type: "PRIMARY",
+              },
+              phone: mobileNo,
+            };
 
-          const user = new User(payload);
-          userDetails = await user.save();
+            const user = new User(payload);
+            userDetails = await user.save();
+          } else {
+            let phones: any;
+            for (let i = 0; i < userFind.phones.length; i++) {
+              if (userFind.phones[i].no === mobileNo) {
+                phones = {
+                  ...phones,
+                  no: userFind.phones[i].no,
+                  type: userFind.phones[i].type,
+                  used_for_login: true,
+                };
+              }
+            }
+            console.log("phones", phones);
+            userDetails = await User.findOneAndUpdate(
+              { _id: userFind._id },
+              { phones: phones }
+            );
+          }
         } else {
           throw new Error("otp is invalid");
         }
