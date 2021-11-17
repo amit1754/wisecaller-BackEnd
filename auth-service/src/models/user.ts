@@ -13,12 +13,10 @@ const UserSchema = new Schema(
     phone: {
       type: String,
       default: null,
-      unique: true,
     },
     secondary_no: {
       type: String,
       default: null,
-      unique: true,
     },
     phones: [
       {
