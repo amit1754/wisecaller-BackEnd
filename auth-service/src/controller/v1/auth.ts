@@ -101,18 +101,13 @@ class AuthController {
             const user = new User(payload);
             userDetails = await user.save();
           } else {
-            let phones: any;
+            let phones: any = userFind.phones;
             for (let i = 0; i < userFind.phones.length; i++) {
               if (userFind.phones[i].no === mobileNo) {
-                phones = {
-                  ...phones,
-                  no: userFind.phones[i].no,
-                  type: userFind.phones[i].type,
-                  used_for_login: true,
-                };
+                phones[i].used_for_login = true;
               }
             }
-            console.log("phones", phones);
+
             userDetails = await User.findOneAndUpdate(
               { _id: userFind._id },
               { phones: phones }
@@ -151,7 +146,7 @@ class AuthController {
           second: "2-digit",
           hour12: false,
         });
-        console.log("token_expires_at", token_expires_at);
+        
         await auth_token.remove();
         return res.status(200).json({
           success: true,
@@ -168,7 +163,7 @@ class AuthController {
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
-      console.log(error);
+      
       return res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -180,7 +175,7 @@ class AuthController {
       let user = await AuthToken.findOne({ mobileNo: mobileNo });
       next();
     } catch (error: any) {
-      console.log(error);
+      
       return res.status(500).json({ success: false, message: error.message });
     }
   }
