@@ -8,23 +8,23 @@ class StatusController {
     try {
       const reqPayload: any = req;
       const loggedInUser: any = req.user;
-      // if (loggedInUser.role === "ADMIN") {
-      const payload: IStatus = {
-        ...req.body,
-        logo: reqPayload.file ? reqPayload.file.key : null,
-        user: null,
-      };
+      if (loggedInUser.role === "ADMIN") {
+        const payload: IStatus = {
+          ...req.body,
+          logo: reqPayload.file ? reqPayload.file.key : null,
+          user: null,
+        };
 
-      const status = new UserStatus(payload);
-      await status.save();
-      res.status(200).json({
-        success: true,
-        message: "User status added successfully",
-        data: [],
-      });
-      // } else {
-      //   throw new Error("you are not authorize person to access this resource");
-      // }
+        const status = new UserStatus(payload);
+        await status.save();
+        res.status(200).json({
+          success: true,
+          message: "User status added successfully",
+          data: [],
+        });
+      } else {
+        throw new Error("you are not authorize person to access this resource");
+      }
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -33,11 +33,6 @@ class StatusController {
     try {
       const loggedInUser: any = req.user;
       let userEvent = await UserStatus.aggregate([
-        {
-          $match: {
-            $or: [{ user: null }],
-          },
-        },
         {
           $lookup: {
             from: "usersubstatuses",
@@ -57,7 +52,7 @@ class StatusController {
       ]);
       res.status(200).json({
         success: true,
-        message: "event get successfully",
+        message: "global status get successfully",
         data: userEvent,
       });
     } catch (error: any) {
@@ -95,7 +90,7 @@ class StatusController {
         );
         res.status(200).json({
           success: true,
-          message: "user Event Status update successfully",
+          message: "global Status update successfully",
           data: StatusUpdate,
         });
       } else {
@@ -120,7 +115,7 @@ class StatusController {
         let user = await UserStatus.findByIdAndDelete(id);
         res.status(200).json({
           success: true,
-          message: "Event Status delete sucessfully",
+          message: "Global Status delete sucessfully",
           data: user,
         });
       }
@@ -143,7 +138,7 @@ class StatusController {
         status.save();
         res.status(200).json({
           success: true,
-          message: "Event Sub-Status added sucessfully",
+          message: "global Sub-Status added sucessfully",
           data: [],
         });
       } else {
@@ -184,7 +179,7 @@ class StatusController {
         );
         res.status(200).json({
           success: true,
-          message: "Sub Event Status update successfully",
+          message: "global sub status update successfully",
           data: StatusUpdate,
         });
       } else {
@@ -208,7 +203,7 @@ class StatusController {
         let user = await UserSubStatus.findByIdAndDelete(id);
         res.status(200).json({
           success: true,
-          message: "Event Sub Status delete sucessfully",
+          message: "Global Sub Status delete sucessfully",
           data: [],
         });
       }

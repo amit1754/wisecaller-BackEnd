@@ -27,9 +27,12 @@ const customStatusSchema = new Schema(
     notes: {
       is_custom: { type: String },
       text: { type: String },
+      noteId: { type: Schema.Types.ObjectId, default: null }, //ref of notes
     },
     display_to: {
       type: String,
+      enum: ["CONTACT", "ALL"],
+      default: "CONTACT",
     },
     auto_sms: { type: Boolean, default: false },
     is_enabled: {

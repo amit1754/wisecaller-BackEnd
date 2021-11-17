@@ -146,7 +146,7 @@ class AuthController {
           second: "2-digit",
           hour12: false,
         });
-        
+
         await auth_token.remove();
         return res.status(200).json({
           success: true,
@@ -163,7 +163,6 @@ class AuthController {
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
-      
       return res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -175,7 +174,6 @@ class AuthController {
       let user = await AuthToken.findOne({ mobileNo: mobileNo });
       next();
     } catch (error: any) {
-      
       return res.status(500).json({ success: false, message: error.message });
     }
   }

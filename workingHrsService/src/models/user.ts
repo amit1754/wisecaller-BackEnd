@@ -13,15 +13,18 @@ const UserSchema = new Schema(
     phone: {
       type: String,
       default: null,
+      unique: true,
     },
     secondary_no: {
       type: String,
       default: null,
+      unique: true,
     },
     phones: [
       {
         no: { type: String },
         used_for_login: { type: Boolean, default: false },
+        type: { type: String },
       },
     ],
 
@@ -55,20 +58,23 @@ const UserSchema = new Schema(
       default: false,
     },
     user_status: {
-      type: Schema.Types.ObjectId,
-      ref: "UserSatus",
-      default: null,
+      type: Schema.Types.Mixed,
     },
-    user_sub_status: {
-      type: Schema.Types.ObjectId,
-      ref: "UserSubStatus",
-      default: null,
-    },
-    custom_status: {
-      type: Schema.Types.ObjectId,
-      ref: "UserSubStatus",
-      default: null,
-    },
+    // user_status: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "UserSatus",
+    //   default: null,
+    // },
+    // user_sub_status: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "UserSubStatus",
+    //   default: null,
+    // },
+    // custom_status: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "UserSubStatus",
+    //   default: null,
+    // },
   },
   { timestamps: true }
 );
