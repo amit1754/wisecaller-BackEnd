@@ -60,21 +60,24 @@ const UserSchema = new Schema(
     user_status: {
       type: Schema.Types.Mixed,
     },
-    // user_status: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "UserSatus",
-    //   default: null,
-    // },
-    // user_sub_status: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "UserSubStatus",
-    //   default: null,
-    // },
-    // custom_status: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "UserSubStatus",
-    //   default: null,
-    // },
+    modes: {
+      workLifeBalance: {
+        is_active: { type: Boolean, default: false },
+        data: { type: Schema.Types.Mixed, default: null },
+      },
+      roadSafetyStatus: {
+        is_active: { type: Boolean, default: false },
+        devices: { type: Schema.Types.Mixed, default: null },
+        data: { type: Schema.Types.Mixed, default: null },
+      },
+      syncCalender: {
+        calenders: { type: Schema.Types.Mixed, default: null },
+        priooritize_calender_events: { type: Boolean, default: false },
+        status: {
+          type: Schema.Types.Mixed,
+        },
+      },
+    },
   },
   { timestamps: true }
 );
