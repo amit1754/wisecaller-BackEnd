@@ -1,5 +1,6 @@
 export interface IStatus {
   status: string;
+  application_types: Object;
 }
 export interface ISubStatus {
   status: string;

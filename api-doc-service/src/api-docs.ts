@@ -158,6 +158,71 @@ export default {
         deprecated: false,
       },
     },
+    "/auth-service/api/v1/user/update-profile-": {
+      put: {
+        tags: ["Auth Service"],
+        summary: "update user profile",
+        description: "",
+        operationId: "updateuserprofile",
+        parameters: [],
+        requestBody: {
+          content: {
+            "application/json": {
+              encoding: {},
+              schema: {
+                required: [],
+                type: "object",
+                properties: {
+                  first_name: {
+                    type: "string",
+                    example: " nithin1",
+                  },
+                  last_name: {
+                    type: "string",
+                    example: " paul",
+                  },
+                  is_profile_from_social_media: {
+                    type: "boolean",
+                    example: false,
+                  },
+                  media_profile_url: {
+                    type: "string",
+                  },
+                  user_status: {
+                    type: "string",
+                    example: "617bdc232e8a70362c05b6ef",
+                  },
+                  user_sub_status: {
+                    type: "string",
+                    example: "617bdef62349463cba0aaf9b",
+                  },
+                  custom_status: {
+                    type: "string",
+                    example: "6191f857f01b8beeb2bdd32f",
+                  },
+                  phone: {
+                    type: "string",
+                    example: "+918585858586",
+                  },
+                  secondary_no: {
+                    type: "string",
+                    example: "+918585858586",
+                  },
+                },
+              },
+            },
+          },
+          required: false,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/auth-service/api/v1/contact-us": {
       post: {
         tags: ["Auth Service"],

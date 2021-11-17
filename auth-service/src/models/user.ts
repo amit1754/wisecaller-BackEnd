@@ -55,20 +55,23 @@ const UserSchema = new Schema(
       default: false,
     },
     user_status: {
-      type: Schema.Types.ObjectId,
-      ref: "UserSatus",
-      default: null,
-    },
-    user_sub_status: {
-      type: Schema.Types.ObjectId,
-      ref: "UserSubStatus",
-      default: null,
-    },
-    custom_status: {
-      type: Schema.Types.ObjectId,
-      ref: "UserSubStatus",
-      default: null,
-    },
+      type: Schema.Types.Mixed
+    }
+    // user_status: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "UserSatus",
+    //   default: null,
+    // },
+    // user_sub_status: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "UserSubStatus",
+    //   default: null,
+    // },
+    // custom_status: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "UserSubStatus",
+    //   default: null,
+    // },
   },
   { timestamps: true }
 );

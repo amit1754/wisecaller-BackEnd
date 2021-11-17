@@ -4,6 +4,8 @@ import { customStatus } from "../../models/customStatus";
 import { ContactUs } from "../../models/contactUs";
 import { sendMailUtils } from "../../utils";
 import { deletefile } from "../../middlewares/uploadService";
+import { UserStatus } from "../../models/status";
+import { UserSubStatus } from "../../models/subStatus";
 
 class UserController {
   async show(req: Request, res: Response) {
@@ -216,6 +218,43 @@ class UserController {
       });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async updateUserStatus(req: Request, res: Response) {
+    try {
+      let loggedInUser: any = req.user
+      let payload = {
+        name: "",
+        status: {
+          sub_status: {}
+        },
+      }
+      if(req.body.customStatusId) {
+        let userCustomStatus = await customStatus.findById(req.body.customStatusId)
+        let userStatus = await UserStatus.findById(userCustomStatus.status).lean()
+        Object.assign(payload, {name: userCustomStatus.custom_name, status: {...payload.status, ...userStatus}})
+        if(userCustomStatus.substatus) {
+          let userSubStatus = await UserSubStatus.findById(req.body.subStatusId)
+          Object.assign(payload, {sub_status: userSubStatus})
+        }
+      }
+
+
+      if(req.body.statusId) {
+        let userStatus = await UserStatus.findById(req.body.statusId).lean()
+        Object.assign(payload, {status: {...payload.status, ...userStatus}})
+      }
+
+      if(req.body.subStatusId) {
+        let userSubStatus = await UserSubStatus.findById(req.body.subStatusId)
+        Object.assign(payload.status, {sub_status: userSubStatus})
+      }
+
+      let user = await User.findOneAndUpdate({_id: loggedInUser._id}, {user_status: payload}, {upsert: true, new: true})
+      return res.status(200).json({success: true, data: user})
+    } catch (error: any) {
+      return res.status(500).json({success: false, error: error.message})
     }
   }
   // async updateCustomStatus(req: Request, res: Response){

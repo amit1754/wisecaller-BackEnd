@@ -12,6 +12,7 @@ router.put(
 );
 router.get("/get-profile", User.show);
 router.post("/add-devices", User.addDevices);
+router.put("/update-user-status", User.updateUserStatus)
 
 export const UserRoutes = router;
 
