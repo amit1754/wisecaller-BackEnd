@@ -5,6 +5,7 @@ import { AuthToken } from "../../models/auth-token";
 import jwt from "jsonwebtoken";
 import { MobileNoCheckUtils } from "../../utils";
 import sendSMS1 from "../../middlewares/smsSendMiddelware";
+import moment from "moment";
 
 var AWS = require("aws-sdk");
 
@@ -134,18 +135,22 @@ class AuthController {
 
         let hrs: any = tokenTime.substr(0, tokenTime.length - 1);
         let now: any = new Date();
-        let token_expires_at: any = now.setHours(
-          now.getHours() + parseInt(hrs)
-        );
-        token_expires_at = new Date(token_expires_at).toLocaleString("en-us", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        });
+        // let token_expires_at: any = now.setHours(
+        //   now.getHours() + parseInt(hrs)
+        // );
+        let token_expires_at: string = moment()
+          .add(12, "hours")
+          .utc()
+          .toISOString();
+        // token_expires_at = new Date(token_expires_at).toLocaleString("en-us", {
+        //   year: "numeric",
+        //   month: "2-digit",
+        //   day: "2-digit",
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        //   second: "2-digit",
+        //   hour12: false,
+        // });
 
         await auth_token.remove();
         return res.status(200).json({
