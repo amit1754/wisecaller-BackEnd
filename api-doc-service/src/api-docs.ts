@@ -7,7 +7,7 @@ export default {
   },
   servers: [
     {
-      url: "http://localhost:8000",
+      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
       variables: {},
     },
   ],
@@ -16,8 +16,7 @@ export default {
       post: {
         tags: ["Auth Service"],
         summary: "Login user",
-        description:
-          "| Name     |Type    | M/o   | Example\n| ---      | ---    | ---   | ---\n|mobileNo  | string | M     | +911212121212",
+        description: "",
         operationId: "Loginuser",
         parameters: [],
         requestBody: {
@@ -28,7 +27,7 @@ export default {
                 $ref: "#/components/schemas/LoginuserRequest",
               },
               example: {
-                mobileNo: "+918980514085",
+                mobileNo: "+919714209234",
               },
             },
           },
@@ -59,8 +58,8 @@ export default {
                 $ref: "#/components/schemas/verifyotprequest",
               },
               example: {
-                mobileNo: "+918980514085",
-                otp: 1628,
+                mobileNo: "+919714209234",
+                otp: 1896,
               },
             },
           },
@@ -94,54 +93,47 @@ export default {
       put: {
         tags: ["Auth Service"],
         summary: "update user profile",
-        description: "",
+        description:
+          "| Name      |Type    | M/o   | Example\n| ---       | ---    | ---   | ---\n| firstName | string | M     | abc\n| lastName  | string | M     | abc\n| email     | string | M     | abc@abc.com\n| status    | string | M     | 61211f1ef34e5900080a6812",
         operationId: "updateuserprofile",
         parameters: [],
         requestBody: {
           content: {
-            "multipart/form-data": {
+            "application/x-www-form-urlencoded": {
               encoding: {},
               schema: {
-                required: [],
+                required: [
+                  "first_name",
+                  "last_name",
+                  "profile_image",
+                  "is_profile_from_social_media",
+                  "phone",
+                  "secondary_no",
+                ],
                 type: "object",
                 properties: {
                   first_name: {
                     type: "string",
-                    example: " nithin1",
+                    example: " tushar",
                   },
                   last_name: {
                     type: "string",
-                    example: " paul",
+                    example: "savaliya",
                   },
                   profile_image: {
-                    type: "file",
+                    type: "string",
                   },
                   is_profile_from_social_media: {
                     type: "boolean",
                     example: false,
                   },
-                  media_profile_url: {
-                    type: "string",
-                  },
-                  user_status: {
-                    type: "string",
-                    example: "617bdc232e8a70362c05b6ef",
-                  },
-                  user_sub_status: {
-                    type: "string",
-                    example: "617bdef62349463cba0aaf9b",
-                  },
-                  custom_status: {
-                    type: "string",
-                    example: "6191f857f01b8beeb2bdd32f",
-                  },
                   phone: {
                     type: "string",
-                    example: "+918585858586",
+                    example: "+918849455045",
                   },
                   secondary_no: {
                     type: "string",
-                    example: "+918585858586",
+                    example: "+918980514085",
                   },
                 },
               },
@@ -158,61 +150,30 @@ export default {
         deprecated: false,
       },
     },
-    "/auth-service/api/v1/user/update-profile-": {
+    "/auth-service/api/v1/user/update-user-status": {
       put: {
         tags: ["Auth Service"],
-        summary: "update user profile",
-        description: "",
-        operationId: "updateuserprofile",
+        summary: "update user status",
+        description:
+          "| Name      |Type    | M/o   | Example\n| ---       | ---    | ---   | ---\n| firstName | string | M     | abc\n| lastName  | string | M     | abc\n| email     | string | M     | abc@abc.com\n| status    | string | M     | 61211f1ef34e5900080a6812",
+        operationId: "updateuserstatus",
         parameters: [],
         requestBody: {
+          description: "",
           content: {
             "application/json": {
-              encoding: {},
               schema: {
-                required: [],
-                type: "object",
-                properties: {
-                  first_name: {
-                    type: "string",
-                    example: " nithin1",
-                  },
-                  last_name: {
-                    type: "string",
-                    example: " paul",
-                  },
-                  is_profile_from_social_media: {
-                    type: "boolean",
-                    example: false,
-                  },
-                  media_profile_url: {
-                    type: "string",
-                  },
-                  user_status: {
-                    type: "string",
-                    example: "617bdc232e8a70362c05b6ef",
-                  },
-                  user_sub_status: {
-                    type: "string",
-                    example: "617bdef62349463cba0aaf9b",
-                  },
-                  custom_status: {
-                    type: "string",
-                    example: "6191f857f01b8beeb2bdd32f",
-                  },
-                  phone: {
-                    type: "string",
-                    example: "+918585858586",
-                  },
-                  secondary_no: {
-                    type: "string",
-                    example: "+918585858586",
-                  },
-                },
+                $ref: "#/components/schemas/updateuserstatusrequest",
+              },
+              example: {
+                customStatusId: "61950368448ab7e5f7775ce0",
+                statusId: "6195004219517edbb9a32dde",
+                subStatusId: "6195023525c96ee17567830d",
+                notesId: "",
               },
             },
           },
-          required: false,
+          required: true,
         },
         responses: {
           "200": {
@@ -255,39 +216,10 @@ export default {
     },
     "/auth-service/api/v1/contact-us/get": {
       get: {
-        tags: ["Auth Service"],
+        tags: ["Admin Service"],
         summary: "get contact us details",
         operationId: "getcontactusdetails",
         parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/auth-service/api/v1/user/add-devices": {
-      post: {
-        tags: ["Auth Service"],
-        summary: "add devices",
-        operationId: "adddevices",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/adddevicesrequest",
-              },
-              example: {
-                devices: ["speaket", "blutooth"],
-              },
-            },
-          },
-          required: true,
-        },
         responses: {
           "200": {
             description: "",
@@ -311,7 +243,7 @@ export default {
                 $ref: "#/components/schemas/resendotprequest",
               },
               example: {
-                mobileNo: "+919898803674",
+                mobileNo: "+918585858588",
               },
             },
           },
@@ -328,7 +260,7 @@ export default {
     },
     "/call-service/api/v1/callhistory/add": {
       post: {
-        tags: ["Call Service"],
+        tags: ["call-History"],
         summary: "call hISTORY",
         operationId: "callhISTORY",
         parameters: [],
@@ -337,117 +269,130 @@ export default {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/callhISTORYRequest",
-              },
-              example: {
-                callLogs: [
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/callhISTORYRequest",
+                },
+                description: "",
+                example: [
                   {
-                    dateId: "2021-10-27",
-                    callList: [
+                    wisecallerId: "6161872b43430600096f3fee",
+                    phone: "+919714209234",
+                    contactId: "618fa6b02ac1e05fd9709da0",
+                    name: "abc",
+                    callHistory: [
                       {
-                        wiseCallerId: "6174ccf5ba15ff00084330f3",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
+                        time: "2021-12-12 11:00:00",
+                        type: "Incoming",
+                        simId: "sim1",
                       },
                       {
-                        wiseCallerId: "6161872b43430600096f3fee",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
-                      },
-                      {
-                        wiseCallerId: "6174ccf5ba15ff00084330f3",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
+                        time: "2021-12-12 11:00:00",
+                        type: "Outgoing",
+                        simId: "sim2",
                       },
                     ],
+                    date: "2021-11-13 10:20:22",
                   },
                   {
-                    dateId: "2020-10-23",
-                    callList: [
+                    wisecallerId: "6161872b43430600096f3fee",
+                    phone: "+919496955716",
+                    contactId: "618fa6b12ac1e05fd9709daa",
+                    name: "abcs",
+                    callHistory: [
                       {
-                        wiseCallerId: "617690a6c294d45bd496d176",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
+                        time: "2021-12-12 11:00:00",
+                        type: "Incoming",
+                        simId: "sim1",
                       },
                       {
-                        wiseCallerId: "6174ccf5ba15ff00084330f3",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
-                      },
-                      {
-                        wiseCallerId: "6177a25b8a2ccc03fc481270",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
+                        time: "2021-12-12 11:00:00",
+                        type: "Outgoing",
+                        simId: "sim2",
                       },
                     ],
+                    date: "2021-11-14 10:20:22",
                   },
                   {
-                    dateId: "2020-10-22",
-                    callList: [
+                    wisecallerId: "6174ccf5ba15ff00084330f3",
+                    phone: "+918989898989",
+                    contactId: null,
+                    name: "abcs",
+                    callHistory: [
                       {
-                        wiseCallerId: "6177a25b8a2ccc03fc481270",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
+                        time: "2021-12-12 11:00:00",
+                        type: "Incoming",
+                        simId: "sim1",
                       },
                       {
-                        wiseCallerId: "6177b82712131f000acc444b",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
-                      },
-                      {
-                        wiseCallerId: "6177b82712131f000acc444b",
-                        phoneNumber: "9876543212",
-                        name: "PRIYA",
-                        status: "busy",
-                        callType: "incoming",
-                        time: "5:00pm",
-                        message: "will call you later",
-                        simId: "SIM1",
+                        time: "2021-12-12 11:00:00",
+                        type: "Outgoing",
+                        simId: "sim2",
                       },
                     ],
+                    date: "2021-11-14 10:20:22",
                   },
                 ],
               },
+              example: [
+                {
+                  wisecallerId: "6161872b43430600096f3fee",
+                  phone: "+919714209234",
+                  contactId: "618fa6b02ac1e05fd9709da0",
+                  name: "abc",
+                  callHistory: [
+                    {
+                      time: "2021-12-12 11:00:00",
+                      type: "Incoming",
+                      simId: "sim1",
+                    },
+                    {
+                      time: "2021-12-12 11:00:00",
+                      type: "Outgoing",
+                      simId: "sim2",
+                    },
+                  ],
+                  date: "2021-11-13 10:20:22",
+                },
+                {
+                  wisecallerId: "6161872b43430600096f3fee",
+                  phone: "+919496955716",
+                  contactId: "618fa6b12ac1e05fd9709daa",
+                  name: "abcs",
+                  callHistory: [
+                    {
+                      time: "2021-12-12 11:00:00",
+                      type: "Incoming",
+                      simId: "sim1",
+                    },
+                    {
+                      time: "2021-12-12 11:00:00",
+                      type: "Outgoing",
+                      simId: "sim2",
+                    },
+                  ],
+                  date: "2021-11-14 10:20:22",
+                },
+                {
+                  wisecallerId: "6174ccf5ba15ff00084330f3",
+                  phone: "+918989898989",
+                  contactId: null,
+                  name: "abcs",
+                  callHistory: [
+                    {
+                      time: "2021-12-12 11:00:00",
+                      type: "Incoming",
+                      simId: "sim1",
+                    },
+                    {
+                      time: "2021-12-12 11:00:00",
+                      type: "Outgoing",
+                      simId: "sim2",
+                    },
+                  ],
+                  date: "2021-11-14 10:20:22",
+                },
+              ],
             },
           },
           required: true,
@@ -463,7 +408,7 @@ export default {
     },
     "/call-service/api/v1/callhistory/get": {
       get: {
-        tags: ["Call Service"],
+        tags: ["call-History"],
         summary: "call history",
         operationId: "callhistory",
         parameters: [],
@@ -478,7 +423,7 @@ export default {
     },
     "/call-service/api/v1/callhistory/add-number": {
       post: {
-        tags: ["Call Service"],
+        tags: ["call-History"],
         summary: "add number from call history",
         operationId: "addnumberfromcallhistory",
         parameters: [],
@@ -490,16 +435,12 @@ export default {
                 $ref: "#/components/schemas/addnumberfromcallhistoryrequest",
               },
               example: {
-                callLogId: "617a3468c0182323f296cf9b",
-                callDetails: {
-                  wiseCallerId: "617949e2917167caf3ad3e23",
-                  name: "TUSHAR0dfgg07",
-                  phoneNumber: "9876543212",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
+                phone: "+919099909990",
+                name: "abcs",
+                time: "2021-12-12 11:00:00",
+                type: "Incoming",
+                simId: "sim2",
+                date: "2021-12-12 11:00:00",
               },
             },
           },
@@ -514,101 +455,101 @@ export default {
         deprecated: false,
       },
     },
-    "/call-service/api/v1/callhistory/delete-number": {
-      post: {
-        tags: ["Call Service"],
-        summary: "delete number from call history",
-        operationId: "deletenumberfromcallhistory",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/deletenumberfromcallhistoryrequest",
-              },
-              example: {
-                callLogId: "617a3468c0182323f296cf9b",
-                callId: "617949e2917167caf3ad3e23",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/call-service/api/v1/callhistory/favorite-add": {
-      post: {
-        tags: ["Call Service"],
-        summary: "Add favorite",
-        operationId: "Addfavorite",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/AddfavoriteRequest",
-              },
-              example: {
-                name: "abc",
-                number: "+918849455045",
-                isFavorite: true,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/call-service/api/v1/callhistory/block-add": {
-      post: {
-        tags: ["Call Service"],
-        summary: "Add Block contact",
-        operationId: "AddBlockcontact",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/AddBlockcontactRequest",
-              },
-              example: {
-                name: "abc",
-                number: "+918849455045",
-                isBlock: true,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
+    // "/call-service/api/v1/callhistory/delete-number": {
+    //   post: {
+    //     tags: ["call-History"],
+    //     summary: "delete number from call history",
+    //     operationId: "deletenumberfromcallhistory",
+    //     parameters: [],
+    //     requestBody: {
+    //       description: "",
+    //       content: {
+    //         "application/json": {
+    //           schema: {
+    //             $ref: "#/components/schemas/deletenumberfromcallhistoryrequest",
+    //           },
+    //           example: {
+    //             callLogId: "617a3468c0182323f296cf9b",
+    //             callId: "617949e2917167caf3ad3e23",
+    //           },
+    //         },
+    //       },
+    //       required: true,
+    //     },
+    //     responses: {
+    //       "200": {
+    //         description: "",
+    //         headers: {},
+    //       },
+    //     },
+    //     deprecated: false,
+    //   },
+    // },
+    // "/call-service/api/v1/callhistory/favorite-add": {
+    //   post: {
+    //     tags: ["Misc"],
+    //     summary: "Add favorite",
+    //     operationId: "Addfavorite",
+    //     parameters: [],
+    //     requestBody: {
+    //       description: "",
+    //       content: {
+    //         "application/json": {
+    //           schema: {
+    //             $ref: "#/components/schemas/AddfavoriteRequest",
+    //           },
+    //           example: {
+    //             name: "abc",
+    //             number: "+918849455045",
+    //             isFavorite: true,
+    //           },
+    //         },
+    //       },
+    //       required: true,
+    //     },
+    //     responses: {
+    //       "200": {
+    //         description: "",
+    //         headers: {},
+    //       },
+    //     },
+    //     deprecated: false,
+    //   },
+    // },
+    // "/call-service/api/v1/callhistory/block-add": {
+    //   post: {
+    //     tags: ["Misc"],
+    //     summary: "Add Block contact",
+    //     operationId: "AddBlockcontact",
+    //     parameters: [],
+    //     requestBody: {
+    //       description: "",
+    //       content: {
+    //         "application/json": {
+    //           schema: {
+    //             $ref: "#/components/schemas/AddBlockcontactRequest",
+    //           },
+    //           example: {
+    //             name: "abc",
+    //             number: "+918849455045",
+    //             isBlock: true,
+    //           },
+    //         },
+    //       },
+    //       required: true,
+    //     },
+    //     responses: {
+    //       "200": {
+    //         description: "",
+    //         headers: {},
+    //       },
+    //     },
+    //     deprecated: false,
+    //   },
+    // },
     "/notification-service/api/v1/sms/send": {
       post: {
-        tags: ["Notification Service"],
+        tags: ["notification-service"],
         summary: "send custom message",
         operationId: "sendcustommessage",
         parameters: [],
@@ -636,9 +577,9 @@ export default {
         deprecated: false,
       },
     },
-    "/contact-service/api/v1/contact/sync": {
+    "/contact-sync-service/api/v1/contact/sync": {
       post: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "contact sync",
         operationId: "contactsync",
         parameters: [],
@@ -647,41 +588,166 @@ export default {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/contactsyncrequest",
-              },
-              example: {
-                mobileNO: "+918980514085",
-                contact: [
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/contactsyncrequest",
+                },
+                description: "",
+                example: [
                   {
-                    name: "abc",
-                    number: "+918849455045",
-                    isFavorite: true,
-                    isBlock: true,
-                    note: "aaaa",
+                    customId: 150,
+                    first_name: "tushar",
+                    last_name: "savaliya",
+                    profile_image: null,
+                    local_profile_image_path: "contacts/abc.png",
+                    phones: [
+                      {
+                        ph_no: "+911234567890",
+                        type: "PRIMARY",
+                      },
+                      {
+                        ph_no: "+913216549870",
+                        type: "SECONDARY",
+                      },
+                      {
+                        ph_no: "+911236547890",
+                        type: "OFFICE",
+                      },
+                      {
+                        ph_no: "+917412589630",
+                        type: "HOME",
+                      },
+                    ],
                   },
                   {
-                    name: "abc1",
-                    number: "+911234567889",
-                    isFavorite: true,
-                    note: "aaaa",
+                    customId: 151,
+                    first_name: "mehul",
+                    last_name: "mehul",
+                    profile_image: null,
+                    local_profile_image_path: "contacts/abc.png",
+                    phones: [
+                      {
+                        ph_no: "+911237896540",
+                        type: "PRIMARY",
+                      },
+                      {
+                        ph_no: "+919874563210",
+                        type: "SECONDARY",
+                      },
+                      {
+                        ph_no: "+915478963210",
+                        type: "OFFICE",
+                      },
+                      {
+                        ph_no: "+918756941230",
+                        type: "HOME",
+                      },
+                    ],
                   },
                   {
-                    name: "abcd",
-                    number: "+911234567888",
-                    isFavorite: true,
-                  },
-                  {
-                    name: "abcd1",
-                    number: "+911234567889",
-                    isFavorite: true,
-                  },
-                  {
-                    name: "abcd3",
-                    number: "+911234567810",
-                    isFavorite: true,
+                    customId: 152,
+                    first_name: "jignesh",
+                    last_name: "jignesh",
+                    profile_image: null,
+                    local_profile_image_path: "contacts/abc.png",
+                    phones: [
+                      {
+                        ph_no: "+919854671230",
+                        type: "PRIMARY",
+                      },
+                      {
+                        ph_no: "+912567894130",
+                        type: "SECONDARY",
+                      },
+                      {
+                        ph_no: "+919568732410",
+                        type: "OFFICE",
+                      },
+                      {
+                        ph_no: "+919496782117",
+                        type: "HOME",
+                      },
+                    ],
                   },
                 ],
               },
+              example: [
+                {
+                  customId: 150,
+                  first_name: "tushar",
+                  last_name: "savaliya",
+                  profile_image: null,
+                  local_profile_image_path: "contacts/abc.png",
+                  phones: [
+                    {
+                      ph_no: "+911234567890",
+                      type: "PRIMARY",
+                    },
+                    {
+                      ph_no: "+913216549870",
+                      type: "SECONDARY",
+                    },
+                    {
+                      ph_no: "+911236547890",
+                      type: "OFFICE",
+                    },
+                    {
+                      ph_no: "+917412589630",
+                      type: "HOME",
+                    },
+                  ],
+                },
+                {
+                  customId: 151,
+                  first_name: "mehul",
+                  last_name: "mehul",
+                  profile_image: null,
+                  local_profile_image_path: "contacts/abc.png",
+                  phones: [
+                    {
+                      ph_no: "+911237896540",
+                      type: "PRIMARY",
+                    },
+                    {
+                      ph_no: "+919874563210",
+                      type: "SECONDARY",
+                    },
+                    {
+                      ph_no: "+915478963210",
+                      type: "OFFICE",
+                    },
+                    {
+                      ph_no: "+918756941230",
+                      type: "HOME",
+                    },
+                  ],
+                },
+                {
+                  customId: 152,
+                  first_name: "jignesh",
+                  last_name: "jignesh",
+                  profile_image: null,
+                  local_profile_image_path: "contacts/abc.png",
+                  phones: [
+                    {
+                      ph_no: "+919854671230",
+                      type: "PRIMARY",
+                    },
+                    {
+                      ph_no: "+912567894130",
+                      type: "SECONDARY",
+                    },
+                    {
+                      ph_no: "+919568732410",
+                      type: "OFFICE",
+                    },
+                    {
+                      ph_no: "+919496782117",
+                      type: "HOME",
+                    },
+                  ],
+                },
+              ],
             },
           },
           required: true,
@@ -695,9 +761,9 @@ export default {
         deprecated: false,
       },
     },
-    "/contact-service/api/v1/contact/get": {
+    "/contact-sync-service/api/v1/contact/get": {
       get: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "Get contact details",
         operationId: "Getcontactdetails",
         parameters: [],
@@ -710,9 +776,9 @@ export default {
         deprecated: false,
       },
     },
-    "/contact-service/api/v1/calender/sync": {
+    "/contact-sync-service/api/v1/calender/sync": {
       post: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "Calendar sync",
         operationId: "Calendarsync",
         parameters: [],
@@ -753,9 +819,9 @@ export default {
         deprecated: false,
       },
     },
-    "/contact-service/api/v1/calender/get": {
+    "/contact-sync-service/api/v1/calender/get": {
       get: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "get calendar Event",
         operationId: "getcalendarEvent",
         parameters: [],
@@ -768,21 +834,12 @@ export default {
         deprecated: false,
       },
     },
-    "/contact-service/api/v1/calender/update/{id}": {
+    "/contact-sync/api/v1/calender/update/{id}": {
       put: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "update email address into calendar event",
         operationId: "updateemailaddressintocalendarevent",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
+        parameters: [],
         responses: {
           "200": {
             description: "",
@@ -794,30 +851,28 @@ export default {
     },
     "/status-service/api/v1/event/add": {
       post: {
-        tags: ["Status Service"],
-        summary: "Add Event status",
-        operationId: "AddEventstatus",
+        tags: ["status-service"],
+        summary: "Add Event status json",
+        operationId: "AddEventstatusjson",
         parameters: [],
         requestBody: {
+          description: "",
           content: {
-            "multipart/form-data": {
-              encoding: {},
+            "application/json": {
               schema: {
-                required: ["status", "logo"],
-                type: "object",
-                properties: {
-                  status: {
-                    type: "string",
-                    example: "DND2",
-                  },
-                  logo: {
-                    type: "file",
-                  },
-                },
+                $ref: "#/components/schemas/AddEventstatusjsonRequest",
+              },
+              example: {
+                status: "Do not Disturb",
+                applicable_types: [
+                  "618fb8e614842f8284d028dd",
+                  "618fb99bc8ba53856cbf0459",
+                ],
+                priority: 0,
               },
             },
           },
-          required: false,
+          required: true,
         },
         responses: {
           "200": {
@@ -830,7 +885,7 @@ export default {
     },
     "/status-service/api/v1/event/get": {
       get: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "Get All Event status",
         operationId: "GetAllEventstatus",
         parameters: [],
@@ -845,7 +900,7 @@ export default {
     },
     "/status-service/api/v1/event/update/{id}": {
       put: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "update Event Details",
         operationId: "updateEventDetails",
         parameters: [
@@ -860,7 +915,7 @@ export default {
         ],
         requestBody: {
           content: {
-            "multipart/form-data": {
+            "application/x-www-form-urlencoded": {
               encoding: {},
               schema: {
                 required: ["status", "logo"],
@@ -871,7 +926,7 @@ export default {
                     example: "DND",
                   },
                   logo: {
-                    type: "file",
+                    type: "string",
                   },
                 },
               },
@@ -890,7 +945,7 @@ export default {
     },
     "/status-service/api/v1/event/delete/{id}": {
       delete: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "Delete Event Status",
         operationId: "DeleteEventStatus",
         parameters: [
@@ -914,13 +969,13 @@ export default {
     },
     "/status-service/api/v1/event/add-sub": {
       post: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "add sub status",
         operationId: "addsubstatus",
         parameters: [],
         requestBody: {
           content: {
-            "multipart/form-data": {
+            "application/x-www-form-urlencoded": {
               encoding: {},
               schema: {
                 required: ["status", "parentId", "logo"],
@@ -932,10 +987,10 @@ export default {
                   },
                   parentId: {
                     type: "string",
-                    example: "61670b887a7764f6a360db28",
+                    example: "6195004219517edbb9a32dde",
                   },
                   logo: {
-                    type: "file",
+                    type: "string",
                   },
                 },
               },
@@ -954,13 +1009,22 @@ export default {
     },
     "/status-service/api/v1/event/sub-update/{id}": {
       put: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "update Event subStatus",
         operationId: "updateEventsubStatus",
-        parameters: [],
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
         requestBody: {
           content: {
-            "multipart/form-data": {
+            "application/x-www-form-urlencoded": {
               encoding: {},
               schema: {
                 required: ["status", "logo", "parentId"],
@@ -971,7 +1035,7 @@ export default {
                     example: "DND11111",
                   },
                   logo: {
-                    type: "file",
+                    type: "string",
                   },
                   parentId: {
                     type: "string",
@@ -994,7 +1058,7 @@ export default {
     },
     "/work-hrs-service/api/v1/work-life/add": {
       post: {
-        tags: ["Work Hrs Service"],
+        tags: ["work life"],
         summary: "Add working Hrs",
         operationId: "AddworkingHrs",
         parameters: [],
@@ -1034,7 +1098,7 @@ export default {
     },
     "/work-hrs-service/api/v1/work-life/update/{id}": {
       put: {
-        tags: ["Work Hrs Service"],
+        tags: ["work life"],
         summary: "update working Hrs",
         operationId: "updateworkingHrs",
         parameters: [
@@ -1067,6 +1131,7 @@ export default {
                 userStatus: "61670b887a7764f6a360db28",
                 userSubStatus: "6167128a37ecb90f33f6f924",
                 Excluded_dates: ["11/12/2021", "20/12/2021"],
+                status: true,
               },
             },
           },
@@ -1081,9 +1146,34 @@ export default {
         deprecated: false,
       },
     },
+    "/work-hrs-service/api/v1/work-life/delete/{id}": {
+      delete: {
+        tags: ["work life"],
+        summary: "delete working Hrs",
+        operationId: "",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+      
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/work-hrs-service/api/v1/work-life/get": {
       get: {
-        tags: ["Work Hrs Service"],
+        tags: ["work life"],
         summary: "Get working Hrs",
         operationId: "GetworkingHrs",
         parameters: [],
@@ -1096,33 +1186,9 @@ export default {
         deprecated: false,
       },
     },
-    "/work-hrs-service/api/v1/work-life/delete/{id}": {
-      delete: {
-        tags: ["Work Hrs Service"],
-        summary: "delete working Hrs",
-        operationId: "deleteworkingHrs",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
     "/package-service/api/v1/packages/add": {
       post: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "add  packages",
         operationId: "addpackages",
         parameters: [],
@@ -1153,7 +1219,7 @@ export default {
     },
     "/package-service/api/v1/packages/get": {
       get: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "Get packages",
         operationId: "Getpackages",
         parameters: [],
@@ -1168,19 +1234,10 @@ export default {
     },
     "/package-service/api/v1/packages/update/{id}": {
       put: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "update packages",
         operationId: "updatepackages",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
+        parameters: [],
         requestBody: {
           description: "",
           content: {
@@ -1208,7 +1265,7 @@ export default {
     },
     "/package-service/api/v1/packages/delete/{id}": {
       delete: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "delete packages",
         operationId: "deletepackages",
         parameters: [
@@ -1232,7 +1289,7 @@ export default {
     },
     "/package-service/api/v1/woucher/add": {
       post: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "Add woucher",
         operationId: "Addwoucher",
         parameters: [],
@@ -1267,7 +1324,7 @@ export default {
     },
     "/package-service/api/v1/woucher/get": {
       get: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "Get Wouchers",
         operationId: "GetWouchers",
         parameters: [],
@@ -1282,19 +1339,10 @@ export default {
     },
     "/package-service/api/v1/woucher/update/{id}": {
       put: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "update woucher",
         operationId: "updatewoucher",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
+        parameters: [],
         requestBody: {
           description: "",
           content: {
@@ -1324,10 +1372,20 @@ export default {
     },
     "/package-service/api/v1/woucher/delete/{id}": {
       delete: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "delete Woucher",
         operationId: "deleteWoucher",
-        parameters: [],
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+
         responses: {
           "200": {
             description: "",
@@ -1339,7 +1397,7 @@ export default {
     },
     "/package-service/api/v1/payment/add": {
       post: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "payment Add",
         operationId: "paymentAdd",
         parameters: [],
@@ -1369,7 +1427,7 @@ export default {
     },
     "/package-service/api/v1/payment/get": {
       get: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "payment Get",
         operationId: "paymentGet",
         parameters: [],
@@ -1382,9 +1440,9 @@ export default {
         deprecated: false,
       },
     },
-    "/package-service/api/v1/cms/add": {
+    "/cms/add": {
       post: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "create page",
         operationId: "createpage",
         parameters: [],
@@ -1422,7 +1480,7 @@ export default {
     },
     "/package-service/api/v1/cms/get": {
       get: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "get cms page",
         operationId: "getcmspage",
         parameters: [],
@@ -1437,7 +1495,7 @@ export default {
     },
     "/package-service/api/v1/cms/update/{id}": {
       put: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "update CMS page",
         operationId: "updateCMSpage",
         parameters: [
@@ -1484,7 +1542,7 @@ export default {
     },
     "/package-service/api/v1/cms/delete/{id}": {
       delete: {
-        tags: ["Package Service"],
+        tags: ["Admin Service"],
         summary: "delete cms page",
         operationId: "deletecmspage",
         parameters: [
@@ -1540,7 +1598,7 @@ export default {
     },
     "/status-service/api/v1/custom-status/add": {
       post: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "custom status add",
         operationId: "customstatusadd",
         parameters: [],
@@ -1556,13 +1614,13 @@ export default {
                 description: "",
                 example: [
                   {
-                    customId: 147,
+                    customId: 135,
                     custom_name: "abc",
                     start_date: "10/08/2021 10:00 AM",
                     end_date: "10/20/2021 10:00 AM",
                     is_allday_status: true,
                     is_repeat: true,
-                    RRULE: "rrule format if is_repeat is true",
+                    RRULE: "is_repeat",
                     time_zone: "IN/PST etc..",
                     status: "61670b887a7764f6a360db28",
                     sub_status: null,
@@ -1570,20 +1628,20 @@ export default {
                       is_custom: true,
                       text: "text for sending sms",
                     },
-                    display_to: "contacts/all",
+                    display_to: "ALL",
                     auto_sms: true,
                   },
                 ],
               },
               example: [
                 {
-                  customId: 147,
+                  customId: 135,
                   custom_name: "abc",
                   start_date: "10/08/2021 10:00 AM",
                   end_date: "10/20/2021 10:00 AM",
                   is_allday_status: true,
                   is_repeat: true,
-                  RRULE: "rrule format if is_repeat is true",
+                  RRULE: "is_repeat",
                   time_zone: "IN/PST etc..",
                   status: "61670b887a7764f6a360db28",
                   sub_status: null,
@@ -1591,7 +1649,7 @@ export default {
                     is_custom: true,
                     text: "text for sending sms",
                   },
-                  display_to: "contacts/all",
+                  display_to: "ALL",
                   auto_sms: true,
                 },
               ],
@@ -1610,7 +1668,7 @@ export default {
     },
     "/status-service/api/v1/custom-status/update": {
       put: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "custom status update",
         operationId: "customstatusupdate",
         parameters: [],
@@ -1640,7 +1698,7 @@ export default {
                     },
                     display_to: "contacts/all",
                     auto_sms: true,
-                    is_deleted: null,
+                    is_deleted: false,
                   },
                   {
                     customId: 148,
@@ -1659,7 +1717,26 @@ export default {
                     },
                     display_to: "contacts/all",
                     auto_sms: true,
-                    is_deleted: "2021-22-11",
+                    is_deleted: false,
+                  },
+                  {
+                    customId: 1588,
+                    custom_name: "status2",
+                    start_date: "10/08/2021 10:00 AM",
+                    end_date: "10/20/2021 10:00 AM",
+                    is_allday_status: true,
+                    is_repeat: true,
+                    RRULE: "rrule format if is_repeat is true",
+                    time_zone: "IN/PST etc..",
+                    status: "61670b887a7764f6a360db28",
+                    sub_status: null,
+                    notes: {
+                      is_custom: true,
+                      text: "text for sending sms",
+                    },
+                    display_to: "contacts/all",
+                    auto_sms: true,
+                    is_deleted: false,
                   },
                 ],
                 workLife: {
@@ -1681,7 +1758,7 @@ export default {
     },
     "/status-service/api/v1/custom-status/delete/{id}": {
       delete: {
-        tags: ["Status Service"],
+        tags: ["status-service"],
         summary: "delete custom status",
         operationId: "deletecustomstatus",
         parameters: [
@@ -1705,234 +1782,10 @@ export default {
     },
     "/status-service/api/v1/custom-status/get": {
       get: {
-        tags: ["Status Service"],
-        summary: "get user status",
-        operationId: "getuserstatus",
+        tags: ["status-service"],
+        summary: "get custom status",
+        operationId: "getcustomstatus",
         parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/global-type/add": {
-      post: {
-        tags: ["Global Type"],
-        summary: "global typee add",
-        operationId: "globaltypeeadd",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/globaltypeeaddrequest",
-              },
-              example: {
-                type: "AUTO_STATUS",
-                order: 6,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/global-type/update/{id}": {
-      put: {
-        tags: ["Global Type"],
-        summary: "global type update",
-        operationId: "globaltypeupdate",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/globaltypeupdaterequest",
-              },
-              example: {
-                type: "ROAD_SAFETY",
-                order: 1,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/global-type/get": {
-      get: {
-        tags: ["Global Type"],
-        summary: "global type get",
-        operationId: "globaltypeget",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/global-type/delete/{id}": {
-      delete: {
-        tags: ["Global Type"],
-        summary: "global type delete",
-        operationId: "globaltypedelete",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/general-status/add": {
-      post: {
-        tags: ["General status"],
-        summary: "general_status add",
-        operationId: "general_statusadd",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/general_statusaddrequest",
-              },
-              example: {
-                name: "Busy",
-                priority: 0,
-                applicable_types: [
-                  "618fb8e614842f8284d028dd",
-                  "618fb99bc8ba53856cbf0459",
-                ],
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/general-status/update/{id}": {
-      put: {
-        tags: ["General status"],
-        summary: "general status update",
-        operationId: "generalstatusupdate",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/generalstatusupdaterequest",
-              },
-              example: {
-                name: "Busy",
-                priority: 0,
-                applicable_types: [
-                  "618fb8e614842f8284d028dd",
-                  "618fb99bc8ba53856cbf0459",
-                ],
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/general-status/get": {
-      get: {
-        tags: ["General status"],
-        summary: "general status get",
-        operationId: "generalstatusget",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/general-status/delete/{id}": {
-      delete: {
-        tags: ["General status"],
-        summary: "general status delete",
-        operationId: "generalstatusdelete",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
         responses: {
           "200": {
             description: "",
@@ -1944,7 +1797,7 @@ export default {
     },
     "/contact-sync-service/api/v1/contact/update": {
       put: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "contact update",
         operationId: "contactupdate",
         parameters: [],
@@ -2158,9 +2011,141 @@ export default {
         deprecated: false,
       },
     },
+    "/status-service/api/v1/global-type/add": {
+      post: {
+        tags: ["status-service"],
+        summary: "global typee add",
+        operationId: "globaltypeeadd",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/globaltypeeaddrequest",
+              },
+              example: {
+                type: "AUTO_STATUS",
+                order: 6,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/global-type/update/{id}": {
+      put: {
+        tags: ["status-service"],
+        summary: "global type update",
+        operationId: "globaltypeupdate",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/globaltypeupdaterequest",
+              },
+              example: {
+                type: "ROAD_SAFETY",
+                order: 1,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/global-type/get": {
+      get: {
+        tags: ["status-service"],
+        summary: "global type get",
+        operationId: "globaltypeget",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/global-type/delete/{id": {
+      delete: {
+        tags: ["status-service"],
+        summary: "global type delete",
+        operationId: "globaltypedelete",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/contact-sync-service/api/v1/contact/delete/{id}": {
+      delete: {
+        tags: ["contact-sync"],
+        summary: "user contact delete",
+        operationId: "usercontactdelete",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/contact-sync-service/api/v1/contact/search": {
       post: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "search contact in list",
         operationId: "searchcontactinlist",
         parameters: [],
@@ -2189,7 +2174,7 @@ export default {
     },
     "/contact-sync-service/api/v1/contact/search-wisecaller": {
       post: {
-        tags: ["Contact Service"],
+        tags: ["contact-sync"],
         summary: "search in wiseccaller contact in list",
         operationId: "searchinwiseccallercontactinlist",
         parameters: [],
@@ -2229,7 +2214,7 @@ export default {
           },
         },
         example: {
-          mobileNo: "+918980514085",
+          mobileNo: "+919714209234",
         },
       },
       verifyotprequest: {
@@ -2246,8 +2231,33 @@ export default {
           },
         },
         example: {
-          mobileNo: "+918980514085",
-          otp: 1628,
+          mobileNo: "+919714209234",
+          otp: 1896,
+        },
+      },
+      updateuserstatusrequest: {
+        title: "updateuserstatusrequest",
+        required: ["customStatusId", "statusId", "subStatusId", "notesId"],
+        type: "object",
+        properties: {
+          customStatusId: {
+            type: "string",
+          },
+          statusId: {
+            type: "string",
+          },
+          subStatusId: {
+            type: "string",
+          },
+          notesId: {
+            type: "string",
+          },
+        },
+        example: {
+          customStatusId: "61950368448ab7e5f7775ce0",
+          statusId: "6195004219517edbb9a32dde",
+          subStatusId: "6195023525c96ee17567830d",
+          notesId: "",
         },
       },
       contactUsRequest: {
@@ -2294,217 +2304,74 @@ export default {
           },
         },
         example: {
-          mobileNo: "+919898803674",
+          mobileNo: "+918585858588",
         },
       },
       callhISTORYRequest: {
         title: "callhISTORYRequest",
-        required: ["callLogs"],
-        type: "object",
-        properties: {
-          callLogs: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/CallLog",
-            },
-            description: "",
-          },
-        },
-        example: {
-          callLogs: [
-            {
-              dateId: "2021-10-27",
-              callList: [
-                {
-                  wiseCallerId: "6174ccf5ba15ff00084330f3",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-                {
-                  wiseCallerId: "6161872b43430600096f3fee",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-                {
-                  wiseCallerId: "6174ccf5ba15ff00084330f3",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-              ],
-            },
-            {
-              dateId: "2020-10-23",
-              callList: [
-                {
-                  wiseCallerId: "617690a6c294d45bd496d176",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-                {
-                  wiseCallerId: "6174ccf5ba15ff00084330f3",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-                {
-                  wiseCallerId: "6177a25b8a2ccc03fc481270",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-              ],
-            },
-            {
-              dateId: "2020-10-22",
-              callList: [
-                {
-                  wiseCallerId: "6177a25b8a2ccc03fc481270",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-                {
-                  wiseCallerId: "6177b82712131f000acc444b",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-                {
-                  wiseCallerId: "6177b82712131f000acc444b",
-                  phoneNumber: "9876543212",
-                  name: "PRIYA",
-                  status: "busy",
-                  callType: "incoming",
-                  time: "5:00pm",
-                  message: "will call you later",
-                  simId: "SIM1",
-                },
-              ],
-            },
-          ],
-        },
-      },
-      CallLog: {
-        title: "CallLog",
-        required: ["dateId", "callList"],
-        type: "object",
-        properties: {
-          dateId: {
-            type: "string",
-          },
-          callList: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/CallList",
-            },
-            description: "",
-          },
-        },
-        example: {
-          dateId: "2021-10-27",
-          callList: [
-            {
-              wiseCallerId: "6174ccf5ba15ff00084330f3",
-              phoneNumber: "9876543212",
-              name: "PRIYA",
-              status: "busy",
-              callType: "incoming",
-              time: "5:00pm",
-              message: "will call you later",
-              simId: "SIM1",
-            },
-            {
-              wiseCallerId: "6161872b43430600096f3fee",
-              phoneNumber: "9876543212",
-              name: "PRIYA",
-              status: "busy",
-              callType: "incoming",
-              time: "5:00pm",
-              message: "will call you later",
-              simId: "SIM1",
-            },
-            {
-              wiseCallerId: "6174ccf5ba15ff00084330f3",
-              phoneNumber: "9876543212",
-              name: "PRIYA",
-              status: "busy",
-              callType: "incoming",
-              time: "5:00pm",
-              message: "will call you later",
-              simId: "SIM1",
-            },
-          ],
-        },
-      },
-      CallList: {
-        title: "CallList",
         required: [
-          "wiseCallerId",
-          "phoneNumber",
+          "wisecallerId",
+          "phone",
+          "contactId",
           "name",
-          "status",
-          "callType",
-          "time",
-          "message",
-          "simId",
+          "callHistory",
+          "date",
         ],
         type: "object",
         properties: {
-          wiseCallerId: {
+          wisecallerId: {
             type: "string",
           },
-          phoneNumber: {
+          phone: {
             type: "string",
+          },
+          contactId: {
+            type: "string",
+            nullable: true,
           },
           name: {
             type: "string",
           },
-          status: {
+          callHistory: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/CallHistory",
+            },
+            description: "",
+          },
+          date: {
             type: "string",
           },
-          callType: {
-            type: "string",
-          },
+        },
+        example: {
+          wisecallerId: "6161872b43430600096f3fee",
+          phone: "+919714209234",
+          contactId: "618fa6b02ac1e05fd9709da0",
+          name: "abc",
+          callHistory: [
+            {
+              time: "2021-12-12 11:00:00",
+              type: "Incoming",
+              simId: "sim1",
+            },
+            {
+              time: "2021-12-12 11:00:00",
+              type: "Outgoing",
+              simId: "sim2",
+            },
+          ],
+          date: "2021-11-13 10:20:22",
+        },
+      },
+      CallHistory: {
+        title: "CallHistory",
+        required: ["time", "type", "simId"],
+        type: "object",
+        properties: {
           time: {
             type: "string",
           },
-          message: {
+          type: {
             type: "string",
           },
           simId: {
@@ -2512,84 +2379,42 @@ export default {
           },
         },
         example: {
-          wiseCallerId: "6174ccf5ba15ff00084330f3",
-          phoneNumber: "9876543212",
-          name: "PRIYA",
-          status: "busy",
-          callType: "incoming",
-          time: "5:00pm",
-          message: "will call you later",
-          simId: "SIM1",
+          time: "2021-12-12 11:00:00",
+          type: "Incoming",
+          simId: "sim1",
         },
       },
       addnumberfromcallhistoryrequest: {
         title: "addnumberfromcallhistoryrequest",
-        required: ["callLogId", "callDetails"],
+        required: ["phone", "name", "time", "type", "simId", "date"],
         type: "object",
         properties: {
-          callLogId: {
-            type: "string",
-          },
-          callDetails: {
-            $ref: "#/components/schemas/CallDetails",
-          },
-        },
-        example: {
-          callLogId: "617a3468c0182323f296cf9b",
-          callDetails: {
-            wiseCallerId: "617949e2917167caf3ad3e23",
-            name: "TUSHAR0dfgg07",
-            phoneNumber: "9876543212",
-            callType: "incoming",
-            time: "5:00pm",
-            message: "will call you later",
-            simId: "SIM1",
-          },
-        },
-      },
-      CallDetails: {
-        title: "CallDetails",
-        required: [
-          "wiseCallerId",
-          "name",
-          "phoneNumber",
-          "callType",
-          "time",
-          "message",
-          "simId",
-        ],
-        type: "object",
-        properties: {
-          wiseCallerId: {
+          phone: {
             type: "string",
           },
           name: {
             type: "string",
           },
-          phoneNumber: {
-            type: "string",
-          },
-          callType: {
-            type: "string",
-          },
           time: {
             type: "string",
           },
-          message: {
+          type: {
             type: "string",
           },
           simId: {
             type: "string",
           },
+          date: {
+            type: "string",
+          },
         },
         example: {
-          wiseCallerId: "617949e2917167caf3ad3e23",
-          name: "TUSHAR0dfgg07",
-          phoneNumber: "9876543212",
-          callType: "incoming",
-          time: "5:00pm",
-          message: "will call you later",
-          simId: "SIM1",
+          phone: "+919099909990",
+          name: "abcs",
+          time: "2021-12-12 11:00:00",
+          type: "Incoming",
+          simId: "sim2",
+          date: "2021-12-12 11:00:00",
         },
       },
       deletenumberfromcallhistoryrequest: {
@@ -2607,61 +2432,6 @@ export default {
         example: {
           callLogId: "617a3468c0182323f296cf9b",
           callId: "617949e2917167caf3ad3e23",
-        },
-      },
-      Contact: {
-        title: "Contact",
-        required: ["name", "number"],
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-          },
-          number: {
-            type: "string",
-          },
-        },
-        example: {
-          name: "abc",
-          number: "+918980514085",
-        },
-      },
-      calldetailsrequest: {
-        title: "calldetailsrequest",
-        required: ["contact"],
-        type: "object",
-        properties: {
-          contact: {
-            $ref: "#/components/schemas/Contact1",
-          },
-        },
-        example: {
-          contact: {
-            name: "abc",
-            number: "+918980514085",
-            isfavourite: false,
-          },
-        },
-      },
-      Contact1: {
-        title: "Contact1",
-        required: ["name", "number", "isfavourite"],
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-          },
-          number: {
-            type: "string",
-          },
-          isfavourite: {
-            type: "boolean",
-          },
-        },
-        example: {
-          name: "abc",
-          number: "+918980514085",
-          isfavourite: false,
         },
       },
       AddfavoriteRequest: {
@@ -2725,81 +2495,82 @@ export default {
       },
       contactsyncrequest: {
         title: "contactsyncrequest",
-        required: ["mobileNO", "contact"],
+        required: [
+          "customId",
+          "first_name",
+          "last_name",
+          "profile_image",
+          "local_profile_image_path",
+          "phones",
+        ],
         type: "object",
         properties: {
-          mobileNO: {
+          customId: {
+            type: "integer",
+            format: "int32",
+          },
+          first_name: {
             type: "string",
           },
-          contact: {
+          last_name: {
+            type: "string",
+          },
+          profile_image: {
+            type: "string",
+            nullable: true,
+          },
+          local_profile_image_path: {
+            type: "string",
+          },
+          phones: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Contact2",
+              $ref: "#/components/schemas/Phone",
             },
             description: "",
           },
         },
         example: {
-          mobileNO: "+918980514085",
-          contact: [
+          customId: 150,
+          first_name: "tushar",
+          last_name: "savaliya",
+          profile_image: null,
+          local_profile_image_path: "contacts/abc.png",
+          phones: [
             {
-              name: "abc",
-              number: "+918849455045",
-              isFavorite: true,
-              isBlock: true,
-              note: "aaaa",
+              ph_no: "+911234567890",
+              type: "PRIMARY",
             },
             {
-              name: "abc1",
-              number: "+911234567889",
-              isFavorite: true,
-              note: "aaaa",
+              ph_no: "+913216549870",
+              type: "SECONDARY",
             },
             {
-              name: "abcd",
-              number: "+911234567888",
-              isFavorite: true,
+              ph_no: "+911236547890",
+              type: "OFFICE",
             },
             {
-              name: "abcd1",
-              number: "+911234567889",
-              isFavorite: true,
-            },
-            {
-              name: "abcd3",
-              number: "+911234567810",
-              isFavorite: true,
+              ph_no: "+917412589630",
+              type: "HOME",
             },
           ],
         },
       },
-      Contact2: {
-        title: "Contact2",
-        required: ["name", "number", "isFavorite"],
+      Phone: {
+        title: "Phone",
+        required: ["ph_no", "type"],
         type: "object",
         properties: {
-          name: {
+          ph_no: {
             type: "string",
           },
-          number: {
-            type: "string",
-          },
-          isFavorite: {
-            type: "boolean",
-          },
-          isBlock: {
-            type: "boolean",
-          },
-          note: {
+          type: {
             type: "string",
           },
         },
         example: {
-          name: "abc",
-          number: "+918849455045",
-          isFavorite: true,
-          isBlock: true,
-          note: "aaaa",
+          ph_no: "+911234567890",
+          type: "PRIMARY",
         },
       },
       CalendarsyncRequest: {
@@ -2861,6 +2632,64 @@ export default {
           endDay: "24-05-2021",
         },
       },
+      AddEventstatusjsonRequest: {
+        title: "AddEventstatusjsonRequest",
+        required: ["status", "applicable_types", "priority"],
+        type: "object",
+        properties: {
+          status: {
+            type: "string",
+          },
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          priority: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          status: "Do not Disturb",
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          priority: 0,
+        },
+      },
+      updateEventDetailsjsonRequest: {
+        title: "updateEventDetailsjsonRequest",
+        required: ["status", "applicable_types", "priority"],
+        type: "object",
+        properties: {
+          status: {
+            type: "string",
+          },
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          priority: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          status: "Do not Disturb",
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          priority: 0,
+        },
+      },
       AddworkingHrsRequest: {
         title: "AddworkingHrsRequest",
         required: [
@@ -2873,7 +2702,9 @@ export default {
           "Sunday",
           "startTime",
           "endTime",
-          "otherStatus",
+          "userStatus",
+          "userSubStatus",
+          "Excluded_dates",
         ],
         type: "object",
         properties: {
@@ -2904,8 +2735,18 @@ export default {
           endTime: {
             type: "string",
           },
-          otherStatus: {
+          userStatus: {
             type: "string",
+          },
+          userSubStatus: {
+            type: "string",
+          },
+          Excluded_dates: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
           },
         },
         example: {
@@ -2918,7 +2759,9 @@ export default {
           Sunday: true,
           startTime: "09:00 AM",
           endTime: "10:00 PM",
-          otherStatus: "612e310c185624e6a914bd57",
+          userStatus: "61670b887a7764f6a360db28",
+          userSubStatus: "6167128a37ecb90f33f6f924",
+          Excluded_dates: ["11/12/2021", "20/12/2021"],
         },
       },
       updateworkingHrsRequest: {
@@ -2933,7 +2776,10 @@ export default {
           "Sunday",
           "startTime",
           "endTime",
-          "otherStatus",
+          "userStatus",
+          "userSubStatus",
+          "Excluded_dates",
+          "status",
         ],
         type: "object",
         properties: {
@@ -2964,8 +2810,21 @@ export default {
           endTime: {
             type: "string",
           },
-          otherStatus: {
+          userStatus: {
             type: "string",
+          },
+          userSubStatus: {
+            type: "string",
+          },
+          Excluded_dates: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          status: {
+            type: "boolean",
           },
         },
         example: {
@@ -2978,7 +2837,10 @@ export default {
           Sunday: true,
           startTime: "09:00 AM",
           endTime: "10:00 PM",
-          otherStatus: "612e310c185624e6a914bd57",
+          userStatus: "61670b887a7764f6a360db28",
+          userSubStatus: "6167128a37ecb90f33f6f924",
+          Excluded_dates: ["11/12/2021", "20/12/2021"],
+          status: true,
         },
       },
       addpackagesrequest: {
@@ -3203,13 +3065,13 @@ export default {
           },
         },
         example: {
-          customId: 147,
+          customId: 135,
           custom_name: "abc",
           start_date: "10/08/2021 10:00 AM",
           end_date: "10/20/2021 10:00 AM",
           is_allday_status: true,
           is_repeat: true,
-          RRULE: "rrule format if is_repeat is true",
+          RRULE: "is_repeat",
           time_zone: "IN/PST etc..",
           status: "61670b887a7764f6a360db28",
           sub_status: null,
@@ -3217,7 +3079,7 @@ export default {
             is_custom: true,
             text: "text for sending sms",
           },
-          display_to: "contacts/all",
+          display_to: "ALL",
           auto_sms: true,
         },
       },
@@ -3273,7 +3135,7 @@ export default {
               },
               display_to: "contacts/all",
               auto_sms: true,
-              is_deleted: null,
+              is_deleted: false,
             },
             {
               customId: 148,
@@ -3292,7 +3154,26 @@ export default {
               },
               display_to: "contacts/all",
               auto_sms: true,
-              is_deleted: "2021-22-11",
+              is_deleted: false,
+            },
+            {
+              customId: 1588,
+              custom_name: "status2",
+              start_date: "10/08/2021 10:00 AM",
+              end_date: "10/20/2021 10:00 AM",
+              is_allday_status: true,
+              is_repeat: true,
+              RRULE: "rrule format if is_repeat is true",
+              time_zone: "IN/PST etc..",
+              status: "61670b887a7764f6a360db28",
+              sub_status: null,
+              notes: {
+                is_custom: true,
+                text: "text for sending sms",
+              },
+              display_to: "contacts/all",
+              auto_sms: true,
+              is_deleted: false,
             },
           ],
           workLife: {
@@ -3362,8 +3243,7 @@ export default {
             type: "boolean",
           },
           is_deleted: {
-            type: "string",
-            nullable: true,
+            type: "boolean",
           },
         },
         example: {
@@ -3383,7 +3263,7 @@ export default {
           },
           display_to: "contacts/all",
           auto_sms: true,
-          is_deleted: null,
+          is_deleted: false,
         },
       },
       WorkLife: {
@@ -3401,6 +3281,103 @@ export default {
         },
         example: {
           Excluded_dates: ["11/12/2021", "20/12/2021"],
+        },
+      },
+      contactupdaterequest: {
+        title: "contactupdaterequest",
+        required: [
+          "customId",
+          "first_name",
+          "last_name",
+          "profile_image",
+          "local_profile_image_path",
+          "phones",
+        ],
+        type: "object",
+        properties: {
+          customId: {
+            type: "integer",
+            format: "int32",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          profile_image: {
+            type: "string",
+            nullable: true,
+          },
+          local_profile_image_path: {
+            type: "string",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone1",
+            },
+            description: "",
+          },
+        },
+        example: {
+          customId: 150,
+          first_name: "tushar1",
+          last_name: "savaliya2",
+          profile_image: null,
+          local_profile_image_path: "contacts/abc.png",
+          phones: [
+            {
+              wisecallerId: "618f6146385c780009f97e21",
+              _id: "618fa6ae2ac1e05fd9709d97",
+              ph_no: "+911234567890",
+              type: "PRIMARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d98",
+              ph_no: "+913216549870",
+              type: "SECONDARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d99",
+              ph_no: "+911236547890",
+              type: "OFFICE",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d9a",
+              ph_no: "+917412589630",
+              type: "HOME",
+            },
+          ],
+        },
+      },
+      Phone1: {
+        title: "Phone1",
+        required: ["ph_no", "type"],
+        type: "object",
+        properties: {
+          wisecallerId: {
+            type: "string",
+            nullable: true,
+          },
+          _id: {
+            type: "string",
+          },
+          ph_no: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+        },
+        example: {
+          wisecallerId: "618f6146385c780009f97e21",
+          _id: "618fa6ae2ac1e05fd9709d97",
+          ph_no: "+911234567890",
+          type: "PRIMARY",
         },
       },
       globaltypeeaddrequest: {
@@ -3607,10 +3584,5 @@ export default {
       httpBearer: [],
     },
   ],
-  tags: [
-    {
-      name: "Package Service",
-      description: "",
-    },
-  ],
+  tags: [],
 };
