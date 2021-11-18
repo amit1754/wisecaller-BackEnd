@@ -1,22 +1,21 @@
 export default {
   openapi: "3.0.0",
   info: {
-    title: "wisecaller",
+    title: "Wiseccaller update collection",
     contact: {},
     version: "1.0",
   },
   servers: [
     {
-      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
+      url: "http://example.com",
       variables: {},
     },
   ],
   paths: {
     "/auth-service/api/v1/auth/login": {
       post: {
-        tags: ["Auth Service"],
+        tags: ["Auth service"],
         summary: "Login user",
-        description: "",
         operationId: "Loginuser",
         parameters: [],
         requestBody: {
@@ -27,7 +26,7 @@ export default {
                 $ref: "#/components/schemas/LoginuserRequest",
               },
               example: {
-                mobileNo: "+919714209234",
+                mobileNo: "+918980514085",
               },
             },
           },
@@ -35,8 +34,20 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Loginuser",
+                },
+                example: {
+                  success: true,
+                  message: "message send successful",
+                  otp: 1773,
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -44,22 +55,20 @@ export default {
     },
     "/auth-service/api/v1/auth/verify-otp": {
       post: {
-        tags: ["Auth Service"],
-        summary: "verify otp",
-        description:
-          "| Name     |Type    | M/o   | Example\n| ---      | ---    | ---   | ---\n| mobileNo | string | M     | +911212121212\n| otp      | number | M     | 1234",
-        operationId: "verifyotp",
+        tags: ["Auth service"],
+        summary: "Verify with otp",
+        operationId: "Verifywithotp",
         parameters: [],
         requestBody: {
           description: "",
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/verifyotprequest",
+                $ref: "#/components/schemas/VerifywithotpRequest",
               },
               example: {
-                mobileNo: "+919714209234",
-                otp: 1896,
+                mobileNo: "+919764569876",
+                otp: 4917,
               },
             },
           },
@@ -67,8 +76,26 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Verifywithotp",
+                },
+                example: {
+                  success: true,
+                  data: {
+                    token:
+                      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0ZmU5NDhmMTNhMWQ1OWQxMWRmMjIiLCJpYXQiOjE2MzcyMjU0NTQsImV4cCI6MTYzNzIzMjY1NH0.zjYvaafmauZLkdBHLmu6IdQC7JFWA1RY7twmaMDEe-s",
+                    refreshToken:
+                      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0ZmU5NDhmMTNhMWQ1OWQxMWRmMjIiLCJpYXQiOjE2MzcyMjU0NTQsImV4cCI6MTY2ODc2MTQ1NH0.qgEldemvwl3UiXIljRJjGkpMJL_jrNfa1csaqh60cYA",
+                    token_expires_at: "2021-11-18T20:50:54.720Z",
+                    is_new_user: true,
+                  },
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -76,14 +103,85 @@ export default {
     },
     "/auth-service/api/v1/user/get-profile": {
       get: {
-        tags: ["Auth Service"],
-        summary: "get user profile",
-        operationId: "getuserprofile",
+        tags: ["Auth service"],
+        summary: "Get user profile",
+        operationId: "Getuserprofile",
         parameters: [],
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m200",
+                },
+                example: {
+                  sucess: true,
+                  message: "User Profile details get successfully",
+                  data: {
+                    _id: "6194fe948f13a1d59d11df22",
+                    first_name: " tushar",
+                    last_name: "savaliya",
+                    phone: "+918849455045",
+                    secondary_no: "+918980514085",
+                    profile_image: null,
+                    is_profile_from_social_media: " false",
+                    media_profile_url: " ",
+                    role: "ADMIN",
+                    devices: null,
+                    isActive: true,
+                    isDeleted: false,
+                    phones: [
+                      {
+                        used_for_login: true,
+                        _id: "6194fe948f13a1d59d11df23",
+                        no: "+918849455045",
+                        type: "PRIMARY",
+                      },
+                      {
+                        used_for_login: true,
+                        _id: "6194fedc8f13a1d59d11df2c",
+                        no: "+918980514085",
+                        type: "SECONDARY",
+                      },
+                    ],
+                    createdAt: "2021-11-17T13:07:32.717Z",
+                    updatedAt: "2021-11-18T08:50:54.681Z",
+                    __v: 0,
+                    user_status: {
+                      name: "abc",
+                      status: {
+                        sub_status: {
+                          user: null,
+                          isDeleted: false,
+                          _id: "6195023525c96ee17567830d",
+                          status: "DND2",
+                          parentId: "6195004219517edbb9a32dde",
+                          logo: "status_images/1637155378453.png",
+                          createdAt: "2021-11-17T13:23:01.173Z",
+                          updatedAt: "2021-11-17T13:23:01.173Z",
+                          __v: 0,
+                        },
+                        _id: "6195004219517edbb9a32dde",
+                        user: null,
+                        applicable_types: [
+                          "618fb8e614842f8284d028dd",
+                          "618fb99bc8ba53856cbf0459",
+                        ],
+                        isDeleted: false,
+                        status: "Do not Disturb",
+                        priority: 0,
+                        logo: "status_images/1637155090761.png",
+                        createdAt: "2021-11-17T13:14:42.642Z",
+                        updatedAt: "2021-11-17T13:19:10.157Z",
+                        __v: 0,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -91,10 +189,8 @@ export default {
     },
     "/auth-service/api/v1/user/update-profile": {
       put: {
-        tags: ["Auth Service"],
+        tags: ["Auth service"],
         summary: "update user profile",
-        description:
-          "| Name      |Type    | M/o   | Example\n| ---       | ---    | ---   | ---\n| firstName | string | M     | abc\n| lastName  | string | M     | abc\n| email     | string | M     | abc@abc.com\n| status    | string | M     | 61211f1ef34e5900080a6812",
         operationId: "updateuserprofile",
         parameters: [],
         requestBody: {
@@ -109,16 +205,17 @@ export default {
                   "is_profile_from_social_media",
                   "phone",
                   "secondary_no",
+                  "media_profile_url",
                 ],
                 type: "object",
                 properties: {
                   first_name: {
                     type: "string",
-                    example: " tushar",
+                    example: "firstName",
                   },
                   last_name: {
                     type: "string",
-                    example: "savaliya",
+                    example: "lastName",
                   },
                   profile_image: {
                     type: "string",
@@ -135,6 +232,9 @@ export default {
                     type: "string",
                     example: "+918980514085",
                   },
+                  media_profile_url: {
+                    type: "string",
+                  },
                 },
               },
             },
@@ -143,8 +243,66 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "user update successfully",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/auth-service/api/v1/user/update-profile/json": {
+      put: {
+        tags: ["Auth service"],
+        summary: "update user profile with json",
+        operationId: "updateuserprofilewithjson",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/updateuserprofilewithjsonrequest",
+              },
+              example: {
+                first_name: "tushar",
+                last_name: "savaliya",
+                is_profile_from_social_media: false,
+                phone: "+918849455045",
+                secondary_no: "+918980514085",
+                media_profile_url: "",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "user update successfully",
+                  data: [],
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -152,10 +310,8 @@ export default {
     },
     "/auth-service/api/v1/user/update-user-status": {
       put: {
-        tags: ["Auth Service"],
+        tags: ["Auth service"],
         summary: "update user status",
-        description:
-          "| Name      |Type    | M/o   | Example\n| ---       | ---    | ---   | ---\n| firstName | string | M     | abc\n| lastName  | string | M     | abc\n| email     | string | M     | abc@abc.com\n| status    | string | M     | 61211f1ef34e5900080a6812",
         operationId: "updateuserstatus",
         parameters: [],
         requestBody: {
@@ -177,8 +333,93 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2003",
+                },
+                example: {
+                  success: true,
+                  data: {
+                    modes: {
+                      workLifeBalance: {
+                        is_active: false,
+                        data: null,
+                      },
+                      roadSafetyStatus: {
+                        is_active: false,
+                        devices: null,
+                        data: null,
+                      },
+                      syncCalender: {
+                        calenders: null,
+                        priooritize_calender_events: false,
+                      },
+                    },
+                    first_name: "tushar",
+                    last_name: "savaliya",
+                    phone: "+918849455045",
+                    secondary_no: "+918980514085",
+                    profile_image: null,
+                    is_profile_from_social_media: "false",
+                    media_profile_url: "",
+                    role: "ADMIN",
+                    devices: null,
+                    isActive: true,
+                    isDeleted: false,
+                    _id: "6194fe948f13a1d59d11df22",
+                    phones: [
+                      {
+                        used_for_login: true,
+                        _id: "6194fe948f13a1d59d11df23",
+                        no: "+918849455045",
+                        type: "PRIMARY",
+                      },
+                      {
+                        used_for_login: false,
+                        _id: "61961587c65f230009c3a4e2",
+                        no: "+918980514085",
+                        type: "SECONDARY",
+                      },
+                    ],
+                    createdAt: "2021-11-17T13:07:32.717Z",
+                    updatedAt: "2021-11-18T09:01:19.402Z",
+                    __v: 0,
+                    user_status: {
+                      name: "abc",
+                      status: {
+                        sub_status: {
+                          user: null,
+                          isDeleted: false,
+                          _id: "6195023525c96ee17567830d",
+                          status: "DND2",
+                          parentId: "6195004219517edbb9a32dde",
+                          logo: "status_images/1637155378453.png",
+                          createdAt: "2021-11-17T13:23:01.173Z",
+                          updatedAt: "2021-11-17T13:23:01.173Z",
+                          __v: 0,
+                        },
+                        _id: "6195004219517edbb9a32dde",
+                        user: null,
+                        applicable_types: [
+                          "618fb8e614842f8284d028dd",
+                          "618fb99bc8ba53856cbf0459",
+                        ],
+                        isDeleted: false,
+                        status: "Do not Disturb",
+                        priority: 0,
+                        logo: "status_images/1637155090761.png",
+                        createdAt: "2021-11-17T13:14:42.642Z",
+                        updatedAt: "2021-11-17T13:19:10.157Z",
+                        __v: 0,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -186,7 +427,7 @@ export default {
     },
     "/auth-service/api/v1/contact-us": {
       post: {
-        tags: ["Auth Service"],
+        tags: ["Auth service"],
         summary: "contactUs",
         operationId: "contactUs",
         parameters: [],
@@ -207,8 +448,20 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "success",
+                  data: [],
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -216,14 +469,35 @@ export default {
     },
     "/auth-service/api/v1/contact-us/get": {
       get: {
-        tags: ["Admin Service"],
+        tags: ["Auth service"],
         summary: "get contact us details",
         operationId: "getcontactusdetails",
         parameters: [],
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2005",
+                },
+                example: {
+                  success: true,
+                  data: [
+                    {
+                      _id: "6196171ec65f230009c3a4ec",
+                      email: "savaliyatushar2197@gmail.com",
+                      Message: "systme is not working",
+                      createdAt: "2021-11-18T09:04:30.813Z",
+                      updatedAt: "2021-11-18T09:04:30.813Z",
+                      __v: 0,
+                    },
+                  ],
+                  message: "contactUs details get sucess fully",
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -231,7 +505,7 @@ export default {
     },
     "/auth-service/api/v1/auth/resend-otp": {
       post: {
-        tags: ["Auth Service"],
+        tags: ["Auth service"],
         summary: "resend otp",
         operationId: "resendotp",
         parameters: [],
@@ -251,8 +525,69 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2006",
+                },
+                example: {
+                  success: true,
+                  message: "message send successful",
+                  otp: 2059,
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/auth-service/api/v1/road-safety": {
+      post: {
+        tags: ["Auth service"],
+        summary: "Update Road Safety",
+        operationId: "UpdateRoadSafety",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/UpdateRoadSafetyRequest",
+              },
+              example: {
+                devices: ["JBL Enduarance", "Boat Rokerz"],
+                selected_device: "Boat Rokerz",
+                display_to: "contacts",
+                auto_sms: false,
+                notes: {
+                  note_id: "",
+                  is_custom: true,
+                  text: "Not available",
+                },
+                is_active: true,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2007",
+                },
+                example: {
+                  success: true,
+                  message: "Roadsafety updated successfully",
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -260,9 +595,9 @@ export default {
     },
     "/call-service/api/v1/callhistory/add": {
       post: {
-        tags: ["call-History"],
-        summary: "call hISTORY",
-        operationId: "callhISTORY",
+        tags: ["Call History"],
+        summary: "Add call History",
+        operationId: "AddcallHistory",
         parameters: [],
         requestBody: {
           description: "",
@@ -271,7 +606,7 @@ export default {
               schema: {
                 type: "array",
                 items: {
-                  $ref: "#/components/schemas/callhISTORYRequest",
+                  $ref: "#/components/schemas/AddcallHistoryRequest",
                 },
                 description: "",
                 example: [
@@ -399,8 +734,20 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "Sucess",
+                  data: [],
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -408,14 +755,121 @@ export default {
     },
     "/call-service/api/v1/callhistory/get": {
       get: {
-        tags: ["call-History"],
+        tags: ["Call History"],
         summary: "call history",
         operationId: "callhistory",
         parameters: [],
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2009",
+                },
+                example: {
+                  success: true,
+                  message: "Sucess",
+                  data: [
+                    {
+                      _id: "2021-11-14",
+                      list: [
+                        {
+                          _id: "6196186a93f0d600093ed1f4",
+                          wisecallerId: "6194fe948f13a1d59d11df22",
+                          callerId: null,
+                          contactId: "618fa6b12ac1e05fd9709daa",
+                          phone: "+919496955716",
+                          name: "abcs",
+                          callHistory: [
+                            {
+                              simId: "sim1",
+                              _id: "6196186a93f0d600093ed1f5",
+                              time: "2021-12-12 11:00:00",
+                              type: "Incoming",
+                            },
+                            {
+                              simId: "sim2",
+                              _id: "6196186a93f0d600093ed1f6",
+                              time: "2021-12-12 11:00:00",
+                              type: "Outgoing",
+                            },
+                          ],
+                          date: "2021-11-14T10:20:22.000Z",
+                          createdAt: "2021-11-18T09:10:02.543Z",
+                          updatedAt: "2021-11-18T09:10:02.543Z",
+                          __v: 0,
+                          subStatus: [],
+                          userContact: [],
+                        },
+                        {
+                          _id: "6196186a93f0d600093ed1f9",
+                          wisecallerId: "6194fe948f13a1d59d11df22",
+                          callerId: null,
+                          contactId: null,
+                          phone: "+918989898989",
+                          name: "abcs",
+                          callHistory: [
+                            {
+                              simId: "sim1",
+                              _id: "6196186a93f0d600093ed1fa",
+                              time: "2021-12-12 11:00:00",
+                              type: "Incoming",
+                            },
+                            {
+                              simId: "sim2",
+                              _id: "6196186a93f0d600093ed1fb",
+                              time: "2021-12-12 11:00:00",
+                              type: "Outgoing",
+                            },
+                          ],
+                          date: "2021-11-14T10:20:22.000Z",
+                          createdAt: "2021-11-18T09:10:02.550Z",
+                          updatedAt: "2021-11-18T09:10:02.550Z",
+                          __v: 0,
+                          subStatus: [],
+                          userContact: [],
+                        },
+                      ],
+                    },
+                    {
+                      _id: "2021-11-13",
+                      list: [
+                        {
+                          _id: "6196186a93f0d600093ed1ef",
+                          wisecallerId: "6194fe948f13a1d59d11df22",
+                          callerId: null,
+                          contactId: "618fa6b02ac1e05fd9709da0",
+                          phone: "+919714209234",
+                          name: "abc",
+                          callHistory: [
+                            {
+                              simId: "sim1",
+                              _id: "6196186a93f0d600093ed1f0",
+                              time: "2021-12-12 11:00:00",
+                              type: "Incoming",
+                            },
+                            {
+                              simId: "sim2",
+                              _id: "6196186a93f0d600093ed1f1",
+                              time: "2021-12-12 11:00:00",
+                              type: "Outgoing",
+                            },
+                          ],
+                          date: "2021-11-13T10:20:22.000Z",
+                          createdAt: "2021-11-18T09:10:02.516Z",
+                          updatedAt: "2021-11-18T09:10:02.516Z",
+                          __v: 0,
+                          subStatus: [],
+                          userContact: [],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -423,7 +877,7 @@ export default {
     },
     "/call-service/api/v1/callhistory/add-number": {
       post: {
-        tags: ["call-History"],
+        tags: ["Call History"],
         summary: "add number from call history",
         operationId: "addnumberfromcallhistory",
         parameters: [],
@@ -448,130 +902,34 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    // "/call-service/api/v1/callhistory/delete-number": {
-    //   post: {
-    //     tags: ["call-History"],
-    //     summary: "delete number from call history",
-    //     operationId: "deletenumberfromcallhistory",
-    //     parameters: [],
-    //     requestBody: {
-    //       description: "",
-    //       content: {
-    //         "application/json": {
-    //           schema: {
-    //             $ref: "#/components/schemas/deletenumberfromcallhistoryrequest",
-    //           },
-    //           example: {
-    //             callLogId: "617a3468c0182323f296cf9b",
-    //             callId: "617949e2917167caf3ad3e23",
-    //           },
-    //         },
-    //       },
-    //       required: true,
-    //     },
-    //     responses: {
-    //       "200": {
-    //         description: "",
-    //         headers: {},
-    //       },
-    //     },
-    //     deprecated: false,
-    //   },
-    // },
-    // "/call-service/api/v1/callhistory/favorite-add": {
-    //   post: {
-    //     tags: ["Misc"],
-    //     summary: "Add favorite",
-    //     operationId: "Addfavorite",
-    //     parameters: [],
-    //     requestBody: {
-    //       description: "",
-    //       content: {
-    //         "application/json": {
-    //           schema: {
-    //             $ref: "#/components/schemas/AddfavoriteRequest",
-    //           },
-    //           example: {
-    //             name: "abc",
-    //             number: "+918849455045",
-    //             isFavorite: true,
-    //           },
-    //         },
-    //       },
-    //       required: true,
-    //     },
-    //     responses: {
-    //       "200": {
-    //         description: "",
-    //         headers: {},
-    //       },
-    //     },
-    //     deprecated: false,
-    //   },
-    // },
-    // "/call-service/api/v1/callhistory/block-add": {
-    //   post: {
-    //     tags: ["Misc"],
-    //     summary: "Add Block contact",
-    //     operationId: "AddBlockcontact",
-    //     parameters: [],
-    //     requestBody: {
-    //       description: "",
-    //       content: {
-    //         "application/json": {
-    //           schema: {
-    //             $ref: "#/components/schemas/AddBlockcontactRequest",
-    //           },
-    //           example: {
-    //             name: "abc",
-    //             number: "+918849455045",
-    //             isBlock: true,
-    //           },
-    //         },
-    //       },
-    //       required: true,
-    //     },
-    //     responses: {
-    //       "200": {
-    //         description: "",
-    //         headers: {},
-    //       },
-    //     },
-    //     deprecated: false,
-    //   },
-    // },
-    "/notification-service/api/v1/sms/send": {
-      post: {
-        tags: ["notification-service"],
-        summary: "send custom message",
-        operationId: "sendcustommessage",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/sendcustommessagerequest",
-              },
-              example: {
-                mobileNo: "+918849455045",
-                message: "custom message",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20010",
+                },
+                example: {
+                  success: true,
+                  message: "success",
+                  callLogs: {
+                    phone: "+919099909990",
+                    name: "abcs",
+                    time: "2021-12-12 11:00:00",
+                    type: "Incoming",
+                    simId: "sim2",
+                    date: "2021-12-12 11:00:00",
+                    callHistory: {
+                      time: "2021-12-12 11:00:00",
+                      type: "Incoming",
+                      simId: "sim2",
+                    },
+                    callerId: "6194fe948f13a1d59d11df22",
+                    wisecallerId: "6194fe948f13a1d59d11df22",
+                  },
+                },
               },
             },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
           },
         },
         deprecated: false,
@@ -579,7 +937,7 @@ export default {
     },
     "/contact-sync-service/api/v1/contact/sync": {
       post: {
-        tags: ["contact-sync"],
+        tags: ["Contact sync"],
         summary: "contact sync",
         operationId: "contactsync",
         parameters: [],
@@ -754,8 +1112,20 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "contact sync successfully",
+                  data: [],
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -763,1033 +1133,150 @@ export default {
     },
     "/contact-sync-service/api/v1/contact/get": {
       get: {
-        tags: ["contact-sync"],
-        summary: "Get contact details",
-        operationId: "Getcontactdetails",
+        tags: ["Contact sync"],
+        summary: "Get synced Contact",
+        operationId: "GetsyncedContact",
         parameters: [],
         responses: {
           "200": {
             description: "",
             headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/contact-sync-service/api/v1/calender/sync": {
-      post: {
-        tags: ["contact-sync"],
-        summary: "Calendar sync",
-        operationId: "Calendarsync",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/CalendarsyncRequest",
-              },
-              example: {
-                email: "savaliyatushar2197@gmail.com",
-                calenderEvent: [
-                  {
-                    eventName: "abc",
-                    allDay: true,
-                    startDate: "24-05-2021",
-                    endDay: "24-05-2021",
-                  },
-                  {
-                    eventName: "abc1",
-                    allDay: true,
-                    startDate: "24-05-2021",
-                    endDay: "24-05-2021",
-                  },
-                ],
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/contact-sync-service/api/v1/calender/get": {
-      get: {
-        tags: ["contact-sync"],
-        summary: "get calendar Event",
-        operationId: "getcalendarEvent",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/contact-sync/api/v1/calender/update/{id}": {
-      put: {
-        tags: ["contact-sync"],
-        summary: "update email address into calendar event",
-        operationId: "updateemailaddressintocalendarevent",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/event/add": {
-      post: {
-        tags: ["status-service"],
-        summary: "Add Event status json",
-        operationId: "AddEventstatusjson",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/AddEventstatusjsonRequest",
-              },
-              example: {
-                status: "Do not Disturb",
-                applicable_types: [
-                  "618fb8e614842f8284d028dd",
-                  "618fb99bc8ba53856cbf0459",
-                ],
-                priority: 0,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/event/get": {
-      get: {
-        tags: ["status-service"],
-        summary: "Get All Event status",
-        operationId: "GetAllEventstatus",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/event/update/{id}": {
-      put: {
-        tags: ["status-service"],
-        summary: "update Event Details",
-        operationId: "updateEventDetails",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/x-www-form-urlencoded": {
-              encoding: {},
-              schema: {
-                required: ["status", "logo"],
-                type: "object",
-                properties: {
-                  status: {
-                    type: "string",
-                    example: "DND",
-                  },
-                  logo: {
-                    type: "string",
-                  },
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20012",
                 },
-              },
-            },
-          },
-          required: false,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/event/delete/{id}": {
-      delete: {
-        tags: ["status-service"],
-        summary: "Delete Event Status",
-        operationId: "DeleteEventStatus",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/event/add-sub": {
-      post: {
-        tags: ["status-service"],
-        summary: "add sub status",
-        operationId: "addsubstatus",
-        parameters: [],
-        requestBody: {
-          content: {
-            "application/x-www-form-urlencoded": {
-              encoding: {},
-              schema: {
-                required: ["status", "parentId", "logo"],
-                type: "object",
-                properties: {
-                  status: {
-                    type: "string",
-                    example: "DND2",
-                  },
-                  parentId: {
-                    type: "string",
-                    example: "6195004219517edbb9a32dde",
-                  },
-                  logo: {
-                    type: "string",
-                  },
-                },
-              },
-            },
-          },
-          required: false,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/event/sub-update/{id}": {
-      put: {
-        tags: ["status-service"],
-        summary: "update Event subStatus",
-        operationId: "updateEventsubStatus",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/x-www-form-urlencoded": {
-              encoding: {},
-              schema: {
-                required: ["status", "logo", "parentId"],
-                type: "object",
-                properties: {
-                  status: {
-                    type: "string",
-                    example: "DND11111",
-                  },
-                  logo: {
-                    type: "string",
-                  },
-                  parentId: {
-                    type: "string",
-                    example: "61670e7633b5790416bcfc03",
-                  },
-                },
-              },
-            },
-          },
-          required: false,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/work-hrs-service/api/v1/work-life/add": {
-      post: {
-        tags: ["work life"],
-        summary: "Add working Hrs",
-        operationId: "AddworkingHrs",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/AddworkingHrsRequest",
-              },
-              example: {
-                Monday: false,
-                Tuesday: true,
-                Wednesday: true,
-                Thursday: true,
-                Friday: true,
-                Saturday: true,
-                Sunday: true,
-                startTime: "09:00 AM",
-                endTime: "10:00 PM",
-                userStatus: "61670b887a7764f6a360db28",
-                userSubStatus: "6167128a37ecb90f33f6f924",
-                Excluded_dates: ["11/12/2021", "20/12/2021"],
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/work-hrs-service/api/v1/work-life/update/{id}": {
-      put: {
-        tags: ["work life"],
-        summary: "update working Hrs",
-        operationId: "updateworkingHrs",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/updateworkingHrsRequest",
-              },
-              example: {
-                Monday: false,
-                Tuesday: true,
-                Wednesday: true,
-                Thursday: true,
-                Friday: true,
-                Saturday: true,
-                Sunday: true,
-                startTime: "09:00 AM",
-                endTime: "10:00 PM",
-                userStatus: "61670b887a7764f6a360db28",
-                userSubStatus: "6167128a37ecb90f33f6f924",
-                Excluded_dates: ["11/12/2021", "20/12/2021"],
-                status: true,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/work-hrs-service/api/v1/work-life/delete/{id}": {
-      delete: {
-        tags: ["work life"],
-        summary: "delete working Hrs",
-        operationId: "",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-      
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/work-hrs-service/api/v1/work-life/get": {
-      get: {
-        tags: ["work life"],
-        summary: "Get working Hrs",
-        operationId: "GetworkingHrs",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/packages/add": {
-      post: {
-        tags: ["Admin Service"],
-        summary: "add  packages",
-        operationId: "addpackages",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/addpackagesrequest",
-              },
-              example: {
-                name: "abac",
-                duration: 12,
-                price: 500,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/packages/get": {
-      get: {
-        tags: ["Admin Service"],
-        summary: "Get packages",
-        operationId: "Getpackages",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/packages/update/{id}": {
-      put: {
-        tags: ["Admin Service"],
-        summary: "update packages",
-        operationId: "updatepackages",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/updatepackagesrequest",
-              },
-              example: {
-                name: "abac",
-                duration: 12,
-                price: 400,
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/packages/delete/{id}": {
-      delete: {
-        tags: ["Admin Service"],
-        summary: "delete packages",
-        operationId: "deletepackages",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/woucher/add": {
-      post: {
-        tags: ["Admin Service"],
-        summary: "Add woucher",
-        operationId: "Addwoucher",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/AddwoucherRequest",
-              },
-              example: {
-                name: "abac",
-                code: "aaa",
-                amount: 10,
-                minAmount: 100,
-                discountType: "FLAT",
-                startDate: "2021-12-15",
-                endDate: "2021-12-20",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/woucher/get": {
-      get: {
-        tags: ["Admin Service"],
-        summary: "Get Wouchers",
-        operationId: "GetWouchers",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/woucher/update/{id}": {
-      put: {
-        tags: ["Admin Service"],
-        summary: "update woucher",
-        operationId: "updatewoucher",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/updatewoucherrequest",
-              },
-              example: {
-                name: "abac",
-                code: "aaa",
-                amount: 100,
-                minAmount: 100,
-                discountType: "FLAT",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/woucher/delete/{id}": {
-      delete: {
-        tags: ["Admin Service"],
-        summary: "delete Woucher",
-        operationId: "deleteWoucher",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/payment/add": {
-      post: {
-        tags: ["Admin Service"],
-        summary: "payment Add",
-        operationId: "paymentAdd",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/paymentAddRequest",
-              },
-              example: {
-                packageId: "613bc118bc2da97b67b2ee17",
-                paymentId: "pay_HxHEX7lHP9E2Em",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/payment/get": {
-      get: {
-        tags: ["Admin Service"],
-        summary: "payment Get",
-        operationId: "paymentGet",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/cms/add": {
-      post: {
-        tags: ["Admin Service"],
-        summary: "create page",
-        operationId: "createpage",
-        parameters: [],
-        requestBody: {
-          content: {
-            "application/x-www-form-urlencoded": {
-              encoding: {},
-              schema: {
-                required: ["pageName", "content"],
-                type: "object",
-                properties: {
-                  pageName: {
-                    type: "string",
-                    example: " policy2",
-                  },
-                  content: {
-                    type: "string",
-                    example:
-                      ' <div class="container"><div id="left-sidebar" data-is-here-when="md lg" class="left-sidebar js-pinned-left-sidebar ps-relative"><div class="left-sidebar--sticky-container js-sticky-leftnav"><nav role="navigation"><ol class="nav-links"><li class=""><a href="/" class="pl8 js-gps-track nav-links--link" data-gps-track="top_nav.click({is_current: false, location: 2, destination: 8})" aria-controls="" data-controller="" data-s-popover-placement="right" data-s-popover-auto-show="true" data-s-popover-hide-on-outside-click="never"><div class="d-flex ai-center"><div class="flex--item truncate"> Home </div></div></a></li><li><ol class="nav-links"><li class="fs-fine tt-uppercase ml8 mt16 mb4 fc-light">Public</li><li class=" youarehere">',
-                  },
-                },
-              },
-            },
-          },
-          required: false,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/cms/get": {
-      get: {
-        tags: ["Admin Service"],
-        summary: "get cms page",
-        operationId: "getcmspage",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/cms/update/{id}": {
-      put: {
-        tags: ["Admin Service"],
-        summary: "update CMS page",
-        operationId: "updateCMSpage",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        requestBody: {
-          content: {
-            "application/x-www-form-urlencoded": {
-              encoding: {},
-              schema: {
-                required: ["pageName", "content"],
-                type: "object",
-                properties: {
-                  pageName: {
-                    type: "string",
-                    example: "policy22",
-                  },
-                  content: {
-                    type: "string",
-                    example:
-                      '<div class="container"><div id="left-sidebar" data-is-here-when="md lg" class="left-sidebar js-pinned-left-sidebar ps-relative"><div class="left-sidebar--sticky-container js-sticky-leftnav"><nav role="navigation"><ol class="nav-links"><li class=""><a href="/" class="pl8 js-gps-track nav-links--link" data-gps-track="top_nav.click({is_current: false, location: 2, destination: 8})" aria-controls="" data-controller="" data-s-popover-placement="right" data-s-popover-auto-show="true" data-s-popover-hide-on-outside-click="never"><div class="d-flex ai-center"><div class="flex--item truncate"> Home </div></div></a></li><li><ol class="nav-links"><li class="fs-fine tt-uppercase ml8 mt16 mb4 fc-light">Public</li><li class=" youarehere">',
-                  },
-                },
-              },
-            },
-          },
-          required: false,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/package-service/api/v1/cms/delete/{id}": {
-      delete: {
-        tags: ["Admin Service"],
-        summary: "delete cms page",
-        operationId: "deletecmspage",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/auth-service/api/v1/auth/refresh-token": {
-      post: {
-        tags: ["Auth Service"],
-        summary: "refresh token",
-        operationId: "refreshtoken",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/refreshtokenrequest",
-              },
-              example: {
-                token:
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0OTA5NTUsImV4cCI6MTYzNTQ5MTAxNX0.7mDc3RwACVbSiBamoGGhZW4XRPVFq-Gzc18EvJ-XbQc",
-                refreshToken:
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0ODkyMTcsImV4cCI6MTYzNTU3NTYxN30.gXjRlkdVMELgFGfXd7sX7WGb4pnssrJTVxCEZCPzR5c",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/custom-status/add": {
-      post: {
-        tags: ["status-service"],
-        summary: "custom status add",
-        operationId: "customstatusadd",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                type: "array",
-                items: {
-                  $ref: "#/components/schemas/customstatusaddrequest",
-                },
-                description: "",
-                example: [
-                  {
-                    customId: 135,
-                    custom_name: "abc",
-                    start_date: "10/08/2021 10:00 AM",
-                    end_date: "10/20/2021 10:00 AM",
-                    is_allday_status: true,
-                    is_repeat: true,
-                    RRULE: "is_repeat",
-                    time_zone: "IN/PST etc..",
-                    status: "61670b887a7764f6a360db28",
-                    sub_status: null,
-                    notes: {
-                      is_custom: true,
-                      text: "text for sending sms",
+                example: {
+                  success: true,
+                  message: "contact list get successfully",
+                  data: [
+                    {
+                      _id: "619619e82c05f200095b25a9",
+                      profile_image: null,
+                      local_profile_image_path: "contacts/abc.png",
+                      customId: 152,
+                      first_name: "jignesh",
+                      last_name: "jignesh",
+                      phones: [
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25aa",
+                          ph_no: "+919854671230",
+                          type: "PRIMARY",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25ab",
+                          ph_no: "+912567894130",
+                          type: "SECONDARY",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25ac",
+                          ph_no: "+919568732410",
+                          type: "OFFICE",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25ad",
+                          ph_no: "+919496782117",
+                          type: "HOME",
+                        },
+                      ],
+                      user: "6194fe948f13a1d59d11df22",
+                      createdAt: "2021-11-18T09:16:24.247Z",
+                      updatedAt: "2021-11-18T09:16:24.247Z",
+                      __v: 0,
+                      wisecallerUser: [],
+                      userStatus: [],
+                      userSubStatus: [],
                     },
-                    display_to: "ALL",
-                    auto_sms: true,
-                  },
-                ],
-              },
-              example: [
-                {
-                  customId: 135,
-                  custom_name: "abc",
-                  start_date: "10/08/2021 10:00 AM",
-                  end_date: "10/20/2021 10:00 AM",
-                  is_allday_status: true,
-                  is_repeat: true,
-                  RRULE: "is_repeat",
-                  time_zone: "IN/PST etc..",
-                  status: "61670b887a7764f6a360db28",
-                  sub_status: null,
-                  notes: {
-                    is_custom: true,
-                    text: "text for sending sms",
-                  },
-                  display_to: "ALL",
-                  auto_sms: true,
-                },
-              ],
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/custom-status/update": {
-      put: {
-        tags: ["status-service"],
-        summary: "custom status update",
-        operationId: "customstatusupdate",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/customstatusupdaterequest",
-              },
-              example: {
-                status: [
-                  {
-                    customId: 147,
-                    custom_name: "abc",
-                    start_date: "10/08/2021 10:00 AM",
-                    end_date: "10/20/2021 10:00 AM",
-                    is_allday_status: true,
-                    is_repeat: true,
-                    RRULE: "rrule format if is_repeat is true",
-                    time_zone: "IN/PST etc..",
-                    status: "61670b887a7764f6a360db28",
-                    sub_status: null,
-                    notes: {
-                      is_custom: true,
-                      text: "text for sending sms",
+                    {
+                      _id: "619619e82c05f200095b259f",
+                      profile_image: null,
+                      local_profile_image_path: "contacts/abc.png",
+                      customId: 151,
+                      first_name: "mehul",
+                      last_name: "mehul",
+                      phones: [
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25a0",
+                          ph_no: "+911237896540",
+                          type: "PRIMARY",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25a1",
+                          ph_no: "+919874563210",
+                          type: "SECONDARY",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25a2",
+                          ph_no: "+915478963210",
+                          type: "OFFICE",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b25a3",
+                          ph_no: "+918756941230",
+                          type: "HOME",
+                        },
+                      ],
+                      user: "6194fe948f13a1d59d11df22",
+                      createdAt: "2021-11-18T09:16:24.233Z",
+                      updatedAt: "2021-11-18T09:16:24.233Z",
+                      __v: 0,
+                      wisecallerUser: [],
+                      userStatus: [],
+                      userSubStatus: [],
                     },
-                    display_to: "contacts/all",
-                    auto_sms: true,
-                    is_deleted: false,
-                  },
-                  {
-                    customId: 148,
-                    custom_name: "status2",
-                    start_date: "10/08/2021 10:00 AM",
-                    end_date: "10/20/2021 10:00 AM",
-                    is_allday_status: true,
-                    is_repeat: true,
-                    RRULE: "rrule format if is_repeat is true",
-                    time_zone: "IN/PST etc..",
-                    status: "61670b887a7764f6a360db28",
-                    sub_status: null,
-                    notes: {
-                      is_custom: true,
-                      text: "text for sending sms",
+                    {
+                      _id: "619619e82c05f200095b2595",
+                      profile_image: null,
+                      local_profile_image_path: "contacts/abc.png",
+                      customId: 150,
+                      first_name: "tushar",
+                      last_name: "savaliya",
+                      phones: [
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b2596",
+                          ph_no: "+911234567890",
+                          type: "PRIMARY",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b2597",
+                          ph_no: "+913216549870",
+                          type: "SECONDARY",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b2598",
+                          ph_no: "+911236547890",
+                          type: "OFFICE",
+                        },
+                        {
+                          wisecallerId: null,
+                          _id: "619619e82c05f200095b2599",
+                          ph_no: "+917412589630",
+                          type: "HOME",
+                        },
+                      ],
+                      user: "6194fe948f13a1d59d11df22",
+                      createdAt: "2021-11-18T09:16:24.207Z",
+                      updatedAt: "2021-11-18T09:16:24.207Z",
+                      __v: 0,
+                      wisecallerUser: [],
+                      userStatus: [],
+                      userSubStatus: [],
                     },
-                    display_to: "contacts/all",
-                    auto_sms: true,
-                    is_deleted: false,
-                  },
-                  {
-                    customId: 1588,
-                    custom_name: "status2",
-                    start_date: "10/08/2021 10:00 AM",
-                    end_date: "10/20/2021 10:00 AM",
-                    is_allday_status: true,
-                    is_repeat: true,
-                    RRULE: "rrule format if is_repeat is true",
-                    time_zone: "IN/PST etc..",
-                    status: "61670b887a7764f6a360db28",
-                    sub_status: null,
-                    notes: {
-                      is_custom: true,
-                      text: "text for sending sms",
-                    },
-                    display_to: "contacts/all",
-                    auto_sms: true,
-                    is_deleted: false,
-                  },
-                ],
-                workLife: {
-                  Excluded_dates: ["11/12/2021", "20/12/2021"],
+                  ],
                 },
               },
             },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/custom-status/delete/{id}": {
-      delete: {
-        tags: ["status-service"],
-        summary: "delete custom status",
-        operationId: "deletecustomstatus",
-        parameters: [
-          {
-            in: "path",
-            name: "id",
-            required: true,
-            schema: {
-              type: "string",
-            },
-          },
-        ],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/status-service/api/v1/custom-status/get": {
-      get: {
-        tags: ["status-service"],
-        summary: "get custom status",
-        operationId: "getcustomstatus",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
           },
         },
         deprecated: false,
@@ -1797,7 +1284,7 @@ export default {
     },
     "/contact-sync-service/api/v1/contact/update": {
       put: {
-        tags: ["contact-sync"],
+        tags: ["Contact sync"],
         summary: "contact update",
         operationId: "contactupdate",
         parameters: [],
@@ -2011,9 +1498,482 @@ export default {
         deprecated: false,
       },
     },
+    "/status-service/api/v1//add/json": {
+      post: {
+        tags: ["Status"],
+        summary: "Add Global status",
+        operationId: "AddGlobalstatus",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/AddGlobalstatusRequest",
+              },
+              example: {
+                status: "Do not Disturb1",
+                applicable_types: [
+                  "618fb8e614842f8284d028dd",
+                  "618fb99bc8ba53856cbf0459",
+                ],
+                priority: 0,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          default: {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "User status added successfully",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1//add": {
+      post: {
+        tags: ["Status"],
+        summary: "Add global status with image",
+        operationId: "Addglobalstatuswithimage",
+        parameters: [],
+        requestBody: {
+          content: {
+            "application/x-www-form-urlencoded": {
+              encoding: {},
+              schema: {
+                required: ["status", "logo"],
+                type: "object",
+                properties: {
+                  status: {
+                    type: "string",
+                    example: "DND2",
+                  },
+                  logo: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: false,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "User status added successfully",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1//get": {
+      get: {
+        tags: ["Status"],
+        summary: "Get All Event status",
+        operationId: "GetAllEventstatus",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20015",
+                },
+                example: {
+                  success: true,
+                  message: "global status get successfully",
+                  data: [
+                    {
+                      _id: "6195004219517edbb9a32dde",
+                      user: null,
+                      applicable_types: [
+                        "618fb8e614842f8284d028dd",
+                        "618fb99bc8ba53856cbf0459",
+                      ],
+                      isDeleted: false,
+                      status: "Do not Disturb",
+                      priority: 0,
+                      logo: "status_images/1637155090761.png",
+                      createdAt: "2021-11-17T13:14:42.642Z",
+                      updatedAt: "2021-11-17T13:19:10.157Z",
+                      __v: 0,
+                      subCategory: [
+                        {
+                          _id: "6195023525c96ee17567830d",
+                          user: null,
+                          isDeleted: false,
+                          status: "DND2",
+                          parentId: "6195004219517edbb9a32dde",
+                          logo: "status_images/1637155378453.png",
+                          createdAt: "2021-11-17T13:23:01.173Z",
+                          updatedAt: "2021-11-17T13:23:01.173Z",
+                          __v: 0,
+                        },
+                      ],
+                      applicableType: [
+                        {
+                          _id: "618fb8e614842f8284d028dd",
+                          type: "SUPER_EVENTS",
+                          order: 2,
+                          createdAt: "2021-11-13T13:08:54.457Z",
+                          updatedAt: "2021-11-13T13:08:54.457Z",
+                          __v: 0,
+                        },
+                        {
+                          _id: "618fb99bc8ba53856cbf0459",
+                          type: "ROAD_SAFETY",
+                          order: 1,
+                          createdAt: "2021-11-13T13:11:55.724Z",
+                          updatedAt: "2021-11-13T13:11:55.724Z",
+                          __v: 0,
+                        },
+                      ],
+                    },
+                    {
+                      _id: "61961de00d7a2900096955af",
+                      user: null,
+                      applicable_types: [
+                        "618fb8e614842f8284d028dd",
+                        "618fb99bc8ba53856cbf0459",
+                      ],
+                      isDeleted: false,
+                      status: "Do not Disturb1",
+                      priority: 0,
+                      logo: null,
+                      createdAt: "2021-11-18T09:33:20.153Z",
+                      updatedAt: "2021-11-18T09:33:20.153Z",
+                      __v: 0,
+                      subCategory: [],
+                      applicableType: [
+                        {
+                          _id: "618fb8e614842f8284d028dd",
+                          type: "SUPER_EVENTS",
+                          order: 2,
+                          createdAt: "2021-11-13T13:08:54.457Z",
+                          updatedAt: "2021-11-13T13:08:54.457Z",
+                          __v: 0,
+                        },
+                        {
+                          _id: "618fb99bc8ba53856cbf0459",
+                          type: "ROAD_SAFETY",
+                          order: 1,
+                          createdAt: "2021-11-13T13:11:55.724Z",
+                          updatedAt: "2021-11-13T13:11:55.724Z",
+                          __v: 0,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1//update/{id}": {
+      put: {
+        tags: ["Status"],
+        summary: "update Global status using id",
+        operationId: "updateGlobalstatususingid",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        requestBody: {
+          content: {
+            "application/x-www-form-urlencoded": {
+              encoding: {},
+              schema: {
+                required: ["status", "logo"],
+                type: "object",
+                properties: {
+                  status: {
+                    type: "string",
+                    example: "DND",
+                  },
+                  logo: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: false,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20016",
+                },
+                example: {
+                  success: true,
+                  message: "global Status update successfully",
+                  data: {
+                    user: null,
+                    applicable_types: [
+                      "618fb8e614842f8284d028dd",
+                      "618fb99bc8ba53856cbf0459",
+                    ],
+                    isDeleted: false,
+                    _id: "6195004219517edbb9a32dde",
+                    status: "DND",
+                    priority: 0,
+                    logo: "status_images/1637230992831.png",
+                    createdAt: "2021-11-17T13:14:42.642Z",
+                    updatedAt: "2021-11-18T10:23:13.150Z",
+                    __v: 0,
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1//delete/{id}": {
+      delete: {
+        tags: ["Status"],
+        summary: "Delete global status",
+        operationId: "Deleteglobalstatus",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20018",
+                },
+                example: {
+                  success: true,
+                  message: "Global Status delete sucessfully",
+                  data: {
+                    user: null,
+                    applicable_types: [
+                      "618fb8e614842f8284d028dd",
+                      "618fb99bc8ba53856cbf0459",
+                    ],
+                    isDeleted: false,
+                    _id: "61961de00d7a2900096955af",
+                    status: "Do not Disturb1",
+                    priority: 0,
+                    logo: null,
+                    createdAt: "2021-11-18T09:33:20.153Z",
+                    updatedAt: "2021-11-18T09:33:20.153Z",
+                    __v: 0,
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1//add-sub": {
+      post: {
+        tags: ["Status"],
+        summary: "Add sub status into Global status",
+        operationId: "AddsubstatusintoGlobalstatus",
+        parameters: [],
+        requestBody: {
+          content: {
+            "application/x-www-form-urlencoded": {
+              encoding: {},
+              schema: {
+                required: ["status", "parentId", "logo"],
+                type: "object",
+                properties: {
+                  status: {
+                    type: "string",
+                    example: "DND2",
+                  },
+                  parentId: {
+                    type: "string",
+                    example: "6195004219517edbb9a32dde",
+                  },
+                  logo: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          required: false,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "global Sub-Status added sucessfully",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1//sub-update/{id}": {
+      put: {
+        tags: ["Status"],
+        summary: "update sub-status into Global status",
+        operationId: "updatesub-statusintoGlobalstatus",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        requestBody: {
+          content: {
+            "application/x-www-form-urlencoded": {
+              encoding: {},
+              schema: {
+                required: ["status", "logo", "parentId"],
+                type: "object",
+                properties: {
+                  status: {
+                    type: "string",
+                    example: "DND11111",
+                  },
+                  logo: {
+                    type: "string",
+                  },
+                  parentId: {
+                    type: "string",
+                    example: "6195004219517edbb9a32dde",
+                  },
+                },
+              },
+            },
+          },
+          required: false,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20020",
+                },
+                example: {
+                  success: true,
+                  message: "global sub status update successfully",
+                  data: {
+                    user: null,
+                    isDeleted: false,
+                    _id: "6195023525c96ee17567830d",
+                    status: "DND11111",
+                    parentId: "6195004219517edbb9a32dde",
+                    logo: "status_images/1637155378453.png",
+                    createdAt: "2021-11-17T13:23:01.173Z",
+                    updatedAt: "2021-11-18T10:31:02.505Z",
+                    __v: 0,
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1//sub-delete/{id}": {
+      delete: {
+        tags: ["Status"],
+        summary: "Delete sub-status in Global status",
+        operationId: "Deletesub-statusinGlobalstatus",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20021",
+                },
+                example: {
+                  success: true,
+                  message: "Global Status delete sucessfully",
+                  data: null,
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/status-service/api/v1/global-type/add": {
       post: {
-        tags: ["status-service"],
+        tags: ["Global Type"],
         summary: "global typee add",
         operationId: "globaltypeeadd",
         parameters: [],
@@ -2025,8 +1985,8 @@ export default {
                 $ref: "#/components/schemas/globaltypeeaddrequest",
               },
               example: {
-                type: "AUTO_STATUS",
-                order: 6,
+                type: "AUTO_STATUS1",
+                order: 7,
               },
             },
           },
@@ -2034,8 +1994,20 @@ export default {
         },
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "gobal type added successfully",
+                  data: [],
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -2043,7 +2015,7 @@ export default {
     },
     "/status-service/api/v1/global-type/update/{id}": {
       put: {
-        tags: ["status-service"],
+        tags: ["Global Type"],
         summary: "global type update",
         operationId: "globaltypeupdate",
         parameters: [
@@ -2064,17 +2036,29 @@ export default {
                 $ref: "#/components/schemas/globaltypeupdaterequest",
               },
               example: {
-                type: "ROAD_SAFETY",
-                order: 1,
+                type: "ROAD_SAFETqY",
+                order: 7,
               },
             },
           },
           required: true,
         },
         responses: {
-          "200": {
+          default: {
             description: "",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "global Type update successfully",
+                  data: [],
+                },
+              },
+            },
           },
         },
         deprecated: false,
@@ -2082,22 +2066,91 @@ export default {
     },
     "/status-service/api/v1/global-type/get": {
       get: {
-        tags: ["status-service"],
+        tags: ["Global Type"],
         summary: "global type get",
         operationId: "globaltypeget",
         parameters: [],
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20024",
+                },
+                example: {
+                  success: true,
+                  message: "global type get successful",
+                  data: [
+                    {
+                      _id: "618fb99bc8ba53856cbf0459",
+                      type: "ROAD_SAFETY",
+                      order: 1,
+                      createdAt: "2021-11-13T13:11:55.724Z",
+                      updatedAt: "2021-11-13T13:11:55.724Z",
+                      __v: 0,
+                    },
+                    {
+                      _id: "618fb8e614842f8284d028dd",
+                      type: "SUPER_EVENTS",
+                      order: 2,
+                      createdAt: "2021-11-13T13:08:54.457Z",
+                      updatedAt: "2021-11-13T13:08:54.457Z",
+                      __v: 0,
+                    },
+                    {
+                      _id: "618fba343bc52886fb4f6b7d",
+                      type: "CALENDAR_EVENTS",
+                      order: 3,
+                      createdAt: "2021-11-13T13:14:28.133Z",
+                      updatedAt: "2021-11-13T13:14:28.133Z",
+                      __v: 0,
+                    },
+                    {
+                      _id: "618fba3d3bc52886fb4f6b80",
+                      type: "CUSTOM_EVENTS",
+                      order: 4,
+                      createdAt: "2021-11-13T13:14:37.273Z",
+                      updatedAt: "2021-11-13T13:14:37.273Z",
+                      __v: 0,
+                    },
+                    {
+                      _id: "618fba473bc52886fb4f6b83",
+                      type: "WORK_LIFE_MODE",
+                      order: 5,
+                      createdAt: "2021-11-13T13:14:47.554Z",
+                      updatedAt: "2021-11-13T13:14:47.554Z",
+                      __v: 0,
+                    },
+                    {
+                      _id: "618fc88c61e23400084ad415",
+                      type: "AUTO_STATUS",
+                      order: 6,
+                      createdAt: "2021-11-13T14:15:40.380Z",
+                      updatedAt: "2021-11-13T14:16:19.805Z",
+                      __v: 0,
+                    },
+                    {
+                      _id: "61962c9494db150009cac095",
+                      type: "AUTO_STATUS1",
+                      order: 7,
+                      createdAt: "2021-11-18T10:36:04.715Z",
+                      updatedAt: "2021-11-18T10:36:04.715Z",
+                      __v: 0,
+                    },
+                  ],
+                },
+              },
+            },
           },
         },
         deprecated: false,
       },
     },
-    "/status-service/api/v1/global-type/delete/{id": {
+    "/status-service/api/v1/global-type/delete/{id}": {
       delete: {
-        tags: ["status-service"],
+        tags: ["Global Type"],
         summary: "global type delete",
         operationId: "globaltypedelete",
         parameters: [
@@ -2112,18 +2165,297 @@ export default {
         ],
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "Global type deleted successfully",
+                  data: [],
+                },
+              },
+            },
           },
         },
         deprecated: false,
       },
     },
-    "/contact-sync-service/api/v1/contact/delete/{id}": {
+    "/status-service/api/v1/custom-status/add": {
+      post: {
+        tags: ["Custom Status"],
+        summary: "Custom Status add",
+        operationId: "CustomStatusadd",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/CustomStatusaddRequest",
+                },
+                description: "",
+                example: [
+                  {
+                    customId: 134,
+                    custom_name: "abc",
+                    start_date: "10/08/2021 10:00 AM",
+                    end_date: "10/20/2021 10:00 AM",
+                    is_allday_status: true,
+                    is_repeat: true,
+                    RRULE: "is_repeat",
+                    time_zone: "IN/PST etc..",
+                    status: "61670b887a7764f6a360db28",
+                    sub_status: null,
+                    notes: {
+                      is_custom: true,
+                      text: "text for sending sms",
+                    },
+                    display_to: "ALL",
+                    auto_sms: true,
+                  },
+                ],
+              },
+              example: [
+                {
+                  customId: 134,
+                  custom_name: "abc",
+                  start_date: "10/08/2021 10:00 AM",
+                  end_date: "10/20/2021 10:00 AM",
+                  is_allday_status: true,
+                  is_repeat: true,
+                  RRULE: "is_repeat",
+                  time_zone: "IN/PST etc..",
+                  status: "61670b887a7764f6a360db28",
+                  sub_status: null,
+                  notes: {
+                    is_custom: true,
+                    text: "text for sending sms",
+                  },
+                  display_to: "ALL",
+                  auto_sms: true,
+                },
+              ],
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "User status added successfully",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/custom-status/update": {
+      put: {
+        tags: ["Custom Status"],
+        summary: "custom status update",
+        operationId: "customstatusupdate",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/customstatusupdaterequest",
+              },
+              example: {
+                status: [
+                  {
+                    customId: 147,
+                    custom_name: "abc",
+                    start_date: "10/08/2021 10:00 AM",
+                    end_date: "10/20/2021 10:00 AM",
+                    is_allday_status: true,
+                    is_repeat: true,
+                    RRULE: "rrule format if is_repeat is true",
+                    time_zone: "IN/PST etc..",
+                    status: "61670b887a7764f6a360db28",
+                    sub_status: null,
+                    notes: {
+                      is_custom: true,
+                      text: "text for sending sms",
+                    },
+                    display_to: "contacts/all",
+                    auto_sms: true,
+                    is_deleted: false,
+                  },
+                  {
+                    customId: 148,
+                    custom_name: "status2",
+                    start_date: "10/08/2021 10:00 AM",
+                    end_date: "10/20/2021 10:00 AM",
+                    is_allday_status: true,
+                    is_repeat: true,
+                    RRULE: "rrule format if is_repeat is true",
+                    time_zone: "IN/PST etc..",
+                    status: "61670b887a7764f6a360db28",
+                    sub_status: null,
+                    notes: {
+                      is_custom: true,
+                      text: "text for sending sms",
+                    },
+                    display_to: "contacts/all",
+                    auto_sms: true,
+                    is_deleted: false,
+                  },
+                  {
+                    customId: 1588,
+                    custom_name: "status2",
+                    start_date: "10/08/2021 10:00 AM",
+                    end_date: "10/20/2021 10:00 AM",
+                    is_allday_status: true,
+                    is_repeat: true,
+                    RRULE: "rrule format if is_repeat is true",
+                    time_zone: "IN/PST etc..",
+                    status: "61670b887a7764f6a360db28",
+                    sub_status: null,
+                    notes: {
+                      is_custom: true,
+                      text: "text for sending sms",
+                    },
+                    display_to: "contacts/all",
+                    auto_sms: true,
+                    is_deleted: false,
+                  },
+                ],
+                workLife: {
+                  Excluded_dates: ["11/12/2021", "20/12/2021"],
+                },
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "User status update successfully",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/custom-status/get": {
+      get: {
+        tags: ["Custom Status"],
+        summary: "Custom Status Get",
+        operationId: "CustomStatusGet",
+        parameters: [],
+        responses: {
+          default: {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20028",
+                },
+                example: {
+                  sucess: true,
+                  message: "getdata successfully",
+                  data: {
+                    status: [
+                      {
+                        _id: "61950368448ab7e5f7775ce0",
+                        notes: {
+                          noteId: null,
+                          is_custom: "true",
+                          text: "text for sending sms",
+                        },
+                        is_allday_status: true,
+                        status: "61670b887a7764f6a360db28",
+                        substatus: null,
+                        user: "6194fe948f13a1d59d11df22",
+                        display_to: "ALL",
+                        auto_sms: true,
+                        is_enabled: true,
+                        is_deleted: false,
+                        customId: 135,
+                        custom_name: "abc",
+                        start_date: "2021-10-08T04:30:00.000Z",
+                        end_date: "2021-10-20T04:30:00.000Z",
+                        RRULE: "is_repeat",
+                        time_zone: "IN/PST etc..",
+                        createdAt: "2021-11-17T13:28:08.571Z",
+                        updatedAt: "2021-11-17T13:28:08.571Z",
+                        __v: 0,
+                      },
+                      {
+                        _id: "61962fb4403857000969c198",
+                        notes: {
+                          noteId: null,
+                          is_custom: "true",
+                          text: "text for sending sms",
+                        },
+                        is_allday_status: true,
+                        status: "61670b887a7764f6a360db28",
+                        substatus: null,
+                        user: "6194fe948f13a1d59d11df22",
+                        display_to: "ALL",
+                        auto_sms: true,
+                        is_enabled: true,
+                        is_deleted: false,
+                        customId: 134,
+                        custom_name: "abc",
+                        start_date: "2021-10-08T10:00:00.000Z",
+                        end_date: "2021-10-20T10:00:00.000Z",
+                        RRULE: "is_repeat",
+                        time_zone: "IN/PST etc..",
+                        createdAt: "2021-11-18T10:49:24.745Z",
+                        updatedAt: "2021-11-18T10:49:24.745Z",
+                        __v: 0,
+                      },
+                    ],
+                    worklife: {
+                      Excluded_dates: ["11/12/2021", "20/12/2021"],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/custom-status/delete/{id}": {
       delete: {
-        tags: ["contact-sync"],
-        summary: "user contact delete",
-        operationId: "usercontactdelete",
+        tags: ["Custom Status"],
+        summary: "Custom status delete",
+        operationId: "Customstatusdelete",
         parameters: [
           {
             in: "path",
@@ -2136,66 +2468,20 @@ export default {
         ],
         responses: {
           "200": {
-            description: "",
+            description: "OK",
             headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/contact-sync-service/api/v1/contact/search": {
-      post: {
-        tags: ["contact-sync"],
-        summary: "search contact in list",
-        operationId: "searchcontactinlist",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/searchcontactinlistrequest",
-              },
-              example: {
-                phone_number: "911234567890",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "User status deleted successfully",
+                  data: [],
+                },
               },
             },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/contact-sync-service/api/v1/contact/search-wisecaller": {
-      post: {
-        tags: ["contact-sync"],
-        summary: "search in wiseccaller contact in list",
-        operationId: "searchinwiseccallercontactinlist",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/searchinwiseccallercontactinlistrequest",
-              },
-              example: {
-                phone_number: "911234567890",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
           },
         },
         deprecated: false,
@@ -2214,11 +2500,33 @@ export default {
           },
         },
         example: {
-          mobileNo: "+919714209234",
+          mobileNo: "+918980514085",
         },
       },
-      verifyotprequest: {
-        title: "verifyotprequest",
+      Loginuser: {
+        title: "Loginuser",
+        required: ["success", "message", "otp"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          otp: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          success: true,
+          message: "message send successful",
+          otp: 1773,
+        },
+      },
+      VerifywithotpRequest: {
+        title: "VerifywithotpRequest",
         required: ["mobileNo", "otp"],
         type: "object",
         properties: {
@@ -2231,8 +2539,556 @@ export default {
           },
         },
         example: {
-          mobileNo: "+919714209234",
-          otp: 1896,
+          mobileNo: "+919764569876",
+          otp: 4917,
+        },
+      },
+      Verifywithotp: {
+        title: "Verifywithotp",
+        required: ["success", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          data: {
+            $ref: "#/components/schemas/Data",
+          },
+        },
+        example: {
+          success: true,
+          data: {
+            token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0ZmU5NDhmMTNhMWQ1OWQxMWRmMjIiLCJpYXQiOjE2MzcyMjU0NTQsImV4cCI6MTYzNzIzMjY1NH0.zjYvaafmauZLkdBHLmu6IdQC7JFWA1RY7twmaMDEe-s",
+            refreshToken:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0ZmU5NDhmMTNhMWQ1OWQxMWRmMjIiLCJpYXQiOjE2MzcyMjU0NTQsImV4cCI6MTY2ODc2MTQ1NH0.qgEldemvwl3UiXIljRJjGkpMJL_jrNfa1csaqh60cYA",
+            token_expires_at: "2021-11-18T20:50:54.720Z",
+            is_new_user: true,
+          },
+        },
+      },
+      Data: {
+        title: "Data",
+        required: ["token", "refreshToken", "token_expires_at", "is_new_user"],
+        type: "object",
+        properties: {
+          token: {
+            type: "string",
+          },
+          refreshToken: {
+            type: "string",
+          },
+          token_expires_at: {
+            type: "string",
+          },
+          is_new_user: {
+            type: "boolean",
+          },
+        },
+        example: {
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0ZmU5NDhmMTNhMWQ1OWQxMWRmMjIiLCJpYXQiOjE2MzcyMjU0NTQsImV4cCI6MTYzNzIzMjY1NH0.zjYvaafmauZLkdBHLmu6IdQC7JFWA1RY7twmaMDEe-s",
+          refreshToken:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0ZmU5NDhmMTNhMWQ1OWQxMWRmMjIiLCJpYXQiOjE2MzcyMjU0NTQsImV4cCI6MTY2ODc2MTQ1NH0.qgEldemvwl3UiXIljRJjGkpMJL_jrNfa1csaqh60cYA",
+          token_expires_at: "2021-11-18T20:50:54.720Z",
+          is_new_user: true,
+        },
+      },
+      m200: {
+        title: "m200",
+        required: ["sucess", "message", "data"],
+        type: "object",
+        properties: {
+          sucess: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            $ref: "#/components/schemas/Data1",
+          },
+        },
+        example: {
+          sucess: true,
+          message: "User Profile details get successfully",
+          data: {
+            _id: "6194fe948f13a1d59d11df22",
+            first_name: " tushar",
+            last_name: "savaliya",
+            phone: "+918849455045",
+            secondary_no: "+918980514085",
+            profile_image: null,
+            is_profile_from_social_media: " false",
+            media_profile_url: " ",
+            role: "ADMIN",
+            devices: null,
+            isActive: true,
+            isDeleted: false,
+            phones: [
+              {
+                used_for_login: true,
+                _id: "6194fe948f13a1d59d11df23",
+                no: "+918849455045",
+                type: "PRIMARY",
+              },
+              {
+                used_for_login: true,
+                _id: "6194fedc8f13a1d59d11df2c",
+                no: "+918980514085",
+                type: "SECONDARY",
+              },
+            ],
+            createdAt: "2021-11-17T13:07:32.717Z",
+            updatedAt: "2021-11-18T08:50:54.681Z",
+            __v: 0,
+            user_status: {
+              name: "abc",
+              status: {
+                sub_status: {
+                  user: null,
+                  isDeleted: false,
+                  _id: "6195023525c96ee17567830d",
+                  status: "DND2",
+                  parentId: "6195004219517edbb9a32dde",
+                  logo: "status_images/1637155378453.png",
+                  createdAt: "2021-11-17T13:23:01.173Z",
+                  updatedAt: "2021-11-17T13:23:01.173Z",
+                  __v: 0,
+                },
+                _id: "6195004219517edbb9a32dde",
+                user: null,
+                applicable_types: [
+                  "618fb8e614842f8284d028dd",
+                  "618fb99bc8ba53856cbf0459",
+                ],
+                isDeleted: false,
+                status: "Do not Disturb",
+                priority: 0,
+                logo: "status_images/1637155090761.png",
+                createdAt: "2021-11-17T13:14:42.642Z",
+                updatedAt: "2021-11-17T13:19:10.157Z",
+                __v: 0,
+              },
+            },
+          },
+        },
+      },
+      Data1: {
+        title: "Data1",
+        required: [
+          "_id",
+          "first_name",
+          "last_name",
+          "phone",
+          "secondary_no",
+          "profile_image",
+          "is_profile_from_social_media",
+          "media_profile_url",
+          "role",
+          "devices",
+          "isActive",
+          "isDeleted",
+          "phones",
+          "createdAt",
+          "updatedAt",
+          "__v",
+          "user_status",
+        ],
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          phone: {
+            type: "string",
+          },
+          secondary_no: {
+            type: "string",
+          },
+          profile_image: {
+            type: "string",
+            nullable: true,
+          },
+          is_profile_from_social_media: {
+            type: "string",
+          },
+          media_profile_url: {
+            type: "string",
+          },
+          role: {
+            type: "string",
+          },
+          devices: {
+            type: "string",
+            nullable: true,
+          },
+          isActive: {
+            type: "boolean",
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone",
+            },
+            description: "",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+          user_status: {
+            $ref: "#/components/schemas/UserStatus",
+          },
+        },
+        example: {
+          _id: "6194fe948f13a1d59d11df22",
+          first_name: " tushar",
+          last_name: "savaliya",
+          phone: "+918849455045",
+          secondary_no: "+918980514085",
+          profile_image: null,
+          is_profile_from_social_media: " false",
+          media_profile_url: " ",
+          role: "ADMIN",
+          devices: null,
+          isActive: true,
+          isDeleted: false,
+          phones: [
+            {
+              used_for_login: true,
+              _id: "6194fe948f13a1d59d11df23",
+              no: "+918849455045",
+              type: "PRIMARY",
+            },
+            {
+              used_for_login: true,
+              _id: "6194fedc8f13a1d59d11df2c",
+              no: "+918980514085",
+              type: "SECONDARY",
+            },
+          ],
+          createdAt: "2021-11-17T13:07:32.717Z",
+          updatedAt: "2021-11-18T08:50:54.681Z",
+          __v: 0,
+          user_status: {
+            name: "abc",
+            status: {
+              sub_status: {
+                user: null,
+                isDeleted: false,
+                _id: "6195023525c96ee17567830d",
+                status: "DND2",
+                parentId: "6195004219517edbb9a32dde",
+                logo: "status_images/1637155378453.png",
+                createdAt: "2021-11-17T13:23:01.173Z",
+                updatedAt: "2021-11-17T13:23:01.173Z",
+                __v: 0,
+              },
+              _id: "6195004219517edbb9a32dde",
+              user: null,
+              applicable_types: [
+                "618fb8e614842f8284d028dd",
+                "618fb99bc8ba53856cbf0459",
+              ],
+              isDeleted: false,
+              status: "Do not Disturb",
+              priority: 0,
+              logo: "status_images/1637155090761.png",
+              createdAt: "2021-11-17T13:14:42.642Z",
+              updatedAt: "2021-11-17T13:19:10.157Z",
+              __v: 0,
+            },
+          },
+        },
+      },
+      Phone: {
+        title: "Phone",
+        required: ["used_for_login", "_id", "no", "type"],
+        type: "object",
+        properties: {
+          used_for_login: {
+            type: "boolean",
+          },
+          _id: {
+            type: "string",
+          },
+          no: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+        },
+        example: {
+          used_for_login: true,
+          _id: "6194fe948f13a1d59d11df23",
+          no: "+918849455045",
+          type: "PRIMARY",
+        },
+      },
+      UserStatus: {
+        title: "UserStatus",
+        required: ["name", "status"],
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+          },
+          status: {
+            $ref: "#/components/schemas/Status",
+          },
+        },
+        example: {
+          name: "abc",
+          status: {
+            sub_status: {
+              user: null,
+              isDeleted: false,
+              _id: "6195023525c96ee17567830d",
+              status: "DND2",
+              parentId: "6195004219517edbb9a32dde",
+              logo: "status_images/1637155378453.png",
+              createdAt: "2021-11-17T13:23:01.173Z",
+              updatedAt: "2021-11-17T13:23:01.173Z",
+              __v: 0,
+            },
+            _id: "6195004219517edbb9a32dde",
+            user: null,
+            applicable_types: [
+              "618fb8e614842f8284d028dd",
+              "618fb99bc8ba53856cbf0459",
+            ],
+            isDeleted: false,
+            status: "Do not Disturb",
+            priority: 0,
+            logo: "status_images/1637155090761.png",
+            createdAt: "2021-11-17T13:14:42.642Z",
+            updatedAt: "2021-11-17T13:19:10.157Z",
+            __v: 0,
+          },
+        },
+      },
+      Status: {
+        title: "Status",
+        required: [
+          "sub_status",
+          "_id",
+          "user",
+          "applicable_types",
+          "isDeleted",
+          "status",
+          "priority",
+          "logo",
+          "createdAt",
+          "updatedAt",
+          "__v",
+        ],
+        type: "object",
+        properties: {
+          sub_status: {
+            $ref: "#/components/schemas/SubStatus",
+          },
+          _id: {
+            type: "string",
+          },
+          user: {
+            type: "string",
+            nullable: true,
+          },
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          status: {
+            type: "string",
+          },
+          priority: {
+            type: "integer",
+            format: "int32",
+          },
+          logo: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          sub_status: {
+            user: null,
+            isDeleted: false,
+            _id: "6195023525c96ee17567830d",
+            status: "DND2",
+            parentId: "6195004219517edbb9a32dde",
+            logo: "status_images/1637155378453.png",
+            createdAt: "2021-11-17T13:23:01.173Z",
+            updatedAt: "2021-11-17T13:23:01.173Z",
+            __v: 0,
+          },
+          _id: "6195004219517edbb9a32dde",
+          user: null,
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          isDeleted: false,
+          status: "Do not Disturb",
+          priority: 0,
+          logo: "status_images/1637155090761.png",
+          createdAt: "2021-11-17T13:14:42.642Z",
+          updatedAt: "2021-11-17T13:19:10.157Z",
+          __v: 0,
+        },
+      },
+      SubStatus: {
+        title: "SubStatus",
+        required: [
+          "user",
+          "isDeleted",
+          "_id",
+          "status",
+          "parentId",
+          "logo",
+          "createdAt",
+          "updatedAt",
+          "__v",
+        ],
+        type: "object",
+        properties: {
+          user: {
+            type: "string",
+            nullable: true,
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          _id: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          parentId: {
+            type: "string",
+          },
+          logo: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          user: null,
+          isDeleted: false,
+          _id: "6195023525c96ee17567830d",
+          status: "DND2",
+          parentId: "6195004219517edbb9a32dde",
+          logo: "status_images/1637155378453.png",
+          createdAt: "2021-11-17T13:23:01.173Z",
+          updatedAt: "2021-11-17T13:23:01.173Z",
+          __v: 0,
+        },
+      },
+      m2001: {
+        title: "m2001",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+        },
+        example: {
+          success: true,
+          message: "user update successfully",
+          data: [],
+        },
+      },
+      updateuserprofilewithjsonrequest: {
+        title: "updateuserprofilewithjsonrequest",
+        required: [
+          "first_name",
+          "last_name",
+          "is_profile_from_social_media",
+          "phone",
+          "secondary_no",
+          "media_profile_url",
+        ],
+        type: "object",
+        properties: {
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          is_profile_from_social_media: {
+            type: "boolean",
+          },
+          phone: {
+            type: "string",
+          },
+          secondary_no: {
+            type: "string",
+          },
+          media_profile_url: {
+            type: "string",
+          },
+        },
+        example: {
+          first_name: "tushar",
+          last_name: "savaliya",
+          is_profile_from_social_media: false,
+          phone: "+918849455045",
+          secondary_no: "+918980514085",
+          media_profile_url: "",
         },
       },
       updateuserstatusrequest: {
@@ -2260,6 +3116,349 @@ export default {
           notesId: "",
         },
       },
+      m2003: {
+        title: "m2003",
+        required: ["success", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          data: {
+            $ref: "#/components/schemas/Data2",
+          },
+        },
+        example: {
+          success: true,
+          data: {
+            modes: {
+              workLifeBalance: {
+                is_active: false,
+                data: null,
+              },
+              roadSafetyStatus: {
+                is_active: false,
+                devices: null,
+                data: null,
+              },
+              syncCalender: {
+                calenders: null,
+                priooritize_calender_events: false,
+              },
+            },
+            first_name: "tushar",
+            last_name: "savaliya",
+            phone: "+918849455045",
+            secondary_no: "+918980514085",
+            profile_image: null,
+            is_profile_from_social_media: "false",
+            media_profile_url: "",
+            role: "ADMIN",
+            devices: null,
+            isActive: true,
+            isDeleted: false,
+            _id: "6194fe948f13a1d59d11df22",
+            phones: [
+              {
+                used_for_login: true,
+                _id: "6194fe948f13a1d59d11df23",
+                no: "+918849455045",
+                type: "PRIMARY",
+              },
+              {
+                used_for_login: false,
+                _id: "61961587c65f230009c3a4e2",
+                no: "+918980514085",
+                type: "SECONDARY",
+              },
+            ],
+            createdAt: "2021-11-17T13:07:32.717Z",
+            updatedAt: "2021-11-18T09:01:19.402Z",
+            __v: 0,
+            user_status: {
+              name: "abc",
+              status: {
+                sub_status: {
+                  user: null,
+                  isDeleted: false,
+                  _id: "6195023525c96ee17567830d",
+                  status: "DND2",
+                  parentId: "6195004219517edbb9a32dde",
+                  logo: "status_images/1637155378453.png",
+                  createdAt: "2021-11-17T13:23:01.173Z",
+                  updatedAt: "2021-11-17T13:23:01.173Z",
+                  __v: 0,
+                },
+                _id: "6195004219517edbb9a32dde",
+                user: null,
+                applicable_types: [
+                  "618fb8e614842f8284d028dd",
+                  "618fb99bc8ba53856cbf0459",
+                ],
+                isDeleted: false,
+                status: "Do not Disturb",
+                priority: 0,
+                logo: "status_images/1637155090761.png",
+                createdAt: "2021-11-17T13:14:42.642Z",
+                updatedAt: "2021-11-17T13:19:10.157Z",
+                __v: 0,
+              },
+            },
+          },
+        },
+      },
+      Data2: {
+        title: "Data2",
+        required: [
+          "modes",
+          "first_name",
+          "last_name",
+          "phone",
+          "secondary_no",
+          "profile_image",
+          "is_profile_from_social_media",
+          "media_profile_url",
+          "role",
+          "devices",
+          "isActive",
+          "isDeleted",
+          "_id",
+          "phones",
+          "createdAt",
+          "updatedAt",
+          "__v",
+          "user_status",
+        ],
+        type: "object",
+        properties: {
+          modes: {
+            $ref: "#/components/schemas/Modes",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          phone: {
+            type: "string",
+          },
+          secondary_no: {
+            type: "string",
+          },
+          profile_image: {
+            type: "string",
+            nullable: true,
+          },
+          is_profile_from_social_media: {
+            type: "string",
+          },
+          media_profile_url: {
+            type: "string",
+          },
+          role: {
+            type: "string",
+          },
+          devices: {
+            type: "string",
+            nullable: true,
+          },
+          isActive: {
+            type: "boolean",
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          _id: {
+            type: "string",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone",
+            },
+            description: "",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+          user_status: {
+            $ref: "#/components/schemas/UserStatus",
+          },
+        },
+        example: {
+          modes: {
+            workLifeBalance: {
+              is_active: false,
+              data: null,
+            },
+            roadSafetyStatus: {
+              is_active: false,
+              devices: null,
+              data: null,
+            },
+            syncCalender: {
+              calenders: null,
+              priooritize_calender_events: false,
+            },
+          },
+          first_name: "tushar",
+          last_name: "savaliya",
+          phone: "+918849455045",
+          secondary_no: "+918980514085",
+          profile_image: null,
+          is_profile_from_social_media: "false",
+          media_profile_url: "",
+          role: "ADMIN",
+          devices: null,
+          isActive: true,
+          isDeleted: false,
+          _id: "6194fe948f13a1d59d11df22",
+          phones: [
+            {
+              used_for_login: true,
+              _id: "6194fe948f13a1d59d11df23",
+              no: "+918849455045",
+              type: "PRIMARY",
+            },
+            {
+              used_for_login: false,
+              _id: "61961587c65f230009c3a4e2",
+              no: "+918980514085",
+              type: "SECONDARY",
+            },
+          ],
+          createdAt: "2021-11-17T13:07:32.717Z",
+          updatedAt: "2021-11-18T09:01:19.402Z",
+          __v: 0,
+          user_status: {
+            name: "abc",
+            status: {
+              sub_status: {
+                user: null,
+                isDeleted: false,
+                _id: "6195023525c96ee17567830d",
+                status: "DND2",
+                parentId: "6195004219517edbb9a32dde",
+                logo: "status_images/1637155378453.png",
+                createdAt: "2021-11-17T13:23:01.173Z",
+                updatedAt: "2021-11-17T13:23:01.173Z",
+                __v: 0,
+              },
+              _id: "6195004219517edbb9a32dde",
+              user: null,
+              applicable_types: [
+                "618fb8e614842f8284d028dd",
+                "618fb99bc8ba53856cbf0459",
+              ],
+              isDeleted: false,
+              status: "Do not Disturb",
+              priority: 0,
+              logo: "status_images/1637155090761.png",
+              createdAt: "2021-11-17T13:14:42.642Z",
+              updatedAt: "2021-11-17T13:19:10.157Z",
+              __v: 0,
+            },
+          },
+        },
+      },
+      Modes: {
+        title: "Modes",
+        required: ["workLifeBalance", "roadSafetyStatus", "syncCalender"],
+        type: "object",
+        properties: {
+          workLifeBalance: {
+            $ref: "#/components/schemas/WorkLifeBalance",
+          },
+          roadSafetyStatus: {
+            $ref: "#/components/schemas/RoadSafetyStatus",
+          },
+          syncCalender: {
+            $ref: "#/components/schemas/SyncCalender",
+          },
+        },
+        example: {
+          workLifeBalance: {
+            is_active: false,
+            data: null,
+          },
+          roadSafetyStatus: {
+            is_active: false,
+            devices: null,
+            data: null,
+          },
+          syncCalender: {
+            calenders: null,
+            priooritize_calender_events: false,
+          },
+        },
+      },
+      WorkLifeBalance: {
+        title: "WorkLifeBalance",
+        required: ["is_active", "data"],
+        type: "object",
+        properties: {
+          is_active: {
+            type: "boolean",
+          },
+          data: {
+            type: "string",
+            nullable: true,
+          },
+        },
+        example: {
+          is_active: false,
+          data: null,
+        },
+      },
+      RoadSafetyStatus: {
+        title: "RoadSafetyStatus",
+        required: ["is_active", "devices", "data"],
+        type: "object",
+        properties: {
+          is_active: {
+            type: "boolean",
+          },
+          devices: {
+            type: "string",
+            nullable: true,
+          },
+          data: {
+            type: "string",
+            nullable: true,
+          },
+        },
+        example: {
+          is_active: false,
+          devices: null,
+          data: null,
+        },
+      },
+      SyncCalender: {
+        title: "SyncCalender",
+        required: ["calenders", "priooritize_calender_events"],
+        type: "object",
+        properties: {
+          calenders: {
+            type: "string",
+            nullable: true,
+          },
+          priooritize_calender_events: {
+            type: "boolean",
+          },
+        },
+        example: {
+          calenders: null,
+          priooritize_calender_events: false,
+        },
+      },
       contactUsRequest: {
         title: "contactUsRequest",
         required: ["email", "message"],
@@ -2277,21 +3476,72 @@ export default {
           message: "systme is not working",
         },
       },
-      adddevicesrequest: {
-        title: "adddevicesrequest",
-        required: ["devices"],
+      m2005: {
+        title: "m2005",
+        required: ["success", "data", "message"],
         type: "object",
         properties: {
-          devices: {
+          success: {
+            type: "boolean",
+          },
+          data: {
             type: "array",
             items: {
-              type: "string",
+              $ref: "#/components/schemas/Data3",
             },
             description: "",
           },
+          message: {
+            type: "string",
+          },
         },
         example: {
-          devices: ["speaket", "blutooth"],
+          success: true,
+          data: [
+            {
+              _id: "6196171ec65f230009c3a4ec",
+              email: "savaliyatushar2197@gmail.com",
+              Message: "systme is not working",
+              createdAt: "2021-11-18T09:04:30.813Z",
+              updatedAt: "2021-11-18T09:04:30.813Z",
+              __v: 0,
+            },
+          ],
+          message: "contactUs details get sucess fully",
+        },
+      },
+      Data3: {
+        title: "Data3",
+        required: ["_id", "email", "Message", "createdAt", "updatedAt", "__v"],
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          Message: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          _id: "6196171ec65f230009c3a4ec",
+          email: "savaliyatushar2197@gmail.com",
+          Message: "systme is not working",
+          createdAt: "2021-11-18T09:04:30.813Z",
+          updatedAt: "2021-11-18T09:04:30.813Z",
+          __v: 0,
         },
       },
       resendotprequest: {
@@ -2307,8 +3557,116 @@ export default {
           mobileNo: "+918585858588",
         },
       },
-      callhISTORYRequest: {
-        title: "callhISTORYRequest",
+      m2006: {
+        title: "m2006",
+        required: ["success", "message", "otp"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          otp: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          success: true,
+          message: "message send successful",
+          otp: 2059,
+        },
+      },
+      UpdateRoadSafetyRequest: {
+        title: "UpdateRoadSafetyRequest",
+        required: [
+          "devices",
+          "selected_device",
+          "display_to",
+          "auto_sms",
+          "notes",
+          "is_active",
+        ],
+        type: "object",
+        properties: {
+          devices: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          selected_device: {
+            type: "string",
+          },
+          display_to: {
+            type: "string",
+          },
+          auto_sms: {
+            type: "boolean",
+          },
+          notes: {
+            $ref: "#/components/schemas/Notes",
+          },
+          is_active: {
+            type: "boolean",
+          },
+        },
+        example: {
+          devices: ["JBL Enduarance", "Boat Rokerz"],
+          selected_device: "Boat Rokerz",
+          display_to: "contacts",
+          auto_sms: false,
+          notes: {
+            note_id: "",
+            is_custom: true,
+            text: "Not available",
+          },
+          is_active: true,
+        },
+      },
+      Notes: {
+        title: "Notes",
+        required: ["note_id", "is_custom", "text"],
+        type: "object",
+        properties: {
+          note_id: {
+            type: "string",
+          },
+          is_custom: {
+            type: "boolean",
+          },
+          text: {
+            type: "string",
+          },
+        },
+        example: {
+          note_id: "",
+          is_custom: true,
+          text: "Not available",
+        },
+      },
+      m2007: {
+        title: "m2007",
+        required: ["success", "message"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+        },
+        example: {
+          success: true,
+          message: "Roadsafety updated successfully",
+        },
+      },
+      AddcallHistoryRequest: {
+        title: "AddcallHistoryRequest",
         required: [
           "wisecallerId",
           "phone",
@@ -2384,6 +3742,332 @@ export default {
           simId: "sim1",
         },
       },
+      m2009: {
+        title: "m2009",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Data4",
+            },
+            description: "",
+          },
+        },
+        example: {
+          success: true,
+          message: "Sucess",
+          data: [
+            {
+              _id: "2021-11-14",
+              list: [
+                {
+                  _id: "6196186a93f0d600093ed1f4",
+                  wisecallerId: "6194fe948f13a1d59d11df22",
+                  callerId: null,
+                  contactId: "618fa6b12ac1e05fd9709daa",
+                  phone: "+919496955716",
+                  name: "abcs",
+                  callHistory: [
+                    {
+                      simId: "sim1",
+                      _id: "6196186a93f0d600093ed1f5",
+                      time: "2021-12-12 11:00:00",
+                      type: "Incoming",
+                    },
+                    {
+                      simId: "sim2",
+                      _id: "6196186a93f0d600093ed1f6",
+                      time: "2021-12-12 11:00:00",
+                      type: "Outgoing",
+                    },
+                  ],
+                  date: "2021-11-14T10:20:22.000Z",
+                  createdAt: "2021-11-18T09:10:02.543Z",
+                  updatedAt: "2021-11-18T09:10:02.543Z",
+                  __v: 0,
+                  subStatus: [],
+                  userContact: [],
+                },
+                {
+                  _id: "6196186a93f0d600093ed1f9",
+                  wisecallerId: "6194fe948f13a1d59d11df22",
+                  callerId: null,
+                  contactId: null,
+                  phone: "+918989898989",
+                  name: "abcs",
+                  callHistory: [
+                    {
+                      simId: "sim1",
+                      _id: "6196186a93f0d600093ed1fa",
+                      time: "2021-12-12 11:00:00",
+                      type: "Incoming",
+                    },
+                    {
+                      simId: "sim2",
+                      _id: "6196186a93f0d600093ed1fb",
+                      time: "2021-12-12 11:00:00",
+                      type: "Outgoing",
+                    },
+                  ],
+                  date: "2021-11-14T10:20:22.000Z",
+                  createdAt: "2021-11-18T09:10:02.550Z",
+                  updatedAt: "2021-11-18T09:10:02.550Z",
+                  __v: 0,
+                  subStatus: [],
+                  userContact: [],
+                },
+              ],
+            },
+            {
+              _id: "2021-11-13",
+              list: [
+                {
+                  _id: "6196186a93f0d600093ed1ef",
+                  wisecallerId: "6194fe948f13a1d59d11df22",
+                  callerId: null,
+                  contactId: "618fa6b02ac1e05fd9709da0",
+                  phone: "+919714209234",
+                  name: "abc",
+                  callHistory: [
+                    {
+                      simId: "sim1",
+                      _id: "6196186a93f0d600093ed1f0",
+                      time: "2021-12-12 11:00:00",
+                      type: "Incoming",
+                    },
+                    {
+                      simId: "sim2",
+                      _id: "6196186a93f0d600093ed1f1",
+                      time: "2021-12-12 11:00:00",
+                      type: "Outgoing",
+                    },
+                  ],
+                  date: "2021-11-13T10:20:22.000Z",
+                  createdAt: "2021-11-18T09:10:02.516Z",
+                  updatedAt: "2021-11-18T09:10:02.516Z",
+                  __v: 0,
+                  subStatus: [],
+                  userContact: [],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      Data4: {
+        title: "Data4",
+        required: ["_id", "list"],
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+          },
+          list: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/List",
+            },
+            description: "",
+          },
+        },
+        example: {
+          _id: "2021-11-14",
+          list: [
+            {
+              _id: "6196186a93f0d600093ed1f4",
+              wisecallerId: "6194fe948f13a1d59d11df22",
+              callerId: null,
+              contactId: "618fa6b12ac1e05fd9709daa",
+              phone: "+919496955716",
+              name: "abcs",
+              callHistory: [
+                {
+                  simId: "sim1",
+                  _id: "6196186a93f0d600093ed1f5",
+                  time: "2021-12-12 11:00:00",
+                  type: "Incoming",
+                },
+                {
+                  simId: "sim2",
+                  _id: "6196186a93f0d600093ed1f6",
+                  time: "2021-12-12 11:00:00",
+                  type: "Outgoing",
+                },
+              ],
+              date: "2021-11-14T10:20:22.000Z",
+              createdAt: "2021-11-18T09:10:02.543Z",
+              updatedAt: "2021-11-18T09:10:02.543Z",
+              __v: 0,
+              subStatus: [],
+              userContact: [],
+            },
+            {
+              _id: "6196186a93f0d600093ed1f9",
+              wisecallerId: "6194fe948f13a1d59d11df22",
+              callerId: null,
+              contactId: null,
+              phone: "+918989898989",
+              name: "abcs",
+              callHistory: [
+                {
+                  simId: "sim1",
+                  _id: "6196186a93f0d600093ed1fa",
+                  time: "2021-12-12 11:00:00",
+                  type: "Incoming",
+                },
+                {
+                  simId: "sim2",
+                  _id: "6196186a93f0d600093ed1fb",
+                  time: "2021-12-12 11:00:00",
+                  type: "Outgoing",
+                },
+              ],
+              date: "2021-11-14T10:20:22.000Z",
+              createdAt: "2021-11-18T09:10:02.550Z",
+              updatedAt: "2021-11-18T09:10:02.550Z",
+              __v: 0,
+              subStatus: [],
+              userContact: [],
+            },
+          ],
+        },
+      },
+      List: {
+        title: "List",
+        required: [
+          "_id",
+          "wisecallerId",
+          "callerId",
+          "contactId",
+          "phone",
+          "name",
+          "callHistory",
+          "date",
+          "createdAt",
+          "updatedAt",
+          "__v",
+          "subStatus",
+          "userContact",
+        ],
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+          },
+          wisecallerId: {
+            type: "string",
+          },
+          callerId: {
+            type: "string",
+            nullable: true,
+          },
+          contactId: {
+            type: "string",
+            nullable: true,
+          },
+          phone: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          callHistory: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/CallHistory1",
+            },
+            description: "",
+          },
+          date: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+          subStatus: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          userContact: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+        },
+        example: {
+          _id: "6196186a93f0d600093ed1f4",
+          wisecallerId: "6194fe948f13a1d59d11df22",
+          callerId: null,
+          contactId: "618fa6b12ac1e05fd9709daa",
+          phone: "+919496955716",
+          name: "abcs",
+          callHistory: [
+            {
+              simId: "sim1",
+              _id: "6196186a93f0d600093ed1f5",
+              time: "2021-12-12 11:00:00",
+              type: "Incoming",
+            },
+            {
+              simId: "sim2",
+              _id: "6196186a93f0d600093ed1f6",
+              time: "2021-12-12 11:00:00",
+              type: "Outgoing",
+            },
+          ],
+          date: "2021-11-14T10:20:22.000Z",
+          createdAt: "2021-11-18T09:10:02.543Z",
+          updatedAt: "2021-11-18T09:10:02.543Z",
+          __v: 0,
+          subStatus: [],
+          userContact: [],
+        },
+      },
+      CallHistory1: {
+        title: "CallHistory1",
+        required: ["simId", "_id", "time", "type"],
+        type: "object",
+        properties: {
+          simId: {
+            type: "string",
+          },
+          _id: {
+            type: "string",
+          },
+          time: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+        },
+        example: {
+          simId: "sim1",
+          _id: "6196186a93f0d600093ed1f5",
+          time: "2021-12-12 11:00:00",
+          type: "Incoming",
+        },
+      },
       addnumberfromcallhistoryrequest: {
         title: "addnumberfromcallhistoryrequest",
         required: ["phone", "name", "time", "type", "simId", "date"],
@@ -2417,80 +4101,98 @@ export default {
           date: "2021-12-12 11:00:00",
         },
       },
-      deletenumberfromcallhistoryrequest: {
-        title: "deletenumberfromcallhistoryrequest",
-        required: ["callLogId", "callId"],
+      m20010: {
+        title: "m20010",
+        required: ["success", "message", "callLogs"],
         type: "object",
         properties: {
-          callLogId: {
-            type: "string",
-          },
-          callId: {
-            type: "string",
-          },
-        },
-        example: {
-          callLogId: "617a3468c0182323f296cf9b",
-          callId: "617949e2917167caf3ad3e23",
-        },
-      },
-      AddfavoriteRequest: {
-        title: "AddfavoriteRequest",
-        required: ["name", "number", "isFavorite"],
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-          },
-          number: {
-            type: "string",
-          },
-          isFavorite: {
+          success: {
             type: "boolean",
-          },
-        },
-        example: {
-          name: "abc",
-          number: "+918849455045",
-          isFavorite: true,
-        },
-      },
-      AddBlockcontactRequest: {
-        title: "AddBlockcontactRequest",
-        required: ["name", "number", "isBlock"],
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-          },
-          number: {
-            type: "string",
-          },
-          isBlock: {
-            type: "boolean",
-          },
-        },
-        example: {
-          name: "abc",
-          number: "+918849455045",
-          isBlock: true,
-        },
-      },
-      sendcustommessagerequest: {
-        title: "sendcustommessagerequest",
-        required: ["mobileNo", "message"],
-        type: "object",
-        properties: {
-          mobileNo: {
-            type: "string",
           },
           message: {
             type: "string",
           },
+          callLogs: {
+            $ref: "#/components/schemas/CallLogs",
+          },
         },
         example: {
-          mobileNo: "+918849455045",
-          message: "custom message",
+          success: true,
+          message: "success",
+          callLogs: {
+            phone: "+919099909990",
+            name: "abcs",
+            time: "2021-12-12 11:00:00",
+            type: "Incoming",
+            simId: "sim2",
+            date: "2021-12-12 11:00:00",
+            callHistory: {
+              time: "2021-12-12 11:00:00",
+              type: "Incoming",
+              simId: "sim2",
+            },
+            callerId: "6194fe948f13a1d59d11df22",
+            wisecallerId: "6194fe948f13a1d59d11df22",
+          },
+        },
+      },
+      CallLogs: {
+        title: "CallLogs",
+        required: [
+          "phone",
+          "name",
+          "time",
+          "type",
+          "simId",
+          "date",
+          "callHistory",
+          "callerId",
+          "wisecallerId",
+        ],
+        type: "object",
+        properties: {
+          phone: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          time: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+          simId: {
+            type: "string",
+          },
+          date: {
+            type: "string",
+          },
+          callHistory: {
+            $ref: "#/components/schemas/CallHistory",
+          },
+          callerId: {
+            type: "string",
+          },
+          wisecallerId: {
+            type: "string",
+          },
+        },
+        example: {
+          phone: "+919099909990",
+          name: "abcs",
+          time: "2021-12-12 11:00:00",
+          type: "Incoming",
+          simId: "sim2",
+          date: "2021-12-12 11:00:00",
+          callHistory: {
+            time: "2021-12-12 11:00:00",
+            type: "Incoming",
+            simId: "sim2",
+          },
+          callerId: "6194fe948f13a1d59d11df22",
+          wisecallerId: "6194fe948f13a1d59d11df22",
         },
       },
       contactsyncrequest: {
@@ -2525,7 +4227,7 @@ export default {
           phones: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Phone",
+              $ref: "#/components/schemas/Phone2",
             },
             description: "",
           },
@@ -2556,8 +4258,8 @@ export default {
           ],
         },
       },
-      Phone: {
-        title: "Phone",
+      Phone2: {
+        title: "Phone2",
         required: ["ph_no", "type"],
         type: "object",
         properties: {
@@ -2573,175 +4275,230 @@ export default {
           type: "PRIMARY",
         },
       },
-      CalendarsyncRequest: {
-        title: "CalendarsyncRequest",
-        required: ["email", "calenderEvent"],
+      m20012: {
+        title: "m20012",
+        required: ["success", "message", "data"],
         type: "object",
         properties: {
-          email: {
-            type: "string",
-          },
-          calenderEvent: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/CalenderEvent",
-            },
-            description: "",
-          },
-        },
-        example: {
-          email: "savaliyatushar2197@gmail.com",
-          calenderEvent: [
-            {
-              eventName: "abc",
-              allDay: true,
-              startDate: "24-05-2021",
-              endDay: "24-05-2021",
-            },
-            {
-              eventName: "abc1",
-              allDay: true,
-              startDate: "24-05-2021",
-              endDay: "24-05-2021",
-            },
-          ],
-        },
-      },
-      CalenderEvent: {
-        title: "CalenderEvent",
-        required: ["eventName", "allDay", "startDate", "endDay"],
-        type: "object",
-        properties: {
-          eventName: {
-            type: "string",
-          },
-          allDay: {
+          success: {
             type: "boolean",
           },
-          startDate: {
+          message: {
             type: "string",
           },
-          endDay: {
-            type: "string",
-          },
-        },
-        example: {
-          eventName: "abc",
-          allDay: true,
-          startDate: "24-05-2021",
-          endDay: "24-05-2021",
-        },
-      },
-      AddEventstatusjsonRequest: {
-        title: "AddEventstatusjsonRequest",
-        required: ["status", "applicable_types", "priority"],
-        type: "object",
-        properties: {
-          status: {
-            type: "string",
-          },
-          applicable_types: {
+          data: {
             type: "array",
             items: {
-              type: "string",
+              $ref: "#/components/schemas/Data5",
             },
             description: "",
           },
-          priority: {
-            type: "integer",
-            format: "int32",
-          },
         },
         example: {
-          status: "Do not Disturb",
-          applicable_types: [
-            "618fb8e614842f8284d028dd",
-            "618fb99bc8ba53856cbf0459",
-          ],
-          priority: 0,
-        },
-      },
-      updateEventDetailsjsonRequest: {
-        title: "updateEventDetailsjsonRequest",
-        required: ["status", "applicable_types", "priority"],
-        type: "object",
-        properties: {
-          status: {
-            type: "string",
-          },
-          applicable_types: {
-            type: "array",
-            items: {
-              type: "string",
+          success: true,
+          message: "contact list get successfully",
+          data: [
+            {
+              _id: "619619e82c05f200095b25a9",
+              profile_image: null,
+              local_profile_image_path: "contacts/abc.png",
+              customId: 152,
+              first_name: "jignesh",
+              last_name: "jignesh",
+              phones: [
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25aa",
+                  ph_no: "+919854671230",
+                  type: "PRIMARY",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25ab",
+                  ph_no: "+912567894130",
+                  type: "SECONDARY",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25ac",
+                  ph_no: "+919568732410",
+                  type: "OFFICE",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25ad",
+                  ph_no: "+919496782117",
+                  type: "HOME",
+                },
+              ],
+              user: "6194fe948f13a1d59d11df22",
+              createdAt: "2021-11-18T09:16:24.247Z",
+              updatedAt: "2021-11-18T09:16:24.247Z",
+              __v: 0,
+              wisecallerUser: [],
+              userStatus: [],
+              userSubStatus: [],
             },
-            description: "",
-          },
-          priority: {
-            type: "integer",
-            format: "int32",
-          },
-        },
-        example: {
-          status: "Do not Disturb",
-          applicable_types: [
-            "618fb8e614842f8284d028dd",
-            "618fb99bc8ba53856cbf0459",
+            {
+              _id: "619619e82c05f200095b259f",
+              profile_image: null,
+              local_profile_image_path: "contacts/abc.png",
+              customId: 151,
+              first_name: "mehul",
+              last_name: "mehul",
+              phones: [
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25a0",
+                  ph_no: "+911237896540",
+                  type: "PRIMARY",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25a1",
+                  ph_no: "+919874563210",
+                  type: "SECONDARY",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25a2",
+                  ph_no: "+915478963210",
+                  type: "OFFICE",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b25a3",
+                  ph_no: "+918756941230",
+                  type: "HOME",
+                },
+              ],
+              user: "6194fe948f13a1d59d11df22",
+              createdAt: "2021-11-18T09:16:24.233Z",
+              updatedAt: "2021-11-18T09:16:24.233Z",
+              __v: 0,
+              wisecallerUser: [],
+              userStatus: [],
+              userSubStatus: [],
+            },
+            {
+              _id: "619619e82c05f200095b2595",
+              profile_image: null,
+              local_profile_image_path: "contacts/abc.png",
+              customId: 150,
+              first_name: "tushar",
+              last_name: "savaliya",
+              phones: [
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b2596",
+                  ph_no: "+911234567890",
+                  type: "PRIMARY",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b2597",
+                  ph_no: "+913216549870",
+                  type: "SECONDARY",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b2598",
+                  ph_no: "+911236547890",
+                  type: "OFFICE",
+                },
+                {
+                  wisecallerId: null,
+                  _id: "619619e82c05f200095b2599",
+                  ph_no: "+917412589630",
+                  type: "HOME",
+                },
+              ],
+              user: "6194fe948f13a1d59d11df22",
+              createdAt: "2021-11-18T09:16:24.207Z",
+              updatedAt: "2021-11-18T09:16:24.207Z",
+              __v: 0,
+              wisecallerUser: [],
+              userStatus: [],
+              userSubStatus: [],
+            },
           ],
-          priority: 0,
         },
       },
-      AddworkingHrsRequest: {
-        title: "AddworkingHrsRequest",
+      Data5: {
+        title: "Data5",
         required: [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
-          "startTime",
-          "endTime",
+          "_id",
+          "profile_image",
+          "local_profile_image_path",
+          "customId",
+          "first_name",
+          "last_name",
+          "phones",
+          "user",
+          "createdAt",
+          "updatedAt",
+          "__v",
+          "wisecallerUser",
           "userStatus",
           "userSubStatus",
-          "Excluded_dates",
         ],
         type: "object",
         properties: {
-          Monday: {
-            type: "boolean",
-          },
-          Tuesday: {
-            type: "boolean",
-          },
-          Wednesday: {
-            type: "boolean",
-          },
-          Thursday: {
-            type: "boolean",
-          },
-          Friday: {
-            type: "boolean",
-          },
-          Saturday: {
-            type: "boolean",
-          },
-          Sunday: {
-            type: "boolean",
-          },
-          startTime: {
+          _id: {
             type: "string",
           },
-          endTime: {
+          profile_image: {
             type: "string",
+            nullable: true,
+          },
+          local_profile_image_path: {
+            type: "string",
+          },
+          customId: {
+            type: "integer",
+            format: "int32",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone3",
+            },
+            description: "",
+          },
+          user: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+          wisecallerUser: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
           },
           userStatus: {
-            type: "string",
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
           },
           userSubStatus: {
-            type: "string",
-          },
-          Excluded_dates: {
             type: "array",
             items: {
               type: "string",
@@ -2750,261 +4507,1029 @@ export default {
           },
         },
         example: {
-          Monday: false,
-          Tuesday: true,
-          Wednesday: true,
-          Thursday: true,
-          Friday: true,
-          Saturday: true,
-          Sunday: true,
-          startTime: "09:00 AM",
-          endTime: "10:00 PM",
-          userStatus: "61670b887a7764f6a360db28",
-          userSubStatus: "6167128a37ecb90f33f6f924",
-          Excluded_dates: ["11/12/2021", "20/12/2021"],
+          _id: "619619e82c05f200095b25a9",
+          profile_image: null,
+          local_profile_image_path: "contacts/abc.png",
+          customId: 152,
+          first_name: "jignesh",
+          last_name: "jignesh",
+          phones: [
+            {
+              wisecallerId: null,
+              _id: "619619e82c05f200095b25aa",
+              ph_no: "+919854671230",
+              type: "PRIMARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "619619e82c05f200095b25ab",
+              ph_no: "+912567894130",
+              type: "SECONDARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "619619e82c05f200095b25ac",
+              ph_no: "+919568732410",
+              type: "OFFICE",
+            },
+            {
+              wisecallerId: null,
+              _id: "619619e82c05f200095b25ad",
+              ph_no: "+919496782117",
+              type: "HOME",
+            },
+          ],
+          user: "6194fe948f13a1d59d11df22",
+          createdAt: "2021-11-18T09:16:24.247Z",
+          updatedAt: "2021-11-18T09:16:24.247Z",
+          __v: 0,
+          wisecallerUser: [],
+          userStatus: [],
+          userSubStatus: [],
         },
       },
-      updateworkingHrsRequest: {
-        title: "updateworkingHrsRequest",
+      Phone3: {
+        title: "Phone3",
+        required: ["wisecallerId", "_id", "ph_no", "type"],
+        type: "object",
+        properties: {
+          wisecallerId: {
+            type: "string",
+            nullable: true,
+          },
+          _id: {
+            type: "string",
+          },
+          ph_no: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+        },
+        example: {
+          wisecallerId: null,
+          _id: "619619e82c05f200095b25aa",
+          ph_no: "+919854671230",
+          type: "PRIMARY",
+        },
+      },
+      contactupdaterequest: {
+        title: "contactupdaterequest",
         required: [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
-          "startTime",
-          "endTime",
-          "userStatus",
-          "userSubStatus",
-          "Excluded_dates",
+          "customId",
+          "first_name",
+          "last_name",
+          "profile_image",
+          "local_profile_image_path",
+          "phones",
+        ],
+        type: "object",
+        properties: {
+          customId: {
+            type: "integer",
+            format: "int32",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          profile_image: {
+            type: "string",
+            nullable: true,
+          },
+          local_profile_image_path: {
+            type: "string",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone4",
+            },
+            description: "",
+          },
+        },
+        example: {
+          customId: 150,
+          first_name: "tushar1",
+          last_name: "savaliya2",
+          profile_image: null,
+          local_profile_image_path: "contacts/abc.png",
+          phones: [
+            {
+              wisecallerId: "618f6146385c780009f97e21",
+              _id: "618fa6ae2ac1e05fd9709d97",
+              ph_no: "+911234567890",
+              type: "PRIMARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d98",
+              ph_no: "+913216549870",
+              type: "SECONDARY",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d99",
+              ph_no: "+911236547890",
+              type: "OFFICE",
+            },
+            {
+              wisecallerId: null,
+              _id: "618fa6ae2ac1e05fd9709d9a",
+              ph_no: "+917412589630",
+              type: "HOME",
+            },
+          ],
+        },
+      },
+      Phone4: {
+        title: "Phone4",
+        required: ["ph_no", "type"],
+        type: "object",
+        properties: {
+          wisecallerId: {
+            type: "string",
+            nullable: true,
+          },
+          _id: {
+            type: "string",
+          },
+          ph_no: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+        },
+        example: {
+          wisecallerId: "618f6146385c780009f97e21",
+          _id: "618fa6ae2ac1e05fd9709d97",
+          ph_no: "+911234567890",
+          type: "PRIMARY",
+        },
+      },
+      AddGlobalstatusRequest: {
+        title: "AddGlobalstatusRequest",
+        required: ["status", "applicable_types", "priority"],
+        type: "object",
+        properties: {
+          status: {
+            type: "string",
+          },
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          priority: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          status: "Do not Disturb1",
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          priority: 0,
+        },
+      },
+      m20015: {
+        title: "m20015",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Data6",
+            },
+            description: "",
+          },
+        },
+        example: {
+          success: true,
+          message: "global status get successfully",
+          data: [
+            {
+              _id: "6195004219517edbb9a32dde",
+              user: null,
+              applicable_types: [
+                "618fb8e614842f8284d028dd",
+                "618fb99bc8ba53856cbf0459",
+              ],
+              isDeleted: false,
+              status: "Do not Disturb",
+              priority: 0,
+              logo: "status_images/1637155090761.png",
+              createdAt: "2021-11-17T13:14:42.642Z",
+              updatedAt: "2021-11-17T13:19:10.157Z",
+              __v: 0,
+              subCategory: [
+                {
+                  _id: "6195023525c96ee17567830d",
+                  user: null,
+                  isDeleted: false,
+                  status: "DND2",
+                  parentId: "6195004219517edbb9a32dde",
+                  logo: "status_images/1637155378453.png",
+                  createdAt: "2021-11-17T13:23:01.173Z",
+                  updatedAt: "2021-11-17T13:23:01.173Z",
+                  __v: 0,
+                },
+              ],
+              applicableType: [
+                {
+                  _id: "618fb8e614842f8284d028dd",
+                  type: "SUPER_EVENTS",
+                  order: 2,
+                  createdAt: "2021-11-13T13:08:54.457Z",
+                  updatedAt: "2021-11-13T13:08:54.457Z",
+                  __v: 0,
+                },
+                {
+                  _id: "618fb99bc8ba53856cbf0459",
+                  type: "ROAD_SAFETY",
+                  order: 1,
+                  createdAt: "2021-11-13T13:11:55.724Z",
+                  updatedAt: "2021-11-13T13:11:55.724Z",
+                  __v: 0,
+                },
+              ],
+            },
+            {
+              _id: "61961de00d7a2900096955af",
+              user: null,
+              applicable_types: [
+                "618fb8e614842f8284d028dd",
+                "618fb99bc8ba53856cbf0459",
+              ],
+              isDeleted: false,
+              status: "Do not Disturb1",
+              priority: 0,
+              logo: null,
+              createdAt: "2021-11-18T09:33:20.153Z",
+              updatedAt: "2021-11-18T09:33:20.153Z",
+              __v: 0,
+              subCategory: [],
+              applicableType: [
+                {
+                  _id: "618fb8e614842f8284d028dd",
+                  type: "SUPER_EVENTS",
+                  order: 2,
+                  createdAt: "2021-11-13T13:08:54.457Z",
+                  updatedAt: "2021-11-13T13:08:54.457Z",
+                  __v: 0,
+                },
+                {
+                  _id: "618fb99bc8ba53856cbf0459",
+                  type: "ROAD_SAFETY",
+                  order: 1,
+                  createdAt: "2021-11-13T13:11:55.724Z",
+                  updatedAt: "2021-11-13T13:11:55.724Z",
+                  __v: 0,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      Data6: {
+        title: "Data6",
+        required: [
+          "_id",
+          "user",
+          "applicable_types",
+          "isDeleted",
           "status",
+          "priority",
+          "logo",
+          "createdAt",
+          "updatedAt",
+          "__v",
+          "subCategory",
+          "applicableType",
         ],
         type: "object",
         properties: {
-          Monday: {
-            type: "boolean",
-          },
-          Tuesday: {
-            type: "boolean",
-          },
-          Wednesday: {
-            type: "boolean",
-          },
-          Thursday: {
-            type: "boolean",
-          },
-          Friday: {
-            type: "boolean",
-          },
-          Saturday: {
-            type: "boolean",
-          },
-          Sunday: {
-            type: "boolean",
-          },
-          startTime: {
+          _id: {
             type: "string",
           },
-          endTime: {
+          user: {
             type: "string",
+            nullable: true,
           },
-          userStatus: {
-            type: "string",
-          },
-          userSubStatus: {
-            type: "string",
-          },
-          Excluded_dates: {
+          applicable_types: {
             type: "array",
             items: {
               type: "string",
             },
             description: "",
           },
-          status: {
+          isDeleted: {
             type: "boolean",
           },
-        },
-        example: {
-          Monday: false,
-          Tuesday: true,
-          Wednesday: true,
-          Thursday: true,
-          Friday: true,
-          Saturday: true,
-          Sunday: true,
-          startTime: "09:00 AM",
-          endTime: "10:00 PM",
-          userStatus: "61670b887a7764f6a360db28",
-          userSubStatus: "6167128a37ecb90f33f6f924",
-          Excluded_dates: ["11/12/2021", "20/12/2021"],
-          status: true,
-        },
-      },
-      addpackagesrequest: {
-        title: "addpackagesrequest",
-        required: ["name", "duration", "price"],
-        type: "object",
-        properties: {
-          name: {
+          status: {
             type: "string",
           },
-          duration: {
+          priority: {
             type: "integer",
             format: "int32",
           },
-          price: {
-            type: "integer",
-            format: "int32",
+          logo: {
+            type: "string",
+            nullable: true,
           },
-        },
-        example: {
-          name: "abac",
-          duration: 12,
-          price: 500,
-        },
-      },
-      updatepackagesrequest: {
-        title: "updatepackagesrequest",
-        required: ["name", "duration", "price"],
-        type: "object",
-        properties: {
-          name: {
+          createdAt: {
             type: "string",
           },
-          duration: {
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
             type: "integer",
             format: "int32",
           },
-          price: {
+          subCategory: {
+            type: "array",
+            items: {
+              oneOf: [
+                {
+                  $ref: "#/components/schemas/SubCategory",
+                },
+                {
+                  type: "string",
+                },
+              ],
+            },
+            description: "",
+            example: [
+              {
+                _id: "6195023525c96ee17567830d",
+                user: null,
+                isDeleted: false,
+                status: "DND2",
+                parentId: "6195004219517edbb9a32dde",
+                logo: "status_images/1637155378453.png",
+                createdAt: "2021-11-17T13:23:01.173Z",
+                updatedAt: "2021-11-17T13:23:01.173Z",
+                __v: 0,
+              },
+            ],
+          },
+          applicableType: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/ApplicableType",
+            },
+            description: "",
+          },
+        },
+        example: {
+          _id: "6195004219517edbb9a32dde",
+          user: null,
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          isDeleted: false,
+          status: "Do not Disturb",
+          priority: 0,
+          logo: "status_images/1637155090761.png",
+          createdAt: "2021-11-17T13:14:42.642Z",
+          updatedAt: "2021-11-17T13:19:10.157Z",
+          __v: 0,
+          subCategory: [
+            {
+              _id: "6195023525c96ee17567830d",
+              user: null,
+              isDeleted: false,
+              status: "DND2",
+              parentId: "6195004219517edbb9a32dde",
+              logo: "status_images/1637155378453.png",
+              createdAt: "2021-11-17T13:23:01.173Z",
+              updatedAt: "2021-11-17T13:23:01.173Z",
+              __v: 0,
+            },
+          ],
+          applicableType: [
+            {
+              _id: "618fb8e614842f8284d028dd",
+              type: "SUPER_EVENTS",
+              order: 2,
+              createdAt: "2021-11-13T13:08:54.457Z",
+              updatedAt: "2021-11-13T13:08:54.457Z",
+              __v: 0,
+            },
+            {
+              _id: "618fb99bc8ba53856cbf0459",
+              type: "ROAD_SAFETY",
+              order: 1,
+              createdAt: "2021-11-13T13:11:55.724Z",
+              updatedAt: "2021-11-13T13:11:55.724Z",
+              __v: 0,
+            },
+          ],
+        },
+      },
+      SubCategory: {
+        title: "SubCategory",
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+          },
+          user: {
+            type: "string",
+            nullable: true,
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          status: {
+            type: "string",
+          },
+          parentId: {
+            type: "string",
+          },
+          logo: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
             type: "integer",
             format: "int32",
           },
         },
         example: {
-          name: "abac",
-          duration: 12,
-          price: 400,
+          _id: "6195023525c96ee17567830d",
+          user: null,
+          isDeleted: false,
+          status: "DND2",
+          parentId: "6195004219517edbb9a32dde",
+          logo: "status_images/1637155378453.png",
+          createdAt: "2021-11-17T13:23:01.173Z",
+          updatedAt: "2021-11-17T13:23:01.173Z",
+          __v: 0,
         },
       },
-      AddwoucherRequest: {
-        title: "AddwoucherRequest",
+      ApplicableType: {
+        title: "ApplicableType",
+        required: ["_id", "type", "order", "createdAt", "updatedAt", "__v"],
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+          order: {
+            type: "integer",
+            format: "int32",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          _id: "618fb8e614842f8284d028dd",
+          type: "SUPER_EVENTS",
+          order: 2,
+          createdAt: "2021-11-13T13:08:54.457Z",
+          updatedAt: "2021-11-13T13:08:54.457Z",
+          __v: 0,
+        },
+      },
+      m20016: {
+        title: "m20016",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            $ref: "#/components/schemas/Data7",
+          },
+        },
+        example: {
+          success: true,
+          message: "global Status update successfully",
+          data: {
+            user: null,
+            applicable_types: [
+              "618fb8e614842f8284d028dd",
+              "618fb99bc8ba53856cbf0459",
+            ],
+            isDeleted: false,
+            _id: "6195004219517edbb9a32dde",
+            status: "DND",
+            priority: 0,
+            logo: "status_images/1637230992831.png",
+            createdAt: "2021-11-17T13:14:42.642Z",
+            updatedAt: "2021-11-18T10:23:13.150Z",
+            __v: 0,
+          },
+        },
+      },
+      Data7: {
+        title: "Data7",
         required: [
-          "name",
-          "code",
-          "amount",
-          "minAmount",
-          "discountType",
-          "startDate",
-          "endDate",
+          "user",
+          "applicable_types",
+          "isDeleted",
+          "_id",
+          "status",
+          "priority",
+          "logo",
+          "createdAt",
+          "updatedAt",
+          "__v",
         ],
         type: "object",
         properties: {
-          name: {
+          user: {
+            type: "string",
+            nullable: true,
+          },
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          _id: {
             type: "string",
           },
-          code: {
+          status: {
             type: "string",
           },
-          amount: {
+          priority: {
             type: "integer",
             format: "int32",
           },
-          minAmount: {
+          logo: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
             type: "integer",
             format: "int32",
-          },
-          discountType: {
-            type: "string",
-          },
-          startDate: {
-            type: "string",
-          },
-          endDate: {
-            type: "string",
           },
         },
         example: {
-          name: "abac",
-          code: "aaa",
-          amount: 10,
-          minAmount: 100,
-          discountType: "FLAT",
-          startDate: "2021-12-15",
-          endDate: "2021-12-20",
+          user: null,
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          isDeleted: false,
+          _id: "6195004219517edbb9a32dde",
+          status: "DND",
+          priority: 0,
+          logo: "status_images/1637230992831.png",
+          createdAt: "2021-11-17T13:14:42.642Z",
+          updatedAt: "2021-11-18T10:23:13.150Z",
+          __v: 0,
         },
       },
-      updatewoucherrequest: {
-        title: "updatewoucherrequest",
-        required: ["name", "code", "amount", "minAmount", "discountType"],
+      updateglobalstatuswithoutimagerequest: {
+        title: "updateglobalstatuswithoutimagerequest",
+        required: ["status", "applicable_types", "priority"],
         type: "object",
         properties: {
-          name: {
+          status: {
             type: "string",
           },
-          code: {
-            type: "string",
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
           },
-          amount: {
+          priority: {
             type: "integer",
             format: "int32",
           },
-          minAmount: {
+        },
+        example: {
+          status: "Do not Disturb",
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          priority: 0,
+        },
+      },
+      m20018: {
+        title: "m20018",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            $ref: "#/components/schemas/Data9",
+          },
+        },
+        example: {
+          success: true,
+          message: "Global Status delete sucessfully",
+          data: {
+            user: null,
+            applicable_types: [
+              "618fb8e614842f8284d028dd",
+              "618fb99bc8ba53856cbf0459",
+            ],
+            isDeleted: false,
+            _id: "61961de00d7a2900096955af",
+            status: "Do not Disturb1",
+            priority: 0,
+            logo: null,
+            createdAt: "2021-11-18T09:33:20.153Z",
+            updatedAt: "2021-11-18T09:33:20.153Z",
+            __v: 0,
+          },
+        },
+      },
+      Data9: {
+        title: "Data9",
+        required: [
+          "user",
+          "applicable_types",
+          "isDeleted",
+          "_id",
+          "status",
+          "priority",
+          "logo",
+          "createdAt",
+          "updatedAt",
+          "__v",
+        ],
+        type: "object",
+        properties: {
+          user: {
+            type: "string",
+            nullable: true,
+          },
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          _id: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          priority: {
             type: "integer",
             format: "int32",
           },
-          discountType: {
+          logo: {
             type: "string",
+            nullable: true,
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
           },
         },
         example: {
-          name: "abac",
-          code: "aaa",
-          amount: 100,
-          minAmount: 100,
-          discountType: "FLAT",
+          user: null,
+          applicable_types: [
+            "618fb8e614842f8284d028dd",
+            "618fb99bc8ba53856cbf0459",
+          ],
+          isDeleted: false,
+          _id: "61961de00d7a2900096955af",
+          status: "Do not Disturb1",
+          priority: 0,
+          logo: null,
+          createdAt: "2021-11-18T09:33:20.153Z",
+          updatedAt: "2021-11-18T09:33:20.153Z",
+          __v: 0,
         },
       },
-      paymentAddRequest: {
-        title: "paymentAddRequest",
-        required: ["packageId", "paymentId"],
+      m20020: {
+        title: "m20020",
+        required: ["success", "message", "data"],
         type: "object",
         properties: {
-          packageId: {
+          success: {
+            type: "boolean",
+          },
+          message: {
             type: "string",
           },
-          paymentId: {
-            type: "string",
+          data: {
+            $ref: "#/components/schemas/Data10",
           },
         },
         example: {
-          packageId: "613bc118bc2da97b67b2ee17",
-          paymentId: "pay_HxHEX7lHP9E2Em",
+          success: true,
+          message: "global sub status update successfully",
+          data: {
+            user: null,
+            isDeleted: false,
+            _id: "6195023525c96ee17567830d",
+            status: "DND11111",
+            parentId: "6195004219517edbb9a32dde",
+            logo: "status_images/1637155378453.png",
+            createdAt: "2021-11-17T13:23:01.173Z",
+            updatedAt: "2021-11-18T10:31:02.505Z",
+            __v: 0,
+          },
         },
       },
-      refreshtokenrequest: {
-        title: "refreshtokenrequest",
-        required: ["token", "refreshToken"],
+      Data10: {
+        title: "Data10",
+        required: [
+          "user",
+          "isDeleted",
+          "_id",
+          "status",
+          "parentId",
+          "logo",
+          "createdAt",
+          "updatedAt",
+          "__v",
+        ],
         type: "object",
         properties: {
-          token: {
+          user: {
+            type: "string",
+            nullable: true,
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          _id: {
             type: "string",
           },
-          refreshToken: {
+          status: {
             type: "string",
+          },
+          parentId: {
+            type: "string",
+          },
+          logo: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
           },
         },
         example: {
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0OTA5NTUsImV4cCI6MTYzNTQ5MTAxNX0.7mDc3RwACVbSiBamoGGhZW4XRPVFq-Gzc18EvJ-XbQc",
-          refreshToken:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTYxODcyYjQzNDMwNjAwMDk2ZjNmZWUiLCJtb2JpbGVObyI6Iis5MTg5ODA1MTQwODUiLCJpYXQiOjE2MzU0ODkyMTcsImV4cCI6MTYzNTU3NTYxN30.gXjRlkdVMELgFGfXd7sX7WGb4pnssrJTVxCEZCPzR5c",
+          user: null,
+          isDeleted: false,
+          _id: "6195023525c96ee17567830d",
+          status: "DND11111",
+          parentId: "6195004219517edbb9a32dde",
+          logo: "status_images/1637155378453.png",
+          createdAt: "2021-11-17T13:23:01.173Z",
+          updatedAt: "2021-11-18T10:31:02.505Z",
+          __v: 0,
         },
       },
-      customstatusaddrequest: {
-        title: "customstatusaddrequest",
+      m20021: {
+        title: "m20021",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            type: "string",
+            nullable: true,
+          },
+        },
+        example: {
+          success: true,
+          message: "Global Status delete sucessfully",
+          data: null,
+        },
+      },
+      globaltypeeaddrequest: {
+        title: "globaltypeeaddrequest",
+        required: ["type", "order"],
+        type: "object",
+        properties: {
+          type: {
+            type: "string",
+          },
+          order: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          type: "AUTO_STATUS1",
+          order: 7,
+        },
+      },
+      globaltypeupdaterequest: {
+        title: "globaltypeupdaterequest",
+        required: ["type", "order"],
+        type: "object",
+        properties: {
+          type: {
+            type: "string",
+          },
+          order: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          type: "ROAD_SAFETqY",
+          order: 7,
+        },
+      },
+      m20024: {
+        title: "m20024",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Data11",
+            },
+            description: "",
+          },
+        },
+        example: {
+          success: true,
+          message: "global type get successful",
+          data: [
+            {
+              _id: "618fb99bc8ba53856cbf0459",
+              type: "ROAD_SAFETY",
+              order: 1,
+              createdAt: "2021-11-13T13:11:55.724Z",
+              updatedAt: "2021-11-13T13:11:55.724Z",
+              __v: 0,
+            },
+            {
+              _id: "618fb8e614842f8284d028dd",
+              type: "SUPER_EVENTS",
+              order: 2,
+              createdAt: "2021-11-13T13:08:54.457Z",
+              updatedAt: "2021-11-13T13:08:54.457Z",
+              __v: 0,
+            },
+            {
+              _id: "618fba343bc52886fb4f6b7d",
+              type: "CALENDAR_EVENTS",
+              order: 3,
+              createdAt: "2021-11-13T13:14:28.133Z",
+              updatedAt: "2021-11-13T13:14:28.133Z",
+              __v: 0,
+            },
+            {
+              _id: "618fba3d3bc52886fb4f6b80",
+              type: "CUSTOM_EVENTS",
+              order: 4,
+              createdAt: "2021-11-13T13:14:37.273Z",
+              updatedAt: "2021-11-13T13:14:37.273Z",
+              __v: 0,
+            },
+            {
+              _id: "618fba473bc52886fb4f6b83",
+              type: "WORK_LIFE_MODE",
+              order: 5,
+              createdAt: "2021-11-13T13:14:47.554Z",
+              updatedAt: "2021-11-13T13:14:47.554Z",
+              __v: 0,
+            },
+            {
+              _id: "618fc88c61e23400084ad415",
+              type: "AUTO_STATUS",
+              order: 6,
+              createdAt: "2021-11-13T14:15:40.380Z",
+              updatedAt: "2021-11-13T14:16:19.805Z",
+              __v: 0,
+            },
+            {
+              _id: "61962c9494db150009cac095",
+              type: "AUTO_STATUS1",
+              order: 7,
+              createdAt: "2021-11-18T10:36:04.715Z",
+              updatedAt: "2021-11-18T10:36:04.715Z",
+              __v: 0,
+            },
+          ],
+        },
+      },
+      Data11: {
+        title: "Data11",
+        required: ["_id", "type", "order", "createdAt", "updatedAt", "__v"],
+        type: "object",
+        properties: {
+          _id: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+          order: {
+            type: "integer",
+            format: "int32",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          _id: "618fb99bc8ba53856cbf0459",
+          type: "ROAD_SAFETY",
+          order: 1,
+          createdAt: "2021-11-13T13:11:55.724Z",
+          updatedAt: "2021-11-13T13:11:55.724Z",
+          __v: 0,
+        },
+      },
+      CustomStatusaddRequest: {
+        title: "CustomStatusaddRequest",
         required: [
           "customId",
           "custom_name",
@@ -3055,7 +5580,7 @@ export default {
             nullable: true,
           },
           notes: {
-            $ref: "#/components/schemas/Notes",
+            $ref: "#/components/schemas/Notes1",
           },
           display_to: {
             type: "string",
@@ -3065,7 +5590,7 @@ export default {
           },
         },
         example: {
-          customId: 135,
+          customId: 134,
           custom_name: "abc",
           start_date: "10/08/2021 10:00 AM",
           end_date: "10/20/2021 10:00 AM",
@@ -3083,8 +5608,8 @@ export default {
           auto_sms: true,
         },
       },
-      Notes: {
-        title: "Notes",
+      Notes1: {
+        title: "Notes1",
         required: ["is_custom", "text"],
         type: "object",
         properties: {
@@ -3108,7 +5633,7 @@ export default {
           status: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Status",
+              $ref: "#/components/schemas/Status2",
             },
             description: "",
           },
@@ -3181,8 +5706,8 @@ export default {
           },
         },
       },
-      Status: {
-        title: "Status",
+      Status2: {
+        title: "Status2",
         required: [
           "customId",
           "custom_name",
@@ -3234,7 +5759,7 @@ export default {
             nullable: true,
           },
           notes: {
-            $ref: "#/components/schemas/Notes",
+            $ref: "#/components/schemas/Notes1",
           },
           display_to: {
             type: "string",
@@ -3283,292 +5808,289 @@ export default {
           Excluded_dates: ["11/12/2021", "20/12/2021"],
         },
       },
-      contactupdaterequest: {
-        title: "contactupdaterequest",
-        required: [
-          "customId",
-          "first_name",
-          "last_name",
-          "profile_image",
-          "local_profile_image_path",
-          "phones",
-        ],
+      m20028: {
+        title: "m20028",
+        required: ["sucess", "message", "data"],
         type: "object",
         properties: {
-          customId: {
-            type: "integer",
-            format: "int32",
+          sucess: {
+            type: "boolean",
           },
-          first_name: {
+          message: {
             type: "string",
           },
-          last_name: {
-            type: "string",
-          },
-          profile_image: {
-            type: "string",
-            nullable: true,
-          },
-          local_profile_image_path: {
-            type: "string",
-          },
-          phones: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/Phone1",
-            },
-            description: "",
+          data: {
+            $ref: "#/components/schemas/Data12",
           },
         },
         example: {
-          customId: 150,
-          first_name: "tushar1",
-          last_name: "savaliya2",
-          profile_image: null,
-          local_profile_image_path: "contacts/abc.png",
-          phones: [
-            {
-              wisecallerId: "618f6146385c780009f97e21",
-              _id: "618fa6ae2ac1e05fd9709d97",
-              ph_no: "+911234567890",
-              type: "PRIMARY",
+          sucess: true,
+          message: "getdata successfully",
+          data: {
+            status: [
+              {
+                _id: "61950368448ab7e5f7775ce0",
+                notes: {
+                  noteId: null,
+                  is_custom: "true",
+                  text: "text for sending sms",
+                },
+                is_allday_status: true,
+                status: "61670b887a7764f6a360db28",
+                substatus: null,
+                user: "6194fe948f13a1d59d11df22",
+                display_to: "ALL",
+                auto_sms: true,
+                is_enabled: true,
+                is_deleted: false,
+                customId: 135,
+                custom_name: "abc",
+                start_date: "2021-10-08T04:30:00.000Z",
+                end_date: "2021-10-20T04:30:00.000Z",
+                RRULE: "is_repeat",
+                time_zone: "IN/PST etc..",
+                createdAt: "2021-11-17T13:28:08.571Z",
+                updatedAt: "2021-11-17T13:28:08.571Z",
+                __v: 0,
+              },
+              {
+                _id: "61962fb4403857000969c198",
+                notes: {
+                  noteId: null,
+                  is_custom: "true",
+                  text: "text for sending sms",
+                },
+                is_allday_status: true,
+                status: "61670b887a7764f6a360db28",
+                substatus: null,
+                user: "6194fe948f13a1d59d11df22",
+                display_to: "ALL",
+                auto_sms: true,
+                is_enabled: true,
+                is_deleted: false,
+                customId: 134,
+                custom_name: "abc",
+                start_date: "2021-10-08T10:00:00.000Z",
+                end_date: "2021-10-20T10:00:00.000Z",
+                RRULE: "is_repeat",
+                time_zone: "IN/PST etc..",
+                createdAt: "2021-11-18T10:49:24.745Z",
+                updatedAt: "2021-11-18T10:49:24.745Z",
+                __v: 0,
+              },
+            ],
+            worklife: {
+              Excluded_dates: ["11/12/2021", "20/12/2021"],
             },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d98",
-              ph_no: "+913216549870",
-              type: "SECONDARY",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d99",
-              ph_no: "+911236547890",
-              type: "OFFICE",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d9a",
-              ph_no: "+917412589630",
-              type: "HOME",
-            },
-          ],
+          },
         },
       },
-      Phone1: {
-        title: "Phone1",
-        required: ["ph_no", "type"],
+      Data12: {
+        title: "Data12",
+        required: ["status", "worklife"],
         type: "object",
         properties: {
-          wisecallerId: {
-            type: "string",
-            nullable: true,
+          status: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Status3",
+            },
+            description: "",
           },
+          worklife: {
+            $ref: "#/components/schemas/WorkLife",
+          },
+        },
+        example: {
+          status: [
+            {
+              _id: "61950368448ab7e5f7775ce0",
+              notes: {
+                noteId: null,
+                is_custom: "true",
+                text: "text for sending sms",
+              },
+              is_allday_status: true,
+              status: "61670b887a7764f6a360db28",
+              substatus: null,
+              user: "6194fe948f13a1d59d11df22",
+              display_to: "ALL",
+              auto_sms: true,
+              is_enabled: true,
+              is_deleted: false,
+              customId: 135,
+              custom_name: "abc",
+              start_date: "2021-10-08T04:30:00.000Z",
+              end_date: "2021-10-20T04:30:00.000Z",
+              RRULE: "is_repeat",
+              time_zone: "IN/PST etc..",
+              createdAt: "2021-11-17T13:28:08.571Z",
+              updatedAt: "2021-11-17T13:28:08.571Z",
+              __v: 0,
+            },
+            {
+              _id: "61962fb4403857000969c198",
+              notes: {
+                noteId: null,
+                is_custom: "true",
+                text: "text for sending sms",
+              },
+              is_allday_status: true,
+              status: "61670b887a7764f6a360db28",
+              substatus: null,
+              user: "6194fe948f13a1d59d11df22",
+              display_to: "ALL",
+              auto_sms: true,
+              is_enabled: true,
+              is_deleted: false,
+              customId: 134,
+              custom_name: "abc",
+              start_date: "2021-10-08T10:00:00.000Z",
+              end_date: "2021-10-20T10:00:00.000Z",
+              RRULE: "is_repeat",
+              time_zone: "IN/PST etc..",
+              createdAt: "2021-11-18T10:49:24.745Z",
+              updatedAt: "2021-11-18T10:49:24.745Z",
+              __v: 0,
+            },
+          ],
+          worklife: {
+            Excluded_dates: ["11/12/2021", "20/12/2021"],
+          },
+        },
+      },
+      Status3: {
+        title: "Status3",
+        required: [
+          "_id",
+          "notes",
+          "is_allday_status",
+          "status",
+          "substatus",
+          "user",
+          "display_to",
+          "auto_sms",
+          "is_enabled",
+          "is_deleted",
+          "customId",
+          "custom_name",
+          "start_date",
+          "end_date",
+          "RRULE",
+          "time_zone",
+          "createdAt",
+          "updatedAt",
+          "__v",
+        ],
+        type: "object",
+        properties: {
           _id: {
             type: "string",
           },
-          ph_no: {
+          notes: {
+            $ref: "#/components/schemas/Notes3",
+          },
+          is_allday_status: {
+            type: "boolean",
+          },
+          status: {
             type: "string",
           },
-          type: {
+          substatus: {
+            type: "string",
+            nullable: true,
+          },
+          user: {
             type: "string",
           },
-        },
-        example: {
-          wisecallerId: "618f6146385c780009f97e21",
-          _id: "618fa6ae2ac1e05fd9709d97",
-          ph_no: "+911234567890",
-          type: "PRIMARY",
-        },
-      },
-      globaltypeeaddrequest: {
-        title: "globaltypeeaddrequest",
-        required: ["type", "order"],
-        type: "object",
-        properties: {
-          type: {
+          display_to: {
             type: "string",
           },
-          order: {
-            type: "integer",
-            format: "int32",
+          auto_sms: {
+            type: "boolean",
           },
-        },
-        example: {
-          type: "AUTO_STATUS",
-          order: 6,
-        },
-      },
-      globaltypeupdaterequest: {
-        title: "globaltypeupdaterequest",
-        required: ["type", "order"],
-        type: "object",
-        properties: {
-          type: {
-            type: "string",
+          is_enabled: {
+            type: "boolean",
           },
-          order: {
-            type: "integer",
-            format: "int32",
+          is_deleted: {
+            type: "boolean",
           },
-        },
-        example: {
-          type: "ROAD_SAFETY",
-          order: 1,
-        },
-      },
-      general_statusaddrequest: {
-        title: "general_statusaddrequest",
-        required: ["name", "priority", "applicable_types"],
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-          },
-          priority: {
-            type: "integer",
-            format: "int32",
-          },
-          applicable_types: {
-            type: "array",
-            items: {
-              type: "string",
-            },
-            description: "",
-          },
-        },
-        example: {
-          name: "Busy",
-          priority: 0,
-          applicable_types: [
-            "618fb8e614842f8284d028dd",
-            "618fb99bc8ba53856cbf0459",
-          ],
-        },
-      },
-      generalstatusupdaterequest: {
-        title: "generalstatusupdaterequest",
-        required: ["name", "priority", "applicable_types"],
-        type: "object",
-        properties: {
-          name: {
-            type: "string",
-          },
-          priority: {
-            type: "integer",
-            format: "int32",
-          },
-          applicable_types: {
-            type: "array",
-            items: {
-              type: "string",
-            },
-            description: "",
-          },
-        },
-        example: {
-          name: "Busy",
-          priority: 0,
-          applicable_types: [
-            "618fb8e614842f8284d028dd",
-            "618fb99bc8ba53856cbf0459",
-          ],
-        },
-      },
-      updatecontactrequest: {
-        title: "updatecontactrequest",
-        required: [
-          "customId",
-          "first_name",
-          "last_name",
-          "profile_image",
-          "local_profile_image_path",
-          "phones",
-        ],
-        type: "object",
-        properties: {
           customId: {
             type: "integer",
             format: "int32",
           },
-          first_name: {
+          custom_name: {
             type: "string",
           },
-          last_name: {
+          start_date: {
             type: "string",
           },
-          profile_image: {
+          end_date: {
+            type: "string",
+          },
+          RRULE: {
+            type: "string",
+          },
+          time_zone: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          _id: "61950368448ab7e5f7775ce0",
+          notes: {
+            noteId: null,
+            is_custom: "true",
+            text: "text for sending sms",
+          },
+          is_allday_status: true,
+          status: "61670b887a7764f6a360db28",
+          substatus: null,
+          user: "6194fe948f13a1d59d11df22",
+          display_to: "ALL",
+          auto_sms: true,
+          is_enabled: true,
+          is_deleted: false,
+          customId: 135,
+          custom_name: "abc",
+          start_date: "2021-10-08T04:30:00.000Z",
+          end_date: "2021-10-20T04:30:00.000Z",
+          RRULE: "is_repeat",
+          time_zone: "IN/PST etc..",
+          createdAt: "2021-11-17T13:28:08.571Z",
+          updatedAt: "2021-11-17T13:28:08.571Z",
+          __v: 0,
+        },
+      },
+      Notes3: {
+        title: "Notes3",
+        required: ["noteId", "is_custom", "text"],
+        type: "object",
+        properties: {
+          noteId: {
             type: "string",
             nullable: true,
           },
-          local_profile_image_path: {
+          is_custom: {
             type: "string",
           },
-          phones: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/Phone1",
-            },
-            description: "",
-          },
-        },
-        example: {
-          customId: 150,
-          first_name: "tushar1",
-          last_name: "savaliya2",
-          profile_image: null,
-          local_profile_image_path: "contacts/abc.png",
-          phones: [
-            {
-              wisecallerId: "618f6146385c780009f97e21",
-              _id: "618fa6ae2ac1e05fd9709d97",
-              ph_no: "+911234567890",
-              type: "PRIMARY",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d98",
-              ph_no: "+913216549870",
-              type: "SECONDARY",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d99",
-              ph_no: "+911236547890",
-              type: "OFFICE",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d9a",
-              ph_no: "+917412589630",
-              type: "HOME",
-            },
-          ],
-        },
-      },
-      searchcontactinlistrequest: {
-        title: "searchcontactinlistrequest",
-        required: ["phone_number"],
-        type: "object",
-        properties: {
-          phone_number: {
+          text: {
             type: "string",
           },
         },
         example: {
-          phone_number: "911234567890",
-        },
-      },
-      searchinwiseccallercontactinlistrequest: {
-        title: "searchinwiseccallercontactinlistrequest",
-        required: ["phone_number"],
-        type: "object",
-        properties: {
-          phone_number: {
-            type: "string",
-          },
-        },
-        example: {
-          phone_number: "911234567890",
+          noteId: null,
+          is_custom: "true",
+          text: "text for sending sms",
         },
       },
     },
@@ -3584,5 +6106,24 @@ export default {
       httpBearer: [],
     },
   ],
-  tags: [],
+  tags: [
+    {
+      name: "Auth service",
+    },
+    {
+      name: "Call History",
+    },
+    {
+      name: "Contact sync",
+    },
+    {
+      name: "Status",
+    },
+    {
+      name: "Global Type",
+    },
+    {
+      name: "Custom Status",
+    },
+  ],
 };
