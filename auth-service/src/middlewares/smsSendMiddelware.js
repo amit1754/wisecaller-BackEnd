@@ -19,11 +19,9 @@ const sendSMS1 = async (mobileNo, otp) => {
 
   publishTextPromise
     .then(function (data) {
-      console.log("true :>> ", data);
       return true;
     })
     .catch(function (err) {
-      console.log("true :>> ", err);
       return false;
     });
 };

@@ -14,7 +14,6 @@ class CustomStatusController {
           ...req.body[i],
           user: loggedInUser._id,
         };
-        console.log(payload);
         const status = new customStatus(payload);
         await status.save();
       }
@@ -57,7 +56,6 @@ class CustomStatusController {
       }
 
       const worklifeData: any = body.workLife;
-      console.log(worklifeData);
       const update = await WorkLife.findOneAndUpdate(
         { user: loggedInUser._id },
         { Excluded_dates: worklifeData.Excluded_dates },
@@ -66,7 +64,6 @@ class CustomStatusController {
           new: true,
         }
       );
-      console.log("update", update);
 
       res.status(200).json({
         success: true,

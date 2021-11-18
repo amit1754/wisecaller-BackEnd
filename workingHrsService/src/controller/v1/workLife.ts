@@ -47,7 +47,6 @@ class WorklifeController {
         data: [],
       });
     } catch (error: any) {
-      console.log("error", error);
       if (error.code === 11000) {
         res.status(400).json({
           success: false,
@@ -93,7 +92,6 @@ class WorklifeController {
         data: userWorkingHrs[0] ? userWorkingHrs[0] : [],
       });
     } catch (error: any) {
-      console.log("error", error);
       return res.status(500).json({ success: false, message: error.message });
     }
   }

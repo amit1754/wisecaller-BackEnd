@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { IStatus } from "../../interfaces/status";
-import { UserStatus } from '../../models/status'
+import { UserStatus } from "../../models/status";
 class StatusController {
   async addStatus(req: Request, res: Response) {
     try {
-      console.log("payload", req)
       const payload: IStatus = {
         ...req.body,
       };
@@ -18,7 +17,7 @@ class StatusController {
   async getAll(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      let userEvent = await UserStatus.find()
+      let userEvent = await UserStatus.find();
       res.status(200).json({ success: true, data: userEvent });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
@@ -31,15 +30,17 @@ class StatusController {
         ...req.body,
       };
 
-      let user = await UserStatus.findOneAndUpdate(
-        { _id: id },
-        payload,
-        {
-          upsert: true,
-          new: true,
-        }
-      );
-      res.status(200).json({ success: true, message: "user Event Status update successfully", data: user });
+      let user = await UserStatus.findOneAndUpdate({ _id: id }, payload, {
+        upsert: true,
+        new: true,
+      });
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "user Event Status update successfully",
+          data: user,
+        });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -49,14 +50,18 @@ class StatusController {
     try {
       const { id }: any = req.params;
 
-
       let user = await UserStatus.findByIdAndDelete(id);
-      res.status(200).json({ success: true, message: "Event Status delete sucessfully", data: user });
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Event Status delete sucessfully",
+          data: user,
+        });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
     }
   }
-
 }
 
 export default StatusController;

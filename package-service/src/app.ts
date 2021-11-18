@@ -14,7 +14,6 @@ import swaggerUI from "swagger-ui-express";
 
 import swaggerDocs from "./swagger-docs";
 
-
 export default class App {
   app: Express = express();
 
@@ -38,7 +37,7 @@ export default class App {
     this.app.use(text());
     this.app.use(morgan("dev"));
     this.app.use(cors());
- 
+
     this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   }
 
@@ -56,9 +55,7 @@ export default class App {
         res.status(404);
         next(error);
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   getExpressApp(): Express {

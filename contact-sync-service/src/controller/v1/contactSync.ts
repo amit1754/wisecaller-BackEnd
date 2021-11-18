@@ -3,7 +3,6 @@ import { IContactSync } from "../../interfaces/contactSync";
 import { UserContact } from "../../models/contactsync";
 import { User } from "../../models/user";
 
-
 class ContactSyncController {
   async sync(req: Request, res: Response) {
     try {
@@ -28,7 +27,6 @@ class ContactSyncController {
               contact.phones[j].wisecallerId = userContactFind._id;
             else contact.phones[j].wisecallerId = null;
           }
-          console.log("userContactFind", contact);
 
           const contactSave = new UserContact(contact);
           await contactSave.save();

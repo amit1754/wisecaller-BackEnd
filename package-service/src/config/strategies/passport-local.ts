@@ -3,10 +3,7 @@ import { Strategy } from "passport-local";
 
 passport.use(
   "local-login",
-  new Strategy({ usernameField: "mobileNo" }, (username, password, done) => {
-    console.log(username);
-    console.log(password);
-  })
+  new Strategy({ usernameField: "mobileNo" }, (username, password, done) => {})
 );
 
 export default passport;

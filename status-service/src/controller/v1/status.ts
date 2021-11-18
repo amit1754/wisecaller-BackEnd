@@ -56,7 +56,6 @@ class StatusController {
         data: userEvent,
       });
     } catch (error: any) {
-      console.log(error);
       res.status(500).json({ success: false, message: error.message });
     }
   }

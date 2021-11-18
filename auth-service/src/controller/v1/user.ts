@@ -85,7 +85,6 @@ class UserController {
       if (loggedInUser.profileImage != null) {
         await deletefile(loggedInUser.profileImage);
       }
-      console.log("payload", payload);
       delete payload.phone;
       delete payload.role;
       await User.findOneAndUpdate(
