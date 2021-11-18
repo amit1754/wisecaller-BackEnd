@@ -159,7 +159,7 @@ class AuthController {
             token,
             refreshToken,
             token_expires_at,
-            is_new_user: userFind ? false : true,
+            is_new_user: userFind?.is_new_user || true,
           },
         });
       } else {

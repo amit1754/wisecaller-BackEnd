@@ -47,10 +47,10 @@ class UserController {
           if ((findSecondaryNO.phone = loggedInUser.phone)) {
             let updatePhone = {
               no: reqPayload.body.secondary_no,
-              type : "SECONDARY",
+              type: "SECONDARY",
               used_for_login: false,
             };
-            payload.phones.length===2?payload.phones.pop():"";
+            payload.phones.length === 2 ? payload.phones.pop() : "";
             payload.phones.push(updatePhone);
           } else {
             throw new Error("second phoneno already exist!");
@@ -88,10 +88,14 @@ class UserController {
       console.log("payload", payload);
       delete payload.phone;
       delete payload.role;
-      await User.findOneAndUpdate({ _id: loggedInUser._id }, payload, {
-        upsert: true,
-        new: false,
-      });
+      await User.findOneAndUpdate(
+        { _id: loggedInUser._id },
+        { ...payload, is_new_user: true },
+        {
+          upsert: true,
+          new: false,
+        }
+      );
 
       return res
         .status(200)

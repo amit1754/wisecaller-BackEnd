@@ -3,6 +3,6 @@ import { RoadSafety } from "../controller";
 
 const router = express.Router();
 
-router.post("/update", RoadSafety.update);
+router.post("/", RoadSafety.update);
 
 export const RoadSafetyRoutes = router;
