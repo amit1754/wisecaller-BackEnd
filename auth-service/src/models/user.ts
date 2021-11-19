@@ -84,46 +84,48 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-// UserSchema.post("find", function (doc) {
-//   if (doc) {
-//     doc.map((x: any) => {
-//       x.profile_image =
-//         x.profile_image == null
-//           ? null
-//           : `${process.env.IMAGE_PATH}${x.profile_image}`;
+UserSchema.post("find", function (doc) {
+  if (doc) {
+    doc.map((x: any) => {
+      x.profile_image =
+        x.profile_image == null
+          ? null
+          : `${process.env.IMAGE_PATH}${x.profile_image}`;
 
-//       if (x?.user_status) {
-//         x.user_status.status.logo =
-//           x.user_status.status.logo === null ? null : `${process.env.IMAGE_PATH}${x.user_status.status.logo}`;
-//       }
-//       if (x?.user_status.status.sub_status) {
-//         x.user_status.status.sub_status.logo =
-//         x.user_status.status.sub_status.logo === null ? null : `${process.env.IMAGE_PATH}${x.user_status.status.sub_status.logo}`;
-//       }
+      if (x?.user_status) {
+        x.user_status.status.logo =
+          x.user_status.status.logo === null ? null : `${process.env.IMAGE_PATH}${x.user_status.status.logo}`;
+          if (x?.user_status.status.sub_status) {
+            x.user_status.status.sub_status.logo =
+            x.user_status.status.sub_status.logo === null ? null : `${process.env.IMAGE_PATH}${x.user_status.status.sub_status.logo}`;
+          }
+      }
+      
 
-//       return x;
-//     });
+      return x;
+    });
    
-//   }
-//   return doc;
-// });
-// UserSchema.post("findOne", function (doc) {
-//   if (doc) {
-//     doc.profile_image =
-//       doc.profile_image == null
-//         ? null
-//         : `${process.env.IMAGE_PATH}${doc.profile_image}`;
+  }
+  return doc;
+});
+UserSchema.post("findOne", function (doc) {
+  if (doc) {
+    doc.profile_image =
+      doc.profile_image == null
+        ? null
+        : `${process.env.IMAGE_PATH}${doc.profile_image}`;
 
-//     if (doc?.user_status) {
-//       doc.user_status.status.logo =
-//         doc.user_status.status.logo === null ? null : `${process.env.IMAGE_PATH}${doc.user_status.status.logo}`;
-//     }
-//     if (doc?.user_status.status.sub_status) {
-//       doc.user_status.status.sub_status.logo =
-//       doc.user_status.status.sub_status.logo === null ? null : `${process.env.IMAGE_PATH}${doc.user_status.status.sub_status.logo}`;
-//     }
-//   }
-//   return doc;
-// });
+    if (doc?.user_status) {
+      doc.user_status.status.logo =
+        doc.user_status.status.logo === null ? null : `${process.env.IMAGE_PATH}${doc.user_status.status.logo}`;
+        if (doc?.user_status?.status?.sub_status) {
+          doc.user_status.status.sub_status.logo =
+          doc.user_status.status.sub_status.logo === null ? null : `${process.env.IMAGE_PATH}${doc.user_status.status.sub_status.logo}`;
+        }
+    }
+    
+  }
+  return doc;
+});
 
 export const User = model("User", UserSchema);

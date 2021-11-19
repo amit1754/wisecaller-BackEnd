@@ -85,7 +85,6 @@ class AuthController {
 
       let userDetails: any;
       let userFind: any = await User.findOne({ "phones.no": mobileNo })
-
       let auth_token: any = await AuthToken.findOne({ mobileNo: mobileNo });
       if (auth_token) {
         if (auth_token?.otp === otp) {
@@ -150,7 +149,7 @@ class AuthController {
             token,
             refreshToken,
             token_expires_at,
-            is_new_user: userFind?.is_new_user || true,
+            is_new_user: (userFind) ? userFind.is_new_user : true
           },
         });
       } else {

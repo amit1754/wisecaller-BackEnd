@@ -11,11 +11,7 @@ class UserController {
   async show(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-
       let user: any = await User.findOne({ _id: loggedInUser._id });
-        
-      
-
       res.status(200).json({
         success: true,
         message: "User Profile details get successfully",
@@ -30,8 +26,6 @@ class UserController {
     const reqPayload: any = req;
     try {
       const loggedInUser: any = req.user;
-      
-
       let payload: any;
 
       if (reqPayload.body.secondary_no) {
@@ -68,6 +62,11 @@ class UserController {
             payload.phones.push(updatePhone);
           }
         }
+      }else {
+        const user: any = await User.findOne({
+          _id: loggedInUser._id
+        });
+        // console.log(user.phones)
       }
 
       if (reqPayload.file) {
@@ -88,14 +87,14 @@ class UserController {
       }
       delete payload.phone;
       delete payload.role;
-      await User.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        { ...payload, is_new_user: false },
-        {
-          upsert: true,
-          new: false,
-        }
-      );
+      // await User.findOneAndUpdate(
+      //   { _id: loggedInUser._id },
+      //   { ...payload, is_new_user: false },
+      //   {
+      //     upsert: true,
+      //     new: false,
+      //   }
+      // );
 
       return res
         .status(200)
