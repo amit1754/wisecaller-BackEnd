@@ -198,42 +198,36 @@ export default {
             "multipart/form-data": {
               encoding: {},
               schema: {
-                required: [
-                  "first_name",
-                  "last_name",
-                  "profile_image",
-                  "is_profile_from_social_media",
-                  "phone",
-                  "secondary_no",
-                  "media_profile_url",
-                ],
+                required: [],
                 type: "object",
                 properties: {
                   first_name: {
                     type: "string",
-                    example: "firstName",
+                    allowEmptyValue: true,
                   },
                   last_name: {
                     type: "string",
-                    example: "lastName",
+                    allowEmptyValue: true,
                   },
                   profile_image: {
                     type: "file",
+                    allowEmptyValue: true,
                   },
                   is_profile_from_social_media: {
                     type: "boolean",
-                    example: false,
+                    allowEmptyValue: true,
                   },
                   phone: {
                     type: "string",
-                    example: "+918849455045",
+                    allowEmptyValue: true,
                   },
                   secondary_no: {
                     type: "string",
-                    example: "+918980514085",
+                    allowEmptyValue: true,
                   },
                   media_profile_url: {
                     type: "string",
+                    allowEmptyValue: true,
                   },
                 },
               },
@@ -1498,7 +1492,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/add/json": {
+    "/status-service/api/v1/global-status/add/json": {
       post: {
         tags: ["Status"],
         summary: "Add Global status",
@@ -1544,7 +1538,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/add": {
+    "/status-service/api/v1/global-status/add": {
       post: {
         tags: ["Status"],
         summary: "Add global status with image",
@@ -1592,7 +1586,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/get": {
+    "/status-service/api/v1/global-status/get": {
       get: {
         tags: ["Status"],
         summary: "Get All Event status",
@@ -1700,7 +1694,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/update/{id}": {
+    "/status-service/api/v1/global-status/update/{id}": {
       put: {
         tags: ["Status"],
         summary: "update Global status using id",
@@ -1771,7 +1765,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/delete/{id}": {
+    "/status-service/api/v1/global-status/delete/{id}": {
       delete: {
         tags: ["Status"],
         summary: "Delete global status",
@@ -1812,7 +1806,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/add-sub": {
+    "/status-service/api/v1/global-status/add-sub": {
       post: {
         tags: ["Status"],
         summary: "Add sub status into Global status",
@@ -1864,7 +1858,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/sub-update/{id}": {
+    "/status-service/api/v1/global-status/sub-update/{id}": {
       put: {
         tags: ["Status"],
         summary: "update sub-status into Global status",
@@ -1935,7 +1929,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/sub-delete/{id}": {
+    "/status-service/api/v1/global-status/sub-delete/{id}": {
       delete: {
         tags: ["Status"],
         summary: "Delete sub-status in Global status",
