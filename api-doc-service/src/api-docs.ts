@@ -7,7 +7,7 @@ export default {
   },
   servers: [
     {
-      url: "http://example.com",
+      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
       variables: {},
     },
   ],
@@ -195,7 +195,7 @@ export default {
         parameters: [],
         requestBody: {
           content: {
-            "application/x-www-form-urlencoded": {
+            "multipart/form-data": {
               encoding: {},
               schema: {
                 required: [
@@ -218,7 +218,7 @@ export default {
                     example: "lastName",
                   },
                   profile_image: {
-                    type: "string",
+                    type: "file",
                   },
                   is_profile_from_social_media: {
                     type: "boolean",
@@ -1498,7 +1498,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//add/json": {
+    "/status-service/api/v1/add/json": {
       post: {
         tags: ["Status"],
         summary: "Add Global status",
@@ -1544,7 +1544,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//add": {
+    "/status-service/api/v1/add": {
       post: {
         tags: ["Status"],
         summary: "Add global status with image",
@@ -1552,7 +1552,7 @@ export default {
         parameters: [],
         requestBody: {
           content: {
-            "application/x-www-form-urlencoded": {
+            "multipart/form-data": {
               encoding: {},
               schema: {
                 required: ["status", "logo"],
@@ -1563,7 +1563,7 @@ export default {
                     example: "DND2",
                   },
                   logo: {
-                    type: "string",
+                    type: "file",
                   },
                 },
               },
@@ -1592,7 +1592,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//get": {
+    "/status-service/api/v1/get": {
       get: {
         tags: ["Status"],
         summary: "Get All Event status",
@@ -1700,7 +1700,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//update/{id}": {
+    "/status-service/api/v1/update/{id}": {
       put: {
         tags: ["Status"],
         summary: "update Global status using id",
@@ -1717,7 +1717,7 @@ export default {
         ],
         requestBody: {
           content: {
-            "application/x-www-form-urlencoded": {
+            "multipart/form-data": {
               encoding: {},
               schema: {
                 required: ["status", "logo"],
@@ -1728,7 +1728,7 @@ export default {
                     example: "DND",
                   },
                   logo: {
-                    type: "string",
+                    type: "file",
                   },
                 },
               },
@@ -1771,7 +1771,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//delete/{id}": {
+    "/status-service/api/v1/delete/{id}": {
       delete: {
         tags: ["Status"],
         summary: "Delete global status",
@@ -1812,7 +1812,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//add-sub": {
+    "/status-service/api/v1/add-sub": {
       post: {
         tags: ["Status"],
         summary: "Add sub status into Global status",
@@ -1820,7 +1820,7 @@ export default {
         parameters: [],
         requestBody: {
           content: {
-            "application/x-www-form-urlencoded": {
+            "multipart/form-data": {
               encoding: {},
               schema: {
                 required: ["status", "parentId", "logo"],
@@ -1835,7 +1835,7 @@ export default {
                     example: "6195004219517edbb9a32dde",
                   },
                   logo: {
-                    type: "string",
+                    type: "file",
                   },
                 },
               },
@@ -1864,7 +1864,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//sub-update/{id}": {
+    "/status-service/api/v1/sub-update/{id}": {
       put: {
         tags: ["Status"],
         summary: "update sub-status into Global status",
@@ -1881,7 +1881,7 @@ export default {
         ],
         requestBody: {
           content: {
-            "application/x-www-form-urlencoded": {
+            "multipart/form-data": {
               encoding: {},
               schema: {
                 required: ["status", "logo", "parentId"],
@@ -1892,7 +1892,7 @@ export default {
                     example: "DND11111",
                   },
                   logo: {
-                    type: "string",
+                    type: "file",
                   },
                   parentId: {
                     type: "string",
@@ -1935,7 +1935,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1//sub-delete/{id}": {
+    "/status-service/api/v1/sub-delete/{id}": {
       delete: {
         tags: ["Status"],
         summary: "Delete sub-status in Global status",
@@ -2713,7 +2713,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "string",
+            type: "file",
             nullable: true,
           },
           is_profile_from_social_media: {
@@ -2929,7 +2929,7 @@ export default {
             format: "int32",
           },
           logo: {
-            type: "string",
+            type: "file",
           },
           createdAt: {
             type: "string",
@@ -3001,7 +3001,7 @@ export default {
             type: "string",
           },
           logo: {
-            type: "string",
+            type: "file",
           },
           createdAt: {
             type: "string",
@@ -3247,7 +3247,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "string",
+            type: "file",
             nullable: true,
           },
           is_profile_from_social_media: {
@@ -4218,7 +4218,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "string",
+            type: "file",
             nullable: true,
           },
           local_profile_image_path: {
@@ -4448,7 +4448,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "string",
+            type: "file",
             nullable: true,
           },
           local_profile_image_path: {
@@ -4597,7 +4597,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "string",
+            type: "file",
             nullable: true,
           },
           local_profile_image_path: {
@@ -4849,7 +4849,7 @@ export default {
             format: "int32",
           },
           logo: {
-            type: "string",
+            type: "file",
             nullable: true,
           },
           createdAt: {
@@ -4965,7 +4965,7 @@ export default {
             type: "string",
           },
           logo: {
-            type: "string",
+            type: "file",
           },
           createdAt: {
             type: "string",
@@ -5101,7 +5101,7 @@ export default {
             format: "int32",
           },
           logo: {
-            type: "string",
+            type: "file",
           },
           createdAt: {
             type: "string",
@@ -5235,7 +5235,7 @@ export default {
             format: "int32",
           },
           logo: {
-            type: "string",
+            type: "file",
             nullable: true,
           },
           createdAt: {
@@ -5328,7 +5328,7 @@ export default {
             type: "string",
           },
           logo: {
-            type: "string",
+            type: "file",
           },
           createdAt: {
             type: "string",
