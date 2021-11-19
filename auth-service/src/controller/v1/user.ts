@@ -17,7 +17,7 @@ class UserController {
       
 
       res.status(200).json({
-        sucess: true,
+        success: true,
         message: "User Profile details get successfully",
         data: user,
       });

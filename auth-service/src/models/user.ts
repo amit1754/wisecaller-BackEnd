@@ -49,7 +49,7 @@ const UserSchema = new Schema(
     },
     is_new_user: {
       type: Boolean,
-      default: true
+      default: true,
     },
     isActive: {
       type: Boolean,
@@ -74,7 +74,7 @@ const UserSchema = new Schema(
       },
       syncCalender: {
         calenders: { type: Schema.Types.Mixed, default: null },
-        priooritize_calender_events: { type: Boolean, default: false },
+        prioritize_calender_events: { type: Boolean, default: false },
         status: {
           type: Schema.Types.Mixed,
         },
@@ -84,25 +84,46 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-UserSchema.post("find", function (doc) {
-  doc.map((x: any) => {
-    x.profile_image =
-      x.profile_image == null
-        ? null
-        : `${process.env.IMAGE_PATH}${x.profile_image}`;
-    
-    return x;
-  });
+// UserSchema.post("find", function (doc) {
+//   if (doc) {
+//     doc.map((x: any) => {
+//       x.profile_image =
+//         x.profile_image == null
+//           ? null
+//           : `${process.env.IMAGE_PATH}${x.profile_image}`;
 
-  return doc;
-});
-UserSchema.post("findOne", function (doc) {
-  doc.profile_image =
-    doc.profile_image == null
-      ? null
-      : `${process.env.IMAGE_PATH}${doc.profile_image}`;
+//       if (x?.user_status) {
+//         x.user_status.status.logo =
+//           x.user_status.status.logo === null ? null : `${process.env.IMAGE_PATH}${x.user_status.status.logo}`;
+//       }
+//       if (x?.user_status.status.sub_status) {
+//         x.user_status.status.sub_status.logo =
+//         x.user_status.status.sub_status.logo === null ? null : `${process.env.IMAGE_PATH}${x.user_status.status.sub_status.logo}`;
+//       }
 
-  return doc;
-});
+//       return x;
+//     });
+   
+//   }
+//   return doc;
+// });
+// UserSchema.post("findOne", function (doc) {
+//   if (doc) {
+//     doc.profile_image =
+//       doc.profile_image == null
+//         ? null
+//         : `${process.env.IMAGE_PATH}${doc.profile_image}`;
+
+//     if (doc?.user_status) {
+//       doc.user_status.status.logo =
+//         doc.user_status.status.logo === null ? null : `${process.env.IMAGE_PATH}${doc.user_status.status.logo}`;
+//     }
+//     if (doc?.user_status.status.sub_status) {
+//       doc.user_status.status.sub_status.logo =
+//       doc.user_status.status.sub_status.logo === null ? null : `${process.env.IMAGE_PATH}${doc.user_status.status.sub_status.logo}`;
+//     }
+//   }
+//   return doc;
+// });
 
 export const User = model("User", UserSchema);
