@@ -7,8 +7,8 @@ const bucket = "wisecaller-images";
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 aws.config.update({
-  secretAccessKey: "moq7cgspYRxpw656cAMz1F6FBD/G9Grh7wN5F9CJ",
-  accessKeyId: "AKIATBDK2RTMG3EWA6W6",
+  secretAccessKey: process.env.secretAccessKey,
+  accessKeyId: process.env.accessKeyId,
   region: process.env.AWS_REGION,
 });
 
@@ -20,6 +20,7 @@ const FILE_EXTENSION_MAPPING: any = {
 };
 
 const s3 = new aws.S3({ signatureVersion: "v4" });
+
 const fileFilter = (req: Request, file: any, cb: any) => {
   if (MIME_TYPES_ALLOWED.includes(file.mimetype)) {
     cb(null, true);
@@ -36,8 +37,6 @@ const upload = multer({
     bucket,
     acl: "public-read",
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    contentEncoding: "gzip",
-
     metadata: function (
       req: Request,
       file: any,
@@ -45,9 +44,11 @@ const upload = multer({
     ) {
       cb(null, { fieldName: file.fieldname });
     },
-    key: function (req: Request, file: any, cb: any, res: Response) {
-      let requestData: any = req;
-      const fileSize = parseInt(requestData.headers["content-length"]);
+    key: function (
+      req: Request,
+      file: any,
+      cb: (arg0: null, arg1: string) => void
+    ) {
       cb(
         null,
         "profile_images/" +
@@ -60,9 +61,9 @@ const upload = multer({
 
 export const deletefile = async (filename: string) => {
   const s3 = new aws.S3({
-    secretAccessKey: "moq7cgspYRxpw656cAMz1F6FBD/G9Grh7wN5F9CJ",
-    accessKeyId: "AKIATBDK2RTMG3EWA6W6",
-    region: process.env.AWS_REGION,
+    secretAccessKey: process.env.secretAccessKey,
+    accessKeyId: process.env.accessKeyId,
+    region: process.env.region,
   });
   s3.deleteObject(
     { Bucket: "wisecaller-images", Key: filename },
