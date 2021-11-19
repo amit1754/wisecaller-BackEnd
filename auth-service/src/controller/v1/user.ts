@@ -12,16 +12,14 @@ class UserController {
     try {
       const loggedInUser: any = req.user;
 
-      let user: any = await User.aggregate([
-        {
-          $match: { _id: loggedInUser._id },
-        },
-      ]);
+      let user: any = await User.findOne({ _id: loggedInUser._id });
+        
+      
 
       res.status(200).json({
         sucess: true,
         message: "User Profile details get successfully",
-        data: user[0],
+        data: user,
       });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
@@ -32,19 +30,22 @@ class UserController {
     const reqPayload: any = req;
     try {
       const loggedInUser: any = req.user;
+      
 
       let payload: any;
 
       if (reqPayload.body.secondary_no) {
         const findSecondaryNO: any = await User.findOne({
           "phones.no": reqPayload.body.secondary_no,
+          _id:{$ne:loggedInUser._id}
         });
+        
         payload = {
           ...payload,
           phones: loggedInUser.phones,
         };
         if (findSecondaryNO) {
-          if ((findSecondaryNO.phone = loggedInUser.phone)) {
+          if (findSecondaryNO.phone === loggedInUser.phone){
             let updatePhone = {
               no: reqPayload.body.secondary_no,
               type: "SECONDARY",
@@ -89,7 +90,7 @@ class UserController {
       delete payload.role;
       await User.findOneAndUpdate(
         { _id: loggedInUser._id },
-        { ...payload, is_new_user: true },
+        { ...payload, is_new_user: false },
         {
           upsert: true,
           new: false,
@@ -100,7 +101,6 @@ class UserController {
         .status(200)
         .json({ success: true, message: "user update successfully", data: [] });
     } catch (error: any) {
-      console.error(error);
       return res.status(500).json({ success: false, message: error.message });
     }
   }
