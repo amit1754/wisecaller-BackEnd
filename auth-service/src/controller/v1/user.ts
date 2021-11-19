@@ -22,6 +22,58 @@ class UserController {
     }
   }
 
+  async update_by_me(req: Request, res: Response) {
+    try {
+      const payload = {
+        ...req.body,
+      };
+      const loggedInUser: any = req.user;
+      const user = await User.findOne({ _id: loggedInUser._id });
+      let phones = user.phones;
+      if (payload.secondary_no) {
+        const secondary_no_user = await User.findOne({
+          _id: { $ne: loggedInUser._id },
+          "phones.no": payload.secondary_no,
+        });
+        if (!secondary_no_user) {
+          let is_exists = phones.find(
+            (item: any) => item.no === payload.secondary_no
+          );
+          if (!is_exists) {
+            let phone_payload = {
+              no: payload.secondary_no,
+              type: "SECONDARY",
+              used_for_login: false,
+            };
+            phones.push(phone_payload);
+          } else {
+            return res
+              .status(200)
+              .json({ success: false, message: "Phone no is already added!" });
+          }
+        } else {
+          return res.status(200).json({
+            success: false,
+            message: "Secondary number already exists!",
+          });
+        }
+      } else {
+        if (payload.secondary_no === "") {
+          let index = phones.findIndex(
+            (item: any) => item.type === "SECONDARY"
+          );
+          phones.splice(index, 1);
+        }
+      }
+      Object.assign(payload, { phones: phones });
+
+      console.log(payload);
+      return res.status(200).json({ success: true, data: user });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
   async update(req: Request, res: Response) {
     const reqPayload: any = req;
     try {
@@ -31,15 +83,15 @@ class UserController {
       if (reqPayload.body.secondary_no) {
         const findSecondaryNO: any = await User.findOne({
           "phones.no": reqPayload.body.secondary_no,
-          _id:{$ne:loggedInUser._id}
+          _id: { $ne: loggedInUser._id },
         });
-        
+
         payload = {
           ...payload,
           phones: loggedInUser.phones,
         };
         if (findSecondaryNO) {
-          if (findSecondaryNO.phone === loggedInUser.phone){
+          if (findSecondaryNO.phone === loggedInUser.phone) {
             let updatePhone = {
               no: reqPayload.body.secondary_no,
               type: "SECONDARY",
@@ -62,9 +114,9 @@ class UserController {
             payload.phones.push(updatePhone);
           }
         }
-      }else {
+      } else {
         const user: any = await User.findOne({
-          _id: loggedInUser._id
+          _id: loggedInUser._id,
         });
         // console.log(user.phones)
       }
@@ -87,14 +139,14 @@ class UserController {
       }
       delete payload.phone;
       delete payload.role;
-      // await User.findOneAndUpdate(
-      //   { _id: loggedInUser._id },
-      //   { ...payload, is_new_user: false },
-      //   {
-      //     upsert: true,
-      //     new: false,
-      //   }
-      // );
+      await User.findOneAndUpdate(
+        { _id: loggedInUser._id },
+        { ...payload, is_new_user: false },
+        {
+          upsert: true,
+          new: false,
+        }
+      );
 
       return res
         .status(200)
