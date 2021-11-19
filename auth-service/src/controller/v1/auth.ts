@@ -84,7 +84,7 @@ class AuthController {
       const { mobileNo, otp } = req.body;
 
       let userDetails: any;
-      let userFind: any = await User.findOne({ "phones.no": mobileNo });
+      let userFind: any = await User.findOne({ "phones.no": mobileNo })
 
       let auth_token: any = await AuthToken.findOne({ mobileNo: mobileNo });
       if (auth_token) {
@@ -97,6 +97,8 @@ class AuthController {
                 type: "PRIMARY",
               },
               phone: mobileNo,
+              profile_image: null
+
             };
 
             const user = new User(payload);
@@ -133,24 +135,13 @@ class AuthController {
           { expiresIn: tokenRefreshTime }
         );
 
-        let hrs: any = tokenTime.substr(0, tokenTime.length - 1);
-        let now: any = new Date();
-        // let token_expires_at: any = now.setHours(
-        //   now.getHours() + parseInt(hrs)
-        // );
+     
+       
         let token_expires_at: string = moment()
           .add(12, "hours")
           .utc()
           .toISOString();
-        // token_expires_at = new Date(token_expires_at).toLocaleString("en-us", {
-        //   year: "numeric",
-        //   month: "2-digit",
-        //   day: "2-digit",
-        //   hour: "2-digit",
-        //   minute: "2-digit",
-        //   second: "2-digit",
-        //   hour12: false,
-        // });
+       
 
         await auth_token.remove();
         return res.status(200).json({
@@ -164,11 +155,13 @@ class AuthController {
         });
       } else {
         return res
-          .status(500)
+          .status(200)
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return res
+          .status(500)
+          .json({ success: false, message: error.message })
     }
   }
   async resendOtp(req: Request, res: Response, next: NextFunction) {
