@@ -47,6 +47,10 @@ const UserSchema = new Schema(
       type: Object,
       default: null,
     },
+    is_new_user: {
+      type: Boolean,
+      default: true
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -79,5 +83,26 @@ const UserSchema = new Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.post("find", function (doc) {
+  doc.map((x: any) => {
+    x.profile_image =
+      x.profile_image == null
+        ? null
+        : `${process.env.IMAGE_PATH}${x.profile_image}`;
+    
+    return x;
+  });
+
+  return doc;
+});
+UserSchema.post("findOne", function (doc) {
+  doc.profile_image =
+    doc.profile_image == null
+      ? null
+      : `${process.env.IMAGE_PATH}${doc.profile_image}`;
+
+  return doc;
+});
 
 export const User = model("User", UserSchema);

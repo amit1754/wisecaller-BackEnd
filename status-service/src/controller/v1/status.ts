@@ -49,6 +49,7 @@ class StatusController {
             as: "applicableType",
           },
         },
+       
       ]);
       res.status(200).json({
         success: true,
