@@ -1,7 +1,7 @@
 import Application from "./app";
 import { config } from "dotenv";
 
-
+process.env.ENVIRONMENT = "dev";
 config({ path: `.env.${process.env.ENVIRONMENT}` });
 
 const application = new Application();
