@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { RoadSafety } from "../../models/road-safety";
 import { User } from "../../models/user";
+import { UserStatus } from "../../models/status";
 
 class RoadSafetyController {
   async update(req: Request, res: Response) {
@@ -22,6 +23,15 @@ class RoadSafetyController {
           { upsert: true }
         );
       }
+
+      let defaultStatus = await UserStatus.findOne({
+        status: "Driving",
+      }).populate({
+        path: "applicable_types",
+        model: "globalType",
+      });
+      console.log("defaultStatus", defaultStatus);
+
       let user = await User.findOne({ _id: loggedInUser._id }).lean();
       let modesPayload = {
         ...user.modes,
@@ -33,7 +43,8 @@ class RoadSafetyController {
             display_to: roadSafety.display_to,
             auto_sms: roadSafety.auto_sms,
             notes: roadSafety.notes,
-            status: roadSafety.status,
+            status: defaultStatus,
+            status1: defaultStatus,
           },
         },
       };

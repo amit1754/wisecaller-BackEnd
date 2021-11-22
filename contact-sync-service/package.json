@@ -7,7 +7,7 @@
       "start": "ts-node index.ts",
       "compile": "tsc",
       "build": "tsc -p .",
-      "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts'",
+      "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts --ENVIRONMENT=dev'",
       "test": "echo \"Error: no test specified\" && exit 1",
       "deploy": "AWS_PROFILE=wisecaller sls deploy"
    },

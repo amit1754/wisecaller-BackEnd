@@ -13,8 +13,6 @@ class UserController {
       const loggedInUser: any = req.user;
 
       let user: any = await User.findOne({ _id: loggedInUser._id });
-        
-      
 
       res.status(200).json({
         success: true,
@@ -30,22 +28,22 @@ class UserController {
     const reqPayload: any = req;
     try {
       const loggedInUser: any = req.user;
-      
-
       let payload: any;
+      
 
       if (reqPayload.body.secondary_no) {
         const findSecondaryNO: any = await User.findOne({
           "phones.no": reqPayload.body.secondary_no,
-          _id:{$ne:loggedInUser._id}
+          _id: { $ne: loggedInUser._id },
         });
-        
+
+        if(loggedInUser)
         payload = {
           ...payload,
           phones: loggedInUser.phones,
         };
         if (findSecondaryNO) {
-          if (findSecondaryNO.phone === loggedInUser.phone){
+          if (findSecondaryNO.phone === loggedInUser.phone) {
             let updatePhone = {
               no: reqPayload.body.secondary_no,
               type: "SECONDARY",
@@ -68,6 +66,10 @@ class UserController {
             payload.phones.push(updatePhone);
           }
         }
+      } else {
+        if (loggedInUser.phones.length === 2) {
+          loggedInUser.phones.pop();
+        }
       }
 
       if (reqPayload.file) {
@@ -88,6 +90,8 @@ class UserController {
       }
       delete payload.phone;
       delete payload.role;
+      payload.phones = loggedInUser.phones;
+
       await User.findOneAndUpdate(
         { _id: loggedInUser._id },
         { ...payload, is_new_user: false },
