@@ -12,10 +12,6 @@ class UserController {
     try {
       const loggedInUser: any = req.user;
       let user: any = await User.findOne({ _id: loggedInUser._id });
-<<<<<<< HEAD
-=======
-
->>>>>>> d6722034e7b1a9d156277bd4c64fc7986d7d3e02
       res.status(200).json({
         success: true,
         message: "User Profile details get successfully",
@@ -83,7 +79,6 @@ class UserController {
     try {
       const loggedInUser: any = req.user;
       let payload: any;
-      
 
       if (reqPayload.body.secondary_no) {
         const findSecondaryNO: any = await User.findOne({
@@ -91,14 +86,11 @@ class UserController {
           _id: { $ne: loggedInUser._id },
         });
 
-<<<<<<< HEAD
-=======
-        if(loggedInUser)
->>>>>>> d6722034e7b1a9d156277bd4c64fc7986d7d3e02
-        payload = {
-          ...payload,
-          phones: loggedInUser.phones,
-        };
+        if (loggedInUser)
+          payload = {
+            ...payload,
+            phones: loggedInUser.phones,
+          };
         if (findSecondaryNO) {
           if (findSecondaryNO.phone === loggedInUser.phone) {
             let updatePhone = {
