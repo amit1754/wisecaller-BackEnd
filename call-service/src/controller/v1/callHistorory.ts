@@ -82,14 +82,6 @@ class callHistory {
             as: "userContact",
           },
         },
-        // {
-        //   $lookup: {
-        //     from: "customstatuses",
-        //     localField: "callerId",
-        //     foreignField: "user",
-        //     as: "customstatuses",
-        //   },
-        // },
 
         {
           $group: {
@@ -98,20 +90,22 @@ class callHistory {
           },
         },
         { $sort: { _id: -1 } },
-        // {
-        //   $project: {
-        //     "list.wisecallerId": 1,
-        //     "list.callerId": 1,
-        //     "list.name": 1,
-        //     "list.callHistory": 1,
-        //     "list.date": 1,
-        //     "list.createdAt": 1,
-        //     "list.updatedAt": 1,
-        //     "list.number": 1,
-        //     "list.notes": "$list.status.notes",
-        //     "list.userDetails": 1,
-        //   },
-        // },
+        {
+          $project: {
+            date: "$_id",
+            _id: 0,
+            "list._id": 1,
+            "list.phone": 1,
+            "list.name": 1,
+            "list.callHistory": 1,
+            "list.date": 1,
+            "list.createdAt": 1,
+            "list.updatedAt": 1,
+            "list.number": 1,
+            "list.status.notes": 1,
+            "list.userDetails": 1,
+          },
+        },
       ]);
 
       res

@@ -10,6 +10,9 @@ plugins:
   
 package:
   individually: true
+  .env.dev,
+  !.env.prod
+
 
 provider:
   name: aws

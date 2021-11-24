@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { globalTypeModel } from "../models/globalType.Model";
 
 const SatusSchema = new Schema(
   {
@@ -19,7 +20,7 @@ const SatusSchema = new Schema(
     applicable_types: [
       {
         type: Schema.Types.ObjectId,
-        ref: "globalType",
+        ref: globalTypeModel,
       },
     ],
     isDeleted: {
@@ -31,36 +32,34 @@ const SatusSchema = new Schema(
 );
 
 SatusSchema.post("aggregate", function (doc: any) {
-  console.log(doc);
-  doc.map((x: any) => {
-    x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
-    if(x.subCategory){
-      x.subCategory.map((y:any)=>{
-        y.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${y.logo}`;
-        return y;
-      });
-    }
-    return x;
-  });
-
+  if (doc) {
+    doc.map((x: any) => {
+      x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
+      if (x.subCategory) {
+        x.subCategory.map((y: any) => {
+          y.logo = y.logo == null ? null : `${process.env.IMAGE_PATH}${y.logo}`;
+          return y;
+        });
+      }
+      return x;
+    });
+  }
   return doc;
 });
-SatusSchema.post("findOne", function (doc:any) {
-  doc.logo =
-    doc.logo == null
-      ? null
-      : `${process.env.IMAGE_PATH}${doc.logo}`;
+SatusSchema.post("findOne", function (doc: any) {
+  if (doc) {
+    doc.logo = doc.logo == null ? null : `${process.env.IMAGE_PATH}${doc.logo}`;
+  }
 
   return doc;
 });
 SatusSchema.post("find", function (doc) {
-  doc.map((x: any) => {
-    x.logo =
-      x.logo == null
-        ? null
-        : `${process.env.IMAGE_PATH}${x.logo}`;
-    return x;
-  });
+  if (doc) {
+    doc.map((x: any) => {
+      x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
+      return x;
+    });
+  }
 
   return doc;
 });

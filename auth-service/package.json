@@ -4,7 +4,7 @@
    "description": "",
    "main": "src/index.ts",
    "scripts": {
-      "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts'",
+      "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts --ENVIRONMENT=dev'",
       "deploy": "AWS_PROFILE=wisecaller sls deploy",
       "build": "rimraf build/ && tsc --build",
       "build1": "tsc -p .",
