@@ -1,23 +1,20 @@
 service: aws-wisecaller-auth-service
 
-frameworkVersion: '2'
+frameworkVersion: "2"
 useDotenv: true
 configValidationMode: warn
 environment:
   NODE_ENV: dev
 plugins:
   - serverless-plugin-typescript
-  
+
 package:
   individually: true
-  .env.dev,
-  !.env.prod
-
 
 provider:
   name: aws
   runtime: nodejs14.x
-  lambdaHashingVersion: '20201221'
+  lambdaHashingVersion: "20201221"
 
 functions:
   api:

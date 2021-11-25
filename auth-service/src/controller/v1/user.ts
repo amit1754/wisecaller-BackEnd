@@ -6,12 +6,22 @@ import { sendMailUtils } from "../../utils";
 import { deletefile } from "../../middlewares/uploadService";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
+import { Notes } from "../../models/notes";
 
 class UserController {
   async show(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
       let user: any = await User.findOne({ _id: loggedInUser._id });
+      if (user?.user_status?.status?.status_notes?.id) {
+        let notesData = await Notes.findById(
+          user?.user_status?.status?.status_notes?.id
+        );
+        if (notesData) {
+          user.user_status.status.status_notes.notes = notesData;
+        }
+      }
+
       res.status(200).json({
         success: true,
         message: "User Profile details get successfully",
@@ -272,6 +282,29 @@ class UserController {
       if (req.body.subStatusId) {
         let userSubStatus = await UserSubStatus.findById(req.body.subStatusId);
         Object.assign(payload.status, { sub_status: userSubStatus });
+      }
+
+      if (req.body.notes) {
+        if (req.body.notes.id) {
+          let findNotes = await Notes.findById(req.body.notes.id);
+          if (findNotes) {
+            let notes = {
+              id: findNotes._id,
+              is_custom: false,
+              text: "",
+            };
+            Object.assign(payload.status, { status_notes: notes });
+          } else {
+            throw new Error("notes is not avalible");
+          }
+        } else {
+          let notes = {
+            id: "",
+            is_custom: true,
+            text: req.body.notes.text,
+          };
+          Object.assign(payload.status, { status_notes: notes });
+        }
       }
 
       let user = await User.findOneAndUpdate(

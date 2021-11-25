@@ -9,21 +9,17 @@ class callHistory {
     try {
       const loginUser: any = req.user;
       let { body }: any = req;
-
-      for (let i = 0; i < body.length; i++) {
-        const wisecallerSerarch = await User.findOne({
-          mobileNo: body[i].phone,
+      for (let index = 0; index < body.length; index++) {
+        body[index].user = loginUser._id;
+        const getContact = await UserContact.findOne({
+          "phones.ph_no": body[index].phone,
         });
-        if (wisecallerSerarch) {
-          body[i].callerId = wisecallerSerarch._id;
-        } else {
-          body[i].callerId = null;
+        if (getContact) {
+          body[index].contactId = getContact._id;
         }
-        body[i].wisecallerId = loginUser._id;
-
-        const callHistorySave = new CallHistory(body[i]);
-        await callHistorySave.save();
       }
+
+      await CallHistory.insertMany(body);
 
       res.status(200).json({ success: true, message: "Sucess", data: [] });
     } catch (error: any) {
@@ -36,53 +32,21 @@ class callHistory {
       const loginUser: any = req.user;
 
       const contactDetails = await CallHistory.aggregate([
-        { $match: { wisecallerId: loginUser._id } },
-        {
-          $lookup: {
-            from: "users",
-            localField: "callerId",
-            foreignField: "_id",
-            as: "userDetails",
-          },
-        },
-        {
-          $unwind: {
-            path: "$userDetails",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $lookup: {
-            from: "usersatus",
-            localField: "userDetails.status",
-            foreignField: "_id",
-            as: "userStatus",
-          },
-        },
-        {
-          $unwind: {
-            path: "$userStatus",
-            preserveNullAndEmptyArrays: true,
-          },
-        },
-        {
-          $lookup: {
-            from: "usersubstatuses",
-            localField: "userDetails.subStatus",
-            foreignField: "_id",
-            as: "subStatus",
-          },
-        },
-
+        { $match: { user: loginUser._id } },
         {
           $lookup: {
             from: "user_contacts",
             localField: "contactId",
             foreignField: "_id",
-            as: "userContact",
+            as: "contact",
           },
         },
-
+        {
+          $unwind: {
+            path: "$contact",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
@@ -104,6 +68,7 @@ class callHistory {
             "list.number": 1,
             "list.status.notes": 1,
             "list.userDetails": 1,
+            "list.contact_details": 1,
           },
         },
       ]);

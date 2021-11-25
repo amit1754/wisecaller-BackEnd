@@ -2,16 +2,12 @@ import { Schema, model } from "mongoose";
 
 const CallHistorySchema = new Schema(
   {
-    wisecallerId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },
-    callerId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
+
     contactId: {
       type: Schema.Types.ObjectId,
       ref: "user_contact",
