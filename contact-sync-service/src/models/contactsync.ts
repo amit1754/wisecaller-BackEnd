@@ -2,11 +2,15 @@ import { Schema, model } from "mongoose";
 
 const ContactSyncSchema = new Schema(
   {
-    customId: {
+    contactId: {
       type: Number,
       unique: true,
     },
     user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    contact: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
@@ -33,7 +37,12 @@ const ContactSyncSchema = new Schema(
         contact_id: { type: Schema.Types.ObjectId },
       },
     ],
+    is_deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
+
   { timestamps: true }
 );
 

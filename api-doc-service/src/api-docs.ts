@@ -26,7 +26,7 @@ export default {
                 $ref: "#/components/schemas/LoginuserRequest",
               },
               example: {
-                mobileNo: "+918980514085",
+                mobileNo: "+911234567890",
               },
             },
           },
@@ -203,31 +203,29 @@ export default {
                 properties: {
                   first_name: {
                     type: "string",
-                    allowEmptyValue: true,
+                    example: "firstName",
                   },
                   last_name: {
                     type: "string",
-                    allowEmptyValue: true,
+                    example: "lastName",
                   },
                   profile_image: {
                     type: "file",
-                    allowEmptyValue: true,
                   },
                   is_profile_from_social_media: {
                     type: "boolean",
-                    allowEmptyValue: true,
+                    example: false,
                   },
                   phone: {
                     type: "string",
-                    allowEmptyValue: true,
+                    example: "+918849455045",
                   },
                   secondary_no: {
                     type: "string",
-                    allowEmptyValue: true,
+                    example: "+918980514085",
                   },
                   media_profile_url: {
                     type: "string",
-                    allowEmptyValue: true,
                   },
                 },
               },
@@ -319,7 +317,11 @@ export default {
                 customStatusId: "61950368448ab7e5f7775ce0",
                 statusId: "6195004219517edbb9a32dde",
                 subStatusId: "6195023525c96ee17567830d",
-                notesId: "",
+                notes: {
+                  id: "619e258c5be4d7298bc74696",
+                  is_custom: false,
+                  text: "",
+                },
               },
             },
           },
@@ -419,84 +421,6 @@ export default {
         deprecated: false,
       },
     },
-    "/auth-service/api/v1/contact-us": {
-      post: {
-        tags: ["Auth service"],
-        summary: "contactUs",
-        operationId: "contactUs",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/contactUsRequest",
-              },
-              example: {
-                email: "savaliyatushar2197@gmail.com",
-                message: "systme is not working",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/m2001",
-                },
-                example: {
-                  success: true,
-                  message: "success",
-                  data: [],
-                },
-              },
-            },
-          },
-        },
-        deprecated: false,
-      },
-    },
-    "/auth-service/api/v1/contact-us/get": {
-      get: {
-        tags: ["Auth service"],
-        summary: "get contact us details",
-        operationId: "getcontactusdetails",
-        parameters: [],
-        responses: {
-          "200": {
-            description: "OK",
-            headers: {},
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/m2005",
-                },
-                example: {
-                  success: true,
-                  data: [
-                    {
-                      _id: "6196171ec65f230009c3a4ec",
-                      email: "savaliyatushar2197@gmail.com",
-                      Message: "systme is not working",
-                      createdAt: "2021-11-18T09:04:30.813Z",
-                      updatedAt: "2021-11-18T09:04:30.813Z",
-                      __v: 0,
-                    },
-                  ],
-                  message: "contactUs details get sucess fully",
-                },
-              },
-            },
-          },
-        },
-        deprecated: false,
-      },
-    },
     "/auth-service/api/v1/auth/resend-otp": {
       post: {
         tags: ["Auth service"],
@@ -530,6 +454,51 @@ export default {
                   success: true,
                   message: "message send successful",
                   otp: 2059,
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/auth-service/api/v1/auth/refresh-token": {
+      post: {
+        tags: ["Auth service"],
+        summary: "refresh token",
+        operationId: "refreshtoken",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/refreshtokenrequest",
+              },
+              example: {
+                token:
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk3ZTE2OGU3MTJhNWQyMDI3ZTkwYzEiLCJpYXQiOjE2Mzc4Mzk5MTksImV4cCI6MTYzNzg0NDkxOX0.ly5zRRfxeIaUAzRYKSMyK0VAW-10fSSLUfAIzEyDNzA",
+                refreshToken:
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk3ZTE2OGU3MTJhNWQyMDI3ZTkwYzEiLCJpYXQiOjE2Mzc4Mzk5MTksImV4cCI6MTYzNzg0MjMxOX0.W9ItR2QwrzxN5va9OTCTAma6RcxIMfyhmwD3IvzzEGw",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          default: {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2008",
+                },
+                example: {
+                  success: true,
+                  message: "token refresh sucessfully",
+                  token:
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk3ZTE2OGU3MTJhNWQyMDI3ZTkwYzEiLCJpYXQiOjE2Mzc4Mzk5MTksImV4cCI6MTYzNzg0NDkxOX0.ly5zRRfxeIaUAzRYKSMyK0VAW-10fSSLUfAIzEyDNzA",
                 },
               },
             },
@@ -605,9 +574,7 @@ export default {
                 description: "",
                 example: [
                   {
-                    wisecallerId: "6161872b43430600096f3fee",
                     phone: "+919714209234",
-                    contactId: "618fa6b02ac1e05fd9709da0",
                     name: "abc",
                     callHistory: [
                       {
@@ -624,9 +591,7 @@ export default {
                     date: "2021-11-13 10:20:22",
                   },
                   {
-                    wisecallerId: "6161872b43430600096f3fee",
                     phone: "+919496955716",
-                    contactId: "618fa6b12ac1e05fd9709daa",
                     name: "abcs",
                     callHistory: [
                       {
@@ -643,9 +608,7 @@ export default {
                     date: "2021-11-14 10:20:22",
                   },
                   {
-                    wisecallerId: "6174ccf5ba15ff00084330f3",
                     phone: "+918989898989",
-                    contactId: null,
                     name: "abcs",
                     callHistory: [
                       {
@@ -665,9 +628,7 @@ export default {
               },
               example: [
                 {
-                  wisecallerId: "6161872b43430600096f3fee",
                   phone: "+919714209234",
-                  contactId: "618fa6b02ac1e05fd9709da0",
                   name: "abc",
                   callHistory: [
                     {
@@ -684,9 +645,7 @@ export default {
                   date: "2021-11-13 10:20:22",
                 },
                 {
-                  wisecallerId: "6161872b43430600096f3fee",
                   phone: "+919496955716",
-                  contactId: "618fa6b12ac1e05fd9709daa",
                   name: "abcs",
                   callHistory: [
                     {
@@ -703,9 +662,7 @@ export default {
                   date: "2021-11-14 10:20:22",
                 },
                 {
-                  wisecallerId: "6174ccf5ba15ff00084330f3",
                   phone: "+918989898989",
-                  contactId: null,
                   name: "abcs",
                   callHistory: [
                     {
@@ -767,98 +724,122 @@ export default {
                   message: "Sucess",
                   data: [
                     {
-                      _id: "2021-11-14",
                       list: [
                         {
-                          _id: "6196186a93f0d600093ed1f4",
-                          wisecallerId: "6194fe948f13a1d59d11df22",
-                          callerId: null,
-                          contactId: "618fa6b12ac1e05fd9709daa",
+                          _id: "619f7a75f201eed14f9ae2be",
+                          phone: "+918849455045",
+                          name: "abc",
+                          callHistory: [
+                            {
+                              simId: "sim1",
+                              _id: "619f7a75f201eed14f9ae2bf",
+                              time: "2021-12-12T05:30:00.000Z",
+                              type: "Incoming",
+                            },
+                            {
+                              simId: "sim2",
+                              _id: "619f7a75f201eed14f9ae2c0",
+                              time: "2021-12-12T05:30:00.000Z",
+                              type: "Outgoing",
+                            },
+                            {
+                              simId: "sim2",
+                              _id: "619f7b7f71db91d4d6c7f973",
+                              time: "2021-12-12T05:30:00.000Z",
+                              type: "Incoming",
+                            },
+                          ],
+                          date: "2021-11-13T04:50:22.000Z",
+                          createdAt: "2021-11-25T11:58:45.859Z",
+                          updatedAt: "2021-11-25T12:03:11.439Z",
+                          contact: {
+                            _id: "619f5ffcf01b8beeb2bfe93d",
+                            contactId: 150,
+                            __v: 0,
+                            createdAt: "2021-11-25T10:05:48.136Z",
+                            first_name: "tushar1",
+                            is_deleted: false,
+                            last_name: "savaliya1",
+                            local_profile_image_path: "contacts/abc.png",
+                            phones: [
+                              {
+                                _id: "619f612686750c993ef9f8de",
+                                ph_no: "+918849455045",
+                                type: "PRIMARY",
+                              },
+                              {
+                                _id: "619f612686750c993ef9f8df",
+                                ph_no: "+913216549870",
+                                type: "SECONDARY",
+                              },
+                              {
+                                _id: "619f612686750c993ef9f8e0",
+                                ph_no: "+911236547890",
+                                type: "OFFICE",
+                              },
+                              {
+                                _id: "619f612686750c993ef9f8e1",
+                                ph_no: "+917412589630",
+                                type: "HOME",
+                              },
+                            ],
+                            profile_image: null,
+                            updatedAt: "2021-11-25T10:10:46.622Z",
+                            user: "6195f3e40ba05e4c53063e94",
+                            contact: "6194fe948f13a1d59d11df22",
+                          },
+                        },
+                      ],
+                      date: "2021-11-13",
+                    },
+                    {
+                      list: [
+                        {
+                          _id: "619f7a75f201eed14f9ae2c1",
                           phone: "+919496955716",
                           name: "abcs",
                           callHistory: [
                             {
                               simId: "sim1",
-                              _id: "6196186a93f0d600093ed1f5",
-                              time: "2021-12-12 11:00:00",
+                              _id: "619f7a75f201eed14f9ae2c2",
+                              time: "2021-12-12T05:30:00.000Z",
                               type: "Incoming",
                             },
                             {
                               simId: "sim2",
-                              _id: "6196186a93f0d600093ed1f6",
-                              time: "2021-12-12 11:00:00",
+                              _id: "619f7a75f201eed14f9ae2c3",
+                              time: "2021-12-12T05:30:00.000Z",
                               type: "Outgoing",
                             },
                           ],
-                          date: "2021-11-14T10:20:22.000Z",
-                          createdAt: "2021-11-18T09:10:02.543Z",
-                          updatedAt: "2021-11-18T09:10:02.543Z",
-                          __v: 0,
-                          subStatus: [],
-                          userContact: [],
+                          date: "2021-11-14T04:50:22.000Z",
+                          createdAt: "2021-11-25T11:58:45.860Z",
+                          updatedAt: "2021-11-25T11:58:45.860Z",
                         },
                         {
-                          _id: "6196186a93f0d600093ed1f9",
-                          wisecallerId: "6194fe948f13a1d59d11df22",
-                          callerId: null,
-                          contactId: null,
+                          _id: "619f7a75f201eed14f9ae2c4",
                           phone: "+918989898989",
                           name: "abcs",
                           callHistory: [
                             {
                               simId: "sim1",
-                              _id: "6196186a93f0d600093ed1fa",
-                              time: "2021-12-12 11:00:00",
+                              _id: "619f7a75f201eed14f9ae2c5",
+                              time: "2021-12-12T05:30:00.000Z",
                               type: "Incoming",
                             },
                             {
                               simId: "sim2",
-                              _id: "6196186a93f0d600093ed1fb",
-                              time: "2021-12-12 11:00:00",
+                              _id: "619f7a75f201eed14f9ae2c6",
+                              time: "2021-12-12T05:30:00.000Z",
                               type: "Outgoing",
                             },
                           ],
-                          date: "2021-11-14T10:20:22.000Z",
-                          createdAt: "2021-11-18T09:10:02.550Z",
-                          updatedAt: "2021-11-18T09:10:02.550Z",
-                          __v: 0,
-                          subStatus: [],
-                          userContact: [],
+                          date: "2021-11-14T04:50:22.000Z",
+                          createdAt: "2021-11-25T11:58:45.861Z",
+                          updatedAt: "2021-11-25T11:58:45.861Z",
                         },
                       ],
-                    },
-                    {
-                      _id: "2021-11-13",
-                      list: [
-                        {
-                          _id: "6196186a93f0d600093ed1ef",
-                          wisecallerId: "6194fe948f13a1d59d11df22",
-                          callerId: null,
-                          contactId: "618fa6b02ac1e05fd9709da0",
-                          phone: "+919714209234",
-                          name: "abc",
-                          callHistory: [
-                            {
-                              simId: "sim1",
-                              _id: "6196186a93f0d600093ed1f0",
-                              time: "2021-12-12 11:00:00",
-                              type: "Incoming",
-                            },
-                            {
-                              simId: "sim2",
-                              _id: "6196186a93f0d600093ed1f1",
-                              time: "2021-12-12 11:00:00",
-                              type: "Outgoing",
-                            },
-                          ],
-                          date: "2021-11-13T10:20:22.000Z",
-                          createdAt: "2021-11-18T09:10:02.516Z",
-                          updatedAt: "2021-11-18T09:10:02.516Z",
-                          __v: 0,
-                          subStatus: [],
-                          userContact: [],
-                        },
-                      ],
+                      date: "2021-11-14",
                     },
                   ],
                 },
@@ -885,10 +866,9 @@ export default {
               example: {
                 phone: "+919099909990",
                 name: "abcs",
-                time: "2021-12-12 11:00:00",
+                date_time: "2021-12-12 11:00:00",
                 type: "Incoming",
                 simId: "sim2",
-                date: "2021-12-12 11:00:00",
               },
             },
           },
@@ -929,6 +909,42 @@ export default {
         deprecated: false,
       },
     },
+    "/call-service/api/v1/callhistory/delete/{id}": {
+      delete: {
+        tags: ["Call History"],
+        summary: "delete records from call history",
+        operationId: "deleterecordsfromcallhistory",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "success",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/contact-sync-service/api/v1/contact/sync": {
       post: {
         tags: ["Contact sync"],
@@ -947,14 +963,14 @@ export default {
                 description: "",
                 example: [
                   {
-                    customId: 150,
+                    contactId: 150,
                     first_name: "tushar",
                     last_name: "savaliya",
                     profile_image: null,
                     local_profile_image_path: "contacts/abc.png",
                     phones: [
                       {
-                        ph_no: "+911234567890",
+                        ph_no: "+918849455045",
                         type: "PRIMARY",
                       },
                       {
@@ -972,7 +988,7 @@ export default {
                     ],
                   },
                   {
-                    customId: 151,
+                    contactId: 151,
                     first_name: "mehul",
                     last_name: "mehul",
                     profile_image: null,
@@ -997,7 +1013,7 @@ export default {
                     ],
                   },
                   {
-                    customId: 152,
+                    contactId: 152,
                     first_name: "jignesh",
                     last_name: "jignesh",
                     profile_image: null,
@@ -1025,14 +1041,14 @@ export default {
               },
               example: [
                 {
-                  customId: 150,
+                  contactId: 150,
                   first_name: "tushar",
                   last_name: "savaliya",
                   profile_image: null,
                   local_profile_image_path: "contacts/abc.png",
                   phones: [
                     {
-                      ph_no: "+911234567890",
+                      ph_no: "+918849455045",
                       type: "PRIMARY",
                     },
                     {
@@ -1050,7 +1066,7 @@ export default {
                   ],
                 },
                 {
-                  customId: 151,
+                  contactId: 151,
                   first_name: "mehul",
                   last_name: "mehul",
                   profile_image: null,
@@ -1075,7 +1091,7 @@ export default {
                   ],
                 },
                 {
-                  customId: 152,
+                  contactId: 152,
                   first_name: "jignesh",
                   last_name: "jignesh",
                   profile_image: null,
@@ -1138,134 +1154,163 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20012",
+                  $ref: "#/components/schemas/m20013",
                 },
                 example: {
                   success: true,
                   message: "contact list get successfully",
                   data: [
                     {
-                      _id: "619619e82c05f200095b25a9",
                       profile_image: null,
                       local_profile_image_path: "contacts/abc.png",
-                      customId: 152,
-                      first_name: "jignesh",
-                      last_name: "jignesh",
-                      phones: [
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25aa",
-                          ph_no: "+919854671230",
-                          type: "PRIMARY",
-                        },
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25ab",
-                          ph_no: "+912567894130",
-                          type: "SECONDARY",
-                        },
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25ac",
-                          ph_no: "+919568732410",
-                          type: "OFFICE",
-                        },
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25ad",
-                          ph_no: "+919496782117",
-                          type: "HOME",
-                        },
-                      ],
-                      user: "6194fe948f13a1d59d11df22",
-                      createdAt: "2021-11-18T09:16:24.247Z",
-                      updatedAt: "2021-11-18T09:16:24.247Z",
-                      __v: 0,
-                      wisecallerUser: [],
-                      userStatus: [],
-                      userSubStatus: [],
-                    },
-                    {
-                      _id: "619619e82c05f200095b259f",
-                      profile_image: null,
-                      local_profile_image_path: "contacts/abc.png",
-                      customId: 151,
-                      first_name: "mehul",
-                      last_name: "mehul",
-                      phones: [
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25a0",
-                          ph_no: "+911237896540",
-                          type: "PRIMARY",
-                        },
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25a1",
-                          ph_no: "+919874563210",
-                          type: "SECONDARY",
-                        },
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25a2",
-                          ph_no: "+915478963210",
-                          type: "OFFICE",
-                        },
-                        {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b25a3",
-                          ph_no: "+918756941230",
-                          type: "HOME",
-                        },
-                      ],
-                      user: "6194fe948f13a1d59d11df22",
-                      createdAt: "2021-11-18T09:16:24.233Z",
-                      updatedAt: "2021-11-18T09:16:24.233Z",
-                      __v: 0,
-                      wisecallerUser: [],
-                      userStatus: [],
-                      userSubStatus: [],
-                    },
-                    {
-                      _id: "619619e82c05f200095b2595",
-                      profile_image: null,
-                      local_profile_image_path: "contacts/abc.png",
-                      customId: 150,
+                      is_deleted: false,
+                      _id: "619f766697705cc533981aa1",
+                      contactId: 180,
                       first_name: "tushar",
                       last_name: "savaliya",
                       phones: [
                         {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b2596",
-                          ph_no: "+911234567890",
+                          _id: "619f766697705cc533981aa2",
+                          ph_no: "+918849455045",
                           type: "PRIMARY",
                         },
                         {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b2597",
+                          _id: "619f766697705cc533981aa3",
                           ph_no: "+913216549870",
                           type: "SECONDARY",
                         },
                         {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b2598",
+                          _id: "619f766697705cc533981aa4",
                           ph_no: "+911236547890",
                           type: "OFFICE",
                         },
                         {
-                          wisecallerId: null,
-                          _id: "619619e82c05f200095b2599",
+                          _id: "619f766697705cc533981aa5",
                           ph_no: "+917412589630",
                           type: "HOME",
                         },
                       ],
-                      user: "6194fe948f13a1d59d11df22",
-                      createdAt: "2021-11-18T09:16:24.207Z",
-                      updatedAt: "2021-11-18T09:16:24.207Z",
+                      contact: {
+                        role: "ADMIN",
+                        devices: null,
+                        isActive: true,
+                        isDeleted: false,
+                        status: null,
+                        subStatus: null,
+                        is_new_user: false,
+                        _id: "6194fe948f13a1d59d11df22",
+                        first_name: "firstName",
+                        last_name: "lastName",
+                        phone: "+918849455045",
+                        secondary_no: "",
+                        profile_image: "profile_images/1637561020768.png",
+                        is_profile_from_social_media: "false",
+                        media_profile_url: "",
+                        phones: [
+                          {
+                            used_for_login: true,
+                            _id: "6194fe948f13a1d59d11df23",
+                            no: "+918849455045",
+                            type: "PRIMARY",
+                          },
+                        ],
+                        createdAt: "2021-11-17T13:07:32.717Z",
+                        updatedAt: "2021-11-22T06:30:29.105Z",
+                        __v: 0,
+                        user_status: {
+                          name: "abc",
+                          status: {
+                            sub_status: {
+                              user: null,
+                              isDeleted: false,
+                              _id: "6195023525c96ee17567830d",
+                              status: "DND2",
+                              parentId: "6195004219517edbb9a32dde",
+                              logo: "status_images/1637155378453.png",
+                              createdAt: "2021-11-17T13:23:01.173Z",
+                              updatedAt: "2021-11-17T13:23:01.173Z",
+                              __v: 0,
+                            },
+                            _id: "6195004219517edbb9a32dde",
+                            user: null,
+                            applicable_types: [
+                              "618fb8e614842f8284d028dd",
+                              "618fb99bc8ba53856cbf0459",
+                            ],
+                            isDeleted: false,
+                            status: "Do not Disturb",
+                            priority: 0,
+                            logo: "status_images/1637155090761.png",
+                            createdAt: "2021-11-17T13:14:42.642Z",
+                            updatedAt: "2021-11-17T13:19:10.157Z",
+                            __v: 0,
+                          },
+                        },
+                        modes: {
+                          roadSafetyStatus: {
+                            is_active: true,
+                            devices: ["JBL Enduarance", "Boat Rokerz"],
+                            data: {
+                              selected_device: "Boat Rokerz",
+                              display_to: "contacts",
+                              auto_sms: false,
+                              notes: {
+                                is_custom: true,
+                                text: "Not available",
+                              },
+                              status: {
+                                user: null,
+                                applicable_types: ["618fb99bc8ba53856cbf0459"],
+                                isDeleted: false,
+                                _id: "619b27747a4897f6abd7338b",
+                                status: "Driving",
+                                priority: 0,
+                                logo: null,
+                                createdAt: "2021-11-22T05:15:32.942Z",
+                                updatedAt: "2021-11-22T05:15:32.942Z",
+                                __v: 0,
+                              },
+                            },
+                          },
+                        },
+                      },
+                      createdAt: "2021-11-25T11:41:26.922Z",
+                      updatedAt: "2021-11-25T11:41:26.922Z",
                       __v: 0,
-                      wisecallerUser: [],
-                      userStatus: [],
-                      userSubStatus: [],
+                    },
+                    {
+                      profile_image: null,
+                      local_profile_image_path: "contacts/abc.png",
+                      is_deleted: false,
+                      _id: "619f766a97705cc533981aab",
+                      contactId: 181,
+                      first_name: "mehul",
+                      last_name: "mehul",
+                      phones: [
+                        {
+                          _id: "619f766a97705cc533981aac",
+                          ph_no: "+911237896540",
+                          type: "PRIMARY",
+                        },
+                        {
+                          _id: "619f766a97705cc533981aad",
+                          ph_no: "+919874563210",
+                          type: "SECONDARY",
+                        },
+                        {
+                          _id: "619f766a97705cc533981aae",
+                          ph_no: "+915478963210",
+                          type: "OFFICE",
+                        },
+                        {
+                          _id: "619f766a97705cc533981aaf",
+                          ph_no: "+918756941230",
+                          type: "HOME",
+                        },
+                      ],
+                      createdAt: "2021-11-25T11:41:30.018Z",
+                      updatedAt: "2021-11-25T11:41:30.018Z",
+                      __v: 0,
                     },
                   ],
                 },
@@ -1294,73 +1339,59 @@ export default {
                 description: "",
                 example: [
                   {
-                    customId: 150,
+                    contactId: 150,
                     first_name: "tushar1",
-                    last_name: "savaliya2",
+                    last_name: "savaliya1",
                     profile_image: null,
                     local_profile_image_path: "contacts/abc.png",
                     phones: [
                       {
-                        wisecallerId: "618f6146385c780009f97e21",
-                        _id: "618fa6ae2ac1e05fd9709d97",
-                        ph_no: "+911234567890",
+                        ph_no: "+918849455045",
                         type: "PRIMARY",
                       },
                       {
-                        wisecallerId: null,
-                        _id: "618fa6ae2ac1e05fd9709d98",
                         ph_no: "+913216549870",
                         type: "SECONDARY",
                       },
                       {
-                        wisecallerId: null,
-                        _id: "618fa6ae2ac1e05fd9709d99",
                         ph_no: "+911236547890",
                         type: "OFFICE",
                       },
                       {
-                        wisecallerId: null,
-                        _id: "618fa6ae2ac1e05fd9709d9a",
                         ph_no: "+917412589630",
                         type: "HOME",
                       },
                     ],
+                    is_deleted: false,
                   },
                   {
-                    customId: 151,
+                    contactId: 151,
                     first_name: "mehul",
                     last_name: "mehul",
                     profile_image: null,
                     local_profile_image_path: "contacts/abc.png",
                     phones: [
                       {
-                        wisecallerId: null,
-                        _id: "618fa6b02ac1e05fd9709da1",
                         ph_no: "+911237896540",
                         type: "PRIMARY",
                       },
                       {
-                        wisecallerId: null,
-                        _id: "618fa6b02ac1e05fd9709da2",
                         ph_no: "+919874563210",
                         type: "SECONDARY",
                       },
                       {
-                        wisecallerId: null,
-                        _id: "618fa6b02ac1e05fd9709da3",
                         ph_no: "+915478963210",
                         type: "OFFICE",
                       },
                       {
-                        wisecallerId: null,
-                        _id: "618fa6b02ac1e05fd9709da4",
                         ph_no: "+918756941230",
                         type: "HOME",
                       },
                     ],
+                    is_deleted: false,
                   },
                   {
-                    customId: 152,
+                    contactId: 152,
                     first_name: "jignesh",
                     last_name: "jignesh",
                     profile_image: null,
@@ -1383,78 +1414,65 @@ export default {
                         type: "HOME",
                       },
                     ],
+                    is_deleted: false,
                   },
                 ],
               },
               example: [
                 {
-                  customId: 150,
+                  contactId: 150,
                   first_name: "tushar1",
-                  last_name: "savaliya2",
+                  last_name: "savaliya1",
                   profile_image: null,
                   local_profile_image_path: "contacts/abc.png",
                   phones: [
                     {
-                      wisecallerId: "618f6146385c780009f97e21",
-                      _id: "618fa6ae2ac1e05fd9709d97",
-                      ph_no: "+911234567890",
+                      ph_no: "+918849455045",
                       type: "PRIMARY",
                     },
                     {
-                      wisecallerId: null,
-                      _id: "618fa6ae2ac1e05fd9709d98",
                       ph_no: "+913216549870",
                       type: "SECONDARY",
                     },
                     {
-                      wisecallerId: null,
-                      _id: "618fa6ae2ac1e05fd9709d99",
                       ph_no: "+911236547890",
                       type: "OFFICE",
                     },
                     {
-                      wisecallerId: null,
-                      _id: "618fa6ae2ac1e05fd9709d9a",
                       ph_no: "+917412589630",
                       type: "HOME",
                     },
                   ],
+                  is_deleted: false,
                 },
                 {
-                  customId: 151,
+                  contactId: 151,
                   first_name: "mehul",
                   last_name: "mehul",
                   profile_image: null,
                   local_profile_image_path: "contacts/abc.png",
                   phones: [
                     {
-                      wisecallerId: null,
-                      _id: "618fa6b02ac1e05fd9709da1",
                       ph_no: "+911237896540",
                       type: "PRIMARY",
                     },
                     {
-                      wisecallerId: null,
-                      _id: "618fa6b02ac1e05fd9709da2",
                       ph_no: "+919874563210",
                       type: "SECONDARY",
                     },
                     {
-                      wisecallerId: null,
-                      _id: "618fa6b02ac1e05fd9709da3",
                       ph_no: "+915478963210",
                       type: "OFFICE",
                     },
                     {
-                      wisecallerId: null,
-                      _id: "618fa6b02ac1e05fd9709da4",
                       ph_no: "+918756941230",
                       type: "HOME",
                     },
                   ],
+                  is_deleted: false,
                 },
                 {
-                  customId: 152,
+                  contactId: 152,
                   first_name: "jignesh",
                   last_name: "jignesh",
                   profile_image: null,
@@ -1477,6 +1495,7 @@ export default {
                       type: "HOME",
                     },
                   ],
+                  is_deleted: false,
                 },
               ],
             },
@@ -1492,7 +1511,223 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/global-status/add/json": {
+    "/contact-sync-service/api/v1/contact/search": {
+      post: {
+        tags: ["Contact sync"],
+        summary: "search contact in list",
+        operationId: "searchcontactinlist",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/searchcontactinlistrequest",
+              },
+              example: {
+                phone_number: "919854671230",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20014",
+                },
+                example: {
+                  success: true,
+                  message: "data get successful",
+                  data: [
+                    {
+                      profile_image: null,
+                      local_profile_image_path: "contacts/abc.png",
+                      is_deleted: false,
+                      _id: "619f59b65afc378e7c7aa615",
+                      contactId: 152,
+                      first_name: "jignesh",
+                      last_name: "jignesh",
+                      phones: [
+                        {
+                          _id: "619f612b86750c993ef9f8f0",
+                          ph_no: "+919854671230",
+                          type: "PRIMARY",
+                        },
+                        {
+                          _id: "619f612b86750c993ef9f8f1",
+                          ph_no: "+912567894130",
+                          type: "SECONDARY",
+                        },
+                        {
+                          _id: "619f612b86750c993ef9f8f2",
+                          ph_no: "+919568732410",
+                          type: "OFFICE",
+                        },
+                        {
+                          _id: "619f612b86750c993ef9f8f3",
+                          ph_no: "+919496782117",
+                          type: "HOME",
+                        },
+                      ],
+                      user: "6195f3e40ba05e4c53063e94",
+                      createdAt: "2021-11-25T09:39:02.197Z",
+                      updatedAt: "2021-11-25T10:10:51.102Z",
+                      __v: 0,
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/contact-sync-service/api/v1/contact/search-wisecaller": {
+      post: {
+        tags: ["Contact sync"],
+        summary: "search in wiseccaller contact in list",
+        operationId: "searchinwiseccallercontactinlist",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/searchinwiseccallercontactinlistrequest",
+              },
+              example: {
+                phone_number: "89805140",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m20015",
+                },
+                example: {
+                  success: true,
+                  message: "data get successful",
+                  data: [
+                    {
+                      role: "USER",
+                      devices: null,
+                      isActive: true,
+                      isDeleted: false,
+                      status: null,
+                      subStatus: null,
+                      is_new_user: true,
+                      _id: "6195f3e40ba05e4c53063e94",
+                      modes: {
+                        workLifeBalance: {
+                          is_active: false,
+                          data: null,
+                        },
+                        roadSafetyStatus: {
+                          is_active: true,
+                          devices: ["JBL Enduarance", "Boat Rokerz"],
+                          data: {
+                            selected_device: "Boat Rokerz",
+                            display_to: "contacts",
+                            auto_sms: false,
+                            notes: {
+                              is_custom: true,
+                              text: "Not available",
+                            },
+                            status: {
+                              user: null,
+                              applicable_types: ["618fb99bc8ba53856cbf0459"],
+                              isDeleted: false,
+                              _id: "619b27747a4897f6abd7338b",
+                              status: "Driving",
+                              priority: 0,
+                              logo: null,
+                              createdAt: "2021-11-22T05:15:32.942Z",
+                              updatedAt: "2021-11-22T05:15:32.942Z",
+                              __v: 0,
+                            },
+                          },
+                        },
+                        syncCalender: {
+                          calenders: null,
+                        },
+                      },
+                      first_name: "firstName",
+                      last_name: "lastName",
+                      phone: "+919764569876",
+                      secondary_no: "+918980514085",
+                      profile_image: "profile_images/1637303316530.jpeg",
+                      is_profile_from_social_media: "false",
+                      media_profile_url: "",
+                      phones: [
+                        {
+                          used_for_login: true,
+                          _id: "6195f3e40ba05e4c53063e95",
+                          no: "+919764569876",
+                          type: "PRIMARY",
+                        },
+                        {
+                          used_for_login: true,
+                          _id: "619730890cd6d371f3aa2e6e",
+                          no: "+918980514085",
+                          type: "SECONDARY",
+                        },
+                      ],
+                      createdAt: "2021-11-18T06:34:12.028Z",
+                      updatedAt: "2021-11-24T08:14:00.851Z",
+                      __v: 0,
+                      user_status: {
+                        name: "abc",
+                        status: {
+                          sub_status: {
+                            user: null,
+                            isDeleted: false,
+                            _id: "6195023525c96ee17567830d",
+                            status: "DND11111",
+                            parentId: "6195004219517edbb9a32dde",
+                            logo: "status_images/1637155378453.png",
+                            createdAt: "2021-11-17T13:23:01.173Z",
+                            updatedAt: "2021-11-18T10:31:02.505Z",
+                            __v: 0,
+                          },
+                          _id: "6195004219517edbb9a32dde",
+                          user: null,
+                          applicable_types: [
+                            "618fb8e614842f8284d028dd",
+                            "618fb99bc8ba53856cbf0459",
+                          ],
+                          isDeleted: false,
+                          status: "Do not Disturb",
+                          priority: 0,
+                          logo: "status_images/1637230992831.png",
+                          createdAt: "2021-11-17T13:14:42.642Z",
+                          updatedAt: "2021-11-18T10:27:23.281Z",
+                          __v: 0,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/global-status/add": {
       post: {
         tags: ["Status"],
         summary: "Add Global status",
@@ -1506,10 +1741,12 @@ export default {
                 $ref: "#/components/schemas/AddGlobalstatusRequest",
               },
               example: {
-                status: "Do not Disturb1",
+                status: "Busy",
                 applicable_types: [
-                  "618fb8e614842f8284d028dd",
                   "618fb99bc8ba53856cbf0459",
+                  "618fba343bc52886fb4f6b7d",
+                  "618fba473bc52886fb4f6b83",
+                  "619b27cc7a4897f6abd7338e",
                 ],
                 priority: 0,
               },
@@ -1538,7 +1775,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/global-status/add": {
+    "/status-service/api/v1/event/add": {
       post: {
         tags: ["Status"],
         summary: "Add global status with image",
@@ -1599,7 +1836,7 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20015",
+                  $ref: "#/components/schemas/m20018",
                 },
                 example: {
                   success: true,
@@ -1737,7 +1974,7 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20016",
+                  $ref: "#/components/schemas/m20019",
                 },
                 example: {
                   success: true,
@@ -1770,7 +2007,16 @@ export default {
         tags: ["Status"],
         summary: "Delete global status",
         operationId: "Deleteglobalstatus",
-        parameters: [],
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
         responses: {
           "200": {
             description: "OK",
@@ -1778,7 +2024,7 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20018",
+                  $ref: "#/components/schemas/m20021",
                 },
                 example: {
                   success: true,
@@ -1905,7 +2151,7 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20020",
+                  $ref: "#/components/schemas/m20023",
                 },
                 example: {
                   success: true,
@@ -1951,7 +2197,7 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20021",
+                  $ref: "#/components/schemas/m20024",
                 },
                 example: {
                   success: true,
@@ -1960,6 +2206,168 @@ export default {
                 },
               },
             },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/notes/add": {
+      post: {
+        tags: ["Status"],
+        summary: "New Notes",
+        operationId: "NewNotes",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/NewNotesRequest",
+              },
+              example: {
+                text: "I am driving, please call me later",
+                display_to: "ALL",
+                type: "ROAD SAFETY",
+                auto_sms: false,
+                is_admin: true,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/notes": {
+      get: {
+        tags: ["Status"],
+        summary: "Notes List With Filters",
+        operationId: "NotesListWithFilters",
+        parameters: [
+          {
+            name: "type",
+            in: "query",
+            description: "",
+            required: true,
+            style: "form",
+            explode: true,
+            schema: {
+              type: "string",
+              example: "ROAD SAFETY",
+            },
+          },
+          {
+            name: "is_admin",
+            in: "query",
+            description: "",
+            required: true,
+            style: "form",
+            explode: true,
+            schema: {
+              type: "boolean",
+              example: true,
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/notes/{id}/details": {
+      get: {
+        tags: ["Status"],
+        summary: "Notes Details",
+        operationId: "NotesDetails",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/notes/{id}/update": {
+      put: {
+        tags: ["Status"],
+        summary: "Notes Update",
+        operationId: "NotesUpdate",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/NotesUpdateRequest",
+              },
+              example: {
+                text: "I am driving, please call me later",
+                display_to: "CONTACTS",
+                type: "ROAD SAFETY",
+                auto_sms: true,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/status-service/api/v1/notes/{id}/remove": {
+      delete: {
+        tags: ["Status"],
+        summary: "Notes Delete",
+        operationId: "NotesDelete",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
           },
         },
         deprecated: false,
@@ -1979,7 +2387,7 @@ export default {
                 $ref: "#/components/schemas/globaltypeeaddrequest",
               },
               example: {
-                type: "AUTO_STATUS1",
+                type: "GENERAL",
                 order: 7,
               },
             },
@@ -2007,7 +2415,7 @@ export default {
         deprecated: false,
       },
     },
-    "/status-service/api/v1/global-type/update/{id}": {
+    "/status-service/api/v1/global-type/update/{id": {
       put: {
         tags: ["Global Type"],
         summary: "global type update",
@@ -2071,7 +2479,7 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20024",
+                  $ref: "#/components/schemas/m20027",
                 },
                 example: {
                   success: true,
@@ -2375,7 +2783,7 @@ export default {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/m20028",
+                  $ref: "#/components/schemas/m20031",
                 },
                 example: {
                   sucess: true,
@@ -2494,7 +2902,7 @@ export default {
           },
         },
         example: {
-          mobileNo: "+918980514085",
+          mobileNo: "+911234567890",
         },
       },
       Loginuser: {
@@ -2707,7 +3115,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "file",
+            type: "string",
             nullable: true,
           },
           is_profile_from_social_media: {
@@ -3080,14 +3488,14 @@ export default {
           first_name: "tushar",
           last_name: "savaliya",
           is_profile_from_social_media: false,
-          phone: "+918849455045",
-          secondary_no: "+918980514085",
+          phone: "+911234567890",
+          secondary_no: "",
           media_profile_url: "",
         },
       },
       updateuserstatusrequest: {
         title: "updateuserstatusrequest",
-        required: ["customStatusId", "statusId", "subStatusId", "notesId"],
+        required: ["customStatusId", "statusId", "subStatusId", "notes"],
         type: "object",
         properties: {
           customStatusId: {
@@ -3099,15 +3507,40 @@ export default {
           subStatusId: {
             type: "string",
           },
-          notesId: {
-            type: "string",
+          notes: {
+            $ref: "#/components/schemas/Notes",
           },
         },
         example: {
           customStatusId: "61950368448ab7e5f7775ce0",
           statusId: "6195004219517edbb9a32dde",
           subStatusId: "6195023525c96ee17567830d",
-          notesId: "",
+          notes: {
+            id: "619e258c5be4d7298bc74696",
+            is_custom: false,
+            text: "",
+          },
+        },
+      },
+      Notes: {
+        title: "Notes",
+        required: ["id", "is_custom", "text"],
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+          },
+          is_custom: {
+            type: "boolean",
+          },
+          text: {
+            type: "string",
+          },
+        },
+        example: {
+          id: "619e258c5be4d7298bc74696",
+          is_custom: false,
+          text: "",
         },
       },
       m2003: {
@@ -3241,7 +3674,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "file",
+            type: "string",
             nullable: true,
           },
           is_profile_from_social_media: {
@@ -3573,6 +4006,25 @@ export default {
           otp: 2059,
         },
       },
+      refreshtokenrequest: {
+        title: "refreshtokenrequest",
+        required: ["token", "refreshToken"],
+        type: "object",
+        properties: {
+          token: {
+            type: "string",
+          },
+          refreshToken: {
+            type: "string",
+          },
+        },
+        example: {
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk3ZTE2OGU3MTJhNWQyMDI3ZTkwYzEiLCJpYXQiOjE2Mzc4Mzk5MTksImV4cCI6MTYzNzg0NDkxOX0.ly5zRRfxeIaUAzRYKSMyK0VAW-10fSSLUfAIzEyDNzA",
+          refreshToken:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk3ZTE2OGU3MTJhNWQyMDI3ZTkwYzEiLCJpYXQiOjE2Mzc4Mzk5MTksImV4cCI6MTYzNzg0MjMxOX0.W9ItR2QwrzxN5va9OTCTAma6RcxIMfyhmwD3IvzzEGw",
+        },
+      },
       UpdateRoadSafetyRequest: {
         title: "UpdateRoadSafetyRequest",
         required: [
@@ -3602,7 +4054,7 @@ export default {
             type: "boolean",
           },
           notes: {
-            $ref: "#/components/schemas/Notes",
+            $ref: "#/components/schemas/Notes1",
           },
           is_active: {
             type: "boolean",
@@ -3621,8 +4073,8 @@ export default {
           is_active: true,
         },
       },
-      Notes: {
-        title: "Notes",
+      Notes1: {
+        title: "Notes1",
         required: ["note_id", "is_custom", "text"],
         type: "object",
         properties: {
@@ -3661,25 +4113,11 @@ export default {
       },
       AddcallHistoryRequest: {
         title: "AddcallHistoryRequest",
-        required: [
-          "wisecallerId",
-          "phone",
-          "contactId",
-          "name",
-          "callHistory",
-          "date",
-        ],
+        required: ["phone", "name", "callHistory", "date"],
         type: "object",
         properties: {
-          wisecallerId: {
-            type: "string",
-          },
           phone: {
             type: "string",
-          },
-          contactId: {
-            type: "string",
-            nullable: true,
           },
           name: {
             type: "string",
@@ -3696,9 +4134,7 @@ export default {
           },
         },
         example: {
-          wisecallerId: "6161872b43430600096f3fee",
           phone: "+919714209234",
-          contactId: "618fa6b02ac1e05fd9709da0",
           name: "abc",
           callHistory: [
             {
@@ -4064,7 +4500,7 @@ export default {
       },
       addnumberfromcallhistoryrequest: {
         title: "addnumberfromcallhistoryrequest",
-        required: ["phone", "name", "time", "type", "simId", "date"],
+        required: ["phone", "name", "date_time", "type", "simId"],
         type: "object",
         properties: {
           phone: {
@@ -4073,7 +4509,7 @@ export default {
           name: {
             type: "string",
           },
-          time: {
+          date_time: {
             type: "string",
           },
           type: {
@@ -4082,17 +4518,13 @@ export default {
           simId: {
             type: "string",
           },
-          date: {
-            type: "string",
-          },
         },
         example: {
           phone: "+919099909990",
           name: "abcs",
-          time: "2021-12-12 11:00:00",
+          date_time: "2021-12-12 11:00:00",
           type: "Incoming",
           simId: "sim2",
-          date: "2021-12-12 11:00:00",
         },
       },
       m20010: {
@@ -4192,7 +4624,7 @@ export default {
       contactsyncrequest: {
         title: "contactsyncrequest",
         required: [
-          "customId",
+          "contactId",
           "first_name",
           "last_name",
           "profile_image",
@@ -4201,7 +4633,7 @@ export default {
         ],
         type: "object",
         properties: {
-          customId: {
+          contactId: {
             type: "integer",
             format: "int32",
           },
@@ -4212,7 +4644,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "file",
+            type: "string",
             nullable: true,
           },
           local_profile_image_path: {
@@ -4227,14 +4659,14 @@ export default {
           },
         },
         example: {
-          customId: 150,
+          contactId: 150,
           first_name: "tushar",
           last_name: "savaliya",
           profile_image: null,
           local_profile_image_path: "contacts/abc.png",
           phones: [
             {
-              ph_no: "+911234567890",
+              ph_no: "+918849455045",
               type: "PRIMARY",
             },
             {
@@ -4265,12 +4697,12 @@ export default {
           },
         },
         example: {
-          ph_no: "+911234567890",
+          ph_no: "+918849455045",
           type: "PRIMARY",
         },
       },
-      m20012: {
-        title: "m20012",
+      m20013: {
+        title: "m20013",
         required: ["success", "message", "data"],
         type: "object",
         properties: {
@@ -4442,7 +4874,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "file",
+            type: "string",
             nullable: true,
           },
           local_profile_image_path: {
@@ -4571,16 +5003,17 @@ export default {
       contactupdaterequest: {
         title: "contactupdaterequest",
         required: [
-          "customId",
+          "contactId",
           "first_name",
           "last_name",
           "profile_image",
           "local_profile_image_path",
           "phones",
+          "is_deleted",
         ],
         type: "object",
         properties: {
-          customId: {
+          contactId: {
             type: "integer",
             format: "int32",
           },
@@ -4591,7 +5024,7 @@ export default {
             type: "string",
           },
           profile_image: {
-            type: "file",
+            type: "string",
             nullable: true,
           },
           local_profile_image_path: {
@@ -4600,54 +5033,218 @@ export default {
           phones: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Phone4",
+              $ref: "#/components/schemas/Phone2",
+            },
+            description: "",
+          },
+          is_deleted: {
+            type: "boolean",
+          },
+        },
+        example: {
+          contactId: 150,
+          first_name: "tushar1",
+          last_name: "savaliya1",
+          profile_image: null,
+          local_profile_image_path: "contacts/abc.png",
+          phones: [
+            {
+              ph_no: "+918849455045",
+              type: "PRIMARY",
+            },
+            {
+              ph_no: "+913216549870",
+              type: "SECONDARY",
+            },
+            {
+              ph_no: "+911236547890",
+              type: "OFFICE",
+            },
+            {
+              ph_no: "+917412589630",
+              type: "HOME",
+            },
+          ],
+          is_deleted: false,
+        },
+      },
+      searchcontactinlistrequest: {
+        title: "searchcontactinlistrequest",
+        required: ["phone_number"],
+        type: "object",
+        properties: {
+          phone_number: {
+            type: "string",
+          },
+        },
+        example: {
+          phone_number: "919854671230",
+        },
+      },
+      m20014: {
+        title: "m20014",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Data6",
             },
             description: "",
           },
         },
         example: {
-          customId: 150,
-          first_name: "tushar1",
-          last_name: "savaliya2",
-          profile_image: null,
-          local_profile_image_path: "contacts/abc.png",
-          phones: [
+          success: true,
+          message: "data get successful",
+          data: [
             {
-              wisecallerId: "618f6146385c780009f97e21",
-              _id: "618fa6ae2ac1e05fd9709d97",
-              ph_no: "+911234567890",
-              type: "PRIMARY",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d98",
-              ph_no: "+913216549870",
-              type: "SECONDARY",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d99",
-              ph_no: "+911236547890",
-              type: "OFFICE",
-            },
-            {
-              wisecallerId: null,
-              _id: "618fa6ae2ac1e05fd9709d9a",
-              ph_no: "+917412589630",
-              type: "HOME",
+              profile_image: null,
+              local_profile_image_path: "contacts/abc.png",
+              is_deleted: false,
+              _id: "619f59b65afc378e7c7aa615",
+              contactId: 152,
+              first_name: "jignesh",
+              last_name: "jignesh",
+              phones: [
+                {
+                  _id: "619f612b86750c993ef9f8f0",
+                  ph_no: "+919854671230",
+                  type: "PRIMARY",
+                },
+                {
+                  _id: "619f612b86750c993ef9f8f1",
+                  ph_no: "+912567894130",
+                  type: "SECONDARY",
+                },
+                {
+                  _id: "619f612b86750c993ef9f8f2",
+                  ph_no: "+919568732410",
+                  type: "OFFICE",
+                },
+                {
+                  _id: "619f612b86750c993ef9f8f3",
+                  ph_no: "+919496782117",
+                  type: "HOME",
+                },
+              ],
+              user: "6195f3e40ba05e4c53063e94",
+              createdAt: "2021-11-25T09:39:02.197Z",
+              updatedAt: "2021-11-25T10:10:51.102Z",
+              __v: 0,
             },
           ],
         },
       },
-      Phone4: {
-        title: "Phone4",
-        required: ["ph_no", "type"],
+      Data6: {
+        title: "Data6",
+        required: [
+          "profile_image",
+          "local_profile_image_path",
+          "is_deleted",
+          "_id",
+          "contactId",
+          "first_name",
+          "last_name",
+          "phones",
+          "user",
+          "createdAt",
+          "updatedAt",
+          "__v",
+        ],
         type: "object",
         properties: {
-          wisecallerId: {
+          profile_image: {
             type: "string",
             nullable: true,
           },
+          local_profile_image_path: {
+            type: "string",
+          },
+          is_deleted: {
+            type: "boolean",
+          },
+          _id: {
+            type: "string",
+          },
+          contactId: {
+            type: "integer",
+            format: "int32",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone5",
+            },
+            description: "",
+          },
+          user: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          profile_image: null,
+          local_profile_image_path: "contacts/abc.png",
+          is_deleted: false,
+          _id: "619f59b65afc378e7c7aa615",
+          contactId: 152,
+          first_name: "jignesh",
+          last_name: "jignesh",
+          phones: [
+            {
+              _id: "619f612b86750c993ef9f8f0",
+              ph_no: "+919854671230",
+              type: "PRIMARY",
+            },
+            {
+              _id: "619f612b86750c993ef9f8f1",
+              ph_no: "+912567894130",
+              type: "SECONDARY",
+            },
+            {
+              _id: "619f612b86750c993ef9f8f2",
+              ph_no: "+919568732410",
+              type: "OFFICE",
+            },
+            {
+              _id: "619f612b86750c993ef9f8f3",
+              ph_no: "+919496782117",
+              type: "HOME",
+            },
+          ],
+          user: "6195f3e40ba05e4c53063e94",
+          createdAt: "2021-11-25T09:39:02.197Z",
+          updatedAt: "2021-11-25T10:10:51.102Z",
+          __v: 0,
+        },
+      },
+      Phone5: {
+        title: "Phone5",
+        required: ["_id", "ph_no", "type"],
+        type: "object",
+        properties: {
           _id: {
             type: "string",
           },
@@ -4659,10 +5256,585 @@ export default {
           },
         },
         example: {
-          wisecallerId: "618f6146385c780009f97e21",
-          _id: "618fa6ae2ac1e05fd9709d97",
-          ph_no: "+911234567890",
+          _id: "619f612b86750c993ef9f8f0",
+          ph_no: "+919854671230",
           type: "PRIMARY",
+        },
+      },
+      searchinwiseccallercontactinlistrequest: {
+        title: "searchinwiseccallercontactinlistrequest",
+        required: ["phone_number"],
+        type: "object",
+        properties: {
+          phone_number: {
+            type: "string",
+          },
+        },
+        example: {
+          phone_number: "89805140",
+        },
+      },
+      m20015: {
+        title: "m20015",
+        required: ["success", "message", "data"],
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+          },
+          message: {
+            type: "string",
+          },
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Data7",
+            },
+            description: "",
+          },
+        },
+        example: {
+          success: true,
+          message: "data get successful",
+          data: [
+            {
+              role: "USER",
+              devices: null,
+              isActive: true,
+              isDeleted: false,
+              status: null,
+              subStatus: null,
+              is_new_user: true,
+              _id: "6195f3e40ba05e4c53063e94",
+              modes: {
+                workLifeBalance: {
+                  is_active: false,
+                  data: null,
+                },
+                roadSafetyStatus: {
+                  is_active: true,
+                  devices: ["JBL Enduarance", "Boat Rokerz"],
+                  data: {
+                    selected_device: "Boat Rokerz",
+                    display_to: "contacts",
+                    auto_sms: false,
+                    notes: {
+                      is_custom: true,
+                      text: "Not available",
+                    },
+                    status: {
+                      user: null,
+                      applicable_types: ["618fb99bc8ba53856cbf0459"],
+                      isDeleted: false,
+                      _id: "619b27747a4897f6abd7338b",
+                      status: "Driving",
+                      priority: 0,
+                      logo: null,
+                      createdAt: "2021-11-22T05:15:32.942Z",
+                      updatedAt: "2021-11-22T05:15:32.942Z",
+                      __v: 0,
+                    },
+                  },
+                },
+                syncCalender: {
+                  calenders: null,
+                },
+              },
+              first_name: "firstName",
+              last_name: "lastName",
+              phone: "+919764569876",
+              secondary_no: "+918980514085",
+              profile_image: "profile_images/1637303316530.jpeg",
+              is_profile_from_social_media: "false",
+              media_profile_url: "",
+              phones: [
+                {
+                  used_for_login: true,
+                  _id: "6195f3e40ba05e4c53063e95",
+                  no: "+919764569876",
+                  type: "PRIMARY",
+                },
+                {
+                  used_for_login: true,
+                  _id: "619730890cd6d371f3aa2e6e",
+                  no: "+918980514085",
+                  type: "SECONDARY",
+                },
+              ],
+              createdAt: "2021-11-18T06:34:12.028Z",
+              updatedAt: "2021-11-24T08:14:00.851Z",
+              __v: 0,
+              user_status: {
+                name: "abc",
+                status: {
+                  sub_status: {
+                    user: null,
+                    isDeleted: false,
+                    _id: "6195023525c96ee17567830d",
+                    status: "DND11111",
+                    parentId: "6195004219517edbb9a32dde",
+                    logo: "status_images/1637155378453.png",
+                    createdAt: "2021-11-17T13:23:01.173Z",
+                    updatedAt: "2021-11-18T10:31:02.505Z",
+                    __v: 0,
+                  },
+                  _id: "6195004219517edbb9a32dde",
+                  user: null,
+                  applicable_types: [
+                    "618fb8e614842f8284d028dd",
+                    "618fb99bc8ba53856cbf0459",
+                  ],
+                  isDeleted: false,
+                  status: "Do not Disturb",
+                  priority: 0,
+                  logo: "status_images/1637230992831.png",
+                  createdAt: "2021-11-17T13:14:42.642Z",
+                  updatedAt: "2021-11-18T10:27:23.281Z",
+                  __v: 0,
+                },
+              },
+            },
+          ],
+        },
+      },
+      Data7: {
+        title: "Data7",
+        required: [
+          "role",
+          "devices",
+          "isActive",
+          "isDeleted",
+          "status",
+          "subStatus",
+          "is_new_user",
+          "_id",
+          "modes",
+          "first_name",
+          "last_name",
+          "phone",
+          "secondary_no",
+          "profile_image",
+          "is_profile_from_social_media",
+          "media_profile_url",
+          "phones",
+          "createdAt",
+          "updatedAt",
+          "__v",
+          "user_status",
+        ],
+        type: "object",
+        properties: {
+          role: {
+            type: "string",
+          },
+          devices: {
+            type: "string",
+            nullable: true,
+          },
+          isActive: {
+            type: "boolean",
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          status: {
+            type: "string",
+            nullable: true,
+          },
+          subStatus: {
+            type: "string",
+            nullable: true,
+          },
+          is_new_user: {
+            type: "boolean",
+          },
+          _id: {
+            type: "string",
+          },
+          modes: {
+            $ref: "#/components/schemas/Modes1",
+          },
+          first_name: {
+            type: "string",
+          },
+          last_name: {
+            type: "string",
+          },
+          phone: {
+            type: "string",
+          },
+          secondary_no: {
+            type: "string",
+          },
+          profile_image: {
+            type: "string",
+          },
+          is_profile_from_social_media: {
+            type: "string",
+          },
+          media_profile_url: {
+            type: "string",
+          },
+          phones: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Phone",
+            },
+            description: "",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+          user_status: {
+            $ref: "#/components/schemas/UserStatus",
+          },
+        },
+        example: {
+          role: "USER",
+          devices: null,
+          isActive: true,
+          isDeleted: false,
+          status: null,
+          subStatus: null,
+          is_new_user: true,
+          _id: "6195f3e40ba05e4c53063e94",
+          modes: {
+            workLifeBalance: {
+              is_active: false,
+              data: null,
+            },
+            roadSafetyStatus: {
+              is_active: true,
+              devices: ["JBL Enduarance", "Boat Rokerz"],
+              data: {
+                selected_device: "Boat Rokerz",
+                display_to: "contacts",
+                auto_sms: false,
+                notes: {
+                  is_custom: true,
+                  text: "Not available",
+                },
+                status: {
+                  user: null,
+                  applicable_types: ["618fb99bc8ba53856cbf0459"],
+                  isDeleted: false,
+                  _id: "619b27747a4897f6abd7338b",
+                  status: "Driving",
+                  priority: 0,
+                  logo: null,
+                  createdAt: "2021-11-22T05:15:32.942Z",
+                  updatedAt: "2021-11-22T05:15:32.942Z",
+                  __v: 0,
+                },
+              },
+            },
+            syncCalender: {
+              calenders: null,
+            },
+          },
+          first_name: "firstName",
+          last_name: "lastName",
+          phone: "+919764569876",
+          secondary_no: "+918980514085",
+          profile_image: "profile_images/1637303316530.jpeg",
+          is_profile_from_social_media: "false",
+          media_profile_url: "",
+          phones: [
+            {
+              used_for_login: true,
+              _id: "6195f3e40ba05e4c53063e95",
+              no: "+919764569876",
+              type: "PRIMARY",
+            },
+            {
+              used_for_login: true,
+              _id: "619730890cd6d371f3aa2e6e",
+              no: "+918980514085",
+              type: "SECONDARY",
+            },
+          ],
+          createdAt: "2021-11-18T06:34:12.028Z",
+          updatedAt: "2021-11-24T08:14:00.851Z",
+          __v: 0,
+          user_status: {
+            name: "abc",
+            status: {
+              sub_status: {
+                user: null,
+                isDeleted: false,
+                _id: "6195023525c96ee17567830d",
+                status: "DND11111",
+                parentId: "6195004219517edbb9a32dde",
+                logo: "status_images/1637155378453.png",
+                createdAt: "2021-11-17T13:23:01.173Z",
+                updatedAt: "2021-11-18T10:31:02.505Z",
+                __v: 0,
+              },
+              _id: "6195004219517edbb9a32dde",
+              user: null,
+              applicable_types: [
+                "618fb8e614842f8284d028dd",
+                "618fb99bc8ba53856cbf0459",
+              ],
+              isDeleted: false,
+              status: "Do not Disturb",
+              priority: 0,
+              logo: "status_images/1637230992831.png",
+              createdAt: "2021-11-17T13:14:42.642Z",
+              updatedAt: "2021-11-18T10:27:23.281Z",
+              __v: 0,
+            },
+          },
+        },
+      },
+      Modes1: {
+        title: "Modes1",
+        required: ["workLifeBalance", "roadSafetyStatus", "syncCalender"],
+        type: "object",
+        properties: {
+          workLifeBalance: {
+            $ref: "#/components/schemas/WorkLifeBalance",
+          },
+          roadSafetyStatus: {
+            $ref: "#/components/schemas/RoadSafetyStatus1",
+          },
+          syncCalender: {
+            $ref: "#/components/schemas/SyncCalender1",
+          },
+        },
+        example: {
+          workLifeBalance: {
+            is_active: false,
+            data: null,
+          },
+          roadSafetyStatus: {
+            is_active: true,
+            devices: ["JBL Enduarance", "Boat Rokerz"],
+            data: {
+              selected_device: "Boat Rokerz",
+              display_to: "contacts",
+              auto_sms: false,
+              notes: {
+                is_custom: true,
+                text: "Not available",
+              },
+              status: {
+                user: null,
+                applicable_types: ["618fb99bc8ba53856cbf0459"],
+                isDeleted: false,
+                _id: "619b27747a4897f6abd7338b",
+                status: "Driving",
+                priority: 0,
+                logo: null,
+                createdAt: "2021-11-22T05:15:32.942Z",
+                updatedAt: "2021-11-22T05:15:32.942Z",
+                __v: 0,
+              },
+            },
+          },
+          syncCalender: {
+            calenders: null,
+          },
+        },
+      },
+      RoadSafetyStatus1: {
+        title: "RoadSafetyStatus1",
+        required: ["is_active", "devices", "data"],
+        type: "object",
+        properties: {
+          is_active: {
+            type: "boolean",
+          },
+          devices: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          data: {
+            $ref: "#/components/schemas/Data8",
+          },
+        },
+        example: {
+          is_active: true,
+          devices: ["JBL Enduarance", "Boat Rokerz"],
+          data: {
+            selected_device: "Boat Rokerz",
+            display_to: "contacts",
+            auto_sms: false,
+            notes: {
+              is_custom: true,
+              text: "Not available",
+            },
+            status: {
+              user: null,
+              applicable_types: ["618fb99bc8ba53856cbf0459"],
+              isDeleted: false,
+              _id: "619b27747a4897f6abd7338b",
+              status: "Driving",
+              priority: 0,
+              logo: null,
+              createdAt: "2021-11-22T05:15:32.942Z",
+              updatedAt: "2021-11-22T05:15:32.942Z",
+              __v: 0,
+            },
+          },
+        },
+      },
+      Data8: {
+        title: "Data8",
+        required: [
+          "selected_device",
+          "display_to",
+          "auto_sms",
+          "notes",
+          "status",
+        ],
+        type: "object",
+        properties: {
+          selected_device: {
+            type: "string",
+          },
+          display_to: {
+            type: "string",
+          },
+          auto_sms: {
+            type: "boolean",
+          },
+          notes: {
+            $ref: "#/components/schemas/Notes2",
+          },
+          status: {
+            $ref: "#/components/schemas/Status2",
+          },
+        },
+        example: {
+          selected_device: "Boat Rokerz",
+          display_to: "contacts",
+          auto_sms: false,
+          notes: {
+            is_custom: true,
+            text: "Not available",
+          },
+          status: {
+            user: null,
+            applicable_types: ["618fb99bc8ba53856cbf0459"],
+            isDeleted: false,
+            _id: "619b27747a4897f6abd7338b",
+            status: "Driving",
+            priority: 0,
+            logo: null,
+            createdAt: "2021-11-22T05:15:32.942Z",
+            updatedAt: "2021-11-22T05:15:32.942Z",
+            __v: 0,
+          },
+        },
+      },
+      Notes2: {
+        title: "Notes2",
+        required: ["is_custom", "text"],
+        type: "object",
+        properties: {
+          is_custom: {
+            type: "boolean",
+          },
+          text: {
+            type: "string",
+          },
+        },
+        example: {
+          is_custom: true,
+          text: "Not available",
+        },
+      },
+      Status2: {
+        title: "Status2",
+        required: [
+          "user",
+          "applicable_types",
+          "isDeleted",
+          "_id",
+          "status",
+          "priority",
+          "logo",
+          "createdAt",
+          "updatedAt",
+          "__v",
+        ],
+        type: "object",
+        properties: {
+          user: {
+            type: "string",
+            nullable: true,
+          },
+          applicable_types: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          isDeleted: {
+            type: "boolean",
+          },
+          _id: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          priority: {
+            type: "integer",
+            format: "int32",
+          },
+          logo: {
+            type: "file",
+            nullable: true,
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          __v: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          user: null,
+          applicable_types: ["618fb99bc8ba53856cbf0459"],
+          isDeleted: false,
+          _id: "619b27747a4897f6abd7338b",
+          status: "Driving",
+          priority: 0,
+          logo: null,
+          createdAt: "2021-11-22T05:15:32.942Z",
+          updatedAt: "2021-11-22T05:15:32.942Z",
+          __v: 0,
+        },
+      },
+      SyncCalender1: {
+        title: "SyncCalender1",
+        required: ["calenders"],
+        type: "object",
+        properties: {
+          calenders: {
+            type: "string",
+            nullable: true,
+          },
+        },
+        example: {
+          calenders: null,
         },
       },
       AddGlobalstatusRequest: {
@@ -4686,16 +5858,18 @@ export default {
           },
         },
         example: {
-          status: "Do not Disturb1",
+          status: "Busy",
           applicable_types: [
-            "618fb8e614842f8284d028dd",
             "618fb99bc8ba53856cbf0459",
+            "618fba343bc52886fb4f6b7d",
+            "618fba473bc52886fb4f6b83",
+            "619b27cc7a4897f6abd7338e",
           ],
           priority: 0,
         },
       },
-      m20015: {
-        title: "m20015",
+      m20018: {
+        title: "m20018",
         required: ["success", "message", "data"],
         type: "object",
         properties: {
@@ -4708,7 +5882,7 @@ export default {
           data: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Data6",
+              $ref: "#/components/schemas/Data9",
             },
             description: "",
           },
@@ -4800,8 +5974,8 @@ export default {
           ],
         },
       },
-      Data6: {
-        title: "Data6",
+      Data9: {
+        title: "Data9",
         required: [
           "_id",
           "user",
@@ -5019,8 +6193,8 @@ export default {
           __v: 0,
         },
       },
-      m20016: {
-        title: "m20016",
+      m20019: {
+        title: "m20019",
         required: ["success", "message", "data"],
         type: "object",
         properties: {
@@ -5031,7 +6205,7 @@ export default {
             type: "string",
           },
           data: {
-            $ref: "#/components/schemas/Data7",
+            $ref: "#/components/schemas/Data10",
           },
         },
         example: {
@@ -5054,8 +6228,8 @@ export default {
           },
         },
       },
-      Data7: {
-        title: "Data7",
+      Data10: {
+        title: "Data10",
         required: [
           "user",
           "applicable_types",
@@ -5153,8 +6327,8 @@ export default {
           priority: 0,
         },
       },
-      m20018: {
-        title: "m20018",
+      m20021: {
+        title: "m20021",
         required: ["success", "message", "data"],
         type: "object",
         properties: {
@@ -5165,7 +6339,7 @@ export default {
             type: "string",
           },
           data: {
-            $ref: "#/components/schemas/Data9",
+            $ref: "#/components/schemas/Data12",
           },
         },
         example: {
@@ -5188,8 +6362,8 @@ export default {
           },
         },
       },
-      Data9: {
-        title: "Data9",
+      Data12: {
+        title: "Data12",
         required: [
           "user",
           "applicable_types",
@@ -5259,8 +6433,8 @@ export default {
           __v: 0,
         },
       },
-      m20020: {
-        title: "m20020",
+      m20023: {
+        title: "m20023",
         required: ["success", "message", "data"],
         type: "object",
         properties: {
@@ -5271,7 +6445,7 @@ export default {
             type: "string",
           },
           data: {
-            $ref: "#/components/schemas/Data10",
+            $ref: "#/components/schemas/Data13",
           },
         },
         example: {
@@ -5290,8 +6464,8 @@ export default {
           },
         },
       },
-      Data10: {
-        title: "Data10",
+      Data13: {
+        title: "Data13",
         required: [
           "user",
           "isDeleted",
@@ -5347,8 +6521,8 @@ export default {
           __v: 0,
         },
       },
-      m20021: {
-        title: "m20021",
+      m20024: {
+        title: "m20024",
         required: ["success", "message", "data"],
         type: "object",
         properties: {
@@ -5369,6 +6543,60 @@ export default {
           data: null,
         },
       },
+      NewNotesRequest: {
+        title: "NewNotesRequest",
+        required: ["text", "display_to", "type", "auto_sms", "is_admin"],
+        type: "object",
+        properties: {
+          text: {
+            type: "string",
+          },
+          display_to: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+          auto_sms: {
+            type: "boolean",
+          },
+          is_admin: {
+            type: "boolean",
+          },
+        },
+        example: {
+          text: "I am driving, please call me later",
+          display_to: "ALL",
+          type: "ROAD SAFETY",
+          auto_sms: false,
+          is_admin: true,
+        },
+      },
+      NotesUpdateRequest: {
+        title: "NotesUpdateRequest",
+        required: ["text", "display_to", "type", "auto_sms"],
+        type: "object",
+        properties: {
+          text: {
+            type: "string",
+          },
+          display_to: {
+            type: "string",
+          },
+          type: {
+            type: "string",
+          },
+          auto_sms: {
+            type: "boolean",
+          },
+        },
+        example: {
+          text: "I am driving, please call me later",
+          display_to: "CONTACTS",
+          type: "ROAD SAFETY",
+          auto_sms: true,
+        },
+      },
       globaltypeeaddrequest: {
         title: "globaltypeeaddrequest",
         required: ["type", "order"],
@@ -5383,7 +6611,7 @@ export default {
           },
         },
         example: {
-          type: "AUTO_STATUS1",
+          type: "GENERAL",
           order: 7,
         },
       },
@@ -5405,8 +6633,8 @@ export default {
           order: 7,
         },
       },
-      m20024: {
-        title: "m20024",
+      m20027: {
+        title: "m20027",
         required: ["success", "message", "data"],
         type: "object",
         properties: {
@@ -5419,7 +6647,7 @@ export default {
           data: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Data11",
+              $ref: "#/components/schemas/Data14",
             },
             description: "",
           },
@@ -5487,8 +6715,8 @@ export default {
           ],
         },
       },
-      Data11: {
-        title: "Data11",
+      Data14: {
+        title: "Data14",
         required: ["_id", "type", "order", "createdAt", "updatedAt", "__v"],
         type: "object",
         properties: {
@@ -5574,7 +6802,7 @@ export default {
             nullable: true,
           },
           notes: {
-            $ref: "#/components/schemas/Notes1",
+            $ref: "#/components/schemas/Notes2",
           },
           display_to: {
             type: "string",
@@ -5602,23 +6830,6 @@ export default {
           auto_sms: true,
         },
       },
-      Notes1: {
-        title: "Notes1",
-        required: ["is_custom", "text"],
-        type: "object",
-        properties: {
-          is_custom: {
-            type: "boolean",
-          },
-          text: {
-            type: "string",
-          },
-        },
-        example: {
-          is_custom: true,
-          text: "text for sending sms",
-        },
-      },
       customstatusupdaterequest: {
         title: "customstatusupdaterequest",
         required: ["status", "workLife"],
@@ -5627,7 +6838,7 @@ export default {
           status: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Status2",
+              $ref: "#/components/schemas/Status4",
             },
             description: "",
           },
@@ -5700,8 +6911,8 @@ export default {
           },
         },
       },
-      Status2: {
-        title: "Status2",
+      Status4: {
+        title: "Status4",
         required: [
           "customId",
           "custom_name",
@@ -5753,7 +6964,7 @@ export default {
             nullable: true,
           },
           notes: {
-            $ref: "#/components/schemas/Notes1",
+            $ref: "#/components/schemas/Notes2",
           },
           display_to: {
             type: "string",
@@ -5802,8 +7013,8 @@ export default {
           Excluded_dates: ["11/12/2021", "20/12/2021"],
         },
       },
-      m20028: {
-        title: "m20028",
+      m20031: {
+        title: "m20031",
         required: ["sucess", "message", "data"],
         type: "object",
         properties: {
@@ -5814,7 +7025,7 @@ export default {
             type: "string",
           },
           data: {
-            $ref: "#/components/schemas/Data12",
+            $ref: "#/components/schemas/Data15",
           },
         },
         example: {
@@ -5879,15 +7090,15 @@ export default {
           },
         },
       },
-      Data12: {
-        title: "Data12",
+      Data15: {
+        title: "Data15",
         required: ["status", "worklife"],
         type: "object",
         properties: {
           status: {
             type: "array",
             items: {
-              $ref: "#/components/schemas/Status3",
+              $ref: "#/components/schemas/Status5",
             },
             description: "",
           },
@@ -5953,8 +7164,8 @@ export default {
           },
         },
       },
-      Status3: {
-        title: "Status3",
+      Status5: {
+        title: "Status5",
         required: [
           "_id",
           "notes",
@@ -5982,7 +7193,7 @@ export default {
             type: "string",
           },
           notes: {
-            $ref: "#/components/schemas/Notes3",
+            $ref: "#/components/schemas/Notes5",
           },
           is_allday_status: {
             type: "boolean",
@@ -6065,8 +7276,8 @@ export default {
           __v: 0,
         },
       },
-      Notes3: {
-        title: "Notes3",
+      Notes5: {
+        title: "Notes5",
         required: ["noteId", "is_custom", "text"],
         type: "object",
         properties: {

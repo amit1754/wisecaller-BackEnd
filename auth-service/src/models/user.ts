@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { globalTypeModel } from "../models/globalType.Model";
 
 const UserSchema = new Schema(
   {
@@ -69,7 +70,11 @@ const UserSchema = new Schema(
       },
       roadSafetyStatus: {
         is_active: { type: Boolean, default: false },
-        devices: { type: Schema.Types.Mixed, default: null },
+        devices: {
+          type: Schema.Types.Mixed,
+          default: null,
+          ref: globalTypeModel,
+        },
         data: { type: Schema.Types.Mixed, default: null },
       },
       syncCalender: {

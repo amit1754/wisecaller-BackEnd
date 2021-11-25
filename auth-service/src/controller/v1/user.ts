@@ -7,12 +7,29 @@ import { deletefile } from "../../middlewares/uploadService";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
 import { Notes } from "../../models/notes";
+import { globalTypeModel } from "../../models/globalType.Model";
 
 class UserController {
   async show(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
       let user: any = await User.findOne({ _id: loggedInUser._id });
+      if (user?.user_status?.status?.applicable_types) {
+        user.user_status.status.applicable_types = await globalTypeModel.find({
+          _id: { $in: user?.user_status?.status?.applicable_types },
+        });
+      }
+
+      if (user?.modes?.roadSafetyStatus?.data?.status?.applicable_types) {
+        user.modes.roadSafetyStatus.data.status.applicable_types =
+          await globalTypeModel.find({
+            _id: {
+              $in: user?.modes?.roadSafetyStatus?.data?.status
+                ?.applicable_types,
+            },
+          });
+      }
+
       if (user?.user_status?.status?.status_notes?.id) {
         let notesData = await Notes.findById(
           user?.user_status?.status?.status_notes?.id

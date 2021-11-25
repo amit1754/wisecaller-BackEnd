@@ -23,7 +23,7 @@ const CallHistorySchema = new Schema(
 
     callHistory: [
       {
-        time: { type: String },
+        time: { type: Date },
         type: { type: String },
         simId: { type: String, default: "sim1" },
       },

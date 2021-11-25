@@ -53,7 +53,7 @@ class callHistory {
             list: { $push: "$$ROOT" },
           },
         },
-        { $sort: { _id: -1 } },
+        { $sort: { _id: 1 } },
         {
           $project: {
             date: "$_id",
@@ -68,7 +68,7 @@ class callHistory {
             "list.number": 1,
             "list.status.notes": 1,
             "list.userDetails": 1,
-            "list.contact_details": 1,
+            "list.contact": 1,
           },
         },
       ]);
@@ -133,17 +133,20 @@ class callHistory {
     try {
       let reqestData: any = req.body;
       const loginUser: any = req.user;
+      console.log(reqestData.phone, loginUser._id);
       let callerHistory: any = await CallHistory.findOne({
-        number: reqestData.callerId,
+        phone: reqestData.phone,
+        user: loginUser._id,
       });
+
       if (callerHistory) {
         let callerUpdate = {
-          time: reqestData.time,
+          time: reqestData.date_time,
           type: reqestData.type,
           simId: reqestData.simId,
         };
         callerHistory.callHistory.push(callerUpdate);
-        let user = await CallHistory.findOneAndUpdate(
+        await CallHistory.findOneAndUpdate(
           { _id: callerHistory._id },
           callerHistory,
           {
@@ -151,24 +154,24 @@ class callHistory {
             new: true,
           }
         );
-        return res.status(200).json({ success: true, data: user });
       } else {
         reqestData.callHistory = {
-          time: reqestData.time,
+          time: reqestData.date_time,
           type: reqestData.type,
           simId: reqestData.simId,
         };
 
-        let data = await User.findOne({ mobileNo: reqestData.callerId });
-        if (data) {
-          reqestData.number = reqestData.callerId;
-          reqestData.callerId = data._id;
-        } else {
-          reqestData.number = reqestData.callerId;
-          reqestData.callerId = null;
-        }
+        // let data = await User.findOne({ mobileNo: reqestData.callerId });
+        // if (data) {
+        //   reqestData.number = reqestData.callerId;
+        //   reqestData.callerId = data._id;
+        // } else {
+        //   reqestData.number = reqestData.callerId;
+        //   reqestData.callerId = null;
+        // }
+        reqestData.date = reqestData.date_time;
 
-        reqestData.wisecallerId = loginUser._id;
+        reqestData.user = loginUser._id;
 
         const callHistorySave = new CallHistory(reqestData);
         await callHistorySave.save();
@@ -183,25 +186,14 @@ class callHistory {
   }
   async deleteNumber(req: Request, res: Response) {
     try {
-      const requestData = req.body;
+      const requestData: any = req;
       const loginUser: any = req.user;
-      const { callDetails } = requestData;
+      const id = requestData.params.id;
 
-      const contactDetailsGet = await CallHistory.findOne({
-        callLogs: { $elemMatch: { _id: requestData.callLogId } },
+      await CallHistory.findOneAndRemove({
+        _id: id,
+        user: loginUser._id,
       });
-
-      const a = map(contactDetailsGet.callLogs, function (o: any) {
-        if (o._id == requestData.callLogId) {
-          o.callList.pop();
-        }
-        return o;
-      });
-      await CallHistory.findOneAndUpdate(
-        { user: loginUser._id },
-        { callLogs: a },
-        { upsert: true, new: true }
-      );
 
       res.status(200).json({ success: true, message: "success", data: [] });
     } catch (error: any) {

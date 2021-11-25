@@ -21,12 +21,11 @@ class ContactSyncController {
           let contact: any = data[i];
           for (let j = 0; j < contact.phones.length; j++) {
             const userContactFind = await User.findOne({
-              mobileNo: contact.phones[j].ph_no,
+              "phones.no": contact.phones[j].ph_no,
             });
-            if (userContactFind)
-              contact.phones[j].wisecallerId = userContactFind._id;
-          }
 
+            if (userContactFind) data[i].contact = userContactFind._id;
+          }
           const contactSave = new UserContact(contact);
           await contactSave.save();
         }
@@ -37,7 +36,13 @@ class ContactSyncController {
         data: [],
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+       if (error.code === 11000) {
+         res
+           .status(400)
+           .json({ success: false, message: "conatct already exists with contactId" });
+       } else {
+         res.status(500).json({ success: false, message: error.message });
+       }
     }
   }
 
@@ -65,17 +70,29 @@ class ContactSyncController {
         });
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      if (error.code === 11000) {
+        res
+          .status(400)
+          .json({
+            success: false,
+            message: "conatct already exists with contactId",
+          });
+      } else {
+        res.status(500).json({ success: false, message: error.message });
+      }
     }
   }
 
   async getAll(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      const userContactFind = await UserContact.findOne({
-        user: loggedInUser._id,
-      }).populate({
-        path: "user",
+      const userContactFind = await UserContact.find(
+        {
+          user: loggedInUser._id,
+        },
+        { user: 0 }
+      ).populate({
+        path: "contact",
         populate: [
           {
             path: "status",
@@ -132,29 +149,32 @@ class ContactSyncController {
       const loginUser: any = req.user;
       let length = data.length;
       for (let i = 0; i < length; i++) {
-        data[i].user = loginUser._id;
-        let contact: any = data[i];
-        for (let j = 0; j < contact.phones.length; j++) {
-          const userContactFind = await User.findOne({
-            mobileNo: contact.phones[j].ph_no,
-          });
-          if (userContactFind)
-            contact.phones[j].wisecallerId = userContactFind._id;
-          else contact.phones[j].wisecallerId = null;
-        }
-        let customId = contact.customId;
-        delete contact.customId;
-
-        await UserContact.findOneAndUpdate(
-          {
-            customId: customId,
-          },
-          contact,
-          {
-            upsert: true,
-            new: true,
+        if (data[i].is_deleted === false) {
+          data[i].user = loginUser._id;
+          let contact: any = data[i];
+          for (let j = 0; j < contact.phones.length; j++) {
+            const userContactFind = await User.findOne({
+              "phones.no": contact.phones[j].ph_no,
+            });
+            if (userContactFind) data[i].contact = userContactFind._id;
+            else contact.phones[j].wisecallerId = null;
           }
-        );
+          let customId = contact.contactId;
+          delete contact.contactId;
+
+          await UserContact.findOneAndUpdate(
+            {
+              contactId: customId,
+            },
+            contact,
+            {
+              upsert: true,
+              new: true,
+            }
+          );
+        } else {
+          await UserContact.findOneAndRemove({ contactId: data[i].contactId });
+        }
       }
       res.status(200).json({
         success: true,
@@ -170,42 +190,48 @@ class ContactSyncController {
     try {
       let search = req.body.phone_number;
       const loggedInUser: any = req.user;
-      const userContactFind = await UserContact.aggregate([
+      const userContactFind = await UserContact.find(
         {
-          $match: {
-            $and: [
-              { "phones.ph_no": { $regex: search, $options: "ig" } },
-              { user: loggedInUser._id },
-            ],
-          },
-        },
+          "phones.ph_no": { $regex: search, $options: "ig" },
+          user: loggedInUser._id,
+        });
 
-        {
-          $lookup: {
-            from: "users",
-            localField: "phones.wisecallerId",
-            foreignField: "_id",
-            as: "wisecallerUser",
-          },
-        },
-        {
-          $lookup: {
-            from: "usersatus",
-            localField: "wisecallerUser.status",
-            foreignField: "_id",
-            as: "userStatus",
-          },
-        },
-        {
-          $lookup: {
-            from: "usersubstatuses",
-            localField: "wisecallerUser.subStatus",
-            foreignField: "_id",
-            as: "userSubStatus",
-          },
-        },
-        { $sort: { first_name: 1 } },
-      ]);
+      // aggregate([
+      //   {
+      //     $match: {
+      //       $and: [
+      //         { "phones.ph_no": { $regex: search, $options: "ig" } },
+      //         { user: loggedInUser._id },
+      //       ],
+      //     },
+      //   },
+
+      //   {
+      //     $lookup: {
+      //       from: "users",
+      //       localField: "phones.wisecallerId",
+      //       foreignField: "_id",
+      //       as: "wisecallerUser",
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "usersatus",
+      //       localField: "wisecallerUser.status",
+      //       foreignField: "_id",
+      //       as: "userStatus",
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "usersubstatuses",
+      //       localField: "wisecallerUser.subStatus",
+      //       foreignField: "_id",
+      //       as: "userSubStatus",
+      //     },
+      //   },
+      //   { $sort: { first_name: 1 } },
+      // ]);
       res.status(200).json({
         success: true,
         message: "data get successful",
@@ -219,30 +245,16 @@ class ContactSyncController {
     try {
       let search = req.body.phone_number;
       const loggedInUser: any = req.user;
-      const userContactFind = await User.aggregate([
-        {
-          $match: {
-            mobileNo: { $regex: search, $options: "ig" },
-          },
-        },
-
-        {
-          $lookup: {
-            from: "usersatus",
-            localField: "status",
-            foreignField: "_id",
-            as: "userStatus",
-          },
-        },
-        {
-          $lookup: {
-            from: "usersubstatuses",
-            localField: "subStatus",
-            foreignField: "_id",
-            as: "userSubStatus",
-          },
-        },
-      ]);
+      const userContactFind = await User.find({
+        "phones.no": { $regex: search, $options: "ig" },
+      });
+      // aggregate([
+      //   {
+      //     $match: {
+      //       "phones.no": { $regex: search, $options: "ig" },
+      //     },
+      //   },
+      // ]);
       res.status(200).json({
         success: true,
         message: "data get successful",
