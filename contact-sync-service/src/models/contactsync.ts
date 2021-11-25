@@ -30,7 +30,7 @@ const ContactSyncSchema = new Schema(
       {
         ph_no: { type: String, required: true },
         type: { type: String, required: true },
-        wisecallerId: { type: Schema.Types.ObjectId, default: null },
+        contact_id: { type: Schema.Types.ObjectId },
       },
     ],
   },

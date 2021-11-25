@@ -25,7 +25,6 @@ class ContactSyncController {
             });
             if (userContactFind)
               contact.phones[j].wisecallerId = userContactFind._id;
-            else contact.phones[j].wisecallerId = null;
           }
 
           const contactSave = new UserContact(contact);
@@ -73,36 +72,49 @@ class ContactSyncController {
   async getAll(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      const userContactFind = await UserContact.aggregate([
-        {
-          $match: { user: loggedInUser._id },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "phones.wisecallerId",
-            foreignField: "_id",
-            as: "wisecallerUser",
+      const userContactFind = await UserContact.findOne({
+        user: loggedInUser._id,
+      }).populate({
+        path: "user",
+        populate: [
+          {
+            path: "status",
           },
-        },
-        {
-          $lookup: {
-            from: "usersatus",
-            localField: "wisecallerUser.status",
-            foreignField: "_id",
-            as: "userStatus",
+          {
+            path: "subStatus",
           },
-        },
-        {
-          $lookup: {
-            from: "usersubstatuses",
-            localField: "wisecallerUser.subStatus",
-            foreignField: "_id",
-            as: "userSubStatus",
-          },
-        },
-        { $sort: { first_name: 1 } },
-      ]);
+        ],
+      });
+      // const userContactFind = await UserContact.aggregate([
+      //   {
+      //     $match: { user: loggedInUser._id },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "users",
+      //       localField: "user",
+      //       foreignField: "_id",
+      //       as: "user",
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "usersatus",
+      //       localField: "user.status",
+      //       foreignField: "_id",
+      //       as: "user.status",
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "usersubstatuses",
+      //       localField: "user.subStatus",
+      //       foreignField: "_id",
+      //       as: "user.subStatus",
+      //     },
+      //   },
+      //   { $sort: { first_name: 1 } },
+      // ]);
 
       res.status(200).json({
         success: true,
