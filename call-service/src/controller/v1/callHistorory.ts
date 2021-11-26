@@ -9,18 +9,33 @@ class callHistory {
     try {
       const loginUser: any = req.user;
       let { body }: any = req;
+      console.log("body.length", body.length);
       for (let index = 0; index < body.length; index++) {
-        body[index].user = loginUser._id;
-        const getContact = await UserContact.findOne({
-          "phones.ph_no": body[index].phone,
-        });
-        if (getContact) {
-          body[index].contactId = getContact._id;
+        console.log("body[index]", body[index].is_deleted);
+        if (body[index].is_deleted === false) {
+          body[index].user = loginUser._id;
+          const getContact = await UserContact.findOne({
+            "phones.ph_no": body[index].phone,
+          });
+          if (getContact) {
+            body[index].contactId = getContact._id;
+          }
+       let a=   await CallHistory.findOneAndUpdate(
+            { caller_history_id: body[index].caller_history_id },
+            body[index],
+            {
+              upsert: true,
+              new: true,
+            }
+          );
+          
+        } else {
+          await CallHistory.findOneAndRemove({
+            caller_history_id: body[index].caller_history_id,
+            user: loginUser._id,
+          });
         }
       }
-
-      await CallHistory.insertMany(body);
-
       res.status(200).json({ success: true, message: "Sucess", data: [] });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
@@ -54,23 +69,25 @@ class callHistory {
           },
         },
         { $sort: { _id: 1 } },
-        {
-          $project: {
-            date: "$_id",
-            _id: 0,
-            "list._id": 1,
-            "list.phone": 1,
-            "list.name": 1,
-            "list.callHistory": 1,
-            "list.date": 1,
-            "list.createdAt": 1,
-            "list.updatedAt": 1,
-            "list.number": 1,
-            "list.status.notes": 1,
-            "list.userDetails": 1,
-            "list.contact": 1,
-          },
-        },
+        // {
+        //   $project: {
+        //     date: "$_id",
+        //     _id: 0,
+        //     "list._id": 1,
+        //     "list.phone": 1,
+        //     "list.name": 1,
+        //     "list.callHistory": 1,
+        //     "list.is_deleted": 1,
+        //     "list.caller_history_id": 1,
+        //     "list.date": 1,
+        //     "list.createdAt": 1,
+        //     "list.updatedAt": 1,
+        //     "list.number": 1,
+        //     "list.status.notes": 1,
+        //     "list.userDetails": 1,
+        //     "list.contact": 1,
+        //   },
+        // },
       ]);
 
       res

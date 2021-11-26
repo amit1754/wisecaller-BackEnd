@@ -32,6 +32,13 @@ const CallHistorySchema = new Schema(
     date: {
       type: Date,
     },
+    caller_history_id: {
+      type: String,
+    },
+    is_deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

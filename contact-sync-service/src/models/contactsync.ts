@@ -4,7 +4,6 @@ const ContactSyncSchema = new Schema(
   {
     contactId: {
       type: Number,
-      unique: true,
     },
     user: {
       type: Schema.Types.ObjectId,

@@ -7,8 +7,7 @@ export default {
   },
   servers: [
     {
-      // url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
-      url: "http://localhost:8000",
+      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
       variables: {},
     },
   ],
@@ -118,37 +117,80 @@ export default {
                   $ref: "#/components/schemas/m200",
                 },
                 example: {
-                  sucess: true,
+                  success: true,
                   message: "User Profile details get successfully",
                   data: {
-                    _id: "6194fe948f13a1d59d11df22",
-                    first_name: " tushar",
-                    last_name: "savaliya",
-                    phone: "+918849455045",
+                    modes: {
+                      workLifeBalance: {
+                        is_active: false,
+                        data: null,
+                      },
+                      roadSafety: {
+                        is_active: false,
+                        devices: null,
+                        data: null,
+                      },
+                      syncCalender: {
+                        calenders: null,
+                        prioritize_calender_events: false,
+                      },
+                      roadSafetyStatus: {
+                        is_active: true,
+                        devices: ["JBL Enduarance", "Boat Rokerz"],
+                        data: {
+                          selected_device: "Boat Rokerz",
+                          display_to: "contacts",
+                          auto_sms: false,
+                          notes: {
+                            is_custom: true,
+                            text: "Not available",
+                          },
+                          status: {
+                            user: null,
+                            applicable_types: ["618fb99bc8ba53856cbf0459"],
+                            isDeleted: false,
+                            _id: "619b27747a4897f6abd7338b",
+                            status: "Driving",
+                            priority: 0,
+                            logo: null,
+                            createdAt: "2021-11-22T05:15:32.942Z",
+                            updatedAt: "2021-11-22T05:15:32.942Z",
+                            __v: 0,
+                          },
+                        },
+                      },
+                    },
+                    first_name: "firstName",
+                    last_name: "lastName",
+                    phone: "+919764569876",
                     secondary_no: "+918980514085",
-                    profile_image: null,
-                    is_profile_from_social_media: " false",
-                    media_profile_url: " ",
+                    profile_image:
+                      "https://wisecaller-images.s3.us-east-1.amazonaws.com/profile_images/1637303316530.jpeg",
+                    is_profile_from_social_media: "false",
+                    media_profile_url: "",
+                    email: null,
                     role: "ADMIN",
                     devices: null,
+                    is_new_user: true,
                     isActive: true,
                     isDeleted: false,
+                    _id: "6195f3e40ba05e4c53063e94",
                     phones: [
                       {
                         used_for_login: true,
-                        _id: "6194fe948f13a1d59d11df23",
-                        no: "+918849455045",
+                        _id: "6195f3e40ba05e4c53063e95",
+                        no: "+919764569876",
                         type: "PRIMARY",
                       },
                       {
                         used_for_login: true,
-                        _id: "6194fedc8f13a1d59d11df2c",
+                        _id: "619730890cd6d371f3aa2e6e",
                         no: "+918980514085",
                         type: "SECONDARY",
                       },
                     ],
-                    createdAt: "2021-11-17T13:07:32.717Z",
-                    updatedAt: "2021-11-18T08:50:54.681Z",
+                    createdAt: "2021-11-18T06:34:12.028Z",
+                    updatedAt: "2021-11-26T09:42:16.746Z",
                     __v: 0,
                     user_status: {
                       name: "abc",
@@ -157,25 +199,39 @@ export default {
                           user: null,
                           isDeleted: false,
                           _id: "6195023525c96ee17567830d",
-                          status: "DND2",
+                          status: "DND11111",
                           parentId: "6195004219517edbb9a32dde",
-                          logo: "status_images/1637155378453.png",
+                          logo: "https://wisecaller-images.s3.us-east-1.amazonaws.com/status_images/1637155378453.png",
                           createdAt: "2021-11-17T13:23:01.173Z",
-                          updatedAt: "2021-11-17T13:23:01.173Z",
+                          updatedAt: "2021-11-18T10:31:02.505Z",
                           __v: 0,
                         },
                         _id: "6195004219517edbb9a32dde",
                         user: null,
                         applicable_types: [
-                          "618fb8e614842f8284d028dd",
-                          "618fb99bc8ba53856cbf0459",
+                          {
+                            _id: "618fb8e614842f8284d028dd",
+                            type: "SUPER_EVENTS",
+                            order: 2,
+                            createdAt: "2021-11-13T13:08:54.457Z",
+                            updatedAt: "2021-11-13T13:08:54.457Z",
+                            __v: 0,
+                          },
+                          {
+                            _id: "618fb99bc8ba53856cbf0459",
+                            type: "ROAD_SAFETY",
+                            order: 1,
+                            createdAt: "2021-11-13T13:11:55.724Z",
+                            updatedAt: "2021-11-13T13:11:55.724Z",
+                            __v: 0,
+                          },
                         ],
                         isDeleted: false,
                         status: "Do not Disturb",
                         priority: 0,
-                        logo: "status_images/1637155090761.png",
+                        logo: "https://wisecaller-images.s3.us-east-1.amazonaws.com/status_images/1637230992831.png",
                         createdAt: "2021-11-17T13:14:42.642Z",
-                        updatedAt: "2021-11-17T13:19:10.157Z",
+                        updatedAt: "2021-11-18T10:27:23.281Z",
                         __v: 0,
                       },
                     },
@@ -579,6 +635,7 @@ export default {
                 description: "",
                 example: [
                   {
+                    caller_history_id: 1,
                     phone: "+919714209234",
                     name: "abc",
                     callHistory: [
@@ -594,8 +651,11 @@ export default {
                       },
                     ],
                     date: "2021-11-13 10:20:22",
+                    is_deleted: false,
                   },
                   {
+                    caller_history_id: "2",
+                    is_deleted: false,
                     phone: "+919496955716",
                     name: "abcs",
                     callHistory: [
@@ -613,6 +673,8 @@ export default {
                     date: "2021-11-14 10:20:22",
                   },
                   {
+                    caller_history_id: "4",
+                    is_deleted: true,
                     phone: "+918989898989",
                     name: "abcs",
                     callHistory: [
@@ -631,59 +693,100 @@ export default {
                   },
                 ],
               },
-              example: [
-                {
-                  phone: "+919714209234",
-                  name: "abc",
-                  callHistory: [
-                    {
-                      time: "2021-12-12 11:00:00",
-                      type: "Incoming",
-                      simId: "sim1",
-                    },
-                    {
-                      time: "2021-12-12 11:00:00",
-                      type: "Outgoing",
-                      simId: "sim2",
-                    },
-                  ],
-                  date: "2021-11-13 10:20:22",
-                },
-                {
-                  phone: "+919496955716",
-                  name: "abcs",
-                  callHistory: [
-                    {
-                      time: "2021-12-12 11:00:00",
-                      type: "Incoming",
-                      simId: "sim1",
-                    },
-                    {
-                      time: "2021-12-12 11:00:00",
-                      type: "Outgoing",
-                      simId: "sim2",
-                    },
-                  ],
-                  date: "2021-11-14 10:20:22",
-                },
-                {
-                  phone: "+918989898989",
-                  name: "abcs",
-                  callHistory: [
-                    {
-                      time: "2021-12-12 11:00:00",
-                      type: "Incoming",
-                      simId: "sim1",
-                    },
-                    {
-                      time: "2021-12-12 11:00:00",
-                      type: "Outgoing",
-                      simId: "sim2",
-                    },
-                  ],
-                  date: "2021-11-14 10:20:22",
-                },
-              ],
+              example: {
+                success: true,
+                message: "Sucess",
+                data: [
+                  {
+                    _id: "2021-11-13",
+                    list: [
+                      {
+                        _id: "61a0cf9af01b8beeb2c047e5",
+                        caller_history_id: "1",
+                        __v: 0,
+                        callHistory: [
+                          {
+                            simId: "sim1",
+                            _id: "61a0cf9ad51a91a14d8a8749",
+                            time: "2021-12-12T05:30:00.000Z",
+                            type: "Incoming",
+                          },
+                          {
+                            simId: "sim2",
+                            _id: "61a0cf9ad51a91a14d8a874a",
+                            time: "2021-12-12T05:30:00.000Z",
+                            type: "Outgoing",
+                          },
+                        ],
+                        createdAt: "2021-11-26T12:14:18.312Z",
+                        date: "2021-11-13T04:50:22.000Z",
+                        is_deleted: false,
+                        name: "abc",
+                        phone: "+919714209234",
+                        updatedAt: "2021-11-26T12:14:18.312Z",
+                        user: "6195f3e40ba05e4c53063e94",
+                      },
+                    ],
+                  },
+                  {
+                    _id: "2021-11-14",
+                    list: [
+                      {
+                        _id: "61a0cf9bf01b8beeb2c047e8",
+                        caller_history_id: "2",
+                        __v: 0,
+                        callHistory: [
+                          {
+                            simId: "sim1",
+                            _id: "61a0cf9ad51a91a14d8a874d",
+                            time: "2021-12-12T05:30:00.000Z",
+                            type: "Incoming",
+                          },
+                          {
+                            simId: "sim2",
+                            _id: "61a0cf9ad51a91a14d8a874e",
+                            time: "2021-12-12T05:30:00.000Z",
+                            type: "Outgoing",
+                          },
+                        ],
+                        createdAt: "2021-11-26T12:14:18.950Z",
+                        date: "2021-11-14T04:50:22.000Z",
+                        is_deleted: false,
+                        name: "abcs",
+                        phone: "+919496955716",
+                        updatedAt: "2021-11-26T12:14:18.950Z",
+                        user: "6195f3e40ba05e4c53063e94",
+                      },
+                      {
+                        _id: "61a0cf9bf01b8beeb2c047ec",
+                        caller_history_id: "3",
+                        __v: 0,
+                        callHistory: [
+                          {
+                            simId: "sim1",
+                            _id: "61a0cf9bd51a91a14d8a8751",
+                            time: "2021-12-12T05:30:00.000Z",
+                            type: "Incoming",
+                          },
+                          {
+                            simId: "sim2",
+                            _id: "61a0cf9bd51a91a14d8a8752",
+                            time: "2021-12-12T05:30:00.000Z",
+                            type: "Outgoing",
+                          },
+                        ],
+                        createdAt: "2021-11-26T12:14:19.592Z",
+                        date: "2021-11-14T04:50:22.000Z",
+                        is_deleted: false,
+                        name: "abcs",
+                        phone: "+918989898989",
+                        updatedAt: "2021-11-26T12:14:19.592Z",
+                        user: "6195f3e40ba05e4c53063e94",
+                      },
+                    ],
+                  },
+                ],
+              },
             },
           },
           required: true,
@@ -729,122 +832,92 @@ export default {
                   message: "Sucess",
                   data: [
                     {
+                      _id: "2021-11-13",
                       list: [
                         {
-                          _id: "619f7a75f201eed14f9ae2be",
-                          phone: "+918849455045",
-                          name: "abc",
+                          _id: "61a0cf9af01b8beeb2c047e5",
+                          caller_history_id: "1",
+                          __v: 0,
                           callHistory: [
                             {
                               simId: "sim1",
-                              _id: "619f7a75f201eed14f9ae2bf",
+                              _id: "61a0cf9ad51a91a14d8a8749",
                               time: "2021-12-12T05:30:00.000Z",
                               type: "Incoming",
                             },
                             {
                               simId: "sim2",
-                              _id: "619f7a75f201eed14f9ae2c0",
+                              _id: "61a0cf9ad51a91a14d8a874a",
                               time: "2021-12-12T05:30:00.000Z",
                               type: "Outgoing",
                             },
-                            {
-                              simId: "sim2",
-                              _id: "619f7b7f71db91d4d6c7f973",
-                              time: "2021-12-12T05:30:00.000Z",
-                              type: "Incoming",
-                            },
                           ],
+                          createdAt: "2021-11-26T12:14:18.312Z",
                           date: "2021-11-13T04:50:22.000Z",
-                          createdAt: "2021-11-25T11:58:45.859Z",
-                          updatedAt: "2021-11-25T12:03:11.439Z",
-                          contact: {
-                            _id: "619f5ffcf01b8beeb2bfe93d",
-                            contactId: 150,
-                            __v: 0,
-                            createdAt: "2021-11-25T10:05:48.136Z",
-                            first_name: "tushar1",
-                            is_deleted: false,
-                            last_name: "savaliya1",
-                            local_profile_image_path: "contacts/abc.png",
-                            phones: [
-                              {
-                                _id: "619f612686750c993ef9f8de",
-                                ph_no: "+918849455045",
-                                type: "PRIMARY",
-                              },
-                              {
-                                _id: "619f612686750c993ef9f8df",
-                                ph_no: "+913216549870",
-                                type: "SECONDARY",
-                              },
-                              {
-                                _id: "619f612686750c993ef9f8e0",
-                                ph_no: "+911236547890",
-                                type: "OFFICE",
-                              },
-                              {
-                                _id: "619f612686750c993ef9f8e1",
-                                ph_no: "+917412589630",
-                                type: "HOME",
-                              },
-                            ],
-                            profile_image: null,
-                            updatedAt: "2021-11-25T10:10:46.622Z",
-                            user: "6195f3e40ba05e4c53063e94",
-                            contact: "6194fe948f13a1d59d11df22",
-                          },
+                          is_deleted: false,
+                          name: "abc",
+                          phone: "+919714209234",
+                          updatedAt: "2021-11-26T12:14:18.312Z",
+                          user: "6195f3e40ba05e4c53063e94",
                         },
                       ],
-                      date: "2021-11-13",
                     },
                     {
+                      _id: "2021-11-14",
                       list: [
                         {
-                          _id: "619f7a75f201eed14f9ae2c1",
-                          phone: "+919496955716",
-                          name: "abcs",
+                          _id: "61a0cf9bf01b8beeb2c047e8",
+                          caller_history_id: "2",
+                          __v: 0,
                           callHistory: [
                             {
                               simId: "sim1",
-                              _id: "619f7a75f201eed14f9ae2c2",
+                              _id: "61a0cf9ad51a91a14d8a874d",
                               time: "2021-12-12T05:30:00.000Z",
                               type: "Incoming",
                             },
                             {
                               simId: "sim2",
-                              _id: "619f7a75f201eed14f9ae2c3",
+                              _id: "61a0cf9ad51a91a14d8a874e",
                               time: "2021-12-12T05:30:00.000Z",
                               type: "Outgoing",
                             },
                           ],
+                          createdAt: "2021-11-26T12:14:18.950Z",
                           date: "2021-11-14T04:50:22.000Z",
-                          createdAt: "2021-11-25T11:58:45.860Z",
-                          updatedAt: "2021-11-25T11:58:45.860Z",
+                          is_deleted: false,
+                          name: "abcs",
+                          phone: "+919496955716",
+                          updatedAt: "2021-11-26T12:14:18.950Z",
+                          user: "6195f3e40ba05e4c53063e94",
                         },
                         {
-                          _id: "619f7a75f201eed14f9ae2c4",
-                          phone: "+918989898989",
-                          name: "abcs",
+                          _id: "61a0cf9bf01b8beeb2c047ec",
+                          caller_history_id: "3",
+                          __v: 0,
                           callHistory: [
                             {
                               simId: "sim1",
-                              _id: "619f7a75f201eed14f9ae2c5",
+                              _id: "61a0cf9bd51a91a14d8a8751",
                               time: "2021-12-12T05:30:00.000Z",
                               type: "Incoming",
                             },
                             {
                               simId: "sim2",
-                              _id: "619f7a75f201eed14f9ae2c6",
+                              _id: "61a0cf9bd51a91a14d8a8752",
                               time: "2021-12-12T05:30:00.000Z",
                               type: "Outgoing",
                             },
                           ],
+                          createdAt: "2021-11-26T12:14:19.592Z",
                           date: "2021-11-14T04:50:22.000Z",
-                          createdAt: "2021-11-25T11:58:45.861Z",
-                          updatedAt: "2021-11-25T11:58:45.861Z",
+                          is_deleted: false,
+                          name: "abcs",
+                          phone: "+918989898989",
+                          updatedAt: "2021-11-26T12:14:19.592Z",
+                          user: "6195f3e40ba05e4c53063e94",
                         },
                       ],
-                      date: "2021-11-14",
                     },
                   ],
                 },
@@ -869,11 +942,12 @@ export default {
                 $ref: "#/components/schemas/addnumberfromcallhistoryrequest",
               },
               example: {
-                phone: "+919099909990",
+                phone: "+918980514085",
                 name: "abcs",
-                date_time: "2021-12-12 11:00:00",
+                date_time: "2021-11-13 11:00:00",
                 type: "Incoming",
                 simId: "sim2",
+                caller_history_id: "4",
               },
             },
           },
@@ -892,19 +966,19 @@ export default {
                   success: true,
                   message: "success",
                   callLogs: {
-                    phone: "+919099909990",
+                    phone: "+918980514085",
                     name: "abcs",
-                    time: "2021-12-12 11:00:00",
+                    date_time: "2021-11-13 11:00:00",
                     type: "Incoming",
                     simId: "sim2",
-                    date: "2021-12-12 11:00:00",
+                    caller_history_id: "4",
                     callHistory: {
-                      time: "2021-12-12 11:00:00",
+                      time: "2021-11-13 11:00:00",
                       type: "Incoming",
                       simId: "sim2",
                     },
-                    callerId: "6194fe948f13a1d59d11df22",
-                    wisecallerId: "6194fe948f13a1d59d11df22",
+                    date: "2021-11-13 11:00:00",
+                    user: "6195f3e40ba05e4c53063e94",
                   },
                 },
               },
@@ -1732,6 +1806,90 @@ export default {
         deprecated: false,
       },
     },
+    "/contact-sync-service/api/v1/contact/favorite-add": {
+      post: {
+        tags: ["Contact sync"],
+        summary: "Add favorite",
+        operationId: "Addfavorite",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/AddfavoriteRequest",
+              },
+              example: {
+                number: "+911237896540",
+                is_favorite: false,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "Sucess",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/contact-sync-service/api/v1/contact/block-add": {
+      post: {
+        tags: ["Contact sync"],
+        summary: "Add Block contact",
+        operationId: "AddBlockcontact",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/AddBlockcontactRequest",
+              },
+              example: {
+                number: "+911237896540",
+                is_blocked: false,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "Sucess",
+                  data: [],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/status-service/api/v1/global-status/add": {
       post: {
         tags: ["Status"],
@@ -1754,6 +1912,7 @@ export default {
                   "619b27cc7a4897f6abd7338e",
                 ],
                 priority: 0,
+                icon_style: "red_cross",
               },
             },
           },
@@ -1791,7 +1950,7 @@ export default {
             "multipart/form-data": {
               encoding: {},
               schema: {
-                required: ["status", "logo"],
+                required: [],
                 type: "object",
                 properties: {
                   status: {
@@ -1800,6 +1959,10 @@ export default {
                   },
                   logo: {
                     type: "file",
+                  },
+                  icon_style: {
+                    type: "string",
+                    example: "red_cross",
                   },
                 },
               },
@@ -1848,41 +2011,37 @@ export default {
                   message: "global status get successfully",
                   data: [
                     {
-                      _id: "6195004219517edbb9a32dde",
+                      _id: "61a0ad14d77a5b6e37d8917d",
                       user: null,
                       applicable_types: [
-                        "618fb8e614842f8284d028dd",
                         "618fb99bc8ba53856cbf0459",
+                        "618fba343bc52886fb4f6b7d",
+                        "618fba473bc52886fb4f6b83",
+                        "619b27cc7a4897f6abd7338e",
                       ],
                       isDeleted: false,
-                      status: "Do not Disturb",
+                      status: "Busylast",
                       priority: 0,
-                      logo: "status_images/1637155090761.png",
-                      createdAt: "2021-11-17T13:14:42.642Z",
-                      updatedAt: "2021-11-17T13:19:10.157Z",
+                      icon_style: "red_cross",
+                      logo: null,
+                      createdAt: "2021-11-26T09:47:00.175Z",
+                      updatedAt: "2021-11-26T09:47:00.175Z",
                       __v: 0,
                       subCategory: [
                         {
-                          _id: "6195023525c96ee17567830d",
+                          _id: "61a0ad48d77a5b6e37d89182",
                           user: null,
                           isDeleted: false,
                           status: "DND2",
-                          parentId: "6195004219517edbb9a32dde",
-                          logo: "status_images/1637155378453.png",
-                          createdAt: "2021-11-17T13:23:01.173Z",
-                          updatedAt: "2021-11-17T13:23:01.173Z",
+                          parentId: "61a0ad14d77a5b6e37d8917d",
+                          icon_style: "green_cross",
+                          logo: null,
+                          createdAt: "2021-11-26T09:47:52.368Z",
+                          updatedAt: "2021-11-26T09:47:52.368Z",
                           __v: 0,
                         },
                       ],
                       applicableType: [
-                        {
-                          _id: "618fb8e614842f8284d028dd",
-                          type: "SUPER_EVENTS",
-                          order: 2,
-                          createdAt: "2021-11-13T13:08:54.457Z",
-                          updatedAt: "2021-11-13T13:08:54.457Z",
-                          __v: 0,
-                        },
                         {
                           _id: "618fb99bc8ba53856cbf0459",
                           type: "ROAD_SAFETY",
@@ -1891,38 +2050,28 @@ export default {
                           updatedAt: "2021-11-13T13:11:55.724Z",
                           __v: 0,
                         },
-                      ],
-                    },
-                    {
-                      _id: "61961de00d7a2900096955af",
-                      user: null,
-                      applicable_types: [
-                        "618fb8e614842f8284d028dd",
-                        "618fb99bc8ba53856cbf0459",
-                      ],
-                      isDeleted: false,
-                      status: "Do not Disturb1",
-                      priority: 0,
-                      logo: null,
-                      createdAt: "2021-11-18T09:33:20.153Z",
-                      updatedAt: "2021-11-18T09:33:20.153Z",
-                      __v: 0,
-                      subCategory: [],
-                      applicableType: [
                         {
-                          _id: "618fb8e614842f8284d028dd",
-                          type: "SUPER_EVENTS",
-                          order: 2,
-                          createdAt: "2021-11-13T13:08:54.457Z",
-                          updatedAt: "2021-11-13T13:08:54.457Z",
+                          _id: "618fba343bc52886fb4f6b7d",
+                          type: "CALENDAR_EVENTS",
+                          order: 3,
+                          createdAt: "2021-11-13T13:14:28.133Z",
+                          updatedAt: "2021-11-13T13:14:28.133Z",
                           __v: 0,
                         },
                         {
-                          _id: "618fb99bc8ba53856cbf0459",
-                          type: "ROAD_SAFETY",
-                          order: 1,
-                          createdAt: "2021-11-13T13:11:55.724Z",
-                          updatedAt: "2021-11-13T13:11:55.724Z",
+                          _id: "618fba473bc52886fb4f6b83",
+                          type: "WORK_LIFE_MODE",
+                          order: 5,
+                          createdAt: "2021-11-13T13:14:47.554Z",
+                          updatedAt: "2021-11-13T13:14:47.554Z",
+                          __v: 0,
+                        },
+                        {
+                          _id: "619b27cc7a4897f6abd7338e",
+                          type: "GENERAL",
+                          order: 7,
+                          createdAt: "2021-11-22T05:17:00.339Z",
+                          updatedAt: "2021-11-22T05:17:00.339Z",
                           __v: 0,
                         },
                       ],
@@ -1965,6 +2114,9 @@ export default {
                   },
                   logo: {
                     type: "file",
+                  },
+                  icon_style: {
+                    type: "string",
                   },
                 },
               },
@@ -2082,6 +2234,10 @@ export default {
                   logo: {
                     type: "file",
                   },
+                  icon_style: {
+                    type: "string",
+                    example: "red_cross",
+                  },
                 },
               },
             },
@@ -2142,6 +2298,10 @@ export default {
                   parentId: {
                     type: "string",
                     example: "6195004219517edbb9a32dde",
+                  },
+                  icon_style: {
+                    type: "string",
+                    example: "red_cross",
                   },
                 },
               },
@@ -5840,6 +6000,40 @@ export default {
         },
         example: {
           calenders: null,
+        },
+      },
+      AddfavoriteRequest: {
+        title: "AddfavoriteRequest",
+        required: ["number", "is_favorite"],
+        type: "object",
+        properties: {
+          number: {
+            type: "string",
+          },
+          is_favorite: {
+            type: "boolean",
+          },
+        },
+        example: {
+          number: "+911237896540",
+          is_favorite: false,
+        },
+      },
+      AddBlockcontactRequest: {
+        title: "AddBlockcontactRequest",
+        required: ["number", "is_blocked"],
+        type: "object",
+        properties: {
+          number: {
+            type: "string",
+          },
+          is_blocked: {
+            type: "boolean",
+          },
+        },
+        example: {
+          number: "+911237896540",
+          is_blocked: false,
         },
       },
       AddGlobalstatusRequest: {

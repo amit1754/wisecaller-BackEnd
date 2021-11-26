@@ -23,6 +23,9 @@ const SatusSchema = new Schema(
         ref: globalTypeModel,
       },
     ],
+    icon_style: {
+      type: String,
+    },
     isDeleted: {
       type: Boolean,
       default: false,
