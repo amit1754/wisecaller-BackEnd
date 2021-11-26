@@ -7,7 +7,8 @@ export default {
   },
   servers: [
     {
-      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
+      // url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
+      url: "http://localhost:8000",
       variables: {},
     },
   ],
@@ -227,6 +228,9 @@ export default {
                   media_profile_url: {
                     type: "string",
                   },
+                  email: {
+                    type: "string",
+                  },
                 },
               },
             },
@@ -274,6 +278,7 @@ export default {
                 phone: "+918849455045",
                 secondary_no: "+918980514085",
                 media_profile_url: "",
+                email: "abc@gmail.com",
               },
             },
           },

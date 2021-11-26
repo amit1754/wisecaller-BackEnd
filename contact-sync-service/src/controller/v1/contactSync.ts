@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import { IContactSync } from "../../interfaces/contactSync";
 import { UserContact } from "../../models/contactsync";
 import { User } from "../../models/user";
+import { map } from "lodash";
 
 class ContactSyncController {
   async sync(req: Request, res: Response) {
     try {
       const loginUser: any = req.user;
       const userFind = await UserContact.findOne({
-        user: loginUser._id,
+        contact: loginUser._id,
       });
 
       if (userFind) {
@@ -24,7 +25,7 @@ class ContactSyncController {
               "phones.no": contact.phones[j].ph_no,
             });
 
-            if (userContactFind) data[i].contact = userContactFind._id;
+            if (userContactFind) data[i].user = userContactFind._id;
           }
           const contactSave = new UserContact(contact);
           await contactSave.save();
@@ -36,13 +37,14 @@ class ContactSyncController {
         data: [],
       });
     } catch (error: any) {
-       if (error.code === 11000) {
-         res
-           .status(400)
-           .json({ success: false, message: "conatct already exists with contactId" });
-       } else {
-         res.status(500).json({ success: false, message: error.message });
-       }
+      if (error.code === 11000) {
+        res.status(400).json({
+          success: false,
+          message: "conatct already exists with contactId",
+        });
+      } else {
+        res.status(500).json({ success: false, message: error.message });
+      }
     }
   }
 
@@ -51,14 +53,17 @@ class ContactSyncController {
       const loggedInUser: any = req.user;
       const contact: any = req.body;
       const findContact = await UserContact.find({
-        $and: [{ first_name: contact.first_name }, { user: loggedInUser._id }],
+        $and: [
+          { first_name: contact.first_name },
+          { contact: loggedInUser._id },
+        ],
       });
       if (findContact.length >= 1) {
         throw new Error(
           "contact is avaliable with same name in youe contact list"
         );
       } else {
-        contact.user = loggedInUser._id;
+        contact.contact = loggedInUser._id;
         let contactupdate: IContactSync = contact;
 
         const contactSave = new UserContact(contactupdate);
@@ -71,12 +76,10 @@ class ContactSyncController {
       }
     } catch (error: any) {
       if (error.code === 11000) {
-        res
-          .status(400)
-          .json({
-            success: false,
-            message: "conatct already exists with contactId",
-          });
+        res.status(400).json({
+          success: false,
+          message: "conatct already exists with contactId",
+        });
       } else {
         res.status(500).json({ success: false, message: error.message });
       }
@@ -86,13 +89,10 @@ class ContactSyncController {
   async getAll(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      const userContactFind = await UserContact.find(
-        {
-          user: loggedInUser._id,
-        },
-        { user: 0 }
-      ).populate({
-        path: "contact",
+      let userContactFind = await UserContact.find({
+        user: loggedInUser._id,
+      }).populate({
+        path: "user",
         populate: [
           {
             path: "status",
@@ -156,7 +156,7 @@ class ContactSyncController {
             const userContactFind = await User.findOne({
               "phones.no": contact.phones[j].ph_no,
             });
-            if (userContactFind) data[i].contact = userContactFind._id;
+            if (userContactFind) data[i].user = userContactFind._id;
             else contact.phones[j].wisecallerId = null;
           }
           let customId = contact.contactId;
@@ -190,11 +190,10 @@ class ContactSyncController {
     try {
       let search = req.body.phone_number;
       const loggedInUser: any = req.user;
-      const userContactFind = await UserContact.find(
-        {
-          "phones.ph_no": { $regex: search, $options: "ig" },
-          user: loggedInUser._id,
-        });
+      const userContactFind = await UserContact.find({
+        "phones.ph_no": { $regex: search, $options: "ig" },
+        user: loggedInUser._id,
+      });
 
       // aggregate([
       //   {
@@ -280,6 +279,37 @@ class ContactSyncController {
       });
     } catch (err: any) {
       res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
+  async addFavorite(req: Request, res: Response) {
+    try {
+      const loginUser: any = req.user;
+      const { number, is_favorite }: any = req.body;
+
+      await UserContact.findOneAndUpdate(
+        { "phones.ph_no": number, user: loginUser._id },
+        { is_favorite }
+      );
+
+      res.status(200).json({ success: true, message: "Sucess", data: [] });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+  async addBlock(req: Request, res: Response) {
+    try {
+      const loginUser: any = req.user;
+      const { number, is_blocked }: any = req.body;
+
+      await UserContact.findOneAndUpdate(
+        { "phones.ph_no": number, user: loginUser._id },
+        { is_blocked }
+      );
+
+      res.status(200).json({ success: true, message: "Sucess", data: [] });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 }

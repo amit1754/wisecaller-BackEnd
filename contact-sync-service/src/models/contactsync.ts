@@ -30,6 +30,14 @@ const ContactSyncSchema = new Schema(
       type: String,
       default: null,
     },
+    is_blocked: {
+      type: Boolean,
+      default: false,
+    },
+    is_favorite: {
+      type: Boolean,
+      default: false,
+    },
     phones: [
       {
         ph_no: { type: String, required: true },

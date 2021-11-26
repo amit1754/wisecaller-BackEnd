@@ -39,6 +39,10 @@ const UserSchema = new Schema(
       type: String,
       default: null,
     },
+    email: {
+      type: String,
+      default: null,
+    },
     role: {
       type: String,
       enum: ["ADMIN", "USER"],
@@ -68,7 +72,7 @@ const UserSchema = new Schema(
         is_active: { type: Boolean, default: false },
         data: { type: Schema.Types.Mixed, default: null },
       },
-      roadSafetyStatus: {
+      roadSafety: {
         is_active: { type: Boolean, default: false },
         devices: {
           type: Schema.Types.Mixed,

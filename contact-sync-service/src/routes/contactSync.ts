@@ -18,4 +18,12 @@ router.delete(
   contactSync_Controller.deleteContact
 );
 
+
+router.post(
+  "/favorite-add",
+  [authorization],
+  contactSync_Controller.addFavorite
+);
+router.post("/block-add", [authorization], contactSync_Controller.addBlock);
+
 export const SyncRoutes = router;

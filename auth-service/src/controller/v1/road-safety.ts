@@ -35,7 +35,7 @@ class RoadSafetyController {
       let user = await User.findOne({ _id: loggedInUser._id }).lean();
       let modesPayload = {
         ...user.modes,
-        roadSafetyStatus: {
+        roadSafety: {
           is_active: req.body.is_active,
           devices: roadSafety.devices,
           data: {
