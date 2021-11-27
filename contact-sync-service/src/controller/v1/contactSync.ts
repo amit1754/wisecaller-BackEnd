@@ -285,11 +285,11 @@ class ContactSyncController {
   async addFavorite(req: Request, res: Response) {
     try {
       const loginUser: any = req.user;
-      const { number, is_favorite }: any = req.body;
+      const { number, is_favourite }: any = req.body;
 
       await UserContact.findOneAndUpdate(
         { "phones.ph_no": number, user: loginUser._id },
-        { is_favorite }
+        { is_favourite }
       );
 
       res.status(200).json({ success: true, message: "Sucess", data: [] });

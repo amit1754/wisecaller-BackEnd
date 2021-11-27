@@ -33,7 +33,7 @@ const ContactSyncSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    is_favorite: {
+    is_favourite: {
       type: Boolean,
       default: false,
     },

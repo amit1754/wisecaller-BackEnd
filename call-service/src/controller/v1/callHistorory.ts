@@ -20,7 +20,7 @@ class callHistory {
           if (getContact) {
             body[index].contactId = getContact._id;
           }
-       let a=   await CallHistory.findOneAndUpdate(
+          let a = await CallHistory.findOneAndUpdate(
             { caller_history_id: body[index].caller_history_id },
             body[index],
             {
@@ -28,7 +28,6 @@ class callHistory {
               new: true,
             }
           );
-          
         } else {
           await CallHistory.findOneAndRemove({
             caller_history_id: body[index].caller_history_id,
@@ -167,6 +166,66 @@ class callHistory {
       res.status(200).json({ success: true, message: "success", data: [] });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async syncHistory(req: Request, res: Response) {
+    try {
+      let body: any = [...req.body];
+      let loggedInUser: any = req.user;
+
+      for (const item of body) {
+        let user = await User.findOne({ "phones.no": item.phone });
+        let contact = await UserContact.findOne({ "phones.ph_no": item.phone });
+        let is_existing = await CallHistory.findOne({
+          phone: item.phone,
+          call_history_id: item.call_history_id,
+          time: item.time,
+          loggedin_user: loggedInUser,
+        });
+        let payload = {
+          ...item,
+          user: user?._id || null,
+          contact: contact?.id || null,
+          loggedin_user: loggedInUser._id,
+        };
+
+        if (!payload.is_deleted) {
+          if (!is_existing) {
+            let history = new CallHistory(payload);
+            await history.save();
+          }
+        } else {
+          await CallHistory.findOneAndRemove({
+            phone: item.phone,
+            call_history_id: item.call_history_id,
+            time: item.time,
+            loggedin_user: loggedInUser._id,
+          });
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Contact history synced successfully",
+      });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async getHistory(req: Request, res: Response) {
+    try {
+      let loggedInUser: any = req.user;
+      let call_history = await CallHistory.find({
+        loggedin_user: loggedInUser._id,
+      }).populate([{ path: "contact" }, { path: "user" }]);
+      return res.status(200).json({
+        success: true,
+        data: call_history,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
     }
   }
 }
