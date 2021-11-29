@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { globalTypeModel } from "../models/globalType.Model";
 
 const UserSchema = new Schema(
   {
@@ -13,12 +14,10 @@ const UserSchema = new Schema(
     phone: {
       type: String,
       default: null,
-      unique: true,
     },
     secondary_no: {
       type: String,
       default: null,
-      unique: true,
     },
     phones: [
       {
@@ -40,6 +39,10 @@ const UserSchema = new Schema(
       type: String,
       default: null,
     },
+    email: {
+      type: String,
+      default: null,
+    },
     role: {
       type: String,
       enum: ["ADMIN", "USER"],
@@ -48,6 +51,10 @@ const UserSchema = new Schema(
     devices: {
       type: Object,
       default: null,
+    },
+    is_new_user: {
+      type: Boolean,
+      default: true,
     },
     isActive: {
       type: Boolean,
@@ -60,23 +67,83 @@ const UserSchema = new Schema(
     user_status: {
       type: Schema.Types.Mixed,
     },
-    // user_status: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "UserSatus",
-    //   default: null,
-    // },
-    // user_sub_status: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "UserSubStatus",
-    //   default: null,
-    // },
-    // custom_status: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "UserSubStatus",
-    //   default: null,
-    // },
+    modes: {
+      workLifeBalance: {
+        is_active: { type: Boolean, default: false },
+        data: { type: Schema.Types.Mixed, default: null },
+      },
+      roadSafety: {
+        is_active: { type: Boolean, default: false },
+        devices: {
+          type: Schema.Types.Mixed,
+          default: null,
+          ref: globalTypeModel,
+        },
+        data: { type: Schema.Types.Mixed, default: null },
+      },
+      syncCalender: {
+        calenders: { type: Schema.Types.Mixed, default: null },
+        prioritize_calender_events: { type: Boolean, default: false },
+        status: {
+          type: Schema.Types.Mixed,
+        },
+      },
+    },
   },
   { timestamps: true }
 );
+
+UserSchema.post("find", function (doc) {
+  if (doc) {
+    doc.map((x: any) => {
+      x.profile_image =
+        x.profile_image == null
+          ? null
+          : `${process.env.IMAGE_PATH}${x.profile_image}`;
+
+      if (x?.user_status) {
+        console.log("x.user_status.status.logo", x.user_status.status.logo);
+        x.user_status.status.logo =
+          x.user_status.status.logo === null
+            ? null
+            : `${process.env.IMAGE_PATH}${x.user_status.status.logo}`;
+        if (x?.user_status.status.sub_status) {
+          x.user_status.status.sub_status.logo =
+            x.user_status.status.sub_status.logo === null
+              ? null
+              : `${process.env.IMAGE_PATH}${x.user_status.status.sub_status.logo}`;
+        }
+      }
+
+      return x;
+    });
+  }
+  return doc;
+});
+UserSchema.post("findOne", function (doc) {
+  if (doc) {
+    doc.profile_image =
+      doc.profile_image == null
+        ? null
+        : `${process.env.IMAGE_PATH}${doc.profile_image}`;
+
+    if (doc?.user_status) {
+      console.log("doc.user_status.status.logo", doc.user_status.status.logo);
+      doc.user_status.status.logo =
+        doc.user_status.status.logo === null ||
+        doc.user_status.status.logo === undefined
+          ? null
+          : `${process.env.IMAGE_PATH}${doc.user_status.status.logo}`;
+      if (doc?.user_status?.status?.sub_status) {
+        doc.user_status.status.sub_status.logo =
+          doc.user_status.status.sub_status.logo === null ||
+          doc.user_status.sub_status.logo === undefined
+            ? null
+            : `${process.env.IMAGE_PATH}${doc.user_status.status.sub_status.logo}`;
+      }
+    }
+  }
+  return doc;
+});
 
 export const User = model("User", UserSchema);

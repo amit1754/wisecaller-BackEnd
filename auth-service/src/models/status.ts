@@ -38,7 +38,10 @@ SatusSchema.post("aggregate", function (doc: any) {
       if (x.subCategory) {
         x.subCategory.map((y: any) => {
           console.log("before", y.logo);
-          y.logo = y.logo == null ? null : `${process.env.IMAGE_PATH}${y.logo}`;
+          y.logo =
+            y.logo == null || y.logo == undefined
+              ? null
+              : `${process.env.IMAGE_PATH}${y.logo}`;
           console.log("Aaa", y.logo);
           return y;
         });
@@ -50,7 +53,9 @@ SatusSchema.post("aggregate", function (doc: any) {
 });
 SatusSchema.post("findOne", function (doc: any) {
   if (doc) {
-    doc.logo = doc.logo == null ? null : `${process.env.IMAGE_PATH}${doc.logo}`;
+    doc.logo == null || doc.logo == undefined
+      ? null
+      : `${process.env.IMAGE_PATH}${doc.logo}`;
   }
 
   return doc;
@@ -58,7 +63,10 @@ SatusSchema.post("findOne", function (doc: any) {
 SatusSchema.post("find", function (doc) {
   if (doc) {
     doc.map((x: any) => {
-      x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
+      x.logo =
+        x.logo == null || x.logo == undefined
+          ? null
+          : `${process.env.IMAGE_PATH}${x.logo}`;
       return x;
     });
   }

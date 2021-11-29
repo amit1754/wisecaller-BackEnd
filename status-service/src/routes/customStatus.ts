@@ -4,7 +4,7 @@ import authorization from "../middlewares/jwt";
 
 const router = express.Router();
 
-router.post("/add", authorization, Custom_status_Controller.add);
+router.post("/add", authorization, Custom_status_Controller.update);
 router.put("/update", authorization, Custom_status_Controller.update);
 router.delete(
   "/delete/:id",

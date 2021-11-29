@@ -14,7 +14,12 @@ class NotesController {
         Object.assign(query, { type: req.query.type });
       }
 
-      let notes = await Notes.find(query);
+      let notes = await Notes.find(query, {
+        is_custom: 0,
+        is_admin: 0,
+        createdAt: 0,
+        updatedAt: 0,
+      });
       return res.status(200).json({ success: true, data: notes });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
@@ -43,7 +48,10 @@ class NotesController {
 
   async details(req: Request, res: Response) {
     try {
-      let details = await Notes.findOne({ _id: req.params.id });
+      let details = await Notes.findOne(
+        { _id: req.params.id },
+        { is_custom: 0, is_admin: 0, createdAt: 0, updatedAt: 0 }
+      );
       return res.status(200).json({ success: true, data: details });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });

@@ -19,7 +19,7 @@ const CallHistorySchema = new Schema(
   //   },
   //   phone: {
   //     type: Schema.Types.String,
-  //   },
+  //   CallHistory},
 
   //   callHistory: [
   //     {
@@ -55,7 +55,7 @@ const CallHistorySchema = new Schema(
     },
     call_type: {
       type: String,
-      enum: ["INCOMING", "OUTGOING", "MISSED_CALL"],
+      enum: ["INCOMING", "OUTGOING", "MISSED"],
     },
     sim: {
       type: String,

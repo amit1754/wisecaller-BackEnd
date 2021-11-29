@@ -3,8 +3,7 @@ import express, { Express, Request, Response, NextFunction, json, urlencoded, te
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
-import swaggerUI from "swagger-ui-express";
-import swaggerDocs from "./swagger-update";
+
 
 export default class App {
   app: Express = express();
@@ -24,24 +23,23 @@ export default class App {
   }
 
   async setupMiddleware() {
-    this.app.use(json({limit: '50mb'}));
-    this.app.use(urlencoded({ extended: false,limit: '50mb' }));
-    
+    this.app.use(json({ limit: "50mb" }));
+    this.app.use(urlencoded({ extended: false, limit: "50mb" }));
+
     this.app.use(text());
     this.app.use(morgan("dev"));
     this.app.use(cors());
-    
   }
-  
+
   async setupDbConnection() {
     import("./config/db/connection");
   }
-  
+
   async setupRoutes() {
     try {
       let router = express.Router();
       this.app.use(`/auth-service/api/v1`, router);
-      this.app.use("/auth-service/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
       router.use("/", routes);
       this.app.use(function (req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");

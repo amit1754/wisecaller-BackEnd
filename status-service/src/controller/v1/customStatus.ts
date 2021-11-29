@@ -54,16 +54,17 @@ class CustomStatusController {
           );
         }
       }
-
-      const worklifeData: any = body.workLife;
-      const update = await WorkLife.findOneAndUpdate(
-        { user: loggedInUser._id },
-        { Excluded_dates: worklifeData.Excluded_dates },
-        {
-          upsert: true,
-          new: true,
-        }
-      );
+      if (body.workLife) {
+        const worklifeData: any = body.workLife;
+        const update = await WorkLife.findOneAndUpdate(
+          { user: loggedInUser._id },
+          { Excluded_dates: worklifeData.Excluded_dates },
+          {
+            upsert: true,
+            new: true,
+          }
+        );
+      }
 
       res.status(200).json({
         success: true,
@@ -100,10 +101,24 @@ class CustomStatusController {
   }
   async get(req: Request, res: Response) {
     try {
+      let page: any = req.query.page;
+      let limit: any = req.query.limit;
+      let where,
+        timestamp: any = req.query.timestamp;
+      if (timestamp) {
+        where = {
+          start_date: { $gte: new Date(timestamp).toISOString() },
+        };
+      }
+      console.log('where :>> ', where);
+
       const loggedInUser: any = req.user;
       const getStatus: any = await customStatus.aggregate([
         {
-          $match: { user: loggedInUser._id },
+          $match: { 
+            user: loggedInUser._id, 
+            start_date: { $gte: new Date(timestamp)}
+          }
         },
         {
           $lookup: {
@@ -125,12 +140,19 @@ class CustomStatusController {
         {
           $unwind: { path: "$userSubStatus", preserveNullAndEmptyArrays: true },
         },
+        {
+          $skip: page > 0 ? +limit * (+page - 1) : 0,
+        },
+        {
+          $limit: +limit || 20,
+        },
       ]);
 
       const worklife: any = await WorkLife.findOne(
         { user: loggedInUser._id },
         { Excluded_dates: 1, _id: 0 }
       );
+
       res.status(200).json({
         sucess: true,
         message: "getdata successfully",

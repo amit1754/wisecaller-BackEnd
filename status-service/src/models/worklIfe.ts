@@ -54,4 +54,7 @@ const WorkLifeSchema = new Schema(
   { timestamps: true }
 );
 
+
 export const WorkLife = model("WorkLife", WorkLifeSchema);
+
+

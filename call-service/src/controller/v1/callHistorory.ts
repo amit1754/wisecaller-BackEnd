@@ -9,9 +9,8 @@ class callHistory {
     try {
       const loginUser: any = req.user;
       let { body }: any = req;
-      console.log("body.length", body.length);
+
       for (let index = 0; index < body.length; index++) {
-        console.log("body[index]", body[index].is_deleted);
         if (body[index].is_deleted === false) {
           body[index].user = loginUser._id;
           const getContact = await UserContact.findOne({
@@ -21,7 +20,10 @@ class callHistory {
             body[index].contactId = getContact._id;
           }
           let a = await CallHistory.findOneAndUpdate(
-            { caller_history_id: body[index].caller_history_id },
+            {
+              caller_history_id: body[index].caller_history_id,
+              user: loginUser._id,
+            },
             body[index],
             {
               upsert: true,
@@ -216,10 +218,23 @@ class callHistory {
 
   async getHistory(req: Request, res: Response) {
     try {
+      let page: any = req.query.page;
+      let limit: any = req.query.limit;
+      let timestamp: any = req.query.timestamp,
+        where;
+      if (timestamp) {
+        where = {
+          time: { $gte: new Date(timestamp).toISOString() },
+        };
+      }
       let loggedInUser: any = req.user;
       let call_history = await CallHistory.find({
         loggedin_user: loggedInUser._id,
-      }).populate([{ path: "contact" }, { path: "user" }]);
+        ...where
+      })
+        .skip(page > 0 ? +limit * (+page - 1) : 0)
+        .limit(+limit || 20)
+        .populate([{ path: "contact" }, { path: "user" }]);
       return res.status(200).json({
         success: true,
         data: call_history,

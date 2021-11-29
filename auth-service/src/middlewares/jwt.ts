@@ -29,6 +29,7 @@ const authorization = async (
     });
     if (data) {
       req.user = data;
+      req.body.token = token;
       next();
     } else {
       throw new Error("unauthorized");

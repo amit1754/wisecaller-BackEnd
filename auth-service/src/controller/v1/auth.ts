@@ -92,7 +92,7 @@ class AuthController {
             const payload: IUser = {
               phones: {
                 no: mobileNo,
-                used_for_login: false,
+                used_for_login: true,
                 type: "PRIMARY",
               },
               phone: mobileNo,
@@ -178,6 +178,7 @@ class AuthController {
   async refreshToken(req: Request, res: Response) {
     try {
       const postData = req.body;
+
       let token;
       const decodedMainToken: any = jwt.decode(postData.token, {
         complete: true,
