@@ -412,7 +412,6 @@ export default {
                       },
                       syncCalender: {
                         calenders: null,
-                        priooritize_calender_events: false,
                       },
                     },
                     first_name: "tushar",
@@ -537,8 +536,6 @@ export default {
                 $ref: "#/components/schemas/refreshtokenrequest",
               },
               example: {
-                token:
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk3ZTE2OGU3MTJhNWQyMDI3ZTkwYzEiLCJpYXQiOjE2Mzc4Mzk5MTksImV4cCI6MTYzNzg0NDkxOX0.ly5zRRfxeIaUAzRYKSMyK0VAW-10fSSLUfAIzEyDNzA",
                 refreshToken:
                   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk3ZTE2OGU3MTJhNWQyMDI3ZTkwYzEiLCJpYXQiOjE2Mzc4Mzk5MTksImV4cCI6MTYzNzg0MjMxOX0.W9ItR2QwrzxN5va9OTCTAma6RcxIMfyhmwD3IvzzEGw",
               },
@@ -685,7 +682,32 @@ export default {
         tags: ["Call History"],
         summary: "call history",
         operationId: "callhistory",
-        parameters: [],
+        parameters: [
+          {
+            in: "query",
+            name: "limit",
+            required: false,
+            schema: {
+              type: "number",
+            },
+          },
+          {
+            in: "query",
+            name: "page",
+            required: false,
+            schema: {
+              type: "number",
+            },
+          },
+          {
+            in: "query",
+            name: "timestamp",
+            required: false,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
         responses: {
           "200": {
             description: "OK",
@@ -952,56 +974,6 @@ export default {
                       },
                     ],
                   },
-                  {
-                    contactId: 151,
-                    first_name: "mehul",
-                    last_name: "mehul",
-                    profile_image: null,
-                    local_profile_image_path: "contacts/abc.png",
-                    phones: [
-                      {
-                        ph_no: "+911237896540",
-                        type: "PRIMARY",
-                      },
-                      {
-                        ph_no: "+919874563210",
-                        type: "SECONDARY",
-                      },
-                      {
-                        ph_no: "+915478963210",
-                        type: "OFFICE",
-                      },
-                      {
-                        ph_no: "+918756941230",
-                        type: "HOME",
-                      },
-                    ],
-                  },
-                  {
-                    contactId: 152,
-                    first_name: "jignesh",
-                    last_name: "jignesh",
-                    profile_image: null,
-                    local_profile_image_path: "contacts/abc.png",
-                    phones: [
-                      {
-                        ph_no: "+919854671230",
-                        type: "PRIMARY",
-                      },
-                      {
-                        ph_no: "+912567894130",
-                        type: "SECONDARY",
-                      },
-                      {
-                        ph_no: "+919568732410",
-                        type: "OFFICE",
-                      },
-                      {
-                        ph_no: "+919496782117",
-                        type: "HOME",
-                      },
-                    ],
-                  },
                 ],
               },
               example: [
@@ -1028,56 +1000,6 @@ export default {
                     },
                     {
                       ph_no: "+917412589630",
-                      type: "HOME",
-                    },
-                  ],
-                },
-                {
-                  contactId: 151,
-                  first_name: "mehul",
-                  last_name: "mehul",
-                  profile_image: null,
-                  local_profile_image_path: "contacts/abc.png",
-                  phones: [
-                    {
-                      ph_no: "+911237896540",
-                      type: "PRIMARY",
-                    },
-                    {
-                      ph_no: "+919874563210",
-                      type: "SECONDARY",
-                    },
-                    {
-                      ph_no: "+915478963210",
-                      type: "OFFICE",
-                    },
-                    {
-                      ph_no: "+918756941230",
-                      type: "HOME",
-                    },
-                  ],
-                },
-                {
-                  contactId: 152,
-                  first_name: "jignesh",
-                  last_name: "jignesh",
-                  profile_image: null,
-                  local_profile_image_path: "contacts/abc.png",
-                  phones: [
-                    {
-                      ph_no: "+919854671230",
-                      type: "PRIMARY",
-                    },
-                    {
-                      ph_no: "+912567894130",
-                      type: "SECONDARY",
-                    },
-                    {
-                      ph_no: "+919568732410",
-                      type: "OFFICE",
-                    },
-                    {
-                      ph_no: "+919496782117",
                       type: "HOME",
                     },
                   ],
@@ -1113,7 +1035,24 @@ export default {
         tags: ["Contact sync"],
         summary: "Get synced Contact",
         operationId: "GetsyncedContact",
-        parameters: [],
+        parameters: [
+          {
+            in: "query",
+            name: "limit",
+            required: false,
+            schema: {
+              type: "number",
+            },
+          },
+          {
+            in: "query",
+            name: "page",
+            required: false,
+            schema: {
+              type: "number",
+            },
+          },
+        ],
         responses: {
           "200": {
             description: "",
@@ -1128,158 +1067,79 @@ export default {
                   message: "contact list get successfully",
                   data: [
                     {
-                      profile_image: null,
-                      local_profile_image_path: "contacts/abc.png",
-                      is_deleted: false,
-                      _id: "619f766697705cc533981aa1",
-                      contactId: 180,
-                      first_name: "tushar",
-                      last_name: "savaliya",
-                      is_favourite: true,
-                      is_blocked: false,
-                      phones: [
+                      success: true,
+                      message: "contact list get successfully",
+                      data: [
                         {
-                          _id: "619f766697705cc533981aa2",
-                          ph_no: "+918849455045",
-                          type: "PRIMARY",
-                        },
-                        {
-                          _id: "619f766697705cc533981aa3",
-                          ph_no: "+913216549870",
-                          type: "SECONDARY",
-                        },
-                        {
-                          _id: "619f766697705cc533981aa4",
-                          ph_no: "+911236547890",
-                          type: "OFFICE",
-                        },
-                        {
-                          _id: "619f766697705cc533981aa5",
-                          ph_no: "+917412589630",
-                          type: "HOME",
-                        },
-                      ],
-                      contact: {
-                        role: "ADMIN",
-                        devices: null,
-                        isActive: true,
-                        isDeleted: false,
-                        status: null,
-                        subStatus: null,
-                        is_new_user: false,
-                        _id: "6194fe948f13a1d59d11df22",
-                        first_name: "firstName",
-                        last_name: "lastName",
-                        phone: "+918849455045",
-                        secondary_no: "",
-                        profile_image: "profile_images/1637561020768.png",
-                        is_profile_from_social_media: "false",
-                        media_profile_url: "",
-                        phones: [
-                          {
-                            used_for_login: true,
-                            _id: "6194fe948f13a1d59d11df23",
-                            no: "+918849455045",
-                            type: "PRIMARY",
-                          },
-                        ],
-                        createdAt: "2021-11-17T13:07:32.717Z",
-                        updatedAt: "2021-11-22T06:30:29.105Z",
-                        __v: 0,
-                        user_status: {
-                          name: "abc",
-                          status: {
-                            sub_status: {
-                              user: null,
-                              isDeleted: false,
-                              _id: "6195023525c96ee17567830d",
-                              status: "DND2",
-                              parentId: "6195004219517edbb9a32dde",
-                              logo: "status_images/1637155378453.png",
-                              createdAt: "2021-11-17T13:23:01.173Z",
-                              updatedAt: "2021-11-17T13:23:01.173Z",
-                              __v: 0,
+                          profile_image: null,
+                          local_profile_image_path: "contacts/abc.png",
+                          is_blocked: false,
+                          is_favourite: false,
+                          is_deleted: false,
+                          _id: "61a5e747f01b8beeb2c11f3d",
+                          contactId: 152,
+                          user: {
+                            modes: {
+                              workLifeBalance: {
+                                is_active: false,
+                                data: null,
+                              },
+                              roadSafety: {
+                                is_active: false,
+                                devices: null,
+                                data: null,
+                              },
+                              syncCalender: {
+                                calenders: null,
+                                prioritize_calender_events: false,
+                              },
                             },
-                            _id: "6195004219517edbb9a32dde",
-                            user: null,
-                            applicable_types: [
-                              "618fb8e614842f8284d028dd",
-                              "618fb99bc8ba53856cbf0459",
-                            ],
+                            first_name: "tushar",
+                            last_name: "savaliya",
+                            phone: "+918980514085",
+                            secondary_no: null,
+                            profile_image:
+                              "https://wisecaller-images.s3.us-east-1.amazonaws.com/profile_images/1638164210938.jpeg",
+                            is_profile_from_social_media: "true",
+                            media_profile_url: null,
+                            email: "savaliyatushar2197@gmail.com",
+                            role: "USER",
+                            devices: null,
+                            is_new_user: false,
+                            isActive: true,
                             isDeleted: false,
-                            status: "Do not Disturb",
-                            priority: 0,
-                            logo: "status_images/1637155090761.png",
-                            createdAt: "2021-11-17T13:14:42.642Z",
-                            updatedAt: "2021-11-17T13:19:10.157Z",
+                            _id: "61a4644b5efa8c6d1c5a0ca1",
+                            phones: [
+                              {
+                                used_for_login: true,
+                                _id: "61a4644b5efa8c6d1c5a0ca2",
+                                no: "+918980514085",
+                                type: "PRIMARY",
+                              },
+                            ],
+                            createdAt: "2021-11-29T05:25:31.494Z",
+                            updatedAt: "2021-11-30T08:55:26.917Z",
                             __v: 0,
                           },
-                        },
-                        modes: {
-                          roadSafetyStatus: {
-                            is_active: true,
-                            devices: ["JBL Enduarance", "Boat Rokerz"],
-                            data: {
-                              selected_device: "Boat Rokerz",
-                              display_to: "contacts",
-                              auto_sms: false,
-                              notes: {
-                                is_custom: true,
-                                text: "Not available",
-                              },
-                              status: {
-                                user: null,
-                                applicable_types: ["618fb99bc8ba53856cbf0459"],
-                                isDeleted: false,
-                                _id: "619b27747a4897f6abd7338b",
-                                status: "Driving",
-                                priority: 0,
-                                logo: null,
-                                createdAt: "2021-11-22T05:15:32.942Z",
-                                updatedAt: "2021-11-22T05:15:32.942Z",
-                                __v: 0,
-                              },
+                          __v: 0,
+                          createdAt: "2021-11-30T08:56:39.029Z",
+                          first_name: "jignesh80",
+                          last_name: "jignesh80",
+                          phones: [
+                            {
+                              _id: "61a5e7470703eda959d4a9ef",
+                              ph_no: "+919496782117",
+                              type: "PRIMARY",
                             },
-                          },
-                        },
-                      },
-                      createdAt: "2021-11-25T11:41:26.922Z",
-                      updatedAt: "2021-11-25T11:41:26.922Z",
-                      __v: 0,
-                    },
-                    {
-                      profile_image: null,
-                      local_profile_image_path: "contacts/abc.png",
-                      is_deleted: false,
-                      _id: "619f766a97705cc533981aab",
-                      contactId: 181,
-                      first_name: "mehul",
-                      last_name: "mehul",
-                      phones: [
-                        {
-                          _id: "619f766a97705cc533981aac",
-                          ph_no: "+911237896540",
-                          type: "PRIMARY",
-                        },
-                        {
-                          _id: "619f766a97705cc533981aad",
-                          ph_no: "+919874563210",
-                          type: "SECONDARY",
-                        },
-                        {
-                          _id: "619f766a97705cc533981aae",
-                          ph_no: "+915478963210",
-                          type: "OFFICE",
-                        },
-                        {
-                          _id: "619f766a97705cc533981aaf",
-                          ph_no: "+918756941230",
-                          type: "HOME",
+                            {
+                              _id: "61a5e7470703eda959d4a9f0",
+                              ph_no: "+919568732410",
+                              type: "SECONDARY",
+                            },
+                          ],
+                          updatedAt: "2021-11-30T08:56:39.029Z",
                         },
                       ],
-                      createdAt: "2021-11-25T11:41:30.018Z",
-                      updatedAt: "2021-11-25T11:41:30.018Z",
-                      __v: 0,
                     },
                   ],
                 },
@@ -2223,8 +2083,10 @@ export default {
                 $ref: "#/components/schemas/NewNotesRequest",
               },
               example: {
+                _id: "619e258c5be4d7298bc74696",
                 text: "I am driving, please call me later",
                 type: "ROAD SAFETY",
+                __v: 0,
               },
             },
           },
@@ -2722,7 +2584,7 @@ export default {
                   },
                 ],
                 workLife: {
-                  Excluded_dates: ["11/12/2021", "20/12/2021"],
+                  Excluded_dates: ["11/15/2021", "11/23/2021"],
                 },
               },
             },
@@ -2755,7 +2617,32 @@ export default {
         tags: ["Custom Status"],
         summary: "Custom Status Get",
         operationId: "CustomStatusGet",
-        parameters: [],
+        parameters: [
+          {
+            in: "query",
+            name: "limit",
+            required: false,
+            schema: {
+              type: "number",
+            },
+          },
+          {
+            in: "query",
+            name: "page",
+            required: false,
+            schema: {
+              type: "number",
+            },
+          },
+          {
+            in: "query",
+            name: "timestamp",
+            required: false,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
         responses: {
           default: {
             description: "",
@@ -3550,7 +3437,6 @@ export default {
               },
               syncCalender: {
                 calenders: null,
-                priooritize_calender_events: false,
               },
             },
             first_name: "tushar",
@@ -3713,7 +3599,6 @@ export default {
             },
             syncCalender: {
               calenders: null,
-              priooritize_calender_events: false,
             },
           },
           first_name: "tushar",
@@ -3803,7 +3688,6 @@ export default {
           },
           syncCalender: {
             calenders: null,
-            priooritize_calender_events: false,
           },
         },
       },
@@ -3850,20 +3734,16 @@ export default {
       },
       SyncCalender: {
         title: "SyncCalender",
-        required: ["calenders", "priooritize_calender_events"],
+        required: ["calenders"],
         type: "object",
         properties: {
           calenders: {
             type: "string",
             nullable: true,
           },
-          priooritize_calender_events: {
-            type: "boolean",
-          },
         },
         example: {
           calenders: null,
-          priooritize_calender_events: false,
         },
       },
       contactUsRequest: {
