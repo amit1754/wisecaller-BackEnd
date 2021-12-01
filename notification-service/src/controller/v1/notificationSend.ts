@@ -5,7 +5,7 @@ var fcm = new FCM(serverKey);
 
 var message = {
   //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-  to: "registration_token",
+  to: "cX42gLnRQIuKW6bY1GZVbw:APA91bFcALPPScndIE_pR4DR-OPzFd4a_nhyzrHnBZm2yuKPSevkXV4FH1PZy7JcZdLmNkEKiAxxgwvzbF74n4nzDdc6F977ZtZIhMEgREiLV48UVh5At9qtiGm6hsULVUPojrU01Y2w",
   collapse_key: "green",
 
   notification: {
@@ -22,7 +22,7 @@ var message = {
 
 fcm.send(message, function (err: any, response: any) {
   if (err) {
-    console.log("Something has gone wrong!");
+    console.log("Something has gone wrong!", err);
   } else {
     console.log("Successfully sent with response: ", response);
   }

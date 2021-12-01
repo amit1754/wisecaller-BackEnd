@@ -200,11 +200,16 @@ class AuthController {
       } else {
         token = postData.token;
       }
-      res.status(200).json({
-        success: true,
-        message: "token refresh sucessfully",
-        token: token,
-      });
+       let verify: any = await jwtVerify(token);
+
+       let time: number = verify.exp;
+       let token_expires_at: any = new Date(time * 1000);
+       res.status(200).json({
+         success: true,
+         message: "token refresh sucessfully",
+         token: token,
+         token_expires_at,
+       });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }

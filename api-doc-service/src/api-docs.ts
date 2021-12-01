@@ -1417,10 +1417,10 @@ export default {
         deprecated: false,
       },
     },
-    "/contact-sync-service/api/v1/contact/search-wisecaller": {
+    "/auth-service/api/v1/user/search": {
       post: {
-        tags: ["Contact sync"],
-        summary: "search in wiseccaller contact in list",
+        tags: ["Auth service"],
+        summary: "search in wiseccaller ",
         operationId: "searchinwiseccallercontactinlist",
         parameters: [],
         requestBody: {

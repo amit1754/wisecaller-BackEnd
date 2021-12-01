@@ -44,7 +44,6 @@ class RoadSafetyController {
             auto_sms: roadSafety.auto_sms,
             notes: roadSafety.notes,
             status: defaultStatus,
-            status1: defaultStatus,
           },
         },
       };

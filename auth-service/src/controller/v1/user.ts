@@ -343,6 +343,30 @@ class UserController {
   //     return res.status(500).json({ success: false, message: error.message });
   //   }
   // }
+  async searchWisecaller(req: Request, res: Response) {
+    try {
+      let search = req.body.phone_number;
+      let searchString = search.replace("+", "");
+      const userContactFind = await User.find({
+        "phones.no": { $regex: searchString, $options: "ig" },
+      });
+
+      res.status(200).json({
+        success: true,
+        message: "data get successful",
+        data: userContactFind,
+      });
+    } catch (err: any) {
+      if (err.code === 51091) {
+        res.status(400).json({
+          success: false,
+          message: "please find with phone number only",
+        });
+      } else {
+        res.status(500).json({ success: false, message: err.message });
+      }
+    }
+  }
 }
 
 const controller = new UserController();

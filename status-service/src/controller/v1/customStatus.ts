@@ -7,16 +7,26 @@ class CustomStatusController {
   async add(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-
-      const length: number = req.body.length;
+      let body: any = req.body;
+      const length: number = body.length;
       for (let i = 0; i < length; i++) {
-        let payload: ICustomStatus = {
-          ...req.body[i],
-          user: loggedInUser._id,
-        };
-        const status = new customStatus(payload);
-        await status.save();
+        if (body[i].is_deleted) {
+          await customStatus.findOneAndRemove({
+            customId: body[i].customId,
+            user: loggedInUser._id,
+          });
+        } else {
+          await customStatus.findOneAndUpdate(
+            { customId: body[i].customId, user: loggedInUser._id },
+            body[i],
+            {
+              upsert: true,
+              new: true,
+            }
+          );
+        }
       }
+      
       res.status(200).json({
         success: true,
         message: "User status added successfully",
@@ -56,14 +66,18 @@ class CustomStatusController {
       }
       if (body.workLife) {
         const worklifeData: any = body.workLife;
-        const update = await WorkLife.findOneAndUpdate(
-          { user: loggedInUser._id },
-          { Excluded_dates: worklifeData.Excluded_dates },
-          {
-            upsert: true,
-            new: true,
-          }
-        );
+       let date1 = worklifeData.Excluded_dates.map((x: any) =>
+         new Date(x).toISOString()
+       );
+
+       const update = await WorkLife.findOneAndUpdate(
+         { user: loggedInUser._id },
+         { Excluded_dates: date1 },
+         {
+           upsert: true,
+           new: true,
+         }
+       );
       }
 
       res.status(200).json({
@@ -110,7 +124,6 @@ class CustomStatusController {
           start_date: { $gte: new Date(timestamp).toISOString() },
         };
       }
-      console.log('where :>> ', where);
 
       const loggedInUser: any = req.user;
       const getStatus: any = await customStatus.aggregate([

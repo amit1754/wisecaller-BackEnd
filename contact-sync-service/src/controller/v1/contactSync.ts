@@ -8,6 +8,7 @@ class ContactSyncController {
   async sync(req: Request, res: Response) {
     try {
       const loginUser: any = req.user;
+      console.log("loginUser",loginUser);
       let data: any = req.body;
       let length = data.length;
       for (let i = 0; i < length; i++) {
@@ -20,6 +21,7 @@ class ContactSyncController {
 
           if (userContactFind) data[i].user = userContactFind._id;
         }
+        
         const contactSave = new UserContact(contact);
         await contactSave.save();
       }
@@ -83,11 +85,14 @@ class ContactSyncController {
       let page: any = req.query.page;
       let limit: any = req.query.limit;
 
-      const loggedInUser: any = req.user;
-      console.log(loggedInUser._id);
-      let userContactFind = await UserContact.find({
-        user: Types.ObjectId(loggedInUser._id),
-      })
+      let loggedInUser: any = req.user;
+      console.log(loggedInUser);
+      let userContactFind = await UserContact.find(
+        {
+          user: Types.ObjectId(loggedInUser._id),
+        },
+        { contact :0}
+      )
         .skip(page > 0 ? +limit * (+page - 1) : 0)
         .limit(+limit || 20)
         .sort({ first_name: 1 })
@@ -119,26 +124,24 @@ class ContactSyncController {
       const loginUser: any = req.user;
       let length = data.length;
       for (let i = 0; i < length; i++) {
-        console.log(
-          data[i].is_deleted === false || data[i]?.is_deleted == undefined
-        );
-        if (data[i].is_deleted === false || data[i]?.is_deleted == undefined) {
+        if ((data[i]?.is_deleted === undefined ||data[i].is_deleted) === false) {
           data[i].user = loginUser._id;
-          console.log("sabdkskn");
           let contact: any = data[i];
           for (let j = 0; j < contact.phones.length; j++) {
             const userContactFind = await User.findOne({
               "phones.no": contact.phones[j].ph_no,
             });
-            if (userContactFind) data[i].user = userContactFind._id;
-            else contact.phones[j].wisecallerId = null;
+            if (userContactFind) data[i].contact = userContactFind._id;
           }
-          console.log("contact", contact);
-
+          console.log('contact :>> ', contact);
           const dda = await UserContact.findOneAndUpdate(
             {
-              contactId: contact.contactId,
-              user: loginUser._id,
+              $and: [
+                {
+                  user: loginUser._id,
+                },
+                { contactId: data[i].contactId },
+              ],
             },
             contact,
             {
@@ -191,30 +194,7 @@ class ContactSyncController {
       }
     }
   }
-  async searchWisecaller(req: Request, res: Response) {
-    try {
-      let search = req.body.phone_number;
-      let searchString = search.replace("+", "");
-      const userContactFind = await User.find({
-        "phones.no": { $regex: searchString, $options: "ig" },
-      });
-
-      res.status(200).json({
-        success: true,
-        message: "data get successful",
-        data: userContactFind,
-      });
-    } catch (err: any) {
-      if (err.code === 51091) {
-        res.status(400).json({
-          success: false,
-          message: "please find with phone number only",
-        });
-      } else {
-        res.status(500).json({ success: false, message: err.message });
-      }
-    }
-  }
+ 
 
   async deleteContact(req: Request, res: Response) {
     try {

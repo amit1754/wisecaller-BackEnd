@@ -19,6 +19,8 @@ class NotesController {
         is_admin: 0,
         createdAt: 0,
         updatedAt: 0,
+        display_to: 0,
+        auto_sms: 0,
       });
       return res.status(200).json({ success: true, data: notes });
     } catch (error: any) {
