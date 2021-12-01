@@ -3,7 +3,7 @@ import { IOtp, IUser } from "../../interfaces/auth";
 import { User } from "../../models/user";
 import { AuthToken } from "../../models/auth-token";
 import jwt from "jsonwebtoken";
-import { MobileNoCheckUtils } from "../../utils";
+import { MobileNoCheckUtils, jwtVerify } from "../../utils";
 import sendSMS1 from "../../middlewares/smsSendMiddelware";
 import moment from "moment";
 
@@ -84,7 +84,7 @@ class AuthController {
       const { mobileNo, otp } = req.body;
 
       let userDetails: any;
-      let userFind: any = await User.findOne({ "phones.no": mobileNo })
+      let userFind: any = await User.findOne({ "phones.no": mobileNo });
       let auth_token: any = await AuthToken.findOne({ mobileNo: mobileNo });
       if (auth_token) {
         if (auth_token?.otp === otp) {
@@ -96,8 +96,7 @@ class AuthController {
                 type: "PRIMARY",
               },
               phone: mobileNo,
-              profile_image: null
-
+              profile_image: null,
             };
 
             const user = new User(payload);
@@ -133,14 +132,10 @@ class AuthController {
           secret,
           { expiresIn: tokenRefreshTime }
         );
-
-     
-       
-        let token_expires_at: string = moment()
-          .add(12, "hours")
-          .utc()
-          .toISOString();
-       
+        let verify: any = await jwtVerify(token);
+        console.log("token", verify.exp);
+        let time: number = verify.exp;
+        let token_expires_at: any = new Date(time * 1000);
 
         await auth_token.remove();
         return res.status(200).json({
@@ -149,7 +144,7 @@ class AuthController {
             token,
             refreshToken,
             token_expires_at,
-            is_new_user: (userFind) ? userFind.is_new_user : true
+            is_new_user: userFind ? userFind.is_new_user : true,
           },
         });
       } else {
@@ -158,9 +153,7 @@ class AuthController {
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
-      return res
-          .status(500)
-          .json({ success: false, message: error.message })
+      return res.status(500).json({ success: false, message: error.message });
     }
   }
   async resendOtp(req: Request, res: Response, next: NextFunction) {

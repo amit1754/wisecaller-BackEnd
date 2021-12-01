@@ -2,16 +2,12 @@ import { Request, Response } from "express";
 import { IContactSync } from "../../interfaces/contactSync";
 import { UserContact } from "../../models/contactsync";
 import { User } from "../../models/user";
-import { map } from "lodash";
+import { Types } from "mongoose";
 
 class ContactSyncController {
   async sync(req: Request, res: Response) {
     try {
       const loginUser: any = req.user;
-      const userFind = await UserContact.findOne({
-        contact: loginUser._id,
-      });
-
       let data: any = req.body;
       let length = data.length;
       for (let i = 0; i < length; i++) {
@@ -84,13 +80,15 @@ class ContactSyncController {
 
   async getAll(req: Request, res: Response) {
     try {
-      let page:any = req.query.page;
-      let limit:any = req.query.limit;
-      console.log(page, limit)
+      let page: any = req.query.page;
+      let limit: any = req.query.limit;
+
       const loggedInUser: any = req.user;
+      console.log(loggedInUser._id);
       let userContactFind = await UserContact.find({
-        user: loggedInUser._id,
-      }).skip(page > 0 ? +limit * (+page - 1) : 0)
+        user: Types.ObjectId(loggedInUser._id),
+      })
+        .skip(page > 0 ? +limit * (+page - 1) : 0)
         .limit(+limit || 20)
         .sort({ first_name: 1 })
         .populate({
@@ -121,8 +119,12 @@ class ContactSyncController {
       const loginUser: any = req.user;
       let length = data.length;
       for (let i = 0; i < length; i++) {
-        if (data[i].is_deleted === false) {
+        console.log(
+          data[i].is_deleted === false || data[i]?.is_deleted == undefined
+        );
+        if (data[i].is_deleted === false || data[i]?.is_deleted == undefined) {
           data[i].user = loginUser._id;
+          console.log("sabdkskn");
           let contact: any = data[i];
           for (let j = 0; j < contact.phones.length; j++) {
             const userContactFind = await User.findOne({
@@ -131,8 +133,9 @@ class ContactSyncController {
             if (userContactFind) data[i].user = userContactFind._id;
             else contact.phones[j].wisecallerId = null;
           }
+          console.log("contact", contact);
 
-          await UserContact.findOneAndUpdate(
+          const dda = await UserContact.findOneAndUpdate(
             {
               contactId: contact.contactId,
               user: loginUser._id,
@@ -143,6 +146,7 @@ class ContactSyncController {
               new: true,
             }
           );
+          console.log("dda", dda);
         } else {
           await UserContact.findOneAndRemove({
             contactId: data[i].contactId,
