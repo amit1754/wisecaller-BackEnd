@@ -103,7 +103,7 @@ class callHistory {
     try {
       let reqestData: any = req.body;
       const loginUser: any = req.user;
-      
+
       let callerHistory: any = await CallHistory.findOne({
         phone: reqestData.phone,
         user: loginUser._id,
@@ -192,13 +192,11 @@ class callHistory {
           loggedin_user: loggedInUser._id,
         };
 
-        
         if (!payload.is_deleted) {
           if (!is_existing) {
             let history = new CallHistory(payload);
             await history.save();
           } else {
-            
             await CallHistory.findOneAndUpdate(
               { _id: is_existing._id },
               payload
@@ -237,11 +235,23 @@ class callHistory {
       let loggedInUser: any = req.user;
       let call_history = await CallHistory.find({
         loggedin_user: loggedInUser._id,
-        ...where
+        ...where,
       })
         .skip(page > 0 ? +limit * (+page - 1) : 0)
         .limit(+limit || 20)
         .populate([{ path: "contact" }, { path: "user" }]);
+
+    const callHistory = await CallHistory.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "phone",
+          foreignField: "phones.no",
+          as: "users",
+        },
+      },
+    ]);
+
       return res.status(200).json({
         success: true,
         data: call_history,

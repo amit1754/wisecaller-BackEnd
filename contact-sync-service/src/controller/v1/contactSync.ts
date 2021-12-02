@@ -154,7 +154,7 @@ class ContactSyncController {
       res.status(200).json({
         success: true,
         message: "contact list get successfully",
-        data: contctTime,
+        data: userContactFind,
       });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
