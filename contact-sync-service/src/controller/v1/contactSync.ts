@@ -140,7 +140,7 @@ class ContactSyncController {
             },
           ],
         });
-
+      // for update on fly
       let contctTime = await UserContact.aggregate([
         {
           $lookup: {
@@ -150,6 +150,9 @@ class ContactSyncController {
             as: "user",
           },
         },
+        { $limit: page > 0 ? +limit * (+page - 1) : 0 },
+        { $skip: +limit || 20 },
+        { $sort: { "first_name": 1 } },
       ]);
       res.status(200).json({
         success: true,

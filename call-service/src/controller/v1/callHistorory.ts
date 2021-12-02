@@ -241,16 +241,27 @@ class callHistory {
         .limit(+limit || 20)
         .populate([{ path: "contact" }, { path: "user" }]);
 
-    const callHistory = await CallHistory.aggregate([
-      {
-        $lookup: {
-          from: "users",
-          localField: "phone",
-          foreignField: "phones.no",
-          as: "users",
+      // for update on fly
+      const callHistory = await CallHistory.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "phone",
+            foreignField: "phones.no",
+            as: "users",
+          },
         },
-      },
-    ]);
+        {
+          $lookup: {
+            from: "user_contacts",
+            localField: "phone",
+            foreignField: "phones.ph_no",
+            as: "contactg",
+          },
+        },
+        { $limit: page > 0 ? +limit * (+page - 1) : 0 },
+        { $skip: +limit || 20 },
+      ]);
 
       return res.status(200).json({
         success: true,
