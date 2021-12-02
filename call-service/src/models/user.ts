@@ -95,6 +95,7 @@ const UserSchema = new Schema(
 
 UserSchema.post("find", function (doc) {
   if (doc) {
+    console.log("find user");
     doc.map((x: any) => {
       x.profile_image =
         x.profile_image == null
@@ -102,16 +103,17 @@ UserSchema.post("find", function (doc) {
           : `${process.env.IMAGE_PATH}${x.profile_image}`;
 
       if (x?.user_status) {
-        console.log("x.user_status.status.logo", x.user_status.status.logo);
-        x.user_status.status.logo =
-          x.user_status.status.logo === null
-            ? null
-            : `${process.env.IMAGE_PATH}${x.user_status.status.logo}`;
+        delete x.user_status.status.logo;
+        // x.user_status.status.logo =
+        //   x.user_status.status.logo === null
+        //     ? null
+        //     : `${process.env.IMAGE_PATH}${x.user_status.status.logo}`;
         if (x?.user_status.status.sub_status) {
-          x.user_status.status.sub_status.logo =
-            x.user_status.status.sub_status.logo === null
-              ? null
-              : `${process.env.IMAGE_PATH}${x.user_status.status.sub_status.logo}`;
+          delete x.user_status.status.sub_status.logo;
+          // x.user_status.status.sub_status.logo =
+          //   x.user_status.status.sub_status.logo === null
+          //     ? null
+          //     : `${process.env.IMAGE_PATH}${x.user_status.status.sub_status.logo}`;
         }
       }
 
@@ -122,23 +124,26 @@ UserSchema.post("find", function (doc) {
 });
 UserSchema.post("findOne", function (doc) {
   if (doc) {
+    console.log("findone user");
     doc.profile_image =
       doc.profile_image == null
         ? null
         : `${process.env.IMAGE_PATH}${doc.profile_image}`;
 
     if (doc?.user_status) {
-      doc.user_status.status.logo =
-        doc.user_status.status.logo === null ||
-        doc.user_status.status.logo === undefined
-          ? null
-          : `${process.env.IMAGE_PATH}${doc.user_status.status.logo}`;
+      delete doc.user_status.status.logo;
+      // doc.user_status.status.logo =
+      //   doc.user_status.status.logo === null ||
+      //   doc.user_status.status.logo === undefined
+      //     ? null
+      //     : `${process.env.IMAGE_PATH}${doc.user_status.status.logo}`;
       if (doc?.user_status?.status?.sub_status) {
-        doc.user_status.status.sub_status.logo =
-          doc?.user_status?.status?.sub_status?.logo === null ||
-          doc?.user_status?.sub_status?.logo === undefined
-            ? null
-            : `${process.env.IMAGE_PATH}${doc.user_status.status.sub_status.logo}`;
+        delete doc.user_status.status.sub_status.logo;
+        // doc.user_status.status.sub_status.logo =
+        //   doc?.user_status?.status?.sub_status?.logo === null ||
+        //   doc?.user_status?.sub_status?.logo === undefined
+        //     ? null
+        //     : `${process.env.IMAGE_PATH}${doc.user_status.status.sub_status.logo}`;
       }
     }
   }

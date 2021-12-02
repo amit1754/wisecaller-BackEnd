@@ -29,7 +29,6 @@ class ContactSyncController {
                 });
 
                 if (userContactGet) data[i].user = userContactGet._id;
-                
               }
             }
             delete data[i].contact;
@@ -47,7 +46,6 @@ class ContactSyncController {
               });
 
               if (userContactGet) data[i].user = userContactGet._id;
-              
             }
           }
           data[i].contact = loginUser._id;
@@ -59,8 +57,6 @@ class ContactSyncController {
             await userContactPayload.save();
           }
         }
-
-       
       }
       res.status(200).json({
         success: true,
@@ -145,10 +141,20 @@ class ContactSyncController {
           ],
         });
 
+      let contctTime = await UserContact.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "phones.ph_no",
+            foreignField: "phones.no",
+            as: "user",
+          },
+        },
+      ]);
       res.status(200).json({
         success: true,
         message: "contact list get successfully",
-        data: userContactFind,
+        data: contctTime,
       });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
@@ -227,7 +233,6 @@ class ContactSyncController {
           },
         ],
       });
-
 
       res.status(200).json({
         success: true,

@@ -137,14 +137,14 @@ class NotificationController {
 
 const myPromise = new Promise((resolve: any, reject: any) => {
   let token =
-    "c6THy7ohTE2hOCtBI9VGkg:APA91bH7Ct-cPKctFgQ_1rn8y6NLKfhBma-20llXtlzVJtkndGlDBg7hxcQg6XINx2Vxl3vWnDJdokHTUgAIHtEnhI7C2FGXWjjTXJe8H5vnUiqWxJbdWlNazLLxPjJ7z-kEFcsoJKxk";
+    "eXIckAUHQmW8vbGK32QDsx:APA91bHf1m_mZYd_ORKt_o1i_EslJERrKU4hv00zxr_HYlcYIwiXMOdTCMoi-NXrB9YTR4p1G3UnS7FD87W6_Mtp7lTDdNNXX-AMlYDUHTWdjAjhtLPQy5muN3E5I1mo8MjyAk7QBcrp";
   const notiObj = new NotificationController();
   let a: any = notiObj
     .registerPushNotificationService(token)
     .then((res: any) => {
       console.log("res :>> ", res);
       let arn =
-        "arn:aws:sns:us-east-1:208529951960:endpoint/GCM/wisecaller-push-notification/95af8246-d763-3c8d-8bb8-23d5351c11cf";
+        "arn:aws:sns:us-east-1:208529951960:endpoint/GCM/wisecaller-push-notification/6ec7287d-ea29-38bf-80f6-f36a9e3e1cef";
       let b = notiObj
         .sendPushNotification(arn, {
           data: "aaaa",

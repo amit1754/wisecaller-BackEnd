@@ -182,7 +182,7 @@ class callHistory {
         let is_existing = await CallHistory.findOne({
           phone: item.phone,
           call_history_id: item.call_history_id,
-          // time: item.time,
+          time: item.time,
           loggedin_user: loggedInUser,
         });
         let payload = {
