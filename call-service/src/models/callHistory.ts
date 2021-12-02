@@ -42,7 +42,7 @@ const CallHistorySchema = new Schema(
   // },
   {
     call_history_id: {
-      type: Number,
+      type: String,
     },
     phone: {
       type: String,

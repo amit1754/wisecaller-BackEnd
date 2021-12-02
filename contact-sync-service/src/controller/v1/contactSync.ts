@@ -8,26 +8,63 @@ class ContactSyncController {
   async sync(req: Request, res: Response) {
     try {
       const loginUser: any = req.user;
-      console.log("loginUser",loginUser);
+
       let data: any = req.body;
       let length = data.length;
       for (let i = 0; i < length; i++) {
-        data[i].user = loginUser._id;
-        let contact: any = data[i];
-        for (let j = 0; j < contact.phones.length; j++) {
-          const userContactFind = await User.findOne({
-            "phones.no": contact.phones[j].ph_no,
-          });
+        let userContactFind = await UserContact.findOne({
+          contact: loginUser._id,
+          contactId: data[i].contactId,
+        });
 
-          if (userContactFind) data[i].user = userContactFind._id;
+        if (userContactFind) {
+          if (data[i].is_deleted) {
+            await UserContact.findByIdAndRemove(userContactFind.id);
+          } else {
+            if (data[i]?.phones) {
+              let contact: any = data[i]?.phones;
+              for (let j = 0; j < contact.length; j++) {
+                const userContactGet = await User.findOne({
+                  "phones.no": contact[j].ph_no,
+                });
+
+                if (userContactGet) data[i].user = userContactGet._id;
+                
+              }
+            }
+            delete data[i].contact;
+            await UserContact.findOneAndUpdate(
+              { _id: userContactFind._id },
+              { $set: { ...data[i] } }
+            );
+          }
+        } else {
+          if (data[i]?.phones) {
+            let contact: any = data[i]?.phones;
+            for (let j = 0; j < contact.length; j++) {
+              const userContactGet = await User.findOne({
+                "phones.no": contact[j].ph_no,
+              });
+
+              if (userContactGet) data[i].user = userContactGet._id;
+              
+            }
+          }
+          data[i].contact = loginUser._id;
+          if (
+            data[i]?.is_deleted == false ||
+            data[i]?.is_deleted == undefined
+          ) {
+            let userContactPayload = new UserContact(data[i]);
+            await userContactPayload.save();
+          }
         }
-        
-        const contactSave = new UserContact(contact);
-        await contactSave.save();
+
+       
       }
       res.status(200).json({
         success: true,
-        message: "contact sync successfully",
+        message: "contact update successfully",
         data: [],
       });
     } catch (error: any) {
@@ -86,12 +123,12 @@ class ContactSyncController {
       let limit: any = req.query.limit;
 
       let loggedInUser: any = req.user;
-      console.log(loggedInUser);
+
       let userContactFind = await UserContact.find(
         {
-          user: Types.ObjectId(loggedInUser._id),
+          contact: Types.ObjectId(loggedInUser._id),
         },
-        { contact :0}
+        { contact: 0 }
       )
         .skip(page > 0 ? +limit * (+page - 1) : 0)
         .limit(+limit || 20)
@@ -124,21 +161,28 @@ class ContactSyncController {
       const loginUser: any = req.user;
       let length = data.length;
       for (let i = 0; i < length; i++) {
-        if ((data[i]?.is_deleted === undefined ||data[i].is_deleted) === false) {
-          data[i].user = loginUser._id;
+        if (data[i]?.is_deleted) {
+          await UserContact.findOneAndRemove({
+            contactId: data[i].contactId,
+            contact: loginUser._id,
+          });
+        } else {
+          data[i].contact = loginUser._id;
           let contact: any = data[i];
-          for (let j = 0; j < contact.phones.length; j++) {
-            const userContactFind = await User.findOne({
-              "phones.no": contact.phones[j].ph_no,
-            });
-            if (userContactFind) data[i].contact = userContactFind._id;
+
+          if (contact?.phone) {
+            for (let j = 0; j < contact?.phones?.length; j++) {
+              const userContactFind = await User.findOne({
+                "phones.no": contact.phones[j].ph_no,
+              });
+              if (userContactFind) data[i].user = userContactFind._id;
+            }
           }
-          console.log('contact :>> ', contact);
           const dda = await UserContact.findOneAndUpdate(
             {
               $and: [
                 {
-                  user: loginUser._id,
+                  contact: loginUser._id,
                 },
                 { contactId: data[i].contactId },
               ],
@@ -149,12 +193,6 @@ class ContactSyncController {
               new: true,
             }
           );
-          console.log("dda", dda);
-        } else {
-          await UserContact.findOneAndRemove({
-            contactId: data[i].contactId,
-            user: loginUser._id,
-          });
         }
       }
       res.status(200).json({
@@ -163,7 +201,6 @@ class ContactSyncController {
         data: [],
       });
     } catch (err: any) {
-      console.log("err :>> ", err);
       res.status(500).json({ success: false, message: err.message });
     }
   }
@@ -173,10 +210,24 @@ class ContactSyncController {
       let search: String = req.body.phone_number;
       let searchString = search.replace("+", "");
       const loggedInUser: any = req.user;
-      const userContactFind = await UserContact.find({
-        "phones.ph_no": { $regex: searchString, $options: "ig" },
-        user: loggedInUser._id,
+      const userContactFind = await UserContact.find(
+        {
+          "phones.ph_no": { $regex: searchString, $options: "ig" },
+          contact: loggedInUser._id,
+        },
+        { contact: 0 }
+      ).populate({
+        path: "user",
+        populate: [
+          {
+            path: "status",
+          },
+          {
+            path: "subStatus",
+          },
+        ],
       });
+
 
       res.status(200).json({
         success: true,
@@ -194,7 +245,6 @@ class ContactSyncController {
       }
     }
   }
- 
 
   async deleteContact(req: Request, res: Response) {
     try {

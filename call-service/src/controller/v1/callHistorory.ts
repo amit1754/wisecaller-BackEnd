@@ -103,7 +103,7 @@ class callHistory {
     try {
       let reqestData: any = req.body;
       const loginUser: any = req.user;
-      console.log(reqestData.phone, loginUser._id);
+      
       let callerHistory: any = await CallHistory.findOne({
         phone: reqestData.phone,
         user: loginUser._id,
@@ -182,7 +182,7 @@ class callHistory {
         let is_existing = await CallHistory.findOne({
           phone: item.phone,
           call_history_id: item.call_history_id,
-          time: item.time,
+          // time: item.time,
           loggedin_user: loggedInUser,
         });
         let payload = {
@@ -192,10 +192,17 @@ class callHistory {
           loggedin_user: loggedInUser._id,
         };
 
+        
         if (!payload.is_deleted) {
           if (!is_existing) {
             let history = new CallHistory(payload);
             await history.save();
+          } else {
+            
+            await CallHistory.findOneAndUpdate(
+              { _id: is_existing._id },
+              payload
+            );
           }
         } else {
           await CallHistory.findOneAndRemove({

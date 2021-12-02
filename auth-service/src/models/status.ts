@@ -33,15 +33,18 @@ const SatusSchema = new Schema(
 
 SatusSchema.post("aggregate", function (doc: any) {
   if (doc) {
+    console.log("aff status");
     doc.map((x: any) => {
-      x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
+      delete x.logo;
+      // x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
       if (x.subCategory) {
         x.subCategory.map((y: any) => {
           console.log("before", y.logo);
-          y.logo =
-            y.logo == null || y.logo == undefined
-              ? null
-              : `${process.env.IMAGE_PATH}${y.logo}`;
+          delete y.logo;
+          // y.logo =
+          //   y.logo == null || y.logo == undefined
+          //     ? null
+          //     : `${process.env.IMAGE_PATH}${y.logo}`;
           console.log("Aaa", y.logo);
           return y;
         });
@@ -53,20 +56,24 @@ SatusSchema.post("aggregate", function (doc: any) {
 });
 SatusSchema.post("findOne", function (doc: any) {
   if (doc) {
-    doc.logo == null || doc.logo == undefined
-      ? null
-      : `${process.env.IMAGE_PATH}${doc.logo}`;
+    console.log("findone status");
+    delete doc.logo;
+    // doc.logo == null || doc.logo == undefined
+    //   ? null
+    //   : `${process.env.IMAGE_PATH}${doc.logo}`;
   }
 
   return doc;
 });
 SatusSchema.post("find", function (doc) {
   if (doc) {
+    console.log("find status");
     doc.map((x: any) => {
-      x.logo =
-        x.logo == null || x.logo == undefined
-          ? null
-          : `${process.env.IMAGE_PATH}${x.logo}`;
+      delete x.logo;
+      // x.logo =
+      //   x.logo == null || x.logo == undefined
+      //     ? null
+      //     : `${process.env.IMAGE_PATH}${x.logo}`;
       return x;
     });
   }
