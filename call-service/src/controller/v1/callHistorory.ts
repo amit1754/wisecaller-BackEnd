@@ -177,17 +177,18 @@ class callHistory {
       let loggedInUser: any = req.user;
 
       for (const item of body) {
-        let user = await User.findOne({ "phones.no": item.phone });
-        let contact = await UserContact.findOne({ "phones.ph_no": item.phone });
+        let contact = await UserContact.findOne({
+          "phones.ph_no": item.phone,
+          contact: loggedInUser._id,
+        });
+
         let is_existing = await CallHistory.findOne({
-          phone: item.phone,
           call_history_id: item.call_history_id,
-          time: item.time,
           loggedin_user: loggedInUser,
         });
+
         let payload = {
           ...item,
-          user: user?._id || null,
           contact: contact?.id || null,
           loggedin_user: loggedInUser._id,
         };
@@ -233,16 +234,9 @@ class callHistory {
         };
       }
       let loggedInUser: any = req.user;
-      let call_history = await CallHistory.find({
-        loggedin_user: loggedInUser._id,
-        ...where,
-      })
-        .skip(page > 0 ? +limit * (+page - 1) : 0)
-        .limit(+limit || 20)
-        .populate([{ path: "contact" }, { path: "user" }]);
-
       // for update on fly
       const callHistory = await CallHistory.aggregate([
+        { $match: { loggedin_user: loggedInUser._id, ...where } },
         {
           $lookup: {
             from: "users",
@@ -254,18 +248,31 @@ class callHistory {
         {
           $lookup: {
             from: "user_contacts",
+            pipeline: [{ $match: { contact: loggedInUser._id } }],
             localField: "phone",
             foreignField: "phones.ph_no",
-            as: "contactg",
+            as: "contact",
           },
         },
-        { $limit: page > 0 ? +limit * (+page - 1) : 0 },
-        { $skip: +limit || 20 },
+        {
+          $unwind: {
+            path: "$users",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: "$contact",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        { $limit: +limit || 20 },
+        { $skip: page > 0 ? +limit * (+page - 1) : 0 },
       ]);
 
       return res.status(200).json({
         success: true,
-        data: call_history,
+        data: callHistory,
       });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
