@@ -94,7 +94,6 @@ class UserController {
       }
       Object.assign(payload, { phones: phones });
 
-      console.log(payload);
       return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });

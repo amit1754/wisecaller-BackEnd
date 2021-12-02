@@ -21,16 +21,16 @@ class ContactSyncController {
           if (data[i].is_deleted) {
             await UserContact.findByIdAndRemove(userContactFind.id);
           } else {
-            if (data[i]?.phones) {
-              let contact: any = data[i]?.phones;
-              for (let j = 0; j < contact.length; j++) {
-                const userContactGet = await User.findOne({
-                  "phones.no": contact[j].ph_no,
-                });
+            // if (data[i]?.phones) {
+            //   let contact: any = data[i]?.phones;
+            //   for (let j = 0; j < contact.length; j++) {
+            //     const userContactGet = await User.findOne({
+            //       "phones.no": contact[j].ph_no,
+            //     });
 
-                if (userContactGet) data[i].user = userContactGet._id;
-              }
-            }
+            //     if (userContactGet) data[i].user = userContactGet._id;
+            //   }
+            // }
             delete data[i].contact;
             await UserContact.findOneAndUpdate(
               { _id: userContactFind._id },
@@ -38,16 +38,16 @@ class ContactSyncController {
             );
           }
         } else {
-          if (data[i]?.phones) {
-            let contact: any = data[i]?.phones;
-            for (let j = 0; j < contact.length; j++) {
-              const userContactGet = await User.findOne({
-                "phones.no": contact[j].ph_no,
-              });
+          // if (data[i]?.phones) {
+          //   let contact: any = data[i]?.phones;
+          //   for (let j = 0; j < contact.length; j++) {
+          //     const userContactGet = await User.findOne({
+          //       "phones.no": contact[j].ph_no,
+          //     });
 
-              if (userContactGet) data[i].user = userContactGet._id;
-            }
-          }
+          //     if (userContactGet) data[i].user = userContactGet._id;
+          //   }
+          // }
           data[i].contact = loginUser._id;
           if (
             data[i]?.is_deleted == false ||
@@ -120,28 +120,9 @@ class ContactSyncController {
 
       let loggedInUser: any = req.user;
 
-      let userContactFind = await UserContact.find(
-        {
-          contact: Types.ObjectId(loggedInUser._id),
-        },
-        { contact: 0 }
-      )
-        .skip(page > 0 ? +limit * (+page - 1) : 0)
-        .limit(+limit || 20)
-        .sort({ first_name: 1 })
-        .populate({
-          path: "user",
-          populate: [
-            {
-              path: "status",
-            },
-            {
-              path: "subStatus",
-            },
-          ],
-        });
       // for update on fly
       let contctTime = await UserContact.aggregate([
+        { $match: { contact: loggedInUser._id } },
         {
           $lookup: {
             from: "users",
@@ -150,14 +131,20 @@ class ContactSyncController {
             as: "user",
           },
         },
-        { $limit: page > 0 ? +limit * (+page - 1) : 0 },
-        { $skip: +limit || 20 },
-        { $sort: { "first_name": 1 } },
+        {
+          $unwind: {
+            path: "$user",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        { $limit: +limit || 20 },
+        { $skip: page > 0 ? +limit * (+page - 1) : 0 },
+        { $sort: { first_name: 1 } },
       ]);
       res.status(200).json({
         success: true,
         message: "contact list get successfully",
-        data: userContactFind,
+        data: contctTime,
       });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
@@ -179,14 +166,14 @@ class ContactSyncController {
           data[i].contact = loginUser._id;
           let contact: any = data[i];
 
-          if (contact?.phone) {
-            for (let j = 0; j < contact?.phones?.length; j++) {
-              const userContactFind = await User.findOne({
-                "phones.no": contact.phones[j].ph_no,
-              });
-              if (userContactFind) data[i].user = userContactFind._id;
-            }
-          }
+          // if (contact?.phone) {
+          //   for (let j = 0; j < contact?.phones?.length; j++) {
+          //     const userContactFind = await User.findOne({
+          //       "phones.no": contact.phones[j].ph_no,
+          //     });
+          //     // if (userContactFind) data[i].user = userContactFind._id;
+          //   }
+          // }
           const dda = await UserContact.findOneAndUpdate(
             {
               $and: [
@@ -219,23 +206,28 @@ class ContactSyncController {
       let search: String = req.body.phone_number;
       let searchString = search.replace("+", "");
       const loggedInUser: any = req.user;
-      const userContactFind = await UserContact.find(
+      const userContactFind = await UserContact.aggregate([
         {
-          "phones.ph_no": { $regex: searchString, $options: "ig" },
-          contact: loggedInUser._id,
+          $match: {
+            "phones.ph_no": { $regex: searchString, $options: "ig" },
+            contact: loggedInUser._id,
+          },
         },
-        { contact: 0 }
-      ).populate({
-        path: "user",
-        populate: [
-          {
-            path: "status",
+        {
+          $lookup: {
+            from: "users",
+            localField: "phones.ph_no",
+            foreignField: "phones.no",
+            as: "user",
           },
-          {
-            path: "subStatus",
+        },
+        {
+          $unwind: {
+            path: "$user",
+            preserveNullAndEmptyArrays: true,
           },
-        ],
-      });
+        },
+      ]);
 
       res.status(200).json({
         success: true,

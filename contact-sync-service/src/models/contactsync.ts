@@ -5,12 +5,6 @@ const ContactSyncSchema = new Schema(
     contactId: {
       type: String,
     },
-    user: {
-      // usercontact is avaliable or not in wisecaller
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
     contact: {
       //for user contact identifier
       type: Schema.Types.ObjectId,

@@ -95,7 +95,6 @@ const UserSchema = new Schema(
 
 UserSchema.post("find", function (doc) {
   if (doc) {
-    console.log("find user");
     doc.map((x: any) => {
       x.profile_image =
         x.profile_image == null
