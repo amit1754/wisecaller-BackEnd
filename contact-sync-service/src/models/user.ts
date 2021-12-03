@@ -82,7 +82,7 @@ const UserSchema = new Schema(
         data: { type: Schema.Types.Mixed, default: null },
       },
       syncCalender: {
-        calenders: { type: Schema.Types.Mixed, default: null },
+        calendars: { type: Schema.Types.Mixed, default: null },
         prioritize_calender_events: { type: Boolean, default: false },
         status: {
           type: Schema.Types.Mixed,

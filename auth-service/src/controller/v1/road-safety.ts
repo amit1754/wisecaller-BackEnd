@@ -30,7 +30,6 @@ class RoadSafetyController {
         path: "applicable_types",
         model: "globalType",
       });
-      console.log("defaultStatus", defaultStatus);
 
       let user = await User.findOne({ _id: loggedInUser._id }).lean();
       let modesPayload = {
@@ -56,6 +55,7 @@ class RoadSafetyController {
         .status(200)
         .json({ success: true, message: "Roadsafety updated successfully" });
     } catch (error: any) {
+      console.log(error);
       return res.status(500).json({ success: false, message: error.message });
     }
   }
