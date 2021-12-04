@@ -205,9 +205,7 @@ class callHistory {
           }
         } else {
           await CallHistory.findOneAndRemove({
-            phone: item.phone,
             call_history_id: item.call_history_id,
-            time: item.time,
             loggedin_user: loggedInUser._id,
           });
         }
