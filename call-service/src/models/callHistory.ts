@@ -60,10 +60,6 @@ const CallHistorySchema = new Schema(
     sim: {
       type: String,
     },
-    contact: {
-      type: Schema.Types.ObjectId,
-      ref: "user_contact",
-    },
     loggedin_user: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -49,8 +49,7 @@ class AuthController {
         otp: otp,
         mobileNo: reqData.mobileNo,
       };
-
-      await sendSMS1(reqData.mobileNo, otp);
+      if (process.env.MESSAGE_SEND) await sendSMS1(reqData.mobileNo, otp);
       let token;
       const userOtpDe = await AuthToken.findOne({
         mobileNo: reqData.mobileNo,
@@ -200,16 +199,16 @@ class AuthController {
       } else {
         token = postData.token;
       }
-       let verify: any = await jwtVerify(token);
+      let verify: any = await jwtVerify(token);
 
-       let time: number = verify.exp;
-       let token_expires_at: any = new Date(time * 1000);
-       res.status(200).json({
-         success: true,
-         message: "token refresh sucessfully",
-         token: token,
-         token_expires_at,
-       });
+      let time: number = verify.exp;
+      let token_expires_at: any = new Date(time * 1000);
+      res.status(200).json({
+        success: true,
+        message: "token refresh sucessfully",
+        token: token,
+        token_expires_at,
+      });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }

@@ -83,7 +83,7 @@ const UserSchema = new Schema(
       },
       syncCalender: {
         calenders: { type: Schema.Types.Mixed, default: null },
-        prioritize_calender_events: { type: Boolean, default: false },
+        prioritize_calender_events: { type: Boolean },
         status: {
           type: Schema.Types.Mixed,
         },
