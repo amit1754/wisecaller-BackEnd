@@ -123,7 +123,6 @@ UserSchema.post("find", function (doc) {
 });
 UserSchema.post("findOne", function (doc) {
   if (doc) {
-    console.log("findone user");
     doc.profile_image =
       doc.profile_image == null
         ? null
