@@ -15,8 +15,8 @@ class CalenderSyncController {
 
       if (!userFind) {
         let payload: any = {
-          calendars: calenderEvent.calendars,
-          prioritize_calendar_events: calenderEvent.prioritize_calendar_events,
+          calenders: calenderEvent.calenders,
+          prioritize_calendar_events: calenderEvent.prioritize_calender_events,
           status: calenderEvent.status,
           user: loginUser._id,
         };
@@ -25,7 +25,7 @@ class CalenderSyncController {
       } else {
         let payload: any = {
           calendars: calenderEvent.calendars,
-          prioritize_calendar_events: calenderEvent.prioritize_calendar_events,
+          prioritize_calendar_events: calenderEvent.prioritize_calender_events,
           status: calenderEvent.status,
         };
 
@@ -49,8 +49,8 @@ class CalenderSyncController {
       let modesPayload = {
         ...user.modes,
         syncCalender: {
-          calenders: calenderEvent.calendars,
-          prioritize_calender_events: calenderEvent.prioritize_calendar_events,
+          calenders: calenderEvent.calenders,
+          prioritize_calender_events: calenderEvent.prioritize_calender_events,
           status: status,
         },
       };

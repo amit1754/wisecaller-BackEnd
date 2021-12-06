@@ -7,7 +7,7 @@ const CalenderSyncSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    calendars: [
+    calenders: [
       {
         id: { type: String, comment: "email address" },
         synced: { type: Boolean, default: false },
@@ -15,7 +15,7 @@ const CalenderSyncSchema = new Schema(
       },
     ],
 
-    prioritize_calendar_events: {
+    prioritize_calender_events: {
       type: Boolean,
       default: false,
     },
@@ -26,6 +26,5 @@ const CalenderSyncSchema = new Schema(
   },
   { timestamps: true }
 );
-
 
 export const UserCalender = model("user_calender", CalenderSyncSchema);
