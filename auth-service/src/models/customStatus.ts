@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const customStatusSchema = new Schema(
   {
     custom_name: { type: String },
-    customId: { type: Number, unique: true },
+    customId: { type: String },
     start_date: { type: Date },
     end_date: { type: Date },
     is_allday_status: { type: Boolean, default: false },
