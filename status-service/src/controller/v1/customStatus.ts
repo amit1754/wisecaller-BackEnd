@@ -26,7 +26,7 @@ class CustomStatusController {
           );
         }
       }
-      
+
       res.status(200).json({
         success: true,
         message: "User status added successfully",
@@ -66,18 +66,18 @@ class CustomStatusController {
       }
       if (body.workLife) {
         const worklifeData: any = body.workLife;
-       let date1 = worklifeData.Excluded_dates.map((x: any) =>
-         new Date(x).toISOString()
-       );
+        let date1 = worklifeData.Excluded_dates.map((x: any) =>
+          new Date(x).toISOString()
+        );
 
-       const update = await WorkLife.findOneAndUpdate(
-         { user: loggedInUser._id },
-         { Excluded_dates: date1 },
-         {
-           upsert: true,
-           new: true,
-         }
-       );
+        const update = await WorkLife.findOneAndUpdate(
+          { user: loggedInUser._id },
+          { Excluded_dates: date1 },
+          {
+            upsert: true,
+            new: true,
+          }
+        );
       }
 
       res.status(200).json({
@@ -128,10 +128,10 @@ class CustomStatusController {
       const loggedInUser: any = req.user;
       const getStatus: any = await customStatus.aggregate([
         {
-          $match: { 
-            user: loggedInUser._id, 
-            start_date: { $gte: new Date(timestamp)}
-          }
+          $match: {
+            user: loggedInUser._id,
+            start_date: { $gte: new Date(timestamp) },
+          },
         },
         {
           $lookup: {
@@ -145,7 +145,7 @@ class CustomStatusController {
         {
           $lookup: {
             from: "usersubstatuses",
-            localField: "substatus`",
+            localField: "substatus",
             foreignField: "_id",
             as: "userSubStatus",
           },
