@@ -283,9 +283,9 @@ class UserController {
             name: userCustomStatus.custom_name,
             status: { ...payload.status, ...userStatus },
           });
-          if (userCustomStatus.substatus) {
+          if (userCustomStatus.sub_status) {
             let userSubStatus = await UserSubStatus.findById(
-              req.body.subStatusId
+              userCustomStatus.sub_status
             );
             Object.assign(payload, { sub_status: userSubStatus });
           }
