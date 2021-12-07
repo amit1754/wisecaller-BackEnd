@@ -263,71 +263,84 @@ class UserController {
   async updateUserStatus(req: Request, res: Response) {
     try {
       let loggedInUser: any = req.user;
+      let user: any = {};
       let payload = {
         name: "",
         status: {
           sub_status: {},
         },
       };
-      if (req.body.customStatusId) {
-        let userCustomStatus = await customStatus.findById(
-          req.body.customStatusId
-        );
-        let userStatus = await UserStatus.findById(
-          userCustomStatus.status
-        ).lean();
-        Object.assign(payload, {
-          name: userCustomStatus.custom_name,
-          status: { ...payload.status, ...userStatus },
-        });
-        if (userCustomStatus.substatus) {
+
+      if (!req.body.is_deleted) {
+        if (req.body.customStatusId) {
+          let userCustomStatus = await customStatus.findById(
+            req.body.customStatusId
+          );
+          let userStatus = await UserStatus.findById(
+            userCustomStatus.status
+          ).lean();
+          Object.assign(payload, {
+            name: userCustomStatus.custom_name,
+            status: { ...payload.status, ...userStatus },
+          });
+          if (userCustomStatus.substatus) {
+            let userSubStatus = await UserSubStatus.findById(
+              req.body.subStatusId
+            );
+            Object.assign(payload, { sub_status: userSubStatus });
+          }
+        }
+
+        if (req.body.statusId) {
+          let userStatus = await UserStatus.findById(req.body.statusId).lean();
+          Object.assign(payload, {
+            status: { ...payload.status, ...userStatus },
+          });
+        }
+
+        if (req.body.subStatusId) {
           let userSubStatus = await UserSubStatus.findById(
             req.body.subStatusId
           );
-          Object.assign(payload, { sub_status: userSubStatus });
+          Object.assign(payload.status, { sub_status: userSubStatus });
         }
-      }
 
-      if (req.body.statusId) {
-        let userStatus = await UserStatus.findById(req.body.statusId).lean();
-        Object.assign(payload, {
-          status: { ...payload.status, ...userStatus },
-        });
-      }
-
-      if (req.body.subStatusId) {
-        let userSubStatus = await UserSubStatus.findById(req.body.subStatusId);
-        Object.assign(payload.status, { sub_status: userSubStatus });
-      }
-
-      if (req.body.notes) {
-        if (req.body.notes.id) {
-          let findNotes = await Notes.findById(req.body.notes.id);
-          if (findNotes) {
+        if (req.body.notes) {
+          if (req.body.notes.id) {
+            let findNotes = await Notes.findById(req.body.notes.id);
+            if (findNotes) {
+              let notes = {
+                id: findNotes._id,
+                is_custom: false,
+                text: "",
+              };
+              Object.assign(payload.status, { status_notes: notes });
+            } else {
+              throw new Error("notes is not avalible");
+            }
+          } else {
             let notes = {
-              id: findNotes._id,
-              is_custom: false,
-              text: "",
+              id: "",
+              is_custom: true,
+              text: req.body.notes.text,
             };
             Object.assign(payload.status, { status_notes: notes });
-          } else {
-            throw new Error("notes is not avalible");
           }
-        } else {
-          let notes = {
-            id: "",
-            is_custom: true,
-            text: req.body.notes.text,
-          };
-          Object.assign(payload.status, { status_notes: notes });
         }
+
+        user = await User.findOneAndUpdate(
+          { _id: loggedInUser._id },
+          { user_status: payload },
+          { upsert: true, new: true }
+        );
+      } else {
+        user = await User.findOneAndUpdate(
+          { _id: loggedInUser._id },
+          { user_status: null },
+          { upsert: true, new: true }
+        );
       }
 
-      let user = await User.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        { user_status: payload },
-        { upsert: true, new: true }
-      );
       return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
       return res.status(500).json({ success: false, error: error.message });
