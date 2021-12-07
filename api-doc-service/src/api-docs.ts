@@ -375,7 +375,7 @@ export default {
                 $ref: "#/components/schemas/updateuserstatusrequest",
               },
               example: {
-                customStatusId: "61950368448ab7e5f7775ce0",
+                customStatusId: "custom_status_id",
                 statusId: "6195004219517edbb9a32dde",
                 subStatusId: "6195023525c96ee17567830d",
                 notes: {
@@ -383,6 +383,7 @@ export default {
                   is_custom: false,
                   text: "",
                 },
+                is_deleted: false,
               },
             },
           },
@@ -606,6 +607,41 @@ export default {
                 example: {
                   success: true,
                   message: "Roadsafety updated successfully",
+                  data: {
+                    is_active: true,
+                    devices: ["JBL Enduarance", "Boat Rokerz"],
+                    data: {
+                      selected_device: "Boat Rokerz",
+                      display_to: "contacts",
+                      auto_sms: false,
+                      notes: {
+                        is_custom: true,
+                        text: "Not available",
+                      },
+                      status: {
+                        user: null,
+                        applicable_types: [
+                          {
+                            _id: "61a190ae88e2950009a58a61",
+                            type: "ROAD_SAFETY",
+                            order: 1,
+                            createdAt: "2021-11-27T01:58:06.318Z",
+                            updatedAt: "2021-11-27T01:58:06.318Z",
+                            __v: 0,
+                          },
+                        ],
+                        isDeleted: false,
+                        _id: "61a19522d87d6100088f7a45",
+                        status: "Driving",
+                        priority: 0,
+                        icon_style: "RED_CROSS",
+                        logo: null,
+                        createdAt: "2021-11-27T02:17:06.417Z",
+                        updatedAt: "2021-11-27T02:17:06.417Z",
+                        __v: 0,
+                      },
+                    },
+                  },
                 },
               },
             },
