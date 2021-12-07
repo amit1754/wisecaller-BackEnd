@@ -273,9 +273,10 @@ class UserController {
 
       if (!req.body.is_deleted) {
         if (req.body.customStatusId) {
-          let userCustomStatus = await customStatus.findById(
-            req.body.customStatusId
-          );
+          let userCustomStatus = await customStatus.findOne({
+            customId: req.body.customStatusId,
+          });
+
           let userStatus = await UserStatus.findById(
             userCustomStatus.status
           ).lean();
@@ -283,9 +284,9 @@ class UserController {
             name: userCustomStatus.custom_name,
             status: { ...payload.status, ...userStatus },
           });
-          if (userCustomStatus.sub_status) {
+          if (userCustomStatus.substatus) {
             let userSubStatus = await UserSubStatus.findById(
-              userCustomStatus.sub_status
+              userCustomStatus.substatus
             );
             Object.assign(payload, { sub_status: userSubStatus });
           }
