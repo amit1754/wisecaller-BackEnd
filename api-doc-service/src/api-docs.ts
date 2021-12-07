@@ -614,6 +614,54 @@ export default {
         deprecated: false,
       },
     },
+    "/auth-service/api/v1/calendar-sync": {
+      post: {
+        tags: ["Auth service"],
+        summary: "Sync Calender",
+        operationId: "SyncCalender",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/SyncCalenderRequest",
+              },
+              example: {
+                calenders: [
+                  {
+                    id: "tesr@gmail.com",
+                    synced: true,
+                  },
+                ],
+                prioritize_calendar_events: false,
+                status: "61a194a2d87d6100088f7a3f",
+                subStatus: "61a196e4d87d6100088f7a5a",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2007",
+                },
+                example: {
+                  success: true,
+                  message: "Sucess",
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/call-service/api/v1/callhistory/sync-history": {
       post: {
         tags: ["Call History"],
@@ -3918,6 +3966,35 @@ export default {
           },
           is_active: {
             type: "boolean",
+          },
+        },
+        example: {
+          devices: ["JBL Enduarance", "Boat Rokerz"],
+          selected_device: "Boat Rokerz",
+          display_to: "contacts",
+          auto_sms: false,
+          notes: {
+            note_id: "",
+            is_custom: true,
+            text: "Not available",
+          },
+          is_active: true,
+        },
+      },
+      SyncCalenderRequest: {
+        title: "SyncCalenderRequest",
+        required: [],
+        type: "object",
+        properties: {
+          calenders: "array",
+          prioritize_calendar_events: {
+            type: "boolean",
+          },
+          status: {
+            type: "string",
+          },
+          subStatus: {
+            type: "string",
           },
         },
         example: {
