@@ -20,6 +20,18 @@ class UserController {
         });
       }
 
+      if (user?.modes?.workLifeBalance?.data) {
+        let data = user?.modes?.workLifeBalance?.data;
+        let status = await UserStatus.findOne({
+          _id: data.status,
+        });
+        let sub_status = await UserSubStatus.findOne({
+          _id: data.sub_status,
+        });
+        user.modes.workLifeBalance.data.status = status;
+        user.modes.workLifeBalance.data.sub_status = sub_status;
+      }
+
       if (user?.modes?.roadSafetyStatus?.data?.status?.applicable_types) {
         user.modes.roadSafetyStatus.data.status.applicable_types =
           await globalTypeModel.find({
