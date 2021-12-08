@@ -89,6 +89,9 @@ const UserSchema = new Schema(
         },
       },
     },
+    notification_token: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
@@ -101,18 +104,11 @@ UserSchema.post("find", function (doc) {
           ? null
           : `${process.env.IMAGE_PATH}${x.profile_image}`;
 
+      delete x.notification_token;
       if (x?.user_status) {
         delete x.user_status.status.logo;
-        // x.user_status.status.logo =
-        //   x.user_status.status.logo === null
-        //     ? null
-        //     : `${process.env.IMAGE_PATH}${x.user_status.status.logo}`;
         if (x?.user_status.status.sub_status) {
           delete x.user_status.status.sub_status.logo;
-          // x.user_status.status.sub_status.logo =
-          //   x.user_status.status.sub_status.logo === null
-          //     ? null
-          //     : `${process.env.IMAGE_PATH}${x.user_status.status.sub_status.logo}`;
         }
       }
 
@@ -123,6 +119,7 @@ UserSchema.post("find", function (doc) {
 });
 UserSchema.post("findOne", function (doc) {
   if (doc) {
+    delete doc.notification_token;
     doc.profile_image =
       doc.profile_image == null
         ? null
@@ -130,18 +127,8 @@ UserSchema.post("findOne", function (doc) {
 
     if (doc?.user_status) {
       delete doc.user_status.status.logo;
-      // doc.user_status.status.logo =
-      //   doc.user_status.status.logo === null ||
-      //   doc.user_status.status.logo === undefined
-      //     ? null
-      //     : `${process.env.IMAGE_PATH}${doc.user_status.status.logo}`;
       if (doc?.user_status?.status?.sub_status) {
         delete doc.user_status.status.sub_status.logo;
-        // doc.user_status.status.sub_status.logo =
-        //   doc?.user_status?.status?.sub_status?.logo === null ||
-        //   doc?.user_status?.sub_status?.logo === undefined
-        //     ? null
-        //     : `${process.env.IMAGE_PATH}${doc.user_status.status.sub_status.logo}`;
       }
     }
   }
