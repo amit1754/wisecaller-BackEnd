@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { ICustomStatus } from "../../interfaces/status";
 import { customStatus } from "../../models/customStatus";
-import { WorkLife } from "../../models/worklIfe";
+import { User } from "../../models/user";
+import { WorkLifeBalance } from "../../models/worklIfe";
 
 class CustomStatusController {
   async add(req: Request, res: Response) {
@@ -46,22 +47,24 @@ class CustomStatusController {
     try {
       const loggedInUser: any = req.user;
       let body: any = req.body;
-      const length: number = body.status.length;
-      for (let i = 0; i < length; i++) {
-        if (body.status[i].is_deleted) {
-          await customStatus.findOneAndRemove({
-            customId: body.status[i].customId,
-            user: loggedInUser._id,
-          });
-        } else {
-          await customStatus.findOneAndUpdate(
-            { customId: body.status[i].customId, user: loggedInUser._id },
-            body.status[i],
-            {
-              upsert: true,
-              new: true,
-            }
-          );
+      if (body.status && body.status.length) {
+        const length: number = body.status.length;
+        for (let i = 0; i < length; i++) {
+          if (body.status[i].is_deleted) {
+            await customStatus.findOneAndRemove({
+              customId: body.status[i].customId,
+              user: loggedInUser._id,
+            });
+          } else {
+            await customStatus.findOneAndUpdate(
+              { customId: body.status[i].customId, user: loggedInUser._id },
+              body.status[i],
+              {
+                upsert: true,
+                new: true,
+              }
+            );
+          }
         }
       }
       if (body.workLife) {
@@ -70,9 +73,9 @@ class CustomStatusController {
           new Date(x).toISOString()
         );
 
-        const update = await WorkLife.findOneAndUpdate(
+        const update = await WorkLifeBalance.findOneAndUpdate(
           { user: loggedInUser._id },
-          { Excluded_dates: date1 },
+          { excluded_dates: date1 },
           {
             upsert: true,
             new: true,
@@ -86,6 +89,7 @@ class CustomStatusController {
         data: [],
       });
     } catch (error: any) {
+      console.log(error);
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -161,9 +165,9 @@ class CustomStatusController {
         },
       ]);
 
-      const worklife: any = await WorkLife.findOne(
+      const worklife: any = await WorkLifeBalance.findOne(
         { user: loggedInUser._id },
-        { Excluded_dates: 1, _id: 0 }
+        { excluded_dates: 1, _id: 0 }
       );
 
       res.status(200).json({
@@ -172,7 +176,7 @@ class CustomStatusController {
         data: {
           status: getStatus,
           worklife: {
-            Excluded_dates: worklife ? worklife.Excluded_dates : null,
+            excluded_dates: worklife ? worklife.excluded_dates : null,
           },
         },
       });

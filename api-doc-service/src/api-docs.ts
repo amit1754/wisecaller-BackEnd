@@ -1640,6 +1640,50 @@ export default {
         deprecated: false,
       },
     },
+    "/auth-service/api/v1/work-life-balance": {
+      post: {
+        tags: ["Auth service"],
+        summary: "Work Life Balance",
+        operationId: "WorkLifeBalance",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/WorkLifeBalanceRequest",
+              },
+              example: {
+                days: [
+                  {
+                    monday: true,
+                    tuesday: false,
+                    wednesday: false,
+                    thursday: true,
+                    friday: false,
+                    saturday: false,
+                    sunday: false,
+                  },
+                ],
+                start_time: "10:00AM",
+                end_time: "03:00PM",
+                status: "61a194a2d87d6100088f7a3f",
+                sub_status: "61a19703d87d6100088f7a60",
+                is_active: true,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          200: {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/contact-sync-service/api/v1/contact/favorite-add": {
       post: {
         tags: ["Contact sync"],
@@ -2539,7 +2583,7 @@ export default {
                     RRULE: "is_repeat",
                     time_zone: "IN/PST etc..",
                     status: "61670b887a7764f6a360db28",
-                    sub_status: null,
+                    substatus: null,
                     notes: {
                       is_custom: true,
                       text: "text for sending sms",
@@ -2560,7 +2604,7 @@ export default {
                   RRULE: "is_repeat",
                   time_zone: "IN/PST etc..",
                   status: "61670b887a7764f6a360db28",
-                  sub_status: null,
+                  substatus: null,
                   notes: {
                     is_custom: true,
                     text: "text for sending sms",
@@ -2619,7 +2663,7 @@ export default {
                     RRULE: "rrule format if is_repeat is true",
                     time_zone: "IN/PST etc..",
                     status: "61670b887a7764f6a360db28",
-                    sub_status: null,
+                    substatus: null,
                     notes: {
                       is_custom: true,
                       text: "text for sending sms",
@@ -2638,7 +2682,7 @@ export default {
                     RRULE: "rrule format if is_repeat is true",
                     time_zone: "IN/PST etc..",
                     status: "61670b887a7764f6a360db28",
-                    sub_status: null,
+                    substatus: null,
                     notes: {
                       is_custom: true,
                       text: "text for sending sms",
@@ -2657,7 +2701,7 @@ export default {
                     RRULE: "rrule format if is_repeat is true",
                     time_zone: "IN/PST etc..",
                     status: "61670b887a7764f6a360db28",
-                    sub_status: null,
+                    substatus: null,
                     notes: {
                       is_custom: true,
                       text: "text for sending sms",
@@ -7340,6 +7384,68 @@ export default {
           noteId: null,
           is_custom: "true",
           text: "text for sending sms",
+        },
+      },
+      WorkLifeBalanceRequest: {
+        title: "WorkLifeBalanceRequest",
+        required: [
+          "days",
+          "start_time",
+          "end_time",
+          "status",
+          "sub_status",
+          "excluded_dates",
+          "is_active",
+        ],
+        type: "object",
+        properties: {
+          days: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Day",
+            },
+            description: "",
+          },
+          start_time: {
+            type: "string",
+          },
+          end_time: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          sub_status: {
+            type: "string",
+          },
+          excluded_dates: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+            description: "",
+          },
+          is_active: {
+            type: "boolean",
+          },
+        },
+        example: {
+          days: [
+            {
+              monday: true,
+              tuesday: false,
+              wednesday: false,
+              thursday: true,
+              friday: false,
+              saturday: false,
+              sunday: false,
+            },
+          ],
+          start_time: "10:00AM",
+          end_time: "03:00PM",
+          status: "61a194a2d87d6100088f7a3f",
+          sub_status: "61a19703d87d6100088f7a60",
+          is_active: true,
         },
       },
     },

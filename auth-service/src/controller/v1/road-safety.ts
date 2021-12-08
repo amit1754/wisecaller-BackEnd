@@ -20,12 +20,12 @@ class RoadSafetyController {
         roadSafety = await RoadSafety.findOneAndUpdate(
           { user: loggedInUser._id },
           { ...req.body },
-          { upsert: true }
+          { upsert: true, new: true }
         );
       }
 
       let defaultStatus = await UserStatus.findOne({
-        status: "Driving",
+        applicable_types: "61a190ae88e2950009a58a61",
       }).populate({
         path: "applicable_types",
         model: "globalType",
