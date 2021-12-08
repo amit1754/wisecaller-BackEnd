@@ -2,7 +2,7 @@ export interface IUser {
   phones: Object;
   phone: String;
   profile_image: null;
-  notification_token: String;
+  // notification_token: String;
 }
 
 export interface IOtp {

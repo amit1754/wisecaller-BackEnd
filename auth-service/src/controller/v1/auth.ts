@@ -3,7 +3,7 @@ import { IOtp, IUser } from "../../interfaces/auth";
 import { User } from "../../models/user";
 import { AuthToken } from "../../models/auth-token";
 import jwt from "jsonwebtoken";
-import { MobileNoCheckUtils, jwtVerify, fcmOperatios } from "../../utils";
+import { MobileNoCheckUtils, jwtVerify } from "../../utils";
 import sendSMS1 from "../../middlewares/smsSendMiddelware";
 import moment from "moment";
 
@@ -96,12 +96,12 @@ class AuthController {
               },
               phone: mobileNo,
               profile_image: null,
-              notification_token,
+              // notification_token,
             };
 
             const user = new User(payload);
             userDetails = await user.save();
-            fcmOperatios.RegisterToken(notification_token);
+            // fcmOperatios.RegisterToken(notification_token);
           } else {
             let phones: any = userFind.phones;
             for (let i = 0; i < userFind.phones.length; i++) {
