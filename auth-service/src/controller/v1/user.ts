@@ -13,7 +13,10 @@ class UserController {
   async show(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      let user: any = await User.findOne({ _id: loggedInUser._id });
+      let user: any = await User.findOne(
+        { _id: loggedInUser._id },
+        { notification_token: 0 }
+      );
       if (user?.user_status?.status?.applicable_types) {
         user.user_status.status.applicable_types = await globalTypeModel.find({
           _id: { $in: user?.user_status?.status?.applicable_types },

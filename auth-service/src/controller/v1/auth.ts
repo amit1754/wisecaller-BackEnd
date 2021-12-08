@@ -3,7 +3,7 @@ import { IOtp, IUser } from "../../interfaces/auth";
 import { User } from "../../models/user";
 import { AuthToken } from "../../models/auth-token";
 import jwt from "jsonwebtoken";
-import { MobileNoCheckUtils, jwtVerify } from "../../utils";
+import { MobileNoCheckUtils, jwtVerify, fcmOperatios } from "../../utils";
 import sendSMS1 from "../../middlewares/smsSendMiddelware";
 import moment from "moment";
 
@@ -80,7 +80,7 @@ class AuthController {
 
   async verifyOtp(req: Request, res: Response) {
     try {
-      const { mobileNo, otp } = req.body;
+      const { mobileNo, otp, notification_token } = req.body;
 
       let userDetails: any;
       let userFind: any = await User.findOne({ "phones.no": mobileNo });
@@ -96,10 +96,12 @@ class AuthController {
               },
               phone: mobileNo,
               profile_image: null,
+              notification_token,
             };
 
             const user = new User(payload);
             userDetails = await user.save();
+            fcmOperatios.RegisterToken(notification_token);
           } else {
             let phones: any = userFind.phones;
             for (let i = 0; i < userFind.phones.length; i++) {

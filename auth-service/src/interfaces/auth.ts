@@ -1,7 +1,8 @@
 export interface IUser {
   phones: Object;
   phone: String;
-  profile_image:null;
+  profile_image: null;
+  notification_token: String;
 }
 
 export interface IOtp {
