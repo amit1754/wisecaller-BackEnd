@@ -5,14 +5,16 @@ import express, {
   NextFunction,
   json,
   urlencoded,
-  text,
 } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
 import swaggerUI from "swagger-ui-express";
 import passport from "passport";
-
+import {
+  handleSNSNotification,
+  handleSNSNotificationHeader,
+} from "@wisecaller/sns-notification-handler";
 
 export default class App {
   app: Express = express();
@@ -33,8 +35,14 @@ export default class App {
 
   async setupMiddleware() {
     this.app.use(json());
+    this.app.use("/", (req: Request, res: Response, next: NextFunction) =>
+      handleSNSNotificationHeader(req, res, next)
+    );
     this.app.use(urlencoded({ extended: false }));
-    this.app.use(text());
+    this.app.use(json());
+    this.app.use("/", (req: Request, res: Response, next: NextFunction) =>
+      handleSNSNotification(req, res, next)
+    );
     this.app.use(morgan("dev"));
     this.app.use(cors());
   }

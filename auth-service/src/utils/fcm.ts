@@ -27,10 +27,6 @@ class FCMData {
         );
       }
     } catch (ex) {
-      console.log(
-        `Failed to send push notification to the device token:${token}`,
-        ex
-      );
       return false;
     }
   }
@@ -46,7 +42,6 @@ class FCMData {
       const endpointResponse = await sns.deleteEndpoint(params).promise();
       return endpointResponse;
     } catch (ex) {
-      console.log(`Failed to deregister the endpoint:${targetArn}`, ex);
       return null;
     }
   }
@@ -58,7 +53,7 @@ class FCMData {
       const message = {
         GCM: JSON.stringify({
           data: {
-            message: "user",
+            message: "user has changes status",
           },
         }),
       };
@@ -82,10 +77,6 @@ class FCMData {
         throw new Error("not snd");
       }
     } catch (ex) {
-      console.log(
-        `Failed to send push notification to the target arn:${targetArn}`,
-        ex
-      );
       return false;
     }
   }

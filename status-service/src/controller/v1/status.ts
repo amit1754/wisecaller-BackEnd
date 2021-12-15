@@ -3,6 +3,7 @@ import { IStatus, ISubStatus } from "../../interfaces/status";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
 import { deletefile } from "../../middlewares/uploadService";
+import snsClient from "../../utils/snsClient";
 class StatusController {
   async addStatus(req: Request, res: Response) {
     try {
@@ -17,6 +18,12 @@ class StatusController {
 
         const status = new UserStatus(payload);
         await status.save();
+        let snsPayload = {
+          type: "GLOBAL_STATUS_UPDATE",
+          data: payload,
+          title: "Global Status Update",
+        };
+        await snsClient.publishToSNS(snsPayload);
         res.status(200).json({
           success: true,
           message: "User status added successfully",
@@ -49,7 +56,6 @@ class StatusController {
             as: "applicableType",
           },
         },
-       
       ]);
       res.status(200).json({
         success: true,
@@ -88,6 +94,12 @@ class StatusController {
             new: true,
           }
         );
+        let snsPayload = {
+          type: "GLOBAL_STATUS_UPDATE",
+          data: StatusUpdate,
+          title: "Global Status Update",
+        };
+        await snsClient.publishToSNS(snsPayload);
         res.status(200).json({
           success: true,
           message: "global Status update successfully",

@@ -11,5 +11,6 @@ router.post("/login", [validate(login)], Auth.login, Auth.generateOtp);
 router.post("/resend-otp", [validate(login)], Auth.resendOtp, Auth.generateOtp);
 router.post("/verify-otp", [validate(verifyOtp)], Auth.verifyOtp);
 router.post("/refresh-token", authorization, Auth.refreshToken);
+router.post("/logout", authorization, Auth.logout);
 
 export const AuthRoutes = router;

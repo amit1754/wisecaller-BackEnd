@@ -4,5 +4,7 @@ export interface IUser {
   lastName: String;
   mobileNo: String;
   email: String;
+  notification_token: String;
   profileImage: String;
+  notification_arn: String;
 }

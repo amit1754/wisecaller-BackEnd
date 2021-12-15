@@ -2,12 +2,14 @@ import { Request, Response } from "express";
 import { User } from "../../models/user";
 import { customStatus } from "../../models/customStatus";
 import { ContactUs } from "../../models/contactUs";
-import { sendMailUtils } from "../../utils";
+import { fcmOperatios, sendMailUtils } from "../../utils";
 import { deletefile } from "../../middlewares/uploadService";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
 import { Notes } from "../../models/notes";
 import { globalTypeModel } from "../../models/globalType.Model";
+import { UserContact } from "../../models/contactsync";
+import snsClient from "../../utils/snsClient";
 
 class UserController {
   async show(req: Request, res: Response) {
@@ -15,7 +17,7 @@ class UserController {
       const loggedInUser: any = req.user;
       let user: any = await User.findOne(
         { _id: loggedInUser._id },
-        { notification_token: 0 }
+        { notification_token: 0, notification_arn: 0 }
       );
       if (user?.user_status?.status?.applicable_types) {
         user.user_status.status.applicable_types = await globalTypeModel.find({
@@ -279,7 +281,7 @@ class UserController {
     try {
       let loggedInUser: any = req.user;
       let user: any = {};
-      let payload = {
+      let payload: any = {
         name: "",
         status: {
           sub_status: {},
@@ -349,6 +351,13 @@ class UserController {
           { user_status: payload },
           { upsert: true, new: true }
         );
+        let snsPayload = {
+          type: "STATUS_UPDATE",
+          data: payload,
+          title: "Status Update",
+          send_all: true,
+        };
+        await snsClient.publishToSNS(snsPayload);
       } else {
         user = await User.findOneAndUpdate(
           { _id: loggedInUser._id },
@@ -362,15 +371,7 @@ class UserController {
       return res.status(500).json({ success: false, error: error.message });
     }
   }
-  // async updateCustomStatus(req: Request, res: Response){
-  //   try{
-  //       const loggedInUser: any = req.user;
 
-  //   } catch (error: any) {
-
-  //     return res.status(500).json({ success: false, message: error.message });
-  //   }
-  // }
   async searchWisecaller(req: Request, res: Response) {
     try {
       let search = req.body.phone_number;

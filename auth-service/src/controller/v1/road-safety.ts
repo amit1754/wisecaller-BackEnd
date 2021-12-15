@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { RoadSafety } from "../../models/road-safety";
 import { User } from "../../models/user";
 import { UserStatus } from "../../models/status";
+import snsClient from "../../utils/snsClient";
 
 class RoadSafetyController {
   async update(req: Request, res: Response) {
@@ -51,13 +52,20 @@ class RoadSafetyController {
         { modes: modesPayload },
         { upsert: true, new: false }
       );
+
+      let snsPayload = {
+        type: "STATUS_UPDATE",
+        data: modesPayload.roadSafety,
+        title: "Status Update",
+        send_all: true,
+      };
+      await snsClient.publishToSNS(snsPayload);
       return res.status(200).json({
         success: true,
         message: "Roadsafety updated successfully",
         data: modesPayload.roadSafety,
       });
     } catch (error: any) {
-      console.log(error);
       return res.status(500).json({ success: false, message: error.message });
     }
   }

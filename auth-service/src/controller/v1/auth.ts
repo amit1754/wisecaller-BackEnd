@@ -3,11 +3,14 @@ import { IOtp, IUser } from "../../interfaces/auth";
 import { User } from "../../models/user";
 import { AuthToken } from "../../models/auth-token";
 import jwt from "jsonwebtoken";
-import { MobileNoCheckUtils, jwtVerify } from "../../utils";
+import {
+  MobileNoCheckUtils,
+  jwtVerify,
+  device_register,
+  fcmOperatios,
+} from "../../utils";
 import sendSMS1 from "../../middlewares/smsSendMiddelware";
-import moment from "moment";
-
-var AWS = require("aws-sdk");
+import { UserDevices } from "../../models/user_devices";
 
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
@@ -80,7 +83,7 @@ class AuthController {
 
   async verifyOtp(req: Request, res: Response) {
     try {
-      const { mobileNo, otp, notification_token } = req.body;
+      const { mobileNo, otp, user_device } = req.body;
 
       let userDetails: any;
       let userFind: any = await User.findOne({ "phones.no": mobileNo });
@@ -96,12 +99,10 @@ class AuthController {
               },
               phone: mobileNo,
               profile_image: null,
-              // notification_token,
             };
 
             const user = new User(payload);
             userDetails = await user.save();
-            // fcmOperatios.RegisterToken(notification_token);
           } else {
             let phones: any = userFind.phones;
             for (let i = 0; i < userFind.phones.length; i++) {
@@ -118,7 +119,9 @@ class AuthController {
         } else {
           throw new Error("otp is invalid");
         }
-
+        if (user_device) {
+          await device_register.addDevices(user_device, userDetails._id);
+        }
         let secret: any = process.env.JWT_SECRET,
           tokenTime: any = process.env.TOKENTIME,
           tokenRefreshTime = process.env.REFRESHTOKENTIME;
@@ -134,7 +137,6 @@ class AuthController {
           { expiresIn: tokenRefreshTime }
         );
         let verify: any = await jwtVerify(token);
-        console.log("token", verify.exp);
         let time: number = verify.exp;
         let token_expires_at: any = new Date(time * 1000);
 
@@ -154,6 +156,7 @@ class AuthController {
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
+      console.log(error);
       return res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -210,6 +213,23 @@ class AuthController {
         message: "token refresh sucessfully",
         token: token,
         token_expires_at,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async logout(req: Request, res: Response) {
+    try {
+      const loggedInUser: any = req.user;
+      let tokenData = await UserDevices.find({ user: loggedInUser._id });
+      for (let i = 0; i < tokenData.length; i++) {
+        await fcmOperatios.deRegisterToken(tokenData[i].user_device?.arn);
+      }
+      await UserDevices.findOneAndRemove({ user: loggedInUser._id });
+      return res.status(200).json({
+        success: true,
+        message: "success",
       });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });

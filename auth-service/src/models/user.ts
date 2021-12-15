@@ -92,6 +92,9 @@ const UserSchema = new Schema(
     notification_token: {
       type: String,
     },
+    notification_arn: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
@@ -105,6 +108,7 @@ UserSchema.post("find", function (doc) {
           : `${process.env.IMAGE_PATH}${x.profile_image}`;
 
       delete x.notification_token;
+      delete x.notification_arn;
       if (x?.user_status) {
         delete x.user_status.status.logo;
         if (x?.user_status.status.sub_status) {
@@ -120,6 +124,7 @@ UserSchema.post("find", function (doc) {
 UserSchema.post("findOne", function (doc) {
   if (doc) {
     delete doc.notification_token;
+    delete doc.notification_arn;
     doc.profile_image =
       doc.profile_image == null
         ? null
