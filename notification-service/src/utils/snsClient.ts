@@ -5,10 +5,10 @@ class SNSClient {
     try {
       let params = {
         Message: JSON.stringify(message),
-        TopicArn: "",
+        TopicArn: process.env.EVENT_PROCESSOR_TOPIC_ARN,
       };
 
-      AWS.config.update({ region: "us-east-1" });
+      AWS.config.update({ region: process.env.AWSREGION });
       const sns = new AWS.SNS({ apiVersion: "latest" });
       let publish = await sns.publish(params).promise();
       return publish.MessageId;
@@ -21,7 +21,7 @@ class SNSClient {
     try {
       let message = {
         GCM: JSON.stringify({
-          data: payload,
+          data: payload.data,
           notification: payload.notification,
         }),
       };
@@ -31,7 +31,7 @@ class SNSClient {
         Message: JSON.stringify(message),
         TargetArn: targetArn,
       };
-      AWS.config.update({ region: "us-east-1" });
+      AWS.config.update({ region: process.env.AWS_REGION });
       const sns = new AWS.SNS({ apiVersion: "latest" });
       let publish = await sns.publish(params).promise();
       return publish.MessageId;

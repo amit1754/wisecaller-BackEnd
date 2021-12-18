@@ -1,4 +1,7 @@
 import AWS from "aws-sdk";
+import { config } from "dotenv";
+config({ path: ".env.dev" });
+
 class SNSClient {
   async publishToSNS(message: any) {
     try {
@@ -20,7 +23,7 @@ class SNSClient {
     try {
       let message = {
         GCM: JSON.stringify({
-          data: payload,
+          data: payload.data,
           notification: payload.notification,
         }),
       };

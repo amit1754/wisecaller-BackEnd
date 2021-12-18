@@ -1,7 +1,7 @@
 import express from "express";
 import { contactSync_Controller } from "../controller";
 const router = express.Router();
-import {authorization} from '../middlewares'
+import { authorization } from "../middlewares";
 
 router.post("/sync", [authorization], contactSync_Controller.sync);
 router.post("/search", [authorization], contactSync_Controller.searchContact);
@@ -14,12 +14,16 @@ router.delete(
   contactSync_Controller.deleteContact
 );
 
-
 router.post(
   "/favorite-add",
   [authorization],
   contactSync_Controller.addFavorite
 );
 router.post("/block-add", [authorization], contactSync_Controller.addBlock);
+router.post(
+  "/callback-request",
+  [authorization],
+  contactSync_Controller.callBack
+);
 
 export const SyncRoutes = router;

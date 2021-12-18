@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { generalStatusModel } from "../../models/generalStatus";
 import { Types } from "mongoose";
+import { globalTypeModel } from "../../models/globalType.Model";
 class generalStatusController {
   async add(req: Request, res: Response) {
     try {

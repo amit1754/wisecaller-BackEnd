@@ -3,6 +3,7 @@ import { IContactSync } from "../../interfaces/contactSync";
 import { UserContact } from "../../models/contactsync";
 import { User } from "../../models/user";
 import { Types } from "mongoose";
+import snsClient from "../../utils/snsClient";
 
 class ContactSyncController {
   async sync(req: Request, res: Response) {
@@ -292,6 +293,23 @@ class ContactSyncController {
       res.status(200).json({ success: true, message: "Sucess", data: [] });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async callBack(req: Request, res: Response) {
+    try {
+      let loggedInUser: any = req.user;
+      let event = {
+        type: "CALL_BACK_REQUEST",
+        title: `${loggedInUser.first_name} ${loggedInUser.last_name} has requested for a callback.`,
+        user: loggedInUser,
+        to: req.body.to,
+        text: req.body.message,
+      };
+      await snsClient.publishToSNS(event);
+      return res.status(200).json({ success: true });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
     }
   }
 }

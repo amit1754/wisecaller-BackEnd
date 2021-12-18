@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import { IStatus, ISubStatus } from "../../interfaces/status";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
+import { globalTypeModel } from "../../models/globalType.Model";
 import { deletefile } from "../../middlewares/uploadService";
 import snsClient from "../../utils/snsClient";
 class StatusController {
@@ -39,28 +40,54 @@ class StatusController {
   async getAll(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      let userEvent = await UserStatus.aggregate([
+      const global_status = await globalTypeModel.aggregate([
+        { $match: {} },
         {
           $lookup: {
-            from: "usersubstatuses",
+            from: "usersatus",
             localField: "_id",
-            foreignField: "parentId",
-            as: "subCategory",
-          },
-        },
-        {
-          $lookup: {
-            from: "globaltypes",
-            localField: "applicable_types",
-            foreignField: "_id",
-            as: "applicableType",
+            foreignField: "applicable_types",
+            as: "global_statuses",
           },
         },
       ]);
+
+      for (const [key, status] of Object.entries(global_status)) {
+        for (const [key, global] of Object.entries(status.global_statuses)) {
+          let temp: any = global;
+          let sub = await UserSubStatus.find({ parentId: temp._id });
+          Object.assign(global, { sub_status: sub });
+        }
+      }
+      // global_status.map((status) => {
+      //   status.global_statuses.map((item: any) => {
+      //     const sub_statuses = await UserSubStatus.find({});
+      //     console.log(sub);
+      //   });
+      // });
+
+      // let userEvent = await UserStatus.aggregate([
+      //   {
+      //     $lookup: {
+      //       from: "usersubstatuses",
+      //       localField: "_id",
+      //       foreignField: "parentId",
+      //       as: "subCategory",
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "globaltypes",
+      //       localField: "applicable_types",
+      //       foreignField: "_id",
+      //       as: "applicableType",
+      //     },
+      //   },
+      // ]);
       res.status(200).json({
         success: true,
         message: "global status get successfully",
-        data: userEvent,
+        data: global_status,
       });
     } catch (error: any) {
       res.status(500).json({ success: false, message: error.message });

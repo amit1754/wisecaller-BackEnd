@@ -3,6 +3,7 @@ import { RoadSafety } from "../../models/road-safety";
 import { User } from "../../models/user";
 import { UserStatus } from "../../models/status";
 import snsClient from "../../utils/snsClient";
+import { globalTypeModel } from "../../models/globalType.Model";
 
 class RoadSafetyController {
   async update(req: Request, res: Response) {
@@ -24,9 +25,11 @@ class RoadSafetyController {
           { upsert: true, new: true }
         );
       }
-
+      let road_safety_type = await globalTypeModel.findOne({
+        type: "ROAD_SAFETY",
+      });
       let defaultStatus = await UserStatus.findOne({
-        applicable_types: "61a190ae88e2950009a58a61",
+        applicable_types: road_safety_type._id,
       }).populate({
         path: "applicable_types",
         model: "globalType",
@@ -55,7 +58,7 @@ class RoadSafetyController {
 
       let snsPayload = {
         type: "STATUS_UPDATE",
-        data: modesPayload.roadSafety,
+        user: loggedInUser._id,
         title: "Status Update",
         send_all: true,
       };

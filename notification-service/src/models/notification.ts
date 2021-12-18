@@ -2,21 +2,14 @@ import { Schema, model } from "mongoose";
 
 const NotificationSchema = new Schema(
   {
-    Tyoe: {
+    type: {
       type: String,
-      required: true,
-    },
-    data: {
-      type: Schema.Types.Mixed,
-      required: true,
     },
     from_user: {
-      type: String,
-      required: true,
+      type: Schema.Types.ObjectId,
     },
     to_user: {
-      type: String,
-      required: true,
+      type: Schema.Types.ObjectId,
     },
     dates: {
       type: String,

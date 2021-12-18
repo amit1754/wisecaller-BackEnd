@@ -351,13 +351,6 @@ class UserController {
           { user_status: payload },
           { upsert: true, new: true }
         );
-        let snsPayload = {
-          type: "STATUS_UPDATE",
-          data: payload,
-          title: "Status Update",
-          send_all: true,
-        };
-        await snsClient.publishToSNS(snsPayload);
       } else {
         user = await User.findOneAndUpdate(
           { _id: loggedInUser._id },
@@ -365,6 +358,13 @@ class UserController {
           { upsert: true, new: true }
         );
       }
+      let snsPayload = {
+        type: "STATUS_UPDATE",
+        title: "Status Update",
+        user: loggedInUser._id,
+        send_all: true,
+      };
+      await snsClient.publishToSNS(snsPayload);
 
       return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
