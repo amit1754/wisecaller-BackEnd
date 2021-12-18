@@ -94,7 +94,7 @@ class EventHandlerController {
                 notification: {
                   title: event.title,
                   body: event.user,
-                  sound: "alarm",
+                  sound: process.env.SOUND,
                 },
               };
 
@@ -121,7 +121,7 @@ class EventHandlerController {
                 notification: {
                   title: event.title,
                   body: event.user,
-                  sound: "alarm",
+                  sound: process.env.SOUND,
                 },
               };
               this.sendNotificationToUsers(userArn, payload);
@@ -172,7 +172,7 @@ class EventHandlerController {
           notification: {
             title: event.title,
             body: event.user,
-            sound: "alarm",
+            sound: process.env.SOUND,
           },
         };
         let device = users[index].user_device;
@@ -200,7 +200,7 @@ class EventHandlerController {
             notification: {
               title: event.title,
               body: event.user,
-              sound: "alarm",
+              sound: process.env.SOUND,
             },
           };
           let device = users[index].user_device;
@@ -236,7 +236,7 @@ class EventHandlerController {
             notification: {
               title: event.title,
               body: event.user,
-              sound: "alarm",
+              sound: process.env.SOUND,
             },
           };
           let device = users[index].device.user_device;
@@ -291,7 +291,7 @@ class EventHandlerController {
           notification: {
             title: event.title,
             body: event.user,
-            sound: "alarm",
+            sound: process.env.SOUND,
           },
         };
 
