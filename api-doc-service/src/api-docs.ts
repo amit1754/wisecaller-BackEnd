@@ -3407,6 +3407,516 @@ export default {
         deprecated: false,
       },
     },
+    "/subscribe-service/api/v1/coupon/update": {
+      post: {
+        tags: ["Coupon"],
+        summary: "Update",
+        operationId: "Update",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/UpdateRequest",
+              },
+              example: {
+                coupon_code: "NEW_COUPON-1",
+                type: "CASH_DISCOUNT",
+                expires_at: "2021-12-19T06:32:35.864Z",
+                price: 10,
+                discount_price: 10,
+                can_use_for: 10,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/coupon": {
+      get: {
+        tags: ["Coupon"],
+        summary: "Get All Coupons",
+        operationId: "GetAllCoupons",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  data: [
+                    {
+                      _id: "61c2a600f01b8beeb2c45435",
+                      coupon_code: "NEW_COUPON",
+                      can_use_for: 10,
+                      createdAt: "2021-12-22T04:13:51.917Z",
+                      discount_price: 10,
+                      expires_at: "2021-12-19T06:32:35.864Z",
+                      organization: "61a8fa3dcc4e890009383b80",
+                      price: 10,
+                      subscription: "61c2a5c6f01b8beeb2c45420",
+                      type: "CASH_DISCOUNT",
+                      updatedAt: "2021-12-22T04:13:51.917Z",
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/coupon/bulk-coupon-create": {
+      post: {
+        tags: ["Coupon"],
+        summary: "Bulk Coupon Create",
+        operationId: "BulkCouponCreate",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/BulkCouponCreateRequest",
+                },
+                description: "",
+                example: [
+                  {
+                    coupon_code: "NEW_COUPON",
+                    type: "CASH_DISCOUNT",
+                    expires_at: "2021-12-19T06:32:35.864Z",
+                    price: 10,
+                    discount_price: 10,
+                    can_use_for: 10,
+                    subscription: "",
+                  },
+                ],
+              },
+              example: [
+                {
+                  coupon_code: "NEW_COUPON",
+                  type: "CASH_DISCOUNT",
+                  expires_at: "2021-12-19T06:32:35.864Z",
+                  price: 10,
+                  discount_price: 10,
+                  can_use_for: 10,
+                  subscription: "",
+                },
+              ],
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  data: [
+                    {
+                      _id: "61c2a600f01b8beeb2c45435",
+                      coupon_code: "NEW_COUPON",
+                      can_use_for: 10,
+                      createdAt: "2021-12-22T04:13:51.917Z",
+                      discount_price: 10,
+                      expires_at: "2021-12-19T06:32:35.864Z",
+                      organization: "61a8fa3dcc4e890009383b80",
+                      price: 10,
+                      subscription: "61c2a5c6f01b8beeb2c45420",
+                      type: "CASH_DISCOUNT",
+                      updatedAt: "2021-12-22T04:13:51.917Z",
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/coupon/redeem-coupon": {
+      post: {
+        tags: ["Coupon"],
+        summary: "Redeem Coupon Code",
+        operationId: "RedeemCouponCode",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/RedeemCouponCodeRequest",
+              },
+              example: {
+                coupon_code: "NEW_COUPON",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  data: {
+                    _id: "61c2a600f01b8beeb2c45435",
+                    coupon_code: "NEW_COUPON",
+                    can_use_for: 10,
+                    createdAt: "2021-12-22T04:13:51.917Z",
+                    discount_price: 10,
+                    expires_at: "2021-12-19T06:32:35.864Z",
+                    organization: "61a8fa3dcc4e890009383b80",
+                    price: 10,
+                    subscription: "61c2a5c6f01b8beeb2c45420",
+                    type: "CASH_DISCOUNT",
+                    updatedAt: "2021-12-22T04:13:51.917Z",
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/subscription/update": {
+      post: {
+        tags: ["Subscription"],
+        summary: "New Subscription",
+        operationId: "NewSubscription",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/NewSubscriptionRequest",
+              },
+              example: {
+                title: "New Subscription",
+                original_price: 10,
+                current_price: 9,
+                min_quantity_price: 0,
+                features: [
+                  {
+                    feature: "AD_FREE",
+                    text: "Enjoy Ad free experience",
+                  },
+                  {
+                    feature: "CALENDAR_SYNC",
+                    text: "Attend your meetings without worrying about your status",
+                  },
+                ],
+                gst_percentage: 18,
+                cess_percentage: 1,
+                type: "USER",
+                duration: 12,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/subscription": {
+      get: {
+        tags: ["Subscription"],
+        summary: "Get All Subscription",
+        operationId: "GetAllSubscription",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  data: [
+                    {
+                      _id: "61c2b5acf01b8beeb2c45936",
+                      title: "New Subscription",
+                      type: "USER",
+                      __v: 0,
+                      cess_percentage: 1,
+                      createdAt: "2021-12-22T05:20:44.352Z",
+                      current_price: 9,
+                      duration: 12,
+                      features: [
+                        {
+                          feature: "AD_FREE",
+                          text: "Enjoy Ad free experience",
+                        },
+                        {
+                          feature: "CALENDAR_SYNC",
+                          text: "Attend your meetings without worrying about your status",
+                        },
+                      ],
+                      gst_percentage: 18,
+                      min_quantity_price: 0,
+                      original_price: 10,
+                      updatedAt: "2021-12-22T05:20:44.352Z",
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/user-subscription/update": {
+      post: {
+        tags: ["User Subscription"],
+        summary: "Update Subscription",
+        operationId: "UpdateSubscription",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/UpdateSubscriptionRequest",
+              },
+              example: {
+                subscription: "61c2b5acf01b8beeb2c45936",
+                coupon_code: "NEW_COUPON-1",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/user-subscription/revoke": {
+      post: {
+        tags: ["User Subscription"],
+        summary: "Revoke Subscription",
+        operationId: "RevokeSubscription",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/RevokeSubscriptionRequest",
+              },
+              example: {
+                reason: "Revoke Subscription",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/payment/order": {
+      post: {
+        tags: ["Payment"],
+        summary: "Order",
+        operationId: "Order",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/OrderRequest",
+              },
+              example: {
+                amount: 10,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  data: {
+                    id: "order_IaSEPVXUKBGxx2",
+                    entity: "order",
+                    amount: 1000,
+                    amount_paid: 0,
+                    amount_due: 1000,
+                    currency: "INR",
+                    receipt: "2021-12-22T08:27:04.765Z",
+                    offer_id: null,
+                    status: "created",
+                    attempts: 0,
+                    notes: [],
+                    created_at: 1640161625,
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/payment": {
+      post: {
+        tags: ["Payment"],
+        summary: "Payment",
+        operationId: "Payment",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/PaymentRequest",
+              },
+              example: {
+                transactionId: "order_IaPz2mLsDvQl6F",
+                subscription: "61c2b605f01b8beeb2c45962",
+                amount: "10",
+                paymentFor: "Subscrition",
+                status: "SUCCESS",
+                mode: "ONLINE",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  data: {
+                    _id: "61c2c7d5f01b8beeb2c46042",
+                    transactionId: "order_IaPz2mLsDvQl6F",
+                    user: "61b6e4f05ca721a7e2913b01",
+                    __v: 0,
+                    amount: 10,
+                    createdAt: "2021-12-22T06:38:13.226Z",
+                    mode: "ONLINE",
+                    paymentFor: "Subscrition",
+                    payment_date: "2021-12-22T08:28:10.505Z",
+                    status: "SUCCESS",
+                    subscription: "61c2b605f01b8beeb2c45962",
+                    updatedAt: "2021-12-22T08:28:10.508Z",
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
   },
   components: {
     schemas: {
