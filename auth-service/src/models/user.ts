@@ -45,7 +45,7 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["ADMIN", "USER"],
+      enum: ["ADMIN", "USER", "ORGANIZATION"],
       default: "USER",
     },
     devices: {
@@ -94,6 +94,12 @@ const UserSchema = new Schema(
     },
     notification_arn: {
       type: String,
+    },
+    organization_subscription: {
+      type: Schema.Types.Mixed,
+    },
+    user_subscription: {
+      type: Schema.Types.Mixed,
     },
   },
   { timestamps: true }
