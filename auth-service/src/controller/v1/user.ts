@@ -278,8 +278,7 @@ class UserController {
             Object.assign(payload.status, { status_notes: notes });
           }
         }
-       let updatedPayload = { user_status: payload };
-        user = await getUserBll.findOneAndUpdate(loggedInUser._id,{...updatedPayload},{ upsert: true, new: true });
+        user = await getUserBll.findOneAndUpdate(loggedInUser._id,{ user_status: payload },{ upsert: true, new: true });
       } else {
         let updatedPayload = { user_status: null };
         user = await getUserBll.findOneAndUpdate(loggedInUser._id, { user_status: null },{ upsert: true, new: true });

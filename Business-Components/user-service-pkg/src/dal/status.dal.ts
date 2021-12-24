@@ -1,6 +1,6 @@
 
 
-import { customStatus } from "../customStatus";
+import { customStatus } from "../models/customStatus";
 import { Notes } from "../models/notes";
 import { UserStatus } from "../models/status";
 import { UserSubStatus } from "../models/subStatus";
