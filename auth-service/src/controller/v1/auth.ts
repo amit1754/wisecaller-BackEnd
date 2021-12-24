@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { IOtp, IUser } from "../../interfaces/auth";
-import { AuthToken } from "../../models/auth-token";
 import jwt from "jsonwebtoken";
 import {
   MobileNoCheckUtils,
@@ -9,8 +8,7 @@ import {
   fcmOperatios,
 } from "../../utils";
 import sendSMS1 from "../../middlewares/smsSendMiddelware";
-import { UserDevices } from "../../models/user_devices";
-import {getUserBll} from "@wisecaller/user-service";
+import {getUserBll,getauthTokenBll} from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
@@ -53,21 +51,14 @@ class AuthController {
       };
       if (process.env.MESSAGE_SEND) await sendSMS1(reqData.mobileNo, otp);
       let token;
-      const userOtpDe = await AuthToken.findOne({
-        mobileNo: reqData.mobileNo,
-      });
+      const userOtpDe = await getauthTokenBll.getTokenByPhone(reqData.mobileNo);
       if (userOtpDe) {
-        token = await AuthToken.findOneAndUpdate(
-          { mobileNo: reqData.mobileNo },
-          payload,
-          {
-            upsert: true,
-            new: true,
-          }
-        );
+        token = await getauthTokenBll.findOneAndUpdate(reqData.mobileNo, {...payload},{
+          upsert: true,
+          new: true,
+        });
       } else {
-        token = new AuthToken(payload);
-        await token.save();
+        token = await getauthTokenBll.createToken(payload);
       }
 
       return res.status(200).json({
@@ -86,7 +77,7 @@ class AuthController {
 
       let userDetails: any;
       let userFind: any = await  getUserBll.findUserByPhone(mobileNo);
-      let auth_token: any = await AuthToken.findOne({ mobileNo: mobileNo });
+      let auth_token: any = await getauthTokenBll.getTokenByPhone(mobileNo);
       if (auth_token) {
         if (auth_token?.otp === otp) {
           if (!userFind) {
@@ -100,7 +91,7 @@ class AuthController {
               profile_image: null,
             };
 
-            const user = await getUserBll.createUser(payload);
+            userDetails = await getUserBll.createUser(payload);
           } else {
             let phones: any = userFind.phones;
             for (let i = 0; i < userFind.phones.length; i++) {
@@ -109,7 +100,8 @@ class AuthController {
               }
             }
 
-            userDetails = await getUserBll.findOneAndUpdate( userFind._id,{ phones: phones });
+            var updtedValue = { phones: phones };
+            userDetails = await getUserBll.findOneAndUpdate( userFind._id,{...updtedValue},{});
           }
         } else {
           throw new Error("otp is invalid");
@@ -159,7 +151,7 @@ class AuthController {
       const { mobileNo } = req.body;
       const checkMobileNo = await MobileNoCheckUtils.verify(mobileNo);
       if (!checkMobileNo) throw new Error("mobile number is not valid");
-      let user = await AuthToken.findOne({ mobileNo: mobileNo });
+      let user = await getauthTokenBll.getTokenByPhone( mobileNo);
       next();
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
@@ -216,11 +208,11 @@ class AuthController {
   async logout(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      let tokenData = await UserDevices.find({ user: loggedInUser._id });
+      let tokenData = await getUserBll.findUserDeviceById(loggedInUser._id);
       for (let i = 0; i < tokenData.length; i++) {
         await fcmOperatios.deRegisterToken(tokenData[i].user_device?.arn);
       }
-      await UserDevices.findOneAndRemove({ user: loggedInUser._id });
+      await getUserBll.findOneAndRemoveById(loggedInUser._id);
       return res.status(200).json({
         success: true,
         message: "success",

@@ -13,13 +13,43 @@ export default class UserBLL {
     return user;
   }
 
+  async findUserByPayload(payload: any): Promise<any> {
+    let user = await userdal.getUserByPayload(payload);
+    return user;
+  }
+  async getUserByPhoneAndId(id:any, mobileNo: any): Promise<any> {
+    let user = await userdal.getUserByPhoneAndId(id, mobileNo);
+    return user;
+  }
+
   async findUserById(id: any): Promise<any> {
     let user = await userdal.getUserById(id);
     return user;
   }
-  async findOneAndUpdate(id: any,obj: any): Promise<any> {
-    let user = await userdal.findOneAndUpdate(id, obj);
+  async findOneAndUpdate(id: any,obj: any,options:any): Promise<any> {
+    let user = await userdal.findOneAndUpdate(id, obj,options);
     return user;
+  }
+
+  async findUserDeviceById(id: any): Promise<any> {
+    let user = await userdal.findUserDeviceById(id);
+    return user;
+  }
+
+  async findOneAndRemoveById(id: any): Promise<void> {
+    await userdal.findOneAndRemoveById(id);
+  }
+
+  
+  async findOneDeviceByTokenById(id: any, token:any): Promise<any> {
+    return await userdal.findOneDeviceByTokenById(id, token);
+  }
+  
+  async findOneDeviceAndUpdateById(id:any, payload:any,options:any):Promise<void> {
+    await userdal.findOneDeviceAndUpdateById(id, payload,options);
+  }
+  async createUserDevice(payload: any): Promise<any> {
+    return await userdal.createUserDevice(payload);
   }
 
   async getUserDetails(id: any) {

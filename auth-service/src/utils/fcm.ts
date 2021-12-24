@@ -1,18 +1,16 @@
 import SNS from "aws-sdk/clients/sns";
 
-const SNS_APPLICATION_ARN =
-  "arn:aws:sns:us-east-1:208529951960:app/GCM/wisecaller-notification";
 class FCMData {
   async RegisterToken(token: string) {
     try {
-      if (SNS_APPLICATION_ARN) {
+      if (process.env.FCM_SNS_APPLICATION_ARN) {
         var sns = new SNS({
           apiVersion: "latest",
           region: "us-east-1",
         });
 
         var params: SNS.Types.CreatePlatformEndpointInput = {
-          PlatformApplicationArn: SNS_APPLICATION_ARN,
+          PlatformApplicationArn: process.env.FCM_SNS_APPLICATION_ARN,
           Token: token,
         };
 
