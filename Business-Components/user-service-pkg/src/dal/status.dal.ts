@@ -7,7 +7,7 @@ import { UserSubStatus } from "../models/subStatus";
 
 
 export const getStatusByFindId = async (id: any):Promise<any>=> {
-  return await UserStatus.findById(id);
+  return await UserStatus.findById(id).lean();
 };
 
 export const getSubStatusByFindId = async (id: any):Promise<any>=> {

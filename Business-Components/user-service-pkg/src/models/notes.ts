@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 
 const NotesSchema = new mongoose.Schema(
   {
@@ -32,4 +34,4 @@ const NotesSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Notes = mongoose.model("Notes", NotesSchema);
+export const Notes =  mongoose.models.Notes || mongoose.model("Notes", NotesSchema);

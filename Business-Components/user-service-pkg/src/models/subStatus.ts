@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
-
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 const SatusSubSchema = new Schema(
     {
         status: {
@@ -26,4 +27,4 @@ const SatusSubSchema = new Schema(
     { timestamps: true }
 );
 
-export const UserSubStatus = model("UserSubStatus", SatusSubSchema);
+export const UserSubStatus = mongoose.models.UserSubStatus || model("UserSubStatus", SatusSubSchema);

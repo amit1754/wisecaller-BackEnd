@@ -1,4 +1,6 @@
-import { Schema, model } from "mongoose";
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 
 const AuthTokenSchema = new Schema(
   {
@@ -29,4 +31,4 @@ const AuthTokenSchema = new Schema(
   { timestamps: true }
 );
 
-export const AuthToken = model("AuthToken", AuthTokenSchema);
+export const AuthToken = mongoose.models.AuthToken|| model("AuthToken", AuthTokenSchema);

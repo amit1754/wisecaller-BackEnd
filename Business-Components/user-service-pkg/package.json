@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/user-service",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "user-service package by Wise Caller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

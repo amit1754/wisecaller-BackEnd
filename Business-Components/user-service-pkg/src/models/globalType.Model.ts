@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
-
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 const globalTypeSchema = new Schema(
   {
     type: {
@@ -12,4 +13,4 @@ const globalTypeSchema = new Schema(
   { timestamps: true }
 );
 
-export const globalTypeModel = model("globalType", globalTypeSchema);
+export const globalTypeModel = mongoose.models.globalType|| model("globalType", globalTypeSchema);

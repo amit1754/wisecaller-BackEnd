@@ -12,4 +12,4 @@ const globalTypeSchema1 = new Schema(
   { timestamps: true }
 );
 
-export const globalTypeModel = model("globalType1", globalTypeSchema1);
+export const globalTypeModel = model("globalType111", globalTypeSchema1);

@@ -1,4 +1,6 @@
-import { Schema, model } from "mongoose";
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 
 const customStatusSchema = new Schema(
   {
@@ -38,4 +40,4 @@ const customStatusSchema = new Schema(
   { timestamps: true }
 );
 
-export const customStatus = model("customStatus", customStatusSchema);
+export const customStatus = mongoose.models.customStatus|| model("customStatus", customStatusSchema);

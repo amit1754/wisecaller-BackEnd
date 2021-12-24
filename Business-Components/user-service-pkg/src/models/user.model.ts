@@ -1,5 +1,7 @@
-import { Schema, model } from "mongoose";
 import { globalTypeModel } from "./globalType.Model";
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 
 const UserSchema = new Schema(
   {
@@ -146,4 +148,5 @@ UserSchema.post("findOne", function (doc) {
   return doc;
 });
 
-export const User = model("User", UserSchema);
+
+export const User = mongoose.models.User || model("User", UserSchema);
