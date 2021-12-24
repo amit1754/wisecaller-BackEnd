@@ -1,0 +1,1176 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: An AWS Serverless Specification template for WiseCaller app.
+Globals:
+  Function:
+    Runtime: nodejs14.x
+    Timeout: 30
+    MemorySize: 512
+    VpcConfig:
+      SecurityGroupIds:
+        - sg-088942f87d5cbb0ca
+      SubnetIds:
+        - subnet-0ee6c5b5afee0cf00
+        - subnet-06aa2f58d0d3b133d
+    Environment:
+      Variables:
+        MYSQL_HOST: !Sub beyond-db.cfoud85kqvop.${AWS::Region}.rds.amazonaws.com
+        MYSQL_USERNAME: admin
+        MYSQL_DATABASE: beyond-live
+        MYSQL_PASSWORD: "Optimuz#Kochi"
+        MYSQL_PORT: "3306"
+        REDIS_HOST: !Sub ${RedisHost}
+        REDIS_PORT: !Sub ${RedisPort}
+        CACHE_EXPIRY: "600"
+        ENVIRONMENT: LIVE
+        NODE_ENV: production
+        AUTHZ_PUBLIC_KEYS: '{"keys":[{"alg":"RS256","e":"AQAB","kid":"+ABUpL29cPbaYoel0U1+rIvoET6naIkHsoMlPdM2pgw=","kty":"RSA","n":"jGtYVIX8WPYzK89G_JbjP31RZPvchRd4sq_tGBeFfKlshyMcj9VZxzaQ91nx4Occ-l0FtEk6muZ9a2_Wdo2NtQGp01eDKSKKgekJUjZ2w_D3qiGbZkfPlzE0dCmQs1cpoml3VA3cXPs-NL1Jl5VB6_7NkLViwIsStb1Tmiyw58tUg-HJ5cQch7sal5L-qcf11UO5vJKHWqdWTw1nb6OEVnhtCQ_-m_EcnCcQXWmGc84qkknmhm00ixNdt16BzRN0NOJx6sxbeupq2nut4ezhzua2GQsuYww5Rn_QExsgquyIhlqBpNOBU_tlPR3i-7yiXsTp33zm7ATv9acj0G0Ggw","use":"sig"},{"alg":"RS256","e":"AQAB","kid":"X0PBqPl70VLHX3PRueMRISh1ZEDqGtbNIHleFkDplWo=","kty":"RSA","n":"wDvCbpwCj-8_5wtBVgCnevVg05V4wmBxLReP2SUjffhhkWSlsn3zFoXci0quu1QGNLemWzGXkziUBWs4VY1VRC206uAEsSdfCbx8uDravRXNO8vHE4ILvcsI9LJ5xuq2iIhSLqJg3JodzCLSqU1wFGMGE45JtX4pTxOz-jwc1ssSSSfaRtYjCGaom2zmvqT-_kU9umUYovh4zhHTXCwKVYC-DD2R6D0MnTcnlCXqKKpdY8XBZDcRkLtundvDlqtSQrP7X7TT1x3YXomY-xhVrFEBSv_8MslAZdm2NqlC1H7uhcJEGxrGkO3TsOTbkGCW6r-yrzxKBXNxv4nilFFC-Q","use":"sig"}]}'
+        SAMPLE_USER_ID: !Sub ${SampleUserId}
+        SYSTEM_USER_ID: !Sub ${SystemUserId}
+
+Parameters:
+  DeployPackagesFolderName:
+    Type: String
+    Default: "2020-03-24"
+    Description: Deploy packages folder name
+
+  ApiDeployStageName:
+    Type: String
+    Default: "live"
+    Description: Deployment stage name
+
+  ApiPhysicalID:
+    Type: String
+    Default: "ApiPhysicalId"
+    Description: The ID of the API. (To avoid circular dependency)
+
+  RedisHost:
+    Type: String
+    Default: "beyond-app-live.paj9et.ng.0001.use1.cache.amazonaws.com"
+    Description: The redis host
+
+  RedisPort:
+    Type: String
+    Default: "6379"
+    Description: The redis port
+
+  EnableSMSVerification:
+    Type: String
+    Default: "true"
+    Description: Enable SMS verification and code
+
+  SampleUserId:
+    Type: String
+    Default: "736"
+    Description: The ID of sample user
+
+  SystemUserId:
+    Type: String
+    Default: "890"
+    Description: The ID of System user
+
+  SampleDisplayMessage:
+    Type: String
+    Default: This custom button is configured to send a text message to a sample contact called 'Gabe GoBeyond' in your contact list. \n\nTouch and hold the custom button icon to see how it is configured. \n\nClicking Ok will send this message.
+    Description: The display text for the sample custom buttons
+
+  ContactSignupMessageText:
+    Type: String
+    Default: "Hi, Your contact {{firstName}} {{lastName}} is now on GoBeyond."
+    Description: The message text for contact signup notification
+
+  ContactSignupMessageTitle:
+    Type: String
+    Default: "{{firstName}} {{lastName}} is now on GoBeyond"
+    Description: The message text for contact signup notification
+
+Resources:
+  ##### IAM Ploicies & Roles
+  GobeyondLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: Allows Lambda functions to call AWS services for AweMe
+      RoleName: Gobeyond-LambdaExecutionRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+        - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+                - lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+
+  GoBeyondAppPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: GoBeyondAppPolicy
+      Roles:
+        - !Ref GobeyondLambdaExecutionRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: VisualEditor0
+            Effect: Allow
+            Action:
+              - lambda:InvokeFunction
+              - lambda:GetFunction
+              - lambda:InvokeAsync
+              - lambda:GetFunctionConfiguration
+              - lambda:GetLayerVersionPolicy
+              - lambda:GetPolicy
+              - s3:GetObject
+              - s3:PutObject
+              - s3:GetObjectVersion
+              - ses:SendEmail
+              - ses:SendRawEmail
+              - ses:SendBounce
+              - sns:DeleteEndpoint
+              - sns:Publish
+              - sns:CreatePlatformEndpoint
+              - "cognito-idp:*"
+            Resource: "*"
+
+  ##### API Gateway
+  BeyondAppApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: Beyond App API
+      StageName: !Sub ${ApiDeployStageName}
+      EndpointConfiguration: REGIONAL
+      # MethodSettings:
+      #   - LoggingLevel: ERROR
+      #     ResourcePath: "*"
+      #     DataTraceEnabled: true
+      #     MetricsEnabled: true
+      Cors:
+        AllowHeaders: "'Access-Control-Allow-Headers, Origin,Accept, X-Amz-Date, X-Requested-With, X-Amz-Security-Token, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization, app-version, api-version, app-platform, gb-id-token'"
+        AllowOrigin: "'*'"
+        AllowMethods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+      BinaryMediaTypes:
+        - multipart~1form-data
+      Auth:
+        AddDefaultAuthorizerToCorsPreflight: false
+        ApiKeyRequired: false
+        Authorizers:
+          BeyondAppCognitoAuth:
+            AuthType: COGNITO_USER_POOLS
+            UserPoolArn: !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/us-east-1_oNnogU6lq
+
+          BeyondAdminCognitoAuth:
+            AuthType: COGNITO_USER_POOLS
+            UserPoolArn: !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/us-east-1_D8TJMOz6o
+
+          AccessTokenAuthorizer:
+            AuthType: LAMBDA_REQUEST
+            FunctionPayloadType: REQUEST
+            FunctionInvokeRole: !GetAtt GobeyondLambdaExecutionRole.Arn
+            FunctionArn: !GetAtt PrivateApiAuthorizer.Arn
+            Identity:
+              Headers:
+                - Authorization
+
+          BasicAuthenticationAuthorizer:
+            AuthType: LAMBDA_REQUEST
+            FunctionPayloadType: REQUEST
+            FunctionInvokeRole: !GetAtt GobeyondLambdaExecutionRole.Arn
+            FunctionArn: !GetAtt ProtectedApiAuthorizer.Arn
+            Identity:
+              Headers:
+                - Authorization
+                - app-platform
+                - app-version
+
+        DefaultAuthorizer: AccessTokenAuthorizer
+        InvokeRole: !GetAtt GobeyondLambdaExecutionRole.Arn
+
+  ##### Node modules Layer
+  DefaultNodeModulesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: beyond-node-modules-default-live
+      Description: Node modules for the app
+      ContentUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/node-modules-layer-default.zip
+      CompatibleRuntimes:
+        - nodejs10.x
+        - nodejs12.x
+      RetentionPolicy: Retain
+
+  ThumbnailNodeModulesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: beyond-node-modules-thumbnail-live
+      Description: Node modules for the thumbnail
+      ContentUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/node-modules-layer-thumbnail.zip
+      CompatibleRuntimes:
+        - nodejs10.x
+        - nodejs12.x
+      RetentionPolicy: Retain
+
+  ##### Lambda functions
+  AuthServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: auth-service-live
+      Runtime: nodejs12.x
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/auth-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Authentication Service"
+      Events:
+        WebLoginMatchCodeApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/auth/web/matchCode"
+            Method: POST
+        AuthWebProxyApiEvent:
+          # need to give custom cors for this
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/auth/web/{proxy+}"
+            Method: POST
+            Auth:
+              Authorizer: BasicAuthenticationAuthorizer
+        LogoutApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/auth/logout"
+            Method: POST
+        ShareServiceLiveApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/auth/{proxy+}"
+            Method: ANY
+            Auth:
+              Authorizer: BasicAuthenticationAuthorizer
+        AuthServicePingApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/auth/ping"
+            Method: POST
+            Auth:
+              Authorizer: NONE
+      Environment:
+        Variables:
+          SEND_OTP: !Sub "${EnableSMSVerification}"
+          COOKIE_EXPIRY_IN_SEC: 864000
+          USER_POOL_ID: us-east-1_oNnogU6lq
+          CODE_CACHE_EXPIRY: 300
+          ALLOWED_HEADERS: "Access-Control-Allow-Headers, Origin,Accept, X-Amz-Date, X-Requested-With, X-Amz-Security-Token, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization, app-version, api-version, app-platform, gb-id-token"
+          CLIENT_ID: 174vqiv3j8vptud8ft17dskddr
+          ALLOWED_METHODS: GET,POST,OPTIONS
+          COOKIE_DOMAIN: .gobeyond.app
+          TOKEN_EXPIRY: 3600
+          TOKEN_ENCRYPTION_KEY: Du9ZQK8Mr74PN6ZgHF3jtNjTAcgf92
+          TOKEN_ISSUER: auth.gobeyond.app
+          ORIGINS_WHITELIST: "https://my.gobeyond.app"
+
+          SNS_SEND_NOTIFICATION_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-notification-live
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          SNS_APPLICATION_ARN: !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:app/GCM/Beyond"
+          SNS_REGION: !Sub ${AWS::Region}
+          COGNITO_REGION: !Sub ${AWS::Region}
+
+          DEMO_USER_ID: 26
+          DEMO_USER_OTP: 654321
+          SAMPLE_CUSTOM_BUTTON_DISPLAY_MSG: !Sub ${SampleDisplayMessage}
+
+  ConfigurationServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: configuration-service-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/configuration-service.zip
+      Handler: index.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Configuration Service"
+      Environment:
+        Variables:
+          CONFIG_KEY: CONFIGURATION
+      Events:
+        ConfigurationServiceLiveApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/configurations"
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
+  AdminServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: admin-service-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/admin-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Admin Service"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Environment:
+        Variables:
+          MYSQL_DATABASE: beyond-stats
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+          SNS_REGION: !Sub ${AWS::Region}
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          APP_VERSION: "1.0"
+          API_VERSION: "1.3"
+          REFRESH_TOKEN: ""
+          APP_PLATFORM: WEB
+          DEVICE_ID: ""
+          API_ENDPOINT_AUTH_MATCHCODE: !Sub "https://${ApiPhysicalID}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/auth/web/matchCode"
+          USER_POOL_ID: us-east-1_oNnogU6lq
+          CLIENT_ID: 174vqiv3j8vptud8ft17dskddr
+          COGNITO_REGION: !Sub ${AWS::Region}
+
+      Events:
+        AdminServiceLiveApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/admin/{proxy+}"
+            Method: ANY
+            Auth:
+              Authorizer: BeyondAdminCognitoAuth
+
+  ShareServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: share-service-live
+      Runtime: nodejs12.x
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/share-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Share Service"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        PublicShareQCApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/share/qc/{quickCode}"
+            RequestParameters:
+              - method.request.path.quickCode:
+                  Required: true
+            Method: GET
+            Auth:
+              Authorizer: NONE
+        ShareServiceLiveApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/share/{proxy+}"
+            Method: ANY
+      Environment:
+        Variables:
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          SNS_REGION: !Sub ${AWS::Region}
+          QC_GENERATION_ATTEMPTS: 1000
+
+  WebLoginLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: web-login-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/web-login-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Web Login"
+      Timeout: 60
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        WebLoginApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref BeyondAppApi
+            Path: "/web/{proxy+}"
+            Method: ANY
+      Environment:
+        Variables:
+          CODE_CACHE_EXPIRY: "300"
+          OTP_SECRET: KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD
+
+  UserServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: user-service-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/user-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for User Service"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        UserServicePublicProfileApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/users/publicProfile/{userId}"
+            RequestParameters:
+              - method.request.path.userId:
+                  Required: true
+            Method: GET
+            Auth:
+              Authorizer: NONE
+        UserServicePublicQuickNoteApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/users/quicknotes/{quickNoteId}"
+            RequestParameters:
+              - method.request.path.quickNoteId:
+                  Required: true
+            Method: GET
+            Auth:
+              Authorizer: NONE
+        UserServicePingApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/users/ping"
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        UserServiceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/users/{proxy+}"
+            Method: ANY
+      Environment:
+        Variables:
+          DOCSTORE_BUCKET_NAME: beyond-live-docstore-pub
+          AWS_S3_FILE_UPLOAD_EXPIRY: "604800"
+          SNS_REGION: !Sub ${AWS::Region}
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+          SNS_APPLICATION_ARN: !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:app/GCM/Beyond"
+          SNS_SEND_NOTIFICATION_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-notification-live
+          SQS_REGION: !Sub ${AWS::Region}
+          VERIFY_OTP_URL: !Sub "https://${ApiPhysicalID}.execute-api.${AWS::Region}.amazonaws.com"
+          VERIFY_OTP_PATH: !Sub /${ApiDeployStageName}/notification/verifyotp
+          HEALTCH_CHECK_HOST: "https://www.google.com"
+          HEALTH_CHECK_PATH: /
+          DEMO_USER_ID: 26
+          DEMO_USER_OTP: 654321
+
+  SyncServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: sync-service-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/sync-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Sync Service"
+      Events:
+        SyncServiceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/sync/{proxy+}"
+            Method: ANY
+        SyncServicePingApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/sync/ping"
+            Method: POST
+            Auth:
+              Authorizer: NONE
+      Environment:
+        Variables:
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          SNS_WARMUP_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:general-service-warmup-event-live
+
+  NotificationServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: notification-service-live
+      Runtime: dotnetcore2.1
+      Timeout: 30
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/notification-service.zip
+      Handler: "NotificationService.Api::NotificationService.Api.LambdaEntryPoint::FunctionHandlerAsync"
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for sending notifications"
+      Events:
+        SendNotificationApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/notification/send"
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        NotificationServiceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/notification/{proxy+}"
+            Method: ANY
+      Environment:
+        Variables:
+          NotificationServiceOptions__SenderEmail: admin@optimuz.tech
+          NotificationServiceOptions__SenderName: AweMeAdmin
+          NotificationServiceOptions__EnableNotification: !Sub "${EnableSMSVerification}"
+          RedisConfigurationOptions__ConfigurationString: !Sub "${RedisHost}:${RedisPort}"
+          RedisConfigurationOptions__Environment: LIVE
+          RedisConfigurationOptions__Expiry: 3600
+          OtpServiceOptions__BypassOtpValue: "654321"
+          OtpServiceOptions__EnableVerification: !Sub "${EnableSMSVerification}"
+          OtpServiceOptions__OtpHashOption: "0"
+          OtpServiceOptions__OtpSize: "6"
+          OtpServiceOptions__SecretKey: FqKCS7B0a4N6lMZwR2VIe6AnDSY=
+          OtpServiceOptions__StepSize: "300"
+          OtpServiceOptions__OtpMessage: "GoBeyond: Your code for registration is {0}.{1}"
+
+  MessagingServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: messaging-service-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/messaging-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Messaging Service"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        MessagingServiceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/messaging/{proxy+}"
+            Method: ANY
+        MessagingHandleEventApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/messaging/handleEvent"
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        MessagingServicePingApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/messaging/ping"
+            Method: POST
+            Auth:
+              Authorizer: NONE
+      Environment:
+        Variables:
+          DOCSTORE_BUCKET_NAME: beyond-live-docstore-pub
+          AWS_S3_FILE_UPLOAD_EXPIRY: "604800"
+          MESSAGE_EXPIRY_IN_MINUTES: "10080"
+          PUBLISH_EVENT_MODE: SNS
+          SNS_REGION: !Sub ${AWS::Region}
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+          SNS_TOPIC_SAMPLE_USER_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:sample-user-event-live
+
+  EventProcessorLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: event-processor-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/event-processor.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "Event Processor"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Environment:
+        Variables:
+          CACHE_EXPIRY: "3600"
+          DOCSTORE_BUCKET_NAME: beyond-live-docstore-pub
+          AWS_S3_FILE_UPLOAD_EXPIRY: "500"
+          MESSAGE_EXPIRY_IN_MINUTES: "10080"
+          PUBLISH_EVENT_MODE: SNS
+          COGNITO_REGION: !Sub ${AWS::Region}
+          USER_POOL_ID: us-east-1_oNnogU6lq
+          SNS_REGION: !Sub ${AWS::Region}
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+          SMTP_HOST: email-smtp.us-east-1.amazonaws.com
+          SMTP_PORT: 587
+          SMTP_USER: AKIA2OXMOZ5N2Z4G6RVM
+          SMTP_PASS: BBA68sxbrUfmNTY2EIq2VUw+CBzjy6d245xJqDyAqtLp
+          DEFAULT_SENDER_EMAIL: '"Optimuz Admin" <admin@optimuz.tech>'
+          SAMPLE_CUSTOM_BUTTON_DISPLAY_MSG: !Sub ${SampleDisplayMessage}
+          CONTACT_SIGN_UP_MESSAGE_TEXT: !Sub ${ContactSignupMessageText}
+          CONTACT_SIGN_UP_MESSAGE_TITLE: !Sub ${ContactSignupMessageTitle}
+
+  UtilsServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: utils-service-live
+      Runtime: nodejs12.x
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/utils-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "Event Processor"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        UtilsServiceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/utils/{proxy+}"
+            Method: ANY
+      Environment:
+        Variables:
+          FEEDBACK_EMAIL: '"GoBeyond Feedback" <info@optimuz.tech>'
+          SENDER_EMAIL: '"Optimuz Admin" <admin@optimuz.tech>'
+          SNS_REGION: !Sub ${AWS::Region}
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+
+  DocumentServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: document-service-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/document-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Document Service"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        # DocstorePublicApiEvent:
+        #   Type: Api
+        #   Properties:
+        #     RestApiId:
+        #       Ref: BeyondAppApi
+        #     Path: "/docstore/{docId}/uri"
+        #     RequestParameters:
+        #       - method.request.path.docId:
+        #           Required: true
+        #     Method: GET
+        #     Auth:
+        #       Authorizer: NONE
+        DocumentServiceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/docstore/{proxy+}"
+            Method: ANY
+        DocumentServicePingApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/docstore/ping"
+            Method: POST
+            Auth:
+              Authorizer: NONE
+      Environment:
+        Variables:
+          DOCSTORE_BUCKET_NAME: beyond-live-docstore-pub
+          AWS_S3_FILE_UPLOAD_EXPIRY: "604800"
+          SNS_REGION: !Sub ${AWS::Region}
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+          SNS_APPLICATION_ARN: !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:app/GCM/Beyond"
+          SNS_SEND_NOTIFICATION_ARN: !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-notification-live"
+
+  S3TriggerLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: s3-trigger-live
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/s3-trigger.zip
+      Handler: index.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "Processes S3 document uploaded events"
+      MemorySize: 1024
+      Timeout: 60
+      Layers:
+        - !Ref ThumbnailNodeModulesLayer
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        DocstoreBucketEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref DocstoreS3Bucket
+            Events: s3:ObjectCreated:*
+      Environment:
+        Variables:
+          SNS_REGION: !Sub ${AWS::Region}
+          SNS_TOPIC_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-event-live
+          DOCSTORE_BUCKET_NAME: beyond-live-docstore-pub
+          THUMB_SIZES_FOR_RATIOS: '[{"ratio":"default","width":25,"height":25},{"ratio":"1","width":75,"height":75},{"ratio":"2","width":125,"height":125},{"ratio":"4","width":175,"height":175},{"ratio":"6","width":225,"height":225}]'
+
+  LoggingServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: logging-service-live
+      Runtime: nodejs12.x
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/logging-service.zip
+      Handler: lambda.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "API for Logging Service"
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Events:
+        LoggingServiceApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: BeyondAppApi
+            Path: "/logging/{proxy+}"
+            Method: ANY
+            Auth:
+              Authorizer: BasicAuthenticationAuthorizer
+      Environment:
+        Variables:
+          MYSQL_DATABASE: beyond-logging-live
+
+  PrivateApiAuthorizer:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: private-api-authorizer-live
+      Runtime: nodejs12.x
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/private-api-authorizer.zip
+      Handler: index.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "Function for Authorizing Access Token for Private endpoints"
+      Events:
+        PrivateAuthorizerWarmupEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref CriticalServicesWarmupEventTopic
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Environment:
+        Variables:
+          AUTH_REQUIRED_SCOPES: aws.cognito.signin.user.admin
+          DEPR_AUTH_REQUIRED_SCOPES: "https://auth.gobeyond.app/write"
+          DEPR_IDP_PUBLIC_KEYS: '{"keys":[{"alg":"RS256","e":"AQAB","kid":"zVXsAUpyTtcAMqVv4FGoVGHyenB02bYAoH+eiC5XFlU=","kty":"RSA","n":"4zdPuMzRR53_gWMMqSiQqwSR17j6zujCrP15SJkdSsES_op_wSX-EBY7fsGlDEWRgZ6zmax2m6sqf7D4z5_KunNHbvjnjNty0f2rXZG1RR204QjDeKExLFreYq2Bie3K7RZqKMlorHKLj1y0Awsow_zI7FyXhDuYstXM6ZbPpc7atyh5MEE9P8i-K7QsLPXI82zUsjvWTunqZ_kxNQZPDfhsWz8RGavqEdYL4NtNVKWcHBbop5jc4emb2V24s3PJB7wSqgpBN-H5o14VwQwRoHGrx-GpXoo-CEmJdL-wpKw3zMDYK3yOZT92vvghAc7iJLTwkU7tZbW68h9HwOuLww","use":"sig"},{"alg":"RS256","e":"AQAB","kid":"ny3NTQTjk62q+91awgPEbdk8si+N83ak75/MkDuT1J4=","kty":"RSA","n":"qU5L9w-SGCm2HSevC1uEJUipSpDdVDtonV9Zoj4sNTi7hvWLTFZvMBujj28okScsJ4iS7CCJ0vWOfFWK0XKXIx2vEeDyUI0bX5UgRGcBAUEAamx89jxHzlBTZMMBkm_At82UoD6uRnPJHus6l_HQq-HoGQAzyA-NOUK8FxEroCXLFYdpMrIDHL8Z-5uT8v1MbjhX6qhBfkuF_RY8c0Vw-fsUoOEoQbtHtJE4_urchFbbAMoswBBlxzIil0F9kRIVJArI1l5mb9XQMqCcmwm4aW8BWIsXZz-kPDCdFZ5Rrx_Qf2JDKUlUOvWCNQhEkWttLQA-nwHCJ0Tg10QQE0HPow","use":"sig"}]}'
+
+  ProtectedApiAuthorizer:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: protected-api-authorizer-live
+      Runtime: nodejs12.x
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/protected-api-authorizer.zip
+      Handler: index.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "Function for Authorizing Access Token for Protected endpoints"
+      Events:
+        ProtectedAuthorizerWarmupEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref CriticalServicesWarmupEventTopic
+      Layers:
+        - !Ref DefaultNodeModulesLayer
+      Environment:
+        Variables:
+          CONFIG_KEY: CONFIGURATION
+
+  SampleUserServiceLive:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: sample-user-service-live
+      Runtime: nodejs12.x
+      CodeUri:
+        Bucket: beyond-app-deploy-packages
+        Key: !Sub ${DeployPackagesFolderName}/sample-user.zip
+      Handler: index.handler
+      Role: !GetAtt GobeyondLambdaExecutionRole.Arn
+      Description: "Function for responding to messages to Sample User"
+      Events:
+        SampleUserEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref SampleUserEventTopic
+      Environment:
+        Variables:
+          SNS_TOPIC_MESSAGING_EVENT_ARN: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:beyond-messaging-event-live
+
+  ##### Cloudwatch log groups for lambda
+  ConfigurationServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: ConfigurationServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/configuration-service-live
+      RetentionInDays: 7
+
+  AuthServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: AuthServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/auth-service-live
+      RetentionInDays: 7
+
+  PrivateApiAuthorizerLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: AuthServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/private-api-authorizer-live
+      RetentionInDays: 7
+
+  ProtectedApiAuthorizerLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: AuthServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/protected-api-authorizer-live
+      RetentionInDays: 7
+
+  ShareServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: ShareServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/share-service-live
+      RetentionInDays: 7
+
+  WebLoginLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: WebLoginLive
+    Properties:
+      LogGroupName: /aws/lambda/web-login-live
+      RetentionInDays: 7
+
+  UserServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: UserServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/user-service-live
+      RetentionInDays: 7
+
+  SyncServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: SyncServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/sync-service-live
+      RetentionInDays: 7
+
+  NotificationServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: NotificationServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/notification-service-live
+      RetentionInDays: 7
+
+  MessagingServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: MessagingServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/messaging-service-live
+      RetentionInDays: 7
+
+  EventProcessorLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: EventProcessorLive
+    Properties:
+      LogGroupName: /aws/lambda/event-processor-live
+      RetentionInDays: 7
+
+  UtilsServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: UtilsServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/utils-service-live
+      RetentionInDays: 7
+
+  DocumentServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: DocumentServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/document-service-live
+      RetentionInDays: 7
+
+  S3TriggerLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: S3TriggerLive
+    Properties:
+      LogGroupName: /aws/lambda/s3-trigger-live
+      RetentionInDays: 7
+
+  LoggingServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: LoggingServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/logging-service-live
+      RetentionInDays: 7
+
+  AdminServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: AdminServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/admin-service-live
+      RetentionInDays: 7
+
+  SampleUserServiceLiveLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: SampleUserServiceLive
+    Properties:
+      LogGroupName: /aws/lambda/sample-user-service-live
+      RetentionInDays: 7
+
+  ApiAccessLogs:
+    Type: AWS::Logs::LogGroup
+    DependsOn: BeyondAppApi
+    Properties:
+      LogGroupName: /aws/apigateway/gobeyondappApi/accessLogs
+      RetentionInDays: 7
+
+  ##### S3 buckets and bucket policies
+  DocstoreS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: beyond-live-docstore-pub
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - "*"
+            AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - PUT
+              - GET
+              - POST
+              - HEAD
+            ExposedHeaders:
+              - ETag
+            MaxAge: 3000
+
+  DocstoreS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: beyond-live-docstore-pub
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !GetAtt GobeyondLambdaExecutionRole.Arn
+            Action: s3:*
+            Resource:
+              - !Sub "arn:aws:s3:::${DocstoreS3Bucket}"
+              - !Sub arn:aws:s3:::${DocstoreS3Bucket}/*
+
+  ##### SQS - Event Queues and Policies
+  EventQueue:
+    Type: AWS::SQS::Queue
+    DependsOn: EventDLQ
+    Properties:
+      QueueName: beyond-event-queue-live
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt EventDLQ.Arn
+        maxReceiveCount: 3
+
+  EventDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: beyond-event-dlq-live
+
+  EventQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    DependsOn: EventQueue
+    Properties:
+      PolicyDocument:
+        Id: !Sub ${EventQueue.Arn}/SQSDefaultPolicy
+        Version: "2012-10-17"
+        Statement:
+          - Sid: Allow-User-SendMessage
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - SQS:*
+            Resource: !GetAtt EventQueue.Arn
+      Queues:
+        - !Ref EventQueue
+        - !Ref EventDLQ
+
+  EventQueueAsEventSourceForEventProcessor:
+    Type: AWS::Lambda::EventSourceMapping
+    DependsOn:
+      - EventQueue
+      - EventProcessorLive
+    Properties:
+      EventSourceArn: !GetAtt EventQueue.Arn
+      FunctionName: !GetAtt EventProcessorLive.Arn
+
+  #######################################
+  # SNS - Topics and Subscriptions
+  NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: GoBeyond Notification Topic
+      TopicName: beyond-notification-live
+  MessagingEventsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: GoBeyond Messaging Event Topic
+      TopicName: beyond-messaging-event-live
+  GeneralEventsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: GoBeyond General Event Topic
+      TopicName: beyond-event-live
+  CriticalServicesWarmupEventTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: GoBeyond Critical services warmup event Topic
+      TopicName: critical-service-warmup-event-live
+  GeneralServicesWarmupEventTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: GoBeyond General services warmup event Topic
+      TopicName: general-service-warmup-event-live
+  SampleUserEventTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: GoBeyond General services warmup event Topic
+      TopicName: sample-user-event-live
+  DevAlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: GoBeyond Dev Alert Topic
+      TopicName: beyond-dev-alert
+
+  NotificationTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: BeyondAppApi
+    Properties:
+      Endpoint: !Sub "https://${BeyondAppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/notification/send"
+      Protocol: https
+      TopicArn: !Ref "NotificationTopic"
+      RawMessageDelivery: "true"
+  MessagingEventsTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: BeyondAppApi
+    Properties:
+      Endpoint: !Sub "https://${BeyondAppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/messaging/handleEvent"
+      Protocol: https
+      TopicArn: !Ref "MessagingEventsTopic"
+      RawMessageDelivery: "true"
+  GeneralEventsTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: EventQueue
+    Properties:
+      Endpoint: !GetAtt EventQueue.Arn
+      Protocol: sqs
+      TopicArn: !Ref "GeneralEventsTopic"
+      RawMessageDelivery: "true"
+
+  # Services warmup subscriptions
+  SyncServiceWarmupTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: BeyondAppApi
+    Properties:
+      Endpoint: !Sub "https://${BeyondAppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/sync/ping"
+      Protocol: https
+      TopicArn: !Ref "CriticalServicesWarmupEventTopic"
+      RawMessageDelivery: "true"
+
+  AuthServiceWarmupTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: BeyondAppApi
+    Properties:
+      Endpoint: !Sub "https://${BeyondAppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/auth/ping"
+      Protocol: https
+      TopicArn: !Ref "CriticalServicesWarmupEventTopic"
+      RawMessageDelivery: "true"
+
+  MessagingServiceWarmupTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: BeyondAppApi
+    Properties:
+      Endpoint: !Sub "https://${BeyondAppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/messaging/ping"
+      Protocol: https
+      TopicArn: !Ref "CriticalServicesWarmupEventTopic"
+      RawMessageDelivery: "true"
+
+  DocstoreServiceWarmupTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: BeyondAppApi
+    Properties:
+      Endpoint: !Sub "https://${BeyondAppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/docstore/ping"
+      Protocol: https
+      TopicArn: !Ref "GeneralServicesWarmupEventTopic"
+      RawMessageDelivery: "true"
+
+  UserServiceWarmupTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: BeyondAppApi
+    Properties:
+      Endpoint: !Sub "https://${BeyondAppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiDeployStageName}/users/ping"
+      Protocol: https
+      TopicArn: !Ref "GeneralServicesWarmupEventTopic"
+      RawMessageDelivery: "true"
+
+#######################################
+# Outputs
+Outputs:
+  BeyondAPIPhysicalID:
+    Description: Physical ID of the API.
+    Value: !Ref BeyondAppApi
+
+  SetEventProcessorSource:
+    Description: Set EventProcessor As Q target
+    Value: !GetAtt EventQueue.Arn
+
+  BeyondApiAccessLogGroupArn:
+    Description: ARN of log group for the API Access Log.
+    Value: !GetAtt ApiAccessLogs.Arn

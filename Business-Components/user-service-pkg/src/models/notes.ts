@@ -32,4 +32,4 @@ const NotesSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Notes = mongoose.model("Notes1", NotesSchema);
+export const Notes = mongoose.model("Notes", NotesSchema);

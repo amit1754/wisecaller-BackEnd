@@ -1,7 +1,7 @@
 import express from "express";
 import { User } from "../controller";
 import passport from "passport";
-import {authorization} from '../middlewares'
+import { authorization } from "@wisecaller/authorizer";
 const router = express.Router();
 // const auth = passport.authenticate("jwt", { session: false });
 

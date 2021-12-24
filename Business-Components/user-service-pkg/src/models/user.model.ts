@@ -146,4 +146,4 @@ UserSchema.post("findOne", function (doc) {
   return doc;
 });
 
-export const User = model("User1", UserSchema);
+export const User = model("User", UserSchema);

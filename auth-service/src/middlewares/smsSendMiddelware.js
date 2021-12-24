@@ -8,7 +8,7 @@ const sendSMS1 = async (mobileNo, otp) => {
     MessageAttributes: {
       "AWS.SNS.SMS.SenderID": {
         DataType: "String",
-        StringValue: "wisecalleer",
+        StringValue: "wisecaller",
       },
     },
   };

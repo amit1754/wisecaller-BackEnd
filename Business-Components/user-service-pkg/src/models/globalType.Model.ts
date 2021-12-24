@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const globalTypeSchema1 = new Schema(
+const globalTypeSchema = new Schema(
   {
     type: {
       type: String,
@@ -12,4 +12,4 @@ const globalTypeSchema1 = new Schema(
   { timestamps: true }
 );
 
-export const globalTypeModel = model("globalType1", globalTypeSchema1);
+export const globalTypeModel = model("globalType", globalTypeSchema);

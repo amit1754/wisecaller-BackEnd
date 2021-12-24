@@ -1,0 +1,313 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CloudFormation Template to set up infrastructure for WiseCaller App"
+
+Parameters:
+  Environment:
+    Type: String
+    Default: "live"
+    Description: Environment
+
+  ElasticIPAllocationId:
+    Type: String
+    Default: ""
+    Description: Elastic IP Allocation Id
+
+  MongoDbConnectionString:
+    Type: String
+    NoEcho: true
+    Default: "mongodb://wisecaller_admin:Dealing2021@54.196.46.51:27017/"
+    Description: Mongo Connection string
+
+MongoDb:
+    Type: String
+    NoEcho: true
+    Default: "wisecaller"
+    Description: Mongo DB
+	
+Mappings:
+  AZMap:
+    AZ1:
+      Name: "us-east-1a"
+    AZ2:
+      Name: "us-east-1b"
+    AZ3:
+      Name: "us-east-1c"
+    AZ4:
+      Name: "us-east-1d"
+
+Resources:
+  # VPC Setup
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub "WiseCaller-vpc-${Environment}"
+
+  # Setup Subnets - 2 public & 2 private - in 2 AZs.
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.0.0/24
+      AvailabilityZone: !FindInMap [AZMap, AZ1, Name]
+      Tags:
+        - Key: Name
+          Value: !Sub public-subnet-1-${Environment}
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !FindInMap [AZMap, AZ2, Name]
+      Tags:
+        - Key: Name
+          Value: !Sub public-subnet-2-${Environment}
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !FindInMap [AZMap, AZ1, Name]
+      Tags:
+        - Key: Name
+          Value: !Sub private-subnet-1-${Environment}
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: !FindInMap [AZMap, AZ2, Name]
+      Tags:
+        - Key: Name
+          Value: !Sub private-subnet-2-${Environment}
+
+  #Internet Gateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub WiseCaller-IGW-${Environment}
+
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !Ref ElasticIPAllocationId
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: !Sub WiseCaller-NAT-GW-${Environment}
+
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Elastic IPs
+  EIP1:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+  EIP2:
+    Type: AWS::EC2::EIP
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      Domain: vpc
+
+  # Route Tables
+  ## Public Route Table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub WiseCaller-public-rtb-${Environment}
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1PublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnet2PublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
+
+  ## Private Route Table
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub WiseCaller-private-rtb-${Environment}
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway
+
+  PrivateSubnet1PrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet2PrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
+  NetworkAcl:
+    Type: AWS::EC2::NetworkAcl
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub WiseCaller-network-acl-${Environment}
+
+  InboundNetworkAclEntry:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      Egress: false
+      NetworkAclId: !Ref NetworkAcl
+      Protocol: -1
+      RuleNumber: 100
+      RuleAction: allow
+
+  OutBoundNetworkAclEntry:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      Egress: true
+      NetworkAclId: !Ref NetworkAcl
+      Protocol: -1
+      RuleNumber: 100
+      RuleAction: allow
+
+  PublicSubnet1NetworkAclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      NetworkAclId: !Ref NetworkAcl
+
+  PublicSubnet2NetworkAclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      NetworkAclId: !Ref NetworkAcl
+
+  PrivateSubnet1NetworkAclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      NetworkAclId: !Ref NetworkAcl
+
+  PrivateSubnet2NetworkAclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      NetworkAclId: !Ref NetworkAcl
+
+  # Security Groups
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub WiseCaller-lambda-sg-${Environment}
+      GroupDescription: SG for lambda functions
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          CidrIp: "0.0.0.0/0"
+          Description: Allow all inbound access within VPC
+
+  BastionHostSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub WiseCaller-bastion-sg-${Environment}
+      GroupDescription: SG for Bastion Host
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          CidrIp: "0.0.0.0/0"
+          FromPort: 80
+          ToPort: 80
+          Description: HTTP to Wise-caller.app from anywhere
+        - IpProtocol: tcp
+          CidrIp: "0.0.0.0/0"
+          FromPort: 443
+          ToPort: 443
+          Description: HTTPS to Wise-caller.app from anywhere
+
+  ## BASTION HOST
+  BastionHostEc2:
+    Type: AWS::EC2::Instance
+    Properties:
+      DisableApiTermination: false
+      InstanceInitiatedShutdownBehavior: stop
+      ImageId: ami-0105f663dc99752af
+      InstanceType: t2.micro
+      KeyName: !Sub WiseCaller--${Environment}-bastion-host-keypair
+      Monitoring: false
+      Tags:
+        - Key: Name
+          Value: !Sub Bastion Host (${Environment})
+      NetworkInterfaces:
+        - DeleteOnTermination: true
+          Description: Primary network interface
+          DeviceIndex: "0"
+          SubnetId: !Ref PublicSubnet1
+          PrivateIpAddresses:
+            - PrivateIpAddress: 10.0.0.253
+              Primary: true
+          GroupSet:
+            - !Ref BastionHostSecurityGroup
+
+  ##### IAM Ploicies & Roles
+  GitlabCiPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: gitlab-ci-user-policy
+      Users:
+        - !Ref GitlabCiUser
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: VisualEditor0
+            Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObject
+              - s3:DeleteObjectVersion
+              - s3:DeleteObject
+              - sns:Publish
+            Resource: "*"
+
+  GitlabCiUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: gitlab-ci

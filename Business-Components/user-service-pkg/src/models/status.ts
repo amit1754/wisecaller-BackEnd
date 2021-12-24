@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { globalTypeModel } from "../models/globalType.Model";
+import { globalTypeModel } from "./globalType.Model";
 
 const SatusSchema = new Schema(
   {
@@ -64,4 +64,4 @@ SatusSchema.post("find", function (doc) {
   return doc;
 });
 
-export const UserStatus = model("UserSatus1", SatusSchema);
+export const UserStatus = model("UserSatus", SatusSchema);

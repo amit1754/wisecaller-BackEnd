@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { IOtp, IUser } from "../../interfaces/auth";
-import { User } from "../../models/user";
 import { AuthToken } from "../../models/auth-token";
 import jwt from "jsonwebtoken";
 import {
@@ -11,7 +10,8 @@ import {
 } from "../../utils";
 import sendSMS1 from "../../middlewares/smsSendMiddelware";
 import { UserDevices } from "../../models/user_devices";
-
+import {getUserBll} from "@wisecaller/user-service";
+import { logError } from "@wisecaller/logger";
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
@@ -22,12 +22,11 @@ class AuthController {
         ...req.body,
       };
 
-      const user = new User(payload);
-      await user.save();
+      const user = await getUserBll.createUser(payload);
       req.body.user = user;
       next();
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -39,7 +38,7 @@ class AuthController {
 
       next();
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -77,7 +76,7 @@ class AuthController {
         otp: token.otp,
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -86,7 +85,7 @@ class AuthController {
       const { mobileNo, otp, user_device } = req.body;
 
       let userDetails: any;
-      let userFind: any = await User.findOne({ "phones.no": mobileNo });
+      let userFind: any = await  getUserBll.findUserByPhone(mobileNo);
       let auth_token: any = await AuthToken.findOne({ mobileNo: mobileNo });
       if (auth_token) {
         if (auth_token?.otp === otp) {
@@ -101,8 +100,7 @@ class AuthController {
               profile_image: null,
             };
 
-            const user = new User(payload);
-            userDetails = await user.save();
+            const user = await getUserBll.createUser(payload);
           } else {
             let phones: any = userFind.phones;
             for (let i = 0; i < userFind.phones.length; i++) {
@@ -111,10 +109,7 @@ class AuthController {
               }
             }
 
-            userDetails = await User.findOneAndUpdate(
-              { _id: userFind._id },
-              { phones: phones }
-            );
+            userDetails = await getUserBll.findOneAndUpdate( userFind._id,{ phones: phones });
           }
         } else {
           throw new Error("otp is invalid");
@@ -156,8 +151,7 @@ class AuthController {
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
-      console.log(error);
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
   async resendOtp(req: Request, res: Response, next: NextFunction) {

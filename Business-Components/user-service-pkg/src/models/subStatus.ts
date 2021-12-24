@@ -26,4 +26,4 @@ const SatusSubSchema = new Schema(
     { timestamps: true }
 );
 
-export const UserSubStatus = model("UserSubStatus1", SatusSubSchema);
+export const UserSubStatus = model("UserSubStatus", SatusSubSchema);
