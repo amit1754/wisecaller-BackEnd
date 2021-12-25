@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/email",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Email client by wisecaller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

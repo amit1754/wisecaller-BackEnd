@@ -149,19 +149,12 @@ class UserController {
     try {
       const { email, message } = req.body;
       let contactUsMessage: any = process.env.CONTACTUSMESSAGE;
-      let ContactUsEmail: any = process.env.CONTACTUSEMAIL;
       let subject: any = process.env.SUPPORTSUBJECT;
       const sendEmail = await emailClient.Send(
-        ContactUsEmail,
         email,
         subject,
         contactUsMessage
       );
-
-      // if (sendEmail.error) {
-      //   throw new Error("email sending failed")
-      // }
-
       let saveObj = new ContactUs({
         email,
         Message: message,
