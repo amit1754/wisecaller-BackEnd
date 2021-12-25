@@ -4,12 +4,11 @@ import jwt from "jsonwebtoken";
 import {
   MobileNoCheckUtils,
   jwtVerify,
-  device_register,
-  fcmOperatios,
+  device_register
 } from "../../utils";
-import sendSMS1 from "../../middlewares/smsSendMiddelware";
 import {getUserBll,getauthTokenBll} from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
+import SNSClient from "@wisecaller/sns";
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
@@ -49,7 +48,7 @@ class AuthController {
         otp: otp,
         mobileNo: reqData.mobileNo,
       };
-      if (process.env.MESSAGE_SEND) await sendSMS1(reqData.mobileNo, otp);
+      await SNSClient.sendOTP(reqData.mobileNo, otp);
       let token;
       const userOtpDe = await getauthTokenBll.getTokenByPhone(reqData.mobileNo);
       if (userOtpDe) {
@@ -154,7 +153,7 @@ class AuthController {
       let user = await getauthTokenBll.getTokenByPhone( mobileNo);
       next();
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -201,7 +200,7 @@ class AuthController {
         token_expires_at,
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -210,7 +209,7 @@ class AuthController {
       const loggedInUser: any = req.user;
       let tokenData = await getUserBll.findUserDeviceById(loggedInUser._id);
       for (let i = 0; i < tokenData.length; i++) {
-        await fcmOperatios.deRegisterToken(tokenData[i].user_device?.arn);
+        await SNSClient.deRegisterPushNotificationService(tokenData[i].user_device?.arn);
       }
       await getUserBll.findOneAndRemoveById(loggedInUser._id);
       return res.status(200).json({
@@ -218,7 +217,7 @@ class AuthController {
         message: "success",
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 }

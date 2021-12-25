@@ -1,10 +1,10 @@
 import {getUserBll} from "@wisecaller/user-service";
+import SNSClient from "@wisecaller/sns";
 
-import { fcmOperatios } from "./";
 class DeviceRegister {
   public async addDevices(userDevices: any, userId: any) {
     const { device_token, OS, platform, deviceId } = userDevices;
-    let arn = await fcmOperatios.RegisterToken(device_token);
+    let arn = await SNSClient.registerPushNotificationService(device_token);
     let existing_token = await getUserBll.findOneDeviceByTokenById(userId,device_token);
 
     if (existing_token) {

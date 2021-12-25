@@ -28,7 +28,7 @@ const WorkLifeBalanceSchema = new mongoose.Schema(
     },
     status: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "UserSatus",
+      ref: "UserStatus",
     },
     sub_status: {
       type: mongoose.Schema.Types.ObjectId,

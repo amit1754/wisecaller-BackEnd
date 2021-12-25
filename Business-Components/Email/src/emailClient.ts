@@ -2,8 +2,8 @@ import sgMail from "@sendgrid/mail";
 const key: any = process.env.SENDGRID_API_KEY;
 sgMail.setApiKey(key);
 
-class EmailSend {
-  public async Send(to: string, from: string, subject: string, html: string) {
+export default class  EmailSend {
+  static async Send(to: string, from: string, subject: string, html: string) {
     try {
       const sendMailObj = {
         to,
@@ -20,5 +20,3 @@ class EmailSend {
     }
   }
 }
-
-export const emailSend = new EmailSend();

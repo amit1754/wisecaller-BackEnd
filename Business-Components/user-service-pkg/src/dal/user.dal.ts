@@ -18,6 +18,16 @@ export const getUserByPhoneAndId = async (id: any ,phone: string):Promise<any>=>
   return user;
 };
 
+export const findOneUserLean = async (payload: any):Promise<any>=> {
+  let user = await User.findOne(payload).lean();
+  return user;
+};
+
+export const findOneUser = async (payload: any):Promise<any>=> {
+  let user = await User.findOne(payload);
+  return user;
+};
+
 export const findOneAndUpdate = async (id: any, obj:any,options:any):Promise<any>=> {
   let user =  await User.findOneAndUpdate(
     { _id: id },

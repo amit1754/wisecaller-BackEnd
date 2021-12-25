@@ -2,8 +2,6 @@ import { Request, Response, NextFunction } from "express";
 const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-
-const bucket = "wisecaller-images";
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 aws.config.update({
@@ -29,35 +27,53 @@ const fileFilter = (req: Request, file: any, cb: any) => {
   }
 };
 
-const upload = multer({
-  fileFilter,
-  limits: { fileSize: MAX_FILE_SIZE },
-  storage: multerS3({
-    s3,
-    bucket,
-    acl: "public-read",
-    contentType: multerS3.AUTO_CONTENT_TYPE,
-    metadata: function (
-      req: Request,
-      file: any,
-      cb: (arg0: null, arg1: { fieldName: any }) => void
-    ) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: function (
-      req: Request,
-      file: any,
-      cb: (arg0: null, arg1: string) => void
-    ) {
-      cb(
-        null,
-        "profile_images/" +
-          Date.now().toString() +
-          FILE_EXTENSION_MAPPING[file.mimetype].extension
-      );
-    },
-  }),
-});
+const getS3Key = function(fileType: string) {
+  if (fileType == "PROFILE") {
+    return 'profile_images/';
+  } else if (fileType == "STATUS_LOGO") {
+    return 'status_images/';
+  } else {
+    return null;
+  }
+}
+
+
+const getS3BucketName = function() {
+  return process.env.AWS_S3_BUCKET;    
+}
+const fileUpload = function upload(type:any):any{
+  const bucketName = getS3BucketName();
+  const folder = getS3Key(type);
+  return multer({
+    fileFilter,
+    limits: { fileSize: MAX_FILE_SIZE },
+    storage: multerS3({
+      s3,
+      bucket:bucketName,
+      acl: "public-read",
+      contentType: multerS3.AUTO_CONTENT_TYPE,
+      metadata: function (
+        req: Request,
+        file: any,
+        cb: (arg0: null, arg1: { fieldName: any }) => void
+      ) {
+        cb(null, { fieldName: file.fieldname });
+      },
+      key: function (
+        req: Request,
+        file: any,
+        cb: (arg0: null, arg1: string) => void
+      ) {
+        cb(
+          null,
+          folder +
+            Date.now().toString() +
+            FILE_EXTENSION_MAPPING[file.mimetype].extension
+        );
+      },
+    }),
+  });
+}
 
 export const deletefile = async (filename: string) => {
   const s3 = new aws.S3({
@@ -66,7 +82,7 @@ export const deletefile = async (filename: string) => {
     region: process.env.region,
   });
   s3.deleteObject(
-    { Bucket: "wisecaller-images", Key: filename },
+    { Bucket: getS3BucketName(), Key: filename },
     (err: any, data: any) => {
       console.error(err);
     }
@@ -86,4 +102,4 @@ const filesizeChecker = (req: Request, res: Response, next: NextFunction) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
-export default { upload, filesizeChecker };
+export default { fileUpload, filesizeChecker };

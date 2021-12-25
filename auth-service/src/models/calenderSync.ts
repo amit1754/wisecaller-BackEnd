@@ -1,6 +1,4 @@
 import { Schema, model } from "mongoose";
-import { UserStatus } from "./status";
-
 const CalenderSyncSchema = new Schema(
   {
     user: {
@@ -21,7 +19,7 @@ const CalenderSyncSchema = new Schema(
     },
     status: {
       type: Schema.Types.ObjectId,
-      ref: UserStatus,
+      ref: "UserStatus",
     },
   },
   { timestamps: true }

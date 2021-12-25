@@ -17,6 +17,18 @@ export default class UserBLL {
     let user = await userdal.getUserByPayload(payload);
     return user;
   }
+
+  async findOneUserLean(payload: any): Promise<any> {
+    let user = await userdal.findOneUserLean(payload);
+    return user;
+  } 
+
+  
+  async findOneUser(payload: any): Promise<any> {
+    let user = await userdal.findOneUser(payload);
+    return user;
+  } 
+
   async getUserByPhoneAndId(id:any, mobileNo: any): Promise<any> {
     let user = await userdal.getUserByPhoneAndId(id, mobileNo);
     return user;

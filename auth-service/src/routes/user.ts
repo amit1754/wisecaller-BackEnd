@@ -1,13 +1,13 @@
 import express from "express";
 import { User } from "../controller";
 const router = express.Router();
-import upload from '../middlewares/uploadService';
+import fileUpload from '@wisecaller/s3';
 
 
 router.put(
   "/update-profile",
-  upload.filesizeChecker,
-  upload.upload.single("profile_image"),
+  fileUpload.filesizeChecker,
+  fileUpload.fileUpload("PROFILE").single("profile_image"),
   User.update
 );
 router.post("/search", User.searchWisecaller);

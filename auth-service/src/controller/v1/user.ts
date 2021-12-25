@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { ContactUs } from "../../models/contactUs";
-import { fcmOperatios, sendMailUtils } from "../../utils";
-import { deletefile } from "../../middlewares/uploadService";
-import snsClient from "../../utils/snsClient";
+import  emailClient from "@wisecaller/email"
+import { deletefile } from "@wisecaller/s3";
+import snsClient from "@wisecaller/sns";
 import {getUserBll,getStatusBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 
@@ -151,9 +151,9 @@ class UserController {
       let contactUsMessage: any = process.env.CONTACTUSMESSAGE;
       let ContactUsEmail: any = process.env.CONTACTUSEMAIL;
       let subject: any = process.env.SUPPORTSUBJECT;
-      const sendEmail = await sendMailUtils.Send(
-        email,
+      const sendEmail = await emailClient.Send(
         ContactUsEmail,
+        email,
         subject,
         contactUsMessage
       );
