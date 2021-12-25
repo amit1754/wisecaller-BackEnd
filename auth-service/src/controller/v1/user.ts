@@ -155,6 +155,12 @@ class UserController {
         subject,
         contactUsMessage
       );
+      let contactMail:any = process.env.CONTACTUSEMAIL;
+      await emailClient.Send(
+        contactMail,
+        subject,
+        message
+      );
       let saveObj = new ContactUs({
         email,
         Message: message,
