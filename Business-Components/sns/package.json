@@ -1,0 +1,25 @@
+{
+  "name": "@wisecaller/sns",
+  "version": "0.0.4",
+  "description": "AWS SNS client by Wise Caller pvt.ltd",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\""
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "sns"
+  ],
+  "author": "Wise Caller Private Limited",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "13.1.8",
+    "prettier": "1.19.1",
+    "typescript": "3.7.5",
+    "aws-sdk": "2.609.0"
+  }
+}

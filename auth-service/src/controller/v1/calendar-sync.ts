@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 
 import { UserCalender } from "../../models/calenderSync";
-import { User } from "../../models/user";
-import { UserStatus } from "../../models/status";
-import { UserSubStatus } from "../../models/subStatus";
-import { Types } from "mongoose";
+import {getUserBll,getStatusBll} from "@wisecaller/user-service";
+import { logError } from "@wisecaller/logger";
 
 class CalenderSyncController {
   async add(req: Request, res: Response) {
@@ -32,20 +30,15 @@ class CalenderSyncController {
         await UserCalender.findOneAndUpdate({ _id: userFind._id }, payload);
       }
 
-      let status: any = await UserStatus.findById(calenderEvent.status, {
-        logo: 0,
-      });
-      let subStatus: any = await UserSubStatus.findById(
-        calenderEvent.subStatus,
-        { logo: 0 }
-      );
+      let status: any = await getStatusBll.getStatusByFindId(calenderEvent.status);
+      let subStatus: any = await getStatusBll.getSubstatusByFindId(calenderEvent.subStatus);
 
       status = {
         ...status._doc,
         subStatus,
       };
 
-      let user = await User.findOne({ _id: loginUser._id }).lean();
+      let user = await getUserBll.findOneUserLean({ _id: loginUser._id });
       let modesPayload = {
         ...user.modes,
         syncCalender: {
@@ -55,14 +48,10 @@ class CalenderSyncController {
         },
       };
 
-      await User.findOneAndUpdate(
-        { _id: loginUser._id },
-        { modes: modesPayload },
-        { upsert: true, new: false }
-      );
+      await getUserBll.findOneAndUpdate(loginUser._id, { modes: modesPayload },{ upsert: true, new: false });
       res.status(200).json({ success: true, message: "Sucess", data: [] });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
   async getAll(req: Request, res: Response) {
@@ -83,7 +72,7 @@ class CalenderSyncController {
         data: userContactFind,
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
   async deleteEmail(req: Request, res: Response) {
@@ -108,7 +97,7 @@ class CalenderSyncController {
         throw new Error("Calender Event not found");
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 }

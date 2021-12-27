@@ -1,0 +1,28 @@
+{
+  "name": "@wisecaller/sns-notification-handler",
+  "version": "0.0.1",
+  "description": "SNS Notification Handler Middleware",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "redis"
+  ],
+  "author": "Wisecaller Technologies Pvt. Ltd.",
+  "license": "ISC",
+  "dependencies": {
+    "@wisecaller/http": "0.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "12.7.2",
+    "@types/express-serve-static-core": "4.16.11",
+    "@types/express": "4.17.1",
+    "rimraf": "3.0.0",
+    "typescript": "3.5.3"
+  }
+}

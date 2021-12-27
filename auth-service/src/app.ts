@@ -3,7 +3,8 @@ import express, { Express, Request, Response, NextFunction, json, urlencoded, te
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
-
+import Connection from '@wisecaller/mongo'
+import {logRequest} from "@wisecaller/logger"
 
 export default class App {
   app: Express = express();
@@ -28,11 +29,12 @@ export default class App {
 
     this.app.use(text());
     this.app.use(morgan("dev"));
+    this.app.use(logRequest);
     this.app.use(cors());
   }
 
   async setupDbConnection() {
-    import("./config/db/connection");
+    Connection.getDbConnection();
   }
 
   async setupRoutes() {
@@ -41,7 +43,7 @@ export default class App {
       this.app.use(`/auth-service/api/v1`, router);
 
       router.use("/", routes);
-      this.app.use(function (req: Request, res: Response, next: NextFunction) {
+      this.app.use(function (req: Request, res: Response, next: NextFunction) {   
         const error = new Error("The requested endpoint is not found.");
         res.status(404);
         next(error);

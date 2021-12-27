@@ -1,0 +1,46 @@
+image: node:latest
+
+variables:
+  AWS_ACCESS_KEY_ID_VAR: ${CI_COMMIT_REF_NAME}_aws_access_id
+  AWS_SECRET_ACCESS_KEY_VAR: ${CI_COMMIT_REF_NAME}_aws_access_secret
+  S3_BUCKET_NAME_VAR: ${CI_COMMIT_REF_NAME}_s3_bucket_name
+
+stages:
+  - build
+  - upload
+
+Build:
+  stage: build
+  only:
+    - develop
+    - staging
+    - master
+  before_script:
+    - npm install -g typescript
+    - npm install -g @types/node
+    - npm install -g bestzip
+  script:
+    - npm install --userconfig ${user_config}
+    - tsc --build
+    - cd build/ && bestzip ../${CI_PROJECT_NAME}.zip *
+    - cd ..
+  artifacts:
+    name: CompiledTS
+    paths:
+      - ${CI_PROJECT_NAME}.zip
+
+Upload:
+  stage: upload
+  image: python:latest
+  only:
+    - develop
+    - staging
+    - master
+  before_script:
+    - pip install awscli
+    - export TODAY=$(date +'%Y-%m-%d')
+    - export AWS_ACCESS_KEY_ID=${!AWS_ACCESS_KEY_ID_VAR}
+    - export AWS_SECRET_ACCESS_KEY=${!AWS_SECRET_ACCESS_KEY_VAR}
+    - export S3_BUCKET_NAME=${!S3_BUCKET_NAME_VAR}
+  script:
+    - aws s3 cp ${CI_PROJECT_NAME}.zip s3://${S3_BUCKET_NAME}/${TODAY}/${CI_PROJECT_NAME}.zip

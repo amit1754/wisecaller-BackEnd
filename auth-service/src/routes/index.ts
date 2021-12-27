@@ -4,7 +4,7 @@ import { AuthRoutes } from "./auth";
 import { UserRoutes } from "./user";
 import { ContactusRoutes } from "./contactus";
 
-import { authorization } from "../middlewares";
+import { authorization } from "@wisecaller/authorizer";
 import { RoadSafetyRoutes } from "./road-safety";
 import { CalenfarSyncRoutes } from "./calendar-sync";
 import { WorkLifeBalanceRoutes } from "./work-life-balance";

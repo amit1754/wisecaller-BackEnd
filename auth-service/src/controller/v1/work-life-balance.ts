@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import { User } from "../../models/user";
 import { WorkLifeBalance } from "../../models/work-life-balance";
-import { UserStatus } from "../../models/status";
-import { UserSubStatus } from "../../models/subStatus";
+import {getUserBll,getStatusBll} from "@wisecaller/user-service";
+import { logError } from "@wisecaller/logger";
 
 class WorkLifeBalanceController {
   async update(req: Request, res: Response) {
@@ -13,7 +12,7 @@ class WorkLifeBalanceController {
         user: loggedInUser._id,
       };
       let updated_work_life: any = {};
-      let user = await User.findOne({ _id: loggedInUser._id }).lean();
+      let user = await getUserBll.findOneUserLean({ _id: loggedInUser._id });
 
       if (payload.is_deleted) {
         await WorkLifeBalance.findOneAndRemove({ user: loggedInUser._id });
@@ -24,10 +23,10 @@ class WorkLifeBalanceController {
           payload,
           { upsert: true, new: true }
         );
-        let status = await UserStatus.findOne({
+        let status = await getStatusBll.getSubStatusByPayload({
           _id: updated_work_life.status,
         });
-        let sub_status = await UserSubStatus.findOne({
+        let sub_status = await getStatusBll.getSubStatusByPayload({
           _id: updated_work_life.sub_status,
         });
 
@@ -45,14 +44,10 @@ class WorkLifeBalanceController {
         },
       };
 
-      await User.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        { modes: user_payload },
-        { upsert: true, new: true }
-      );
+      await getUserBll.findOneAndUpdate(loggedInUser._id,{ modes: user_payload },{ upsert: true, new: true });
       return res.status(200).json({ success: true, data: updated_work_life });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 }

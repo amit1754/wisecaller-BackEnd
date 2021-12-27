@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { RoadSafety } from "../../models/road-safety";
-import { User } from "../../models/user";
-import { UserStatus } from "../../models/status";
-import snsClient from "../../utils/snsClient";
-import { globalTypeModel } from "../../models/globalType.Model";
+import {getUserBll,getStatusBll} from "@wisecaller/user-service";
+import { logError } from "@wisecaller/logger";
 
 class RoadSafetyController {
   async update(req: Request, res: Response) {
@@ -25,17 +23,14 @@ class RoadSafetyController {
           { upsert: true, new: true }
         );
       }
-      let road_safety_type = await globalTypeModel.findOne({
+      let road_safety_type = await getStatusBll.getGlobalType({
         type: "ROAD_SAFETY",
       });
-      let defaultStatus = await UserStatus.findOne({
+      let defaultStatus = await getStatusBll.getStatusByPayload({
         applicable_types: road_safety_type._id,
-      }).populate({
-        path: "applicable_types",
-        model: "globalType",
-      });
+      })
 
-      let user = await User.findOne({ _id: loggedInUser._id }).lean();
+      let user = await getUserBll.findOneUserLean({ _id: loggedInUser._id });
       let modesPayload = {
         ...user.modes,
         roadSafety: {
@@ -50,26 +45,14 @@ class RoadSafetyController {
           },
         },
       };
-      await User.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        { modes: modesPayload },
-        { upsert: true, new: false }
-      );
-
-      let snsPayload = {
-        type: "STATUS_UPDATE",
-        user: loggedInUser._id,
-        title: "Status Update",
-        send_all: true,
-      };
-      await snsClient.publishToSNS(snsPayload);
+      await getUserBll.findOneAndUpdate(loggedInUser._id, { modes: modesPayload },{ upsert: true, new: false });
       return res.status(200).json({
         success: true,
         message: "Roadsafety updated successfully",
         data: modesPayload.roadSafety,
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 }

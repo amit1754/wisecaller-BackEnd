@@ -1,14 +1,11 @@
-import { UserDevices } from "../models/user_devices";
+import {getUserBll} from "@wisecaller/user-service";
+import SNSClient from "@wisecaller/sns";
 
-import { fcmOperatios } from "./";
 class DeviceRegister {
   public async addDevices(userDevices: any, userId: any) {
     const { device_token, OS, platform, deviceId } = userDevices;
-    let arn = await fcmOperatios.RegisterToken(device_token);
-    let existing_token = await UserDevices.findOne({
-      user: userId,
-      "user_device.device_token": device_token,
-    }).lean();
+    let arn = await SNSClient.registerPushNotificationService(device_token);
+    let existing_token = await getUserBll.findOneDeviceByTokenById(userId,device_token);
 
     if (existing_token) {
       let updated_payload = {
@@ -21,11 +18,7 @@ class DeviceRegister {
           arn,
         },
       };
-      await UserDevices.findOneAndUpdate(
-        { _id: existing_token._id },
-        { ...updated_payload },
-        { upsert: false, new: false }
-      );
+      await getUserBll.findOneDeviceAndUpdateById(existing_token._id , { ...updated_payload } ,{ upsert: false, new: false });
     } else {
       await UserDevices.deleteMany({ user: userId });
       let payload = {
@@ -36,8 +29,7 @@ class DeviceRegister {
         arn,
       };
       let fpayload = { user: userId, user_device: payload };
-      let devices = new UserDevices(fpayload);
-      await devices.save();
+      let devices = await getUserBll.createUserDevice(fpayload);
     }
   }
 }

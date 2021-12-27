@@ -1,0 +1,33 @@
+{
+  "name": "@wisecaller/logger",
+  "version": "0.0.3",
+  "description": "logger client for Wise Caller Technologies",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\""
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "mongo"
+  ],
+  "author": "WiseCaller Technologies Private Limited",
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node14": "^1.0.1",
+    "@types/node": "^16.11.8",
+    "prettier": "^2.4.1",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.4.4"
+  }
+}

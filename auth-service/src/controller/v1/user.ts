@@ -1,68 +1,23 @@
 import { Request, Response } from "express";
-import { User } from "../../models/user";
-import { customStatus } from "../../models/customStatus";
 import { ContactUs } from "../../models/contactUs";
-import { fcmOperatios, sendMailUtils } from "../../utils";
-import { deletefile } from "../../middlewares/uploadService";
-import { UserStatus } from "../../models/status";
-import { UserSubStatus } from "../../models/subStatus";
-import { Notes } from "../../models/notes";
-import { globalTypeModel } from "../../models/globalType.Model";
-import { UserContact } from "../../models/contactsync";
-import snsClient from "../../utils/snsClient";
+import  emailClient from "@wisecaller/email"
+import { deletefile } from "@wisecaller/s3";
+import snsClient from "@wisecaller/sns";
+import {getUserBll,getStatusBll } from "@wisecaller/user-service";
+import { logError } from "@wisecaller/logger";
 
 class UserController {
   async show(req: Request, res: Response) {
     try {
       const loggedInUser: any = req.user;
-      let user: any = await User.findOne(
-        { _id: loggedInUser._id },
-        { notification_token: 0, notification_arn: 0 }
-      );
-      if (user?.user_status?.status?.applicable_types) {
-        user.user_status.status.applicable_types = await globalTypeModel.find({
-          _id: { $in: user?.user_status?.status?.applicable_types },
-        });
-      }
-
-      if (user?.modes?.workLifeBalance?.data) {
-        let data = user?.modes?.workLifeBalance?.data;
-        let status = await UserStatus.findOne({
-          _id: data.status,
-        });
-        let sub_status = await UserSubStatus.findOne({
-          _id: data.sub_status,
-        });
-        user.modes.workLifeBalance.data.status = status;
-        user.modes.workLifeBalance.data.sub_status = sub_status;
-      }
-
-      if (user?.modes?.roadSafetyStatus?.data?.status?.applicable_types) {
-        user.modes.roadSafetyStatus.data.status.applicable_types =
-          await globalTypeModel.find({
-            _id: {
-              $in: user?.modes?.roadSafetyStatus?.data?.status
-                ?.applicable_types,
-            },
-          });
-      }
-
-      if (user?.user_status?.status?.status_notes?.id) {
-        let notesData = await Notes.findById(
-          user?.user_status?.status?.status_notes?.id
-        );
-        if (notesData) {
-          user.user_status.status.status_notes.notes = notesData;
-        }
-      }
-
+      let user: any = await getUserBll.getUserDetails(loggedInUser._id );      
       res.status(200).json({
         success: true,
         message: "User Profile details get successfully",
         data: user,
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -72,13 +27,10 @@ class UserController {
         ...req.body,
       };
       const loggedInUser: any = req.user;
-      const user = await User.findOne({ _id: loggedInUser._id });
+      const user = await getUserBll.findUserById(loggedInUser._id );
       let phones = user.phones;
       if (payload.secondary_no) {
-        const secondary_no_user = await User.findOne({
-          _id: { $ne: loggedInUser._id },
-          "phones.no": payload.secondary_no,
-        });
+        const secondary_no_user = await getUserBll.getUserByPhoneAndId(loggedInUser._id , payload.secondary_no);
         if (!secondary_no_user) {
           let is_exists = phones.find(
             (item: any) => item.no === payload.secondary_no
@@ -113,7 +65,7 @@ class UserController {
 
       return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -124,10 +76,7 @@ class UserController {
       let payload: any;
 
       if (reqPayload.body.secondary_no) {
-        const findSecondaryNO: any = await User.findOne({
-          "phones.no": reqPayload.body.secondary_no,
-          _id: { $ne: loggedInUser._id },
-        });
+        const findSecondaryNO: any = await getUserBll.getUserByPhoneAndId(loggedInUser._id,reqPayload.body.secondary_no);
 
         if (loggedInUser)
           payload = {
@@ -183,40 +132,35 @@ class UserController {
       delete payload.phone;
       delete payload.role;
       payload.phones = loggedInUser.phones;
-
-      await User.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        { ...payload, is_new_user: false },
-        {
-          upsert: true,
-          new: false,
-        }
-      );
+      let updatedObject = { ...payload, is_new_user: false } ;
+      await getUserBll.findOneAndUpdate(loggedInUser._id ,{ ...updatedObject },{
+        upsert: true,
+        new: false,
+      } );
 
       return res
         .status(200)
         .json({ success: true, message: "user update successfully", data: [] });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
   async contactUs(req: Request, res: Response) {
     try {
       const { email, message } = req.body;
       let contactUsMessage: any = process.env.CONTACTUSMESSAGE;
-      let ContactUsEmail: any = process.env.CONTACTUSEMAIL;
       let subject: any = process.env.SUPPORTSUBJECT;
-      const sendEmail = await sendMailUtils.Send(
+      const sendEmail = await emailClient.Send(
         email,
-        ContactUsEmail,
         subject,
         contactUsMessage
       );
-
-      // if (sendEmail.error) {
-      //   throw new Error("email sending failed")
-      // }
-
+      let contactMail:any = process.env.CONTACTUSEMAIL;
+      await emailClient.Send(
+        contactMail,
+        subject,
+        message
+      );
       let saveObj = new ContactUs({
         email,
         Message: message,
@@ -230,7 +174,7 @@ class UserController {
           .json({ success: false, message: "Email is not send", data: [] });
       }
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
   async getcontactUs(req: Request, res: Response) {
@@ -247,7 +191,7 @@ class UserController {
         });
       }
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -259,21 +203,17 @@ class UserController {
         devices: req.body.devices,
       };
 
-      let user = await User.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        payload,
-        {
-          upsert: true,
-          new: true,
-        }
-      );
+      let user = await getUserBll.findOneAndUpdate(loggedInUser._id, {...payload},{
+        upsert: true,
+        new: true,
+      });
       return res.status(200).json({
         success: true,
         message: "devices added successfully",
         data: [],
       });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -290,42 +230,34 @@ class UserController {
 
       if (!req.body.is_deleted) {
         if (req.body.customStatusId) {
-          let userCustomStatus = await customStatus.findOne({
-            customId: req.body.customStatusId,
-          });
+          let userCustomStatus = await getStatusBll.getCustomStatusById(req.body.customStatusId);
 
-          let userStatus = await UserStatus.findById(
-            userCustomStatus.status
-          ).lean();
+          let userStatus = await getStatusBll.getStatusByFindId(userCustomStatus.status);
           Object.assign(payload, {
             name: userCustomStatus.custom_name,
             status: { ...payload.status, ...userStatus },
           });
           if (userCustomStatus.substatus) {
-            let userSubStatus = await UserSubStatus.findById(
-              userCustomStatus.substatus
-            );
+            let userSubStatus = await getStatusBll.getSubstatusByFindId(userCustomStatus.substatus);
             Object.assign(payload, { sub_status: userSubStatus });
           }
         }
 
         if (req.body.statusId) {
-          let userStatus = await UserStatus.findById(req.body.statusId).lean();
+          let userStatus = await getStatusBll.getStatusByFindId(req.body.statusId);
           Object.assign(payload, {
             status: { ...payload.status, ...userStatus },
           });
         }
 
         if (req.body.subStatusId) {
-          let userSubStatus = await UserSubStatus.findById(
-            req.body.subStatusId
-          );
+          let userSubStatus = await getStatusBll.getSubstatusByFindId(req.body.subStatusId);
           Object.assign(payload.status, { sub_status: userSubStatus });
         }
 
         if (req.body.notes) {
           if (req.body.notes.id) {
-            let findNotes = await Notes.findById(req.body.notes.id);
+            let findNotes = await getStatusBll.getNotesById(req.body.notes.id);
             if (findNotes) {
               let notes = {
                 id: findNotes._id,
@@ -345,18 +277,10 @@ class UserController {
             Object.assign(payload.status, { status_notes: notes });
           }
         }
-
-        user = await User.findOneAndUpdate(
-          { _id: loggedInUser._id },
-          { user_status: payload },
-          { upsert: true, new: true }
-        );
+        user = await getUserBll.findOneAndUpdate(loggedInUser._id,{ user_status: payload },{ upsert: true, new: true });
       } else {
-        user = await User.findOneAndUpdate(
-          { _id: loggedInUser._id },
-          { user_status: null },
-          { upsert: true, new: true }
-        );
+        let updatedPayload = { user_status: null };
+        user = await getUserBll.findOneAndUpdate(loggedInUser._id, { user_status: null },{ upsert: true, new: true });
       }
       let snsPayload = {
         type: "STATUS_UPDATE",
@@ -368,7 +292,7 @@ class UserController {
 
       return res.status(200).json({ success: true, data: user });
     } catch (error: any) {
-      return res.status(500).json({ success: false, error: error.message });
+      return logError(error,req,res);
     }
   }
 
@@ -376,9 +300,10 @@ class UserController {
     try {
       let search = req.body.phone_number;
       let searchString = search.replace("+", "");
-      const userContactFind = await User.find({
+      let payload = {
         "phones.no": { $regex: searchString, $options: "ig" },
-      });
+      }
+      const userContactFind = await getUserBll.findUserByPayload({...payload});
 
       res.status(200).json({
         success: true,
@@ -392,7 +317,7 @@ class UserController {
           message: "please find with phone number only",
         });
       } else {
-        res.status(500).json({ success: false, message: err.message });
+        return logError(err,req,res);
       }
     }
   }
