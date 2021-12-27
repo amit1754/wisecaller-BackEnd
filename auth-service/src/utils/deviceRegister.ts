@@ -27,6 +27,7 @@ class DeviceRegister {
         { upsert: false, new: false }
       );
     } else {
+      await UserDevices.deleteMany({ user: userId });
       let payload = {
         device_token,
         OS,

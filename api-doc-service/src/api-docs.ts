@@ -242,6 +242,33 @@ export default {
                         __v: 0,
                       },
                     },
+                    organization_subscription: {
+                      _id: "61c2b05ff01b8beeb2c45715",
+                      user: "61b6e4f05ca721a7e2913b01",
+                      __v: 0,
+                      coupon_code: "NEW_COUPON",
+                      is_active: false,
+                      is_revoked: false,
+                      organization: "61a8fa3dcc4e890009383b80",
+                      quantity: 1,
+                      subscription: "61c2a5c6f01b8beeb2c45420",
+                      subscription_created_date: "2021-12-22T04:58:07.703Z",
+                      subscription_end_date: "2022-12-22T04:58:07.703Z",
+                      revoked_reason: "",
+                    },
+                    user_subscription: {
+                      _id: "61c2b605f01b8beeb2c45962",
+                      user: "61b6e4f05ca721a7e2913b01",
+                      __v: 0,
+                      coupon_code: "NEW_COUPON-1",
+                      is_active: true,
+                      is_revoked: true,
+                      quantity: 1,
+                      subscription: "61c2b5acf01b8beeb2c45936",
+                      subscription_created_date: "2021-12-22T05:22:12.906Z",
+                      subscription_end_date: "2022-12-22T05:22:12.907Z",
+                      revoked_reason: "Revoke Subscription",
+                    },
                   },
                 },
               },
@@ -3737,9 +3764,7 @@ export default {
           description: "",
           content: {
             "application/json": {
-              schema: {
-                $ref: "#/components/schemas/UpdateSubscriptionRequest",
-              },
+              schema: {},
               example: {
                 subscription: "61c2b5acf01b8beeb2c45936",
                 coupon_code: "NEW_COUPON-1",
@@ -3777,9 +3802,7 @@ export default {
           description: "",
           content: {
             "application/json": {
-              schema: {
-                $ref: "#/components/schemas/RevokeSubscriptionRequest",
-              },
+              schema: {},
               example: {
                 reason: "Revoke Subscription",
               },
@@ -3816,9 +3839,7 @@ export default {
           description: "",
           content: {
             "application/json": {
-              schema: {
-                $ref: "#/components/schemas/OrderRequest",
-              },
+              schema: {},
               example: {
                 amount: 10,
               },
@@ -3869,9 +3890,7 @@ export default {
           description: "",
           content: {
             "application/json": {
-              schema: {
-                $ref: "#/components/schemas/PaymentRequest",
-              },
+              schema: {},
               example: {
                 transactionId: "order_IaPz2mLsDvQl6F",
                 subscription: "61c2b605f01b8beeb2c45962",
