@@ -7,21 +7,19 @@ const OrganizationSchema = new Schema(
     },
     email: {
       type: String,
+      unique: true,
     },
     website: {
       type: String,
     },
     phone_no: {
       type: String,
+      unique: true,
     },
     role: {
       type: String,
       enum: ["ORGANIZATION"],
       default: "ORGANIZATION",
-    },
-    is_new_user: {
-      type: Boolean,
-      default: true,
     },
   },
   { timestamps: true }

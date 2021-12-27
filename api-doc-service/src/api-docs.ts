@@ -3436,7 +3436,7 @@ export default {
     },
     "/subscribe-service/api/v1/coupon/update": {
       post: {
-        tags: ["Coupon"],
+        tags: ["Subscription Service"],
         summary: "Update",
         operationId: "Update",
         parameters: [],
@@ -3480,7 +3480,7 @@ export default {
     },
     "/subscribe-service/api/v1/coupon": {
       get: {
-        tags: ["Coupon"],
+        tags: ["Subscription Service"],
         summary: "Get All Coupons",
         operationId: "GetAllCoupons",
         parameters: [],
@@ -3520,7 +3520,7 @@ export default {
     },
     "/subscribe-service/api/v1/coupon/bulk-coupon-create": {
       post: {
-        tags: ["Coupon"],
+        tags: ["Subscription Service"],
         summary: "Bulk Coupon Create",
         operationId: "BulkCouponCreate",
         parameters: [],
@@ -3597,7 +3597,7 @@ export default {
     },
     "/subscribe-service/api/v1/coupon/redeem-coupon": {
       post: {
-        tags: ["Coupon"],
+        tags: ["Subscription Service"],
         summary: "Redeem Coupon Code",
         operationId: "RedeemCouponCode",
         parameters: [],
@@ -3649,7 +3649,7 @@ export default {
     },
     "/subscribe-service/api/v1/subscription/update": {
       post: {
-        tags: ["Subscription"],
+        tags: ["Subscription Service"],
         summary: "New Subscription",
         operationId: "NewSubscription",
         parameters: [],
@@ -3705,10 +3705,19 @@ export default {
     },
     "/subscribe-service/api/v1/subscription": {
       get: {
-        tags: ["Subscription"],
+        tags: ["Subscription Service"],
         summary: "Get All Subscription",
         operationId: "GetAllSubscription",
-        parameters: [],
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            required: true,
+            schema: {
+              type: "string",
+            },
+          },
+        ],
         responses: {
           "200": {
             description: "",
@@ -3756,7 +3765,7 @@ export default {
     },
     "/subscribe-service/api/v1/user-subscription/update": {
       post: {
-        tags: ["User Subscription"],
+        tags: ["Subscription Service"],
         summary: "Update Subscription",
         operationId: "UpdateSubscription",
         parameters: [],
@@ -3794,7 +3803,7 @@ export default {
     },
     "/subscribe-service/api/v1/user-subscription/revoke": {
       post: {
-        tags: ["User Subscription"],
+        tags: ["Subscription Service"],
         summary: "Revoke Subscription",
         operationId: "RevokeSubscription",
         parameters: [],
@@ -3831,7 +3840,7 @@ export default {
     },
     "/subscribe-service/api/v1/payment/order": {
       post: {
-        tags: ["Payment"],
+        tags: ["Subscription Service"],
         summary: "Order",
         operationId: "Order",
         parameters: [],
@@ -3882,7 +3891,7 @@ export default {
     },
     "/subscribe-service/api/v1/payment": {
       post: {
-        tags: ["Payment"],
+        tags: ["Subscription Service"],
         summary: "Payment",
         operationId: "Payment",
         parameters: [],
@@ -3931,6 +3940,97 @@ export default {
                 },
               },
             },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/organization-service/api/v1/auth/register": {
+      post: {
+        tags: ["Organization Service"],
+        summary: "Create Organazation",
+        operationId: "CreateOrganazation",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/CreateOrganazationRequest",
+              },
+              example: {
+                name: "Tushar",
+                email: "savaliyatushar2197@gmail.com",
+                website: "www.aaa.com",
+                phone_no: "+918980514085",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/organization-service/api/v1/auth/login": {
+      post: {
+        tags: ["Organization Service"],
+        summary: "Organazation Login",
+        operationId: "OrganazationLogin",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/OrganazationLoginRequest",
+              },
+              example: {
+                phone_no: "+918980514085",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/organization-service/api/v1/auth/verify": {
+      post: {
+        tags: ["Organization Service"],
+        summary: "Verify OTP for Organazation",
+        operationId: "VerifyOTPforOrganazation",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/VerifyOTPforOrganazationRequest",
+              },
+              example: {
+                phone_no: "+918980514085",
+                otp: 3381,
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
           },
         },
         deprecated: false,
@@ -8855,6 +8955,62 @@ export default {
           status: "61a194a2d87d6100088f7a3f",
           sub_status: "61a19703d87d6100088f7a60",
           is_active: true,
+        },
+      },
+      CreateOrganazationRequest: {
+        title: "CreateOrganazationRequest",
+        required: ["name", "email", "website", "phone_no"],
+        type: "object",
+        properties: {
+          name: {
+            type: "string",
+          },
+          email: {
+            type: "string",
+          },
+          website: {
+            type: "string",
+          },
+          phone_no: {
+            type: "string",
+          },
+        },
+        example: {
+          name: "Tushar",
+          email: "savaliyatushar2197@gmail.com",
+          website: "www.aaa.com",
+          phone_no: "+918980514085",
+        },
+      },
+      OrganazationLoginRequest: {
+        title: "OrganazationLoginRequest",
+        required: ["phone_no"],
+        type: "object",
+        properties: {
+          phone_no: {
+            type: "string",
+          },
+        },
+        example: {
+          phone_no: "+918980514085",
+        },
+      },
+      VerifyOTPforOrganazationRequest: {
+        title: "VerifyOTPforOrganazationRequest",
+        required: ["phone_no", "otp"],
+        type: "object",
+        properties: {
+          phone_no: {
+            type: "string",
+          },
+          otp: {
+            type: "integer",
+            format: "int32",
+          },
+        },
+        example: {
+          phone_no: "+918980514085",
+          otp: 3381,
         },
       },
     },

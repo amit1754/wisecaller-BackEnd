@@ -28,8 +28,8 @@ const authorization = async (
       _id: verifyToken._id,
     });
     if (data) {
-      // req.user = data;
-      req.body.token = token;
+     
+      req.body.user = data;
       next();
     } else {
       throw new Error("unauthorized");

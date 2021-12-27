@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Coupon } from "../../model/coupon";
-import VerifyJWTToken from "../../utils/verify-jwt";
 import { User } from "../../model/user";
 import moment from "moment";
 import { Subscription } from "../../model/subscription";
@@ -59,9 +58,8 @@ class CouponController {
 
   async redeemCouponCode(req: Request, res: Response) {
     try {
-      let token: any = req.headers.authorization;
-      let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
-      let user: any = await User.findOne({ _id: vefied_token._id });
+      const request: any = req;
+      let user: any = request?.body.user;
 
       let coupon = await Coupon.findOne({ coupon_code: req.body.coupon_code });
       if (coupon && coupon.can_use_for > 0) {
