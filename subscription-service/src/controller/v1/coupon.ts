@@ -60,9 +60,13 @@ class CouponController {
     try {
       const request: any = req;
       let user: any = request?.body.user;
-
       let coupon = await Coupon.findOne({ coupon_code: req.body.coupon_code });
-      if (coupon && coupon.can_use_for > 0) {
+      let coupon_expiry_date = moment(coupon.expires_at)
+        .utc(false)
+        .toISOString();
+      let current_date = moment().utc(false).toISOString();
+      let diff = moment(coupon_expiry_date).diff(moment(current_date), "days");
+      if ((coupon && coupon.can_use_for > 0, diff >= 0)) {
         if (coupon.organization) {
           let subscription = await Subscription.findOne({
             _id: coupon.subscription,
@@ -80,20 +84,38 @@ class CouponController {
               .toISOString(),
           };
 
-          let organization_subscription =
-            await UserSubscription.findOneAndUpdate(
-              { user: user._id },
-              payload,
-              {
-                upsert: true,
-                new: true,
-              }
+          let user_active_subscriptions = await UserSubscription.findOne({
+            user: user._id,
+            subscription: payload.subscription,
+            subscription_end_date: { $gte: moment().toISOString() },
+            is_revoked: false,
+          });
+
+          if (user_active_subscriptions.coupon_code !== payload.coupon_code) {
+            let organization_subscription =
+              await UserSubscription.findOneAndUpdate(
+                { user: user._id },
+                payload,
+                {
+                  upsert: true,
+                  new: true,
+                }
+              );
+            await User.findOneAndUpdate(
+              { _id: user._id },
+              { organization_subscription: organization_subscription },
+              { upsert: true, new: true }
             );
-          await User.findOneAndUpdate(
-            { _id: user._id },
-            { organization_subscription: organization_subscription },
-            { upsert: true, new: true }
-          );
+            coupon = await Coupon.findOneAndUpdate(
+              { coupon_code: req.body.coupon_code },
+              { $inc: { can_use_for: -1 } },
+              { upsert: true, new: true }
+            );
+          } else {
+            return res
+              .status(200)
+              .json({ success: false, message: "Coupon already used!" });
+          }
         } else {
           coupon = await Coupon.findOneAndUpdate(
             { coupon_code: req.body.coupon_code },

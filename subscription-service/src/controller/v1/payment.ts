@@ -6,16 +6,20 @@ import moment from "moment";
 import { Payment } from "../../model/payment";
 import { UserSubscription } from "../../model/user_subscription";
 import { Subscription } from "../../model/subscription";
+import { Coupon } from "../../model/coupon";
+import email from "@wisecaller/email";
 class PaymentController {
   async index(req: Request, res: Response) {
     try {
       let token: any = req.headers.authorization;
       let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
       let user: any = await User.findOne({ _id: vefied_token._id });
-
+      let loggedInUser = req.body.user;
       let payload = {
         ...req.body,
       };
+
+      delete payload.user;
 
       let subscription = await Subscription.findById(payload.subscription);
       let subscription_payload = {
@@ -47,6 +51,20 @@ class PaymentController {
           { upsert: true, new: true }
         );
       } else {
+        let user_active_subscriptions = await UserSubscription.findOne({
+          user: loggedInUser._id,
+          subscription: payload.subscription,
+          subscription_end_date: { $gte: moment().toISOString() },
+          is_revoked: false,
+        });
+        let diff_days = moment(
+          user_active_subscriptions.subscription_end_date
+        ).diff(moment(), "days");
+        subscription_payload.subscription_end_date = moment(
+          subscription_payload.subscription_end_date
+        )
+          .add(diff_days, "days")
+          .toISOString();
         let user_subscription = await UserSubscription.findOneAndUpdate(
           { user: user._id, organization: { $exists: false } },
           subscription_payload,
@@ -95,6 +113,49 @@ class PaymentController {
 
       let order = await instance.orders.create(options);
       return res.status(200).json({ success: true, data: order });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async paymentForOrganization(req: Request, res: Response) {
+    try {
+      let loggedInUser = req.body.user;
+      let payload = {
+        ...req.body,
+      };
+      delete payload.user;
+
+      let coupon_payload = {
+        coupon_code: payload.coupon_code,
+        can_use_for: payload.quantity,
+        organization: loggedInUser._id,
+        subscription: payload.subscription,
+        type: "ORGANIZATION",
+        expires_at: payload.coupon_expiry_date,
+      };
+
+      let payment_payload = {
+        ...req.body,
+        user: loggedInUser._id,
+        payment_date: moment().toISOString(),
+      };
+
+      let payment = await Payment.findOneAndUpdate(
+        { user: loggedInUser._id, transactionId: payload.transactionId },
+        payment_payload,
+        { upsert: true, new: true }
+      );
+
+      await Coupon.findOneAndUpdate(
+        { coupon_code: payload.coupon_code },
+        coupon_payload,
+        { upsert: true, new: true }
+      );
+
+      let mail_body = `<h3>COUPON CODE:  ${payload.coupon_code}`;
+      await email.Send(loggedInUser.email, "Organization Coupon", mail_body);
+      return res.status(200).json({ success: true, data: payment });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });
     }
