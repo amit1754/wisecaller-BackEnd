@@ -3763,44 +3763,6 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/user-subscription/update": {
-      post: {
-        tags: ["Subscription Service"],
-        summary: "Update Subscription",
-        operationId: "UpdateSubscription",
-        parameters: [],
-        requestBody: {
-          description: "",
-          content: {
-            "application/json": {
-              schema: {},
-              example: {
-                subscription: "61c2b5acf01b8beeb2c45936",
-                coupon_code: "NEW_COUPON-1",
-              },
-            },
-          },
-          required: true,
-        },
-        responses: {
-          "200": {
-            description: "",
-            headers: {},
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/m2001",
-                },
-                example: {
-                  success: true,
-                },
-              },
-            },
-          },
-        },
-        deprecated: false,
-      },
-    },
     "/subscribe-service/api/v1/user-subscription/revoke": {
       post: {
         tags: ["Subscription Service"],
@@ -3907,6 +3869,65 @@ export default {
                 paymentFor: "Subscrition",
                 status: "SUCCESS",
                 mode: "ONLINE",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  data: {
+                    _id: "61c2c7d5f01b8beeb2c46042",
+                    transactionId: "order_IaPz2mLsDvQl6F",
+                    user: "61b6e4f05ca721a7e2913b01",
+                    __v: 0,
+                    amount: 10,
+                    createdAt: "2021-12-22T06:38:13.226Z",
+                    mode: "ONLINE",
+                    paymentFor: "Subscrition",
+                    payment_date: "2021-12-22T08:28:10.505Z",
+                    status: "SUCCESS",
+                    subscription: "61c2b605f01b8beeb2c45962",
+                    updatedAt: "2021-12-22T08:28:10.508Z",
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/subscribe-service/api/v1/organization-payment": {
+      post: {
+        tags: ["Subscription Service"],
+        summary: "Organization Payment",
+        operationId: "OrganizationPayment",
+        parameters: [],
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {},
+              example: {
+                transactionId: "order_IaPz2mLsDvQl6F",
+                subscription: "61c2b605f01b8beeb2c45962",
+                amount: "10",
+                paymentFor: "Organization Coupon",
+                status: "SUCCESS",
+                mode: "ONLINE",
+                quantity: 50,
+                coupon_expiry_date: "2021-12-22 04:13:51.917Z",
+                coupon_code: "MY_CHECK_50",
               },
             },
           },
