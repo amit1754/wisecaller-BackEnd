@@ -20,7 +20,7 @@ class DeviceRegister {
       };
       await getUserBll.findOneDeviceAndUpdateById(existing_token._id , { ...updated_payload } ,{ upsert: false, new: false });
     } else {
-      await UserDevices.deleteMany({ user: userId });
+      // await UserDevices.deleteMany({ user: userId });
       let payload = {
         device_token,
         OS,

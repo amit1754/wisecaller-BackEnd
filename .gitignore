@@ -1,6 +1,7 @@
 .vscode/
 wisecaller_modules/nodejs/
 wisecaller_modules/nodejs.zip
+workingHrsService-copy
 
 auth-service/node_modules
 call-service/node_modules
