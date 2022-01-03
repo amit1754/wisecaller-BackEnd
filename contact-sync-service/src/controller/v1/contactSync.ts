@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { IContactSync } from "../../interfaces/contactSync";
 import { UserContact } from "../../models/contactsync";
-import { User } from "../../models/user";
-import { Types } from "mongoose";
+
+
 import snsClient from "../../utils/snsClient";
 
 class ContactSyncController {

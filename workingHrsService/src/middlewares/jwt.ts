@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../models/user";
+
+import { getUserBll } from "@wisecaller/user-service";
+
 import { jwtVerify } from "../utils";
 
 const authorization = async (
@@ -24,7 +26,7 @@ const authorization = async (
     if (currentDate > verifyToken?.exp) {
       throw new Error("token is expired");
     }
-    const data: any = await User.findOne({
+    const data: any = await getUserBll.findOne({
       _id: verifyToken._id,
     });
     if (data) {

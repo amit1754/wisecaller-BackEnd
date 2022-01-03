@@ -1,7 +1,7 @@
 import express from "express";
 import { contactSync_Controller } from "../controller";
 const router = express.Router();
-import { authorization } from "../middlewares";
+import { authorization } from "@wisecaller/authorizer";
 
 router.post("/sync", [authorization], contactSync_Controller.sync);
 router.post("/search", [authorization], contactSync_Controller.searchContact);

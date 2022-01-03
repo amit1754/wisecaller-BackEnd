@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { ICalenderSync } from "../../interfaces/contactSync";
 import { UserCalender } from "../../models/calenderSync";
-import { User } from "../../models/user";
+import { getUserBll } from "@wisecaller/user-service";
 import { Types } from "mongoose";
 
 class CalenderSyncController {
@@ -10,7 +9,7 @@ class CalenderSyncController {
       const loginUser: any = req.user;
       const userFind = await UserCalender.findOne({ user: loginUser._id });
       let calenderEvent: any = req.body;
-      console.log(userFind);
+
       if (!userFind) {
         let payload: any = {
           calendars: calenderEvent.calendars,
@@ -26,11 +25,11 @@ class CalenderSyncController {
           prioritize_calendar_events: calenderEvent.prioritize_calendar_events,
           status: calenderEvent.status,
         };
-        console.log("payloawwwwd", payload);
+
         await UserCalender.findOneAndUpdate({ _id: userFind._id }, payload);
       }
 
-      let user = await User.findOne({ _id: loginUser._id }).lean();
+      let user = await getUserBll.findOneUserLean({ _id: loginUser._id });
       let modesPayload = {
         ...user.modes,
         syncCalender: {
@@ -39,7 +38,7 @@ class CalenderSyncController {
           status: Types.ObjectId(calenderEvent.status),
         },
       };
-      await User.findOneAndUpdate(
+      await getUserBll.findOneAndUpdate(
         { _id: loginUser._id },
         { modes: modesPayload },
         { upsert: true, new: false }

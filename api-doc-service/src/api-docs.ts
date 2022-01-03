@@ -7,7 +7,7 @@ export default {
   },
   servers: [
     {
-      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
+      url: "http://localhost:8000/",
       variables: {},
     },
   ],
