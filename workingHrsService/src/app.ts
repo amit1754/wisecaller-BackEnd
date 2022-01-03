@@ -3,10 +3,6 @@ import express, { Express, Request, Response, NextFunction, json, urlencoded, te
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
-import swaggerUI from "swagger-ui-express";
-
-
-import swaggerDocs from "./swagger-docs";
 
 export default class App {
   app: Express = express();
@@ -31,7 +27,6 @@ export default class App {
     this.app.use(text());
     this.app.use(morgan("dev"));
     this.app.use(cors());
-    this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   }
 
   async setupDbConnection() {

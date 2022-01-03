@@ -11,6 +11,7 @@ plugins:
 package:
   patterns:
   - 'env.dev'
+  - '!node_modules'
 
 provider:
   name: aws

@@ -6,7 +6,8 @@ import { WorkLife } from "../../models/worklIfe";
 class WorklifeController {
   async add(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      const request: any = req;
+      const loggedInUser: any = request.user;
 
       let payload: IWorkingDays = {
         ...req.body,
@@ -59,7 +60,8 @@ class WorklifeController {
   }
   async getWorkdays(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      const request: any = req;
+      const loggedInUser: any = request.user;
 
       const userWorkingHrs = await WorkLife.aggregate([
         { $match: { user: loggedInUser._id } },

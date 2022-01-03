@@ -9,8 +9,6 @@ import express, {
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
-import swaggerUI from "swagger-ui-express";
-import passport from "passport";
 import {
   handleSNSNotification,
   handleSNSNotificationHeader,

@@ -10,10 +10,8 @@ import express, {
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
-import swaggerUI from "swagger-ui-express";
 
-import swaggerDocs from "./swagger-docs";
-import {authorization} from './middlewares'
+import { authorization } from "./middlewares";
 
 export default class App {
   app: Express = express();
@@ -38,8 +36,6 @@ export default class App {
     this.app.use(text());
     this.app.use(morgan("dev"));
     this.app.use(cors());
- 
-    this.app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   }
 
   async setupDbConnection() {

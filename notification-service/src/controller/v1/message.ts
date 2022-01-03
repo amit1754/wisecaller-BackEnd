@@ -16,7 +16,8 @@ class MessageController {
 
   async callBack(req: Request, res: Response) {
     try {
-      let loggedInUser: any = req.user;
+      let request: any = req;
+      let loggedInUser: any = request.user;
       let event = {
         type: "CALL_BACK_REQUEST",
         title: `${loggedInUser.first_name} ${loggedInUser.last_name} has requested for a callback.`,
@@ -33,7 +34,8 @@ class MessageController {
 
   async customNotification(req: Request, res: Response) {
     try {
-      let loggedInUser: any = req.user;
+        let request: any = req;
+        let loggedInUser: any = request.user;
       let event = {
         type: "CUSTOM_NOTIFICATION",
         title: req.body.title,

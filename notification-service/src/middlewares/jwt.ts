@@ -28,7 +28,9 @@ const authorization = async (
       _id: verifyToken._id,
     });
     if (data) {
-      req.user = data;
+      let user = data;
+      req.push(user);
+      // req.user = data;
       req.body.token = token;
       next();
     } else {

@@ -10,7 +10,10 @@ provider:
   name: aws
   runtime: nodejs14.x
   lambdaHashingVersion: '20201221'
-
+package:
+  patterns:
+  - 'env.dev'
+  - '!node_modules'
 functions:
   api:
     handler: bin/handler.api

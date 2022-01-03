@@ -48,7 +48,7 @@ export default class App {
 
       router.use("/", routes);
       this.app.use(function (req: Request, res: Response, next: NextFunction) {
-        const error = new Error("The requested endpoint is not found.");
+        const error = new Error("The requested endpoint is not  found.");
         res.status(404);
         next(error);
       });
