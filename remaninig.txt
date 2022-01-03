@@ -1,0 +1,16 @@
+1. Update the Swagger with user response with Organization and User subscriptions.=>done
+2. Register Organization API => done
+3. Login Organization =>done
+4. List Subscriptions based on Type (Sent Type as Query string in Get Subscription Api) => done
+5. Once payment is done for User Subscriotion They call '/payment' API WHERE we create the subscription for User =>done
+6. The user_subscription_date should be saved in the user Profile =>done
+
+
+7. When the user has an active subscription (ie; user_Subscription_End Data is greater than today) and if the user subnscripbed to a plan again the user_Subscription_EndDate has to be updated from the current End Date, eg: has an active subscription till Jan 22 , subscribed for a 2 month plan again, the user subscription gets updated withe the 2 month subscription and the subscription End Date will get updated to March 22 not feb 22
+8. But if the user is subscripbed for an Organization Subscription the end Date will be the endDate for the Coupon Created for the organisation.
+10. User_Subscription End Date should be saved physically (do not calculate on calling /get-profile api) so that even if the subscritopn duration get changed it wont affect the already subsxcribed users.
+
+11. When the organization logs in and chooses an organization subscription Plans
+They call "subscription-service/api/v1/payment/Order" and then call a different api
+which creates a coupon for how many subscriptions they need say for eg: 50 and sent it to the Email Id of the organization.
+12. Save the Request with paid price , quantity ,actual price etc.. in DB
