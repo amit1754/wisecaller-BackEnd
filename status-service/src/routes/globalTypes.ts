@@ -1,6 +1,6 @@
 import express from "express";
 import { global_status_Controller } from "../controller";
-import authorization from "../middlewares/jwt";
+import { authorization } from "@wisecaller/authorizer";
 
 const router = express.Router();
 

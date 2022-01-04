@@ -1,6 +1,6 @@
 import express from "express";
 import { status_Controller } from "../controller";
-import {authorization} from '../middlewares'
+import { authorization } from "@wisecaller/authorizer";
 const router = express.Router();
 import upload from '../middlewares/uploadService';
 
