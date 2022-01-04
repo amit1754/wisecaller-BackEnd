@@ -26,12 +26,16 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
+    "@wisecaller/authorizer": "0.0.7",
+    "@wisecaller/logger": "0.0.3",
+    "@wisecaller/mongo": "0.0.2",
     "@wisecaller/sns-notification-handler": "^0.0.1",
+    "@wisecaller/user-service": "0.0.8",
     "aws-sdk": "^2.1039.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "fcm-node": "^1.6.1",
     "google-libphonenumber": "^3.2.22",
     "jsonwebtoken": "^8.5.1",

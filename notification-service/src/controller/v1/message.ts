@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import snsClient from "../../utils/snsClient";
 import event from "./event-handler";
+import { logError } from "@wisecaller/logger";
 const EventHandler = new event();
 
 class MessageController {
@@ -26,16 +27,17 @@ class MessageController {
         text: req.body.message,
       };
       await EventHandler.index(event);
-      return res.status(200).json({ success: true });
+      res.status(200).json({ success: true });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      logError(error, req, res);
+      res.status(200).json({ success: false, message: error.message });
     }
   }
 
   async customNotification(req: Request, res: Response) {
     try {
-        let request: any = req;
-        let loggedInUser: any = request.user;
+      let request: any = req;
+      let loggedInUser: any = request.user;
       let event = {
         type: "CUSTOM_NOTIFICATION",
         title: req.body.title,
@@ -45,9 +47,10 @@ class MessageController {
         text: req.body.text,
       };
       await snsClient.publishToSNS(event);
-      return res.status(200).json({ success: true });
+      res.status(200).json({ success: true });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      logError(error, req, res);
+      res.status(200).json({ success: false, message: error.message });
     }
   }
 }

@@ -36,7 +36,7 @@ class SNSClient {
       let publish = await sns.publish(params).promise();
       return publish.MessageId;
     } catch (error: any) {
-      throw new error(error);
+      throw new Error(error);
     }
   }
 }
