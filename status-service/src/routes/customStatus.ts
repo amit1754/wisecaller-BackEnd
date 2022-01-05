@@ -11,6 +11,6 @@ router.delete(
   authorization,
   Custom_status_Controller.delteStatus
 );
-router.get("/get", authorization, Custom_status_Controller.get);
+router.get("/get", Custom_status_Controller.get);
 
 export const CustomStatusRoutes = router;

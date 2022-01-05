@@ -1,11 +1,11 @@
 import express from "express";
 import { status_Controller } from "../controller";
-import { authorization } from "@wisecaller/authorizer";
+import { authorization } from "../middlewares";
 const router = express.Router();
 import upload from '../middlewares/uploadService';
 
 router.post("/add",authorization, status_Controller.addStatus);
-router.get("/get", authorization, status_Controller.getAll);
+router.get("/get",authorization, status_Controller.getAll);
 router.post("/add-sub",authorization ,status_Controller.addSubStatus);
 router.delete("/delete/:id",authorization, status_Controller.delete);
 router.put("/update/:id",authorization, status_Controller.update);

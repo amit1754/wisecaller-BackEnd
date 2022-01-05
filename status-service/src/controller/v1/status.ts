@@ -8,6 +8,7 @@ import snsClient from "../../utils/snsClient";
 class StatusController {
   async addStatus(req: Request, res: Response) {
     try {
+      
       const reqPayload: any = req;
       const loggedInUser: any = req.user;
       if (loggedInUser.role === "ADMIN") {
@@ -39,7 +40,7 @@ class StatusController {
   }
   async getAll(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      console.log('true :>> ', true);
       const global_status = await globalTypeModel.aggregate([
         { $match: {} },
         {

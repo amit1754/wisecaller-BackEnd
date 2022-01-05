@@ -73,6 +73,7 @@ class generalStatusController {
         data: globalType,
       });
     } catch (error: any) {
+      console.log('error :>> ', error);
       res.status(500).json({ success: false, message: error.message });
     }
   }
