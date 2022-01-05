@@ -59,31 +59,7 @@ class StatusController {
           Object.assign(global, { sub_status: sub });
         }
       }
-      // global_status.map((status) => {
-      //   status.global_statuses.map((item: any) => {
-      //     const sub_statuses = await UserSubStatus.find({});
-      //     console.log(sub);
-      //   });
-      // });
-
-      // let userEvent = await UserStatus.aggregate([
-      //   {
-      //     $lookup: {
-      //       from: "usersubstatuses",
-      //       localField: "_id",
-      //       foreignField: "parentId",
-      //       as: "subCategory",
-      //     },
-      //   },
-      //   {
-      //     $lookup: {
-      //       from: "globaltypes",
-      //       localField: "applicable_types",
-      //       foreignField: "_id",
-      //       as: "applicableType",
-      //     },
-      //   },
-      // ]);
+      
       res.status(200).json({
         success: true,
         message: "global status get successfully",

@@ -122,3 +122,8 @@ aws-sdk-layer/package-lock.json
 subscription-service/.serverless
 organization-service/.serverless
 organization-service/.env
+.npmrc
+package-lock.json
+organization-service/yarn-error.log
+organization-service/yarn.lock
+remaninig.txt
