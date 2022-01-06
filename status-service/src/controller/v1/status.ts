@@ -1,4 +1,4 @@
-import e, { Request, Response } from "express";
+import  { Request, Response } from "express";
 import { IStatus, ISubStatus } from "../../interfaces/status";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
@@ -8,8 +8,9 @@ import snsClient from "../../utils/snsClient";
 class StatusController {
   async addStatus(req: Request, res: Response) {
     try {
+      
       const reqPayload: any = req;
-      const loggedInUser: any = req.user;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser.role === "ADMIN") {
         const payload: IStatus = {
           ...req.body,
@@ -39,7 +40,7 @@ class StatusController {
   }
   async getAll(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      
       const global_status = await globalTypeModel.aggregate([
         { $match: {} },
         {
@@ -59,31 +60,7 @@ class StatusController {
           Object.assign(global, { sub_status: sub });
         }
       }
-      // global_status.map((status) => {
-      //   status.global_statuses.map((item: any) => {
-      //     const sub_statuses = await UserSubStatus.find({});
-      //     console.log(sub);
-      //   });
-      // });
-
-      // let userEvent = await UserStatus.aggregate([
-      //   {
-      //     $lookup: {
-      //       from: "usersubstatuses",
-      //       localField: "_id",
-      //       foreignField: "parentId",
-      //       as: "subCategory",
-      //     },
-      //   },
-      //   {
-      //     $lookup: {
-      //       from: "globaltypes",
-      //       localField: "applicable_types",
-      //       foreignField: "_id",
-      //       as: "applicableType",
-      //     },
-      //   },
-      // ]);
+      
       res.status(200).json({
         success: true,
         message: "global status get successfully",
@@ -95,8 +72,8 @@ class StatusController {
   }
   async update(req: Request, res: Response) {
     try {
-      const reqPayload: any = req;
-      const loggedInUser: any = req.user;
+   const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser.role === "ADMIN") {
         const { id }: any = req.params;
         let statusFind = await UserStatus.findById(id);
@@ -142,8 +119,9 @@ class StatusController {
 
   async delete(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
-      if (loginUser.role != "ADMIN") {
+      const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
+      if (loggedInUser.role != "ADMIN") {
         res.status(401).json({
           success: false,
           message: "you are not access to this resource",
@@ -165,7 +143,8 @@ class StatusController {
 
   async addSubStatus(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+    const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser?.role === "ADMIN") {
         const reqPayload: any = req;
         const payload: ISubStatus = {
@@ -191,7 +170,7 @@ class StatusController {
   async updateSubStatus(req: Request, res: Response) {
     try {
       const reqPayload: any = req;
-      const loggedInUser: any = req.user;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser?.role === "ADMIN") {
         const { id }: any = req.params;
         let payload: any = {
@@ -231,8 +210,9 @@ class StatusController {
   }
   async deleteSub(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
-      if (loginUser.role != "ADMIN") {
+       const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
+      if (loggedInUser.role != "ADMIN") {
         res.status(401).json({
           success: false,
           message: "you are not access to this resource",

@@ -71,17 +71,6 @@ workingHrsService/bin
 subscription-service/bin
 
 
-auth-service/.serverless
-call-service/.serverless
-contact-sync-service/.serverless
-notification-service/.serverless
-event-service/.serverless
-order-service/.serverless
-package-service/.serverless
-status-service/.serverless
-api-doc-service/.serverless
-workingHrsService/.serverless
-subscription-service/.serverless
 
 auth-service/build
 call-service/build
@@ -125,3 +114,16 @@ node_modules/lodash/_apply.js
 node_modules
 backup 12 nov.json
 .gitignore
+organization-service/bin
+auth-service/package.json
+aws-sdk-layer/package-lock.json
+call-service/.npmrc
+aws-sdk-layer/package-lock.json
+subscription-service/.serverless
+organization-service/.serverless
+organization-service/.env
+.npmrc
+package-lock.json
+organization-service/yarn-error.log
+organization-service/yarn.lock
+remaninig.txt

@@ -5,6 +5,8 @@ import { NotificationModel } from "../../models/notification";
 import snsClient from "../../utils/snsClient";
 import { globalTypeModel } from "../../models/globalType.Model";
 import { UserSubStatus } from "../../models/subStatus";
+import { getUserBll } from "@wisecaller/user-service";
+import { logError } from "@wisecaller/logger";
 
 class EventHandlerController {
   async index(event: any) {
@@ -32,7 +34,7 @@ class EventHandlerController {
 
   async statusUpdateNotification(event: any) {
     try {
-      let user_details = await User.findById(event.user_id);
+      let user_details = await getUserBll.findUserById(event.user_id);
       let data: any = {
         title: event.title,
         text: event.text,

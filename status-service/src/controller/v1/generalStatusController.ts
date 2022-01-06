@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { generalStatusModel } from "../../models/generalStatus";
 import { Types } from "mongoose";
-import { globalTypeModel } from "../../models/globalType.Model";
+
 class generalStatusController {
   async add(req: Request, res: Response) {
     try {
@@ -22,7 +22,6 @@ class generalStatusController {
   }
   async update(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
       let body: any = req.body;
       let id = req.params.id;
 
@@ -73,6 +72,7 @@ class generalStatusController {
         data: globalType,
       });
     } catch (error: any) {
+      console.log('error :>> ', error);
       res.status(500).json({ success: false, message: error.message });
     }
   }

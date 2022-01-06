@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { ICustomStatus } from "../../interfaces/status";
 import { customStatus } from "../../models/customStatus";
-import { User } from "../../models/user";
 import { WorkLifeBalance } from "../../models/worklIfe";
 
 class CustomStatusController {
   async add(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      
+       const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       let body: any = req.body;
       const length: number = body.length;
       for (let i = 0; i < length; i++) {
@@ -33,7 +33,7 @@ class CustomStatusController {
         message: "User status added successfully",
         data: [],
       });
-    } catch (error: any) {
+    } catch (error:any) {
       if (error.code === 11000) {
         res
           .status(500)
@@ -45,7 +45,8 @@ class CustomStatusController {
   }
   async update(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+     const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       let body: any = req.body;
       if (body.status && body.status.length) {
         const length: number = body.status.length;
@@ -88,18 +89,15 @@ class CustomStatusController {
         message: "User status update successfully",
         data: [],
       });
-    } catch (error: any) {
+    } catch (error:any) {
       console.log(error);
       res.status(500).json({ success: false, message: error.message });
     }
   }
   async delteStatus(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
-      // await customStatus.findOneAndRemove({
-      //   _id: req.params.id,
-      //   user: loggedInUser._id,
-      // });
+     const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       await customStatus.findOneAndUpdate(
         { _id: req.params.id, user: loggedInUser._id },
         { is_deleted: true },
@@ -113,7 +111,7 @@ class CustomStatusController {
         message: "User status deleted successfully",
         data: [],
       });
-    } catch (error: any) {
+    } catch (error:any) {
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -129,7 +127,8 @@ class CustomStatusController {
         };
       }
 
-      const loggedInUser: any = req.user;
+      const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       const getStatus: any = await customStatus.aggregate([
         {
           $match: {
@@ -180,7 +179,7 @@ class CustomStatusController {
           },
         },
       });
-    } catch (error: any) {
+    } catch (error:any) {
       res.status(500).json({ success: false, message: error.message });
     }
   }

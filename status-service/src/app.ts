@@ -10,6 +10,7 @@ import express, {
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
+import Connection from "@wisecaller/mongo";
 export default class App {
   app: Express = express();
 
@@ -33,16 +34,15 @@ export default class App {
     this.app.use(text());
     this.app.use(morgan("dev"));
     this.app.use(cors());
+    // this.app.use(logRequest);
   }
-
-  async setupDbConnection() {
-    import("./config/db/connection");
+ async setupDbConnection() {
+    Connection.getDbConnection();
   }
-
   async setupRoutes() {
     try {
       let router = express.Router();
-      this.app.use(`/status-service/api/v1`, router);
+ this.app.use(`/status-service/api/v1`, router);
       router.use("/", routes);
       this.app.use(function(req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");

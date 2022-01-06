@@ -1,0 +1,13 @@
+
+2. i need the list of subscribers for the organization, expiry etc...
+3. list of coupouns created for the organization , expiry etc...
+4. Admin Report for organization (Role Admin)
+ b. Organization subscribers
+ c. Organization generated coupouns
+ 
+ 
+ 
+ 
+1. subscription service  - URL wrong in Swagger=>done
+ a. list of organization=>done
+  d. Edit / Delete Organization (incl Phone and Email)=>done

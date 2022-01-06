@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Coupon } from "../controller";
-import { authorization } from "../middlewares";
+import { authorization } from "@wisecaller/authorizer";
 
 const router = Router();
 

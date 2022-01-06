@@ -5,7 +5,7 @@ import { CustomStatusRoutes } from "./customStatus";
 import { globalTypesRoutes } from "./globalTypes";
 import { generalStatusRoutes } from "./generalStatus";
 import { NotesRoutes } from "./notes";
-import { authorization } from "../middlewares";
+import { authorization } from "@wisecaller/authorizer";
 const router = express.Router();
 
 router.use("/global-status", EventRoutes);

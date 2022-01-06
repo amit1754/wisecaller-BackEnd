@@ -1,6 +1,6 @@
 import express from "express";
 import { Custom_status_Controller } from "../controller";
-import authorization from "../middlewares/jwt";
+import { authorization } from "@wisecaller/authorizer";
 
 const router = express.Router();
 
@@ -11,6 +11,6 @@ router.delete(
   authorization,
   Custom_status_Controller.delteStatus
 );
-router.get("/get", authorization, Custom_status_Controller.get);
+router.get("/get", Custom_status_Controller.get);
 
 export const CustomStatusRoutes = router;

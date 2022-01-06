@@ -7,7 +7,7 @@ export default {
   },
   servers: [
     {
-      url: "https://kkd6boswxb.execute-api.us-east-1.amazonaws.com/dev",
+      url: "https://2ap8jicooc.execute-api.us-east-1.amazonaws.com/dev/",
       variables: {},
     },
   ],
@@ -3434,7 +3434,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/coupon/update": {
+    "/subscription-service/api/v1/coupon/update": {
       post: {
         tags: ["Subscription Service"],
         summary: "Update",
@@ -3478,7 +3478,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/coupon": {
+    "/subscription-service/api/v1/coupon": {
       get: {
         tags: ["Subscription Service"],
         summary: "Get All Coupons",
@@ -3518,7 +3518,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/coupon/bulk-coupon-create": {
+    "/subscription-service/api/v1/coupon/bulk-coupon-create": {
       post: {
         tags: ["Subscription Service"],
         summary: "Bulk Coupon Create",
@@ -3595,7 +3595,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/coupon/redeem-coupon": {
+    "/subscription-service/api/v1/coupon/redeem-coupon": {
       post: {
         tags: ["Subscription Service"],
         summary: "Redeem Coupon Code",
@@ -3647,7 +3647,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/subscription/update": {
+    "/subscription-service/api/v1/subscription/update": {
       post: {
         tags: ["Subscription Service"],
         summary: "New Subscription",
@@ -3703,7 +3703,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/subscription": {
+    "/subscription-service/api/v1/subscription": {
       get: {
         tags: ["Subscription Service"],
         summary: "Get All Subscription",
@@ -3763,7 +3763,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/user-subscription/revoke": {
+    "/subscription-service/api/v1/user-subscription/revoke": {
       post: {
         tags: ["Subscription Service"],
         summary: "Revoke Subscription",
@@ -3800,7 +3800,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/payment/order": {
+    "/subscription-service/api/v1/payment/order": {
       post: {
         tags: ["Subscription Service"],
         summary: "Order",
@@ -3851,7 +3851,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/payment": {
+    "/subscription-service/api/v1/payment": {
       post: {
         tags: ["Subscription Service"],
         summary: "Payment",
@@ -3907,7 +3907,7 @@ export default {
         deprecated: false,
       },
     },
-    "/subscribe-service/api/v1/organization-payment": {
+    "/subscription-service/api/v1/organization-payment": {
       post: {
         tags: ["Subscription Service"],
         summary: "Organization Payment",

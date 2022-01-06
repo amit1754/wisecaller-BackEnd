@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CallHistory } from "../../models/callHistory";
-
+import { logError } from "@wisecaller/logger";
 class callHistory {
   async add(req: Request, res: Response) {
     try {
@@ -9,7 +9,7 @@ class callHistory {
 
       for (let index = 0; index < body.length; index++) {
         if (body[index].is_deleted === false) {
-          body[index].user = loginUser._id;          
+          body[index].user = loginUser._id;
           let a = await CallHistory.findOneAndUpdate(
             {
               caller_history_id: body[index].caller_history_id,
@@ -30,6 +30,7 @@ class callHistory {
       }
       res.status(200).json({ success: true, message: "Sucess", data: [] });
     } catch (error: any) {
+      logError(error, req, res);
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -86,6 +87,7 @@ class callHistory {
         .status(200)
         .json({ success: true, message: "Sucess", data: contactDetails });
     } catch (error: any) {
+      logError(error, req, res);
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -142,6 +144,7 @@ class callHistory {
         .status(200)
         .json({ success: true, message: "success", callLogs: reqestData });
     } catch (error: any) {
+      logError(error, req, res);
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -158,6 +161,7 @@ class callHistory {
 
       res.status(200).json({ success: true, message: "success", data: [] });
     } catch (error: any) {
+      logError(error, req, res);
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -168,7 +172,6 @@ class callHistory {
       let loggedInUser: any = req.user;
 
       for (const item of body) {
-
         let is_existing = await CallHistory.findOne({
           call_history_id: item.call_history_id,
           loggedin_user: loggedInUser,
@@ -202,6 +205,7 @@ class callHistory {
         message: "Contact history synced successfully",
       });
     } catch (error: any) {
+      logError(error, req, res);
       return res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -259,6 +263,7 @@ class callHistory {
         data: callHistory,
       });
     } catch (error: any) {
+      logError(error, req, res);
       return res.status(500).json({ success: false, message: error.message });
     }
   }

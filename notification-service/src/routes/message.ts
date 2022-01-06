@@ -1,6 +1,6 @@
 import express from "express";
 import { Message } from "../controller";
-import { authorization } from "../middlewares";
+import { authorization } from "@wisecaller/authorizer";
 const router = express.Router();
 
 router.post("/", Message.index);

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Coupon } from "../../model/coupon";
-import { User } from "../../model/user";
+import { getUserBll } from "@wisecaller/user-service";
 import moment from "moment";
 import { Subscription } from "../../model/subscription";
 import { UserSubscription } from "../../model/user_subscription";
@@ -8,6 +8,7 @@ import { UserSubscription } from "../../model/user_subscription";
 class CouponController {
   async index(req: Request, res: Response) {
     try {
+      
       let criteria = {};
 
       if (req.query.type) {
@@ -17,11 +18,12 @@ class CouponController {
       if (req.query.coupon_code) {
         Object.assign(criteria, { coupon_code: req.query.coupon_code });
       }
-
+      console.log('criteria :>> ', criteria);
       let coupons = await Coupon.find(criteria);
-      return res.status(200).json({ success: true, data: coupons });
+      console.log('data :>> ', true);
+       res.status(200).json({ success: true, data: [] });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+       res.status(200).json({ success: false, message: error.message });
     }
   }
 
@@ -101,7 +103,7 @@ class CouponController {
                   new: true,
                 }
               );
-            await User.findOneAndUpdate(
+            await getUserBll.findOneAndUpdate(
               { _id: user._id },
               { organization_subscription: organization_subscription },
               { upsert: true, new: true }
