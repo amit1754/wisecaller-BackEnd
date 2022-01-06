@@ -11,16 +11,16 @@ class EventHandlerController {
     try {
       switch (event.type) {
         case "STATUS_UPDATE":
-          this.statusUpdateNotification(event);
+          await this.statusUpdateNotification(event);
           break;
         case "GLOBAL_STATUS_UPDATE":
-          this.globalStatusUpdateNotifications(event);
+          await this.globalStatusUpdateNotifications(event);
           break;
         case "CUSTOM_NOTIFICATION":
-          this.customNotification(event);
+          await this.customNotification(event);
           break;
         case "CALL_BACK_REQUEST":
-          this.callBackRequest(event);
+          await this.callBackRequest(event);
           break;
         default:
           break;
@@ -68,7 +68,7 @@ class EventHandlerController {
           {
             $lookup: {
               from: "user_devices",
-              localField: "user._id",
+              localField: "contact",
               foreignField: "user",
               as: "device",
             },
