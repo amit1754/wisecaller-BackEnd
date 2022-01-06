@@ -285,7 +285,7 @@ class UserController {
       let snsPayload = {
         type: "STATUS_UPDATE",
         title: "Status Update",
-        user: loggedInUser._id,
+        user_id: loggedInUser._id,
         send_all: true,
       };
       await snsClient.publishToSNS(snsPayload);

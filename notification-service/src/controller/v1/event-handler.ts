@@ -13,16 +13,16 @@ class EventHandlerController {
     try {
       switch (event.type) {
         case "STATUS_UPDATE":
-          this.statusUpdateNotification(event);
+          await this.statusUpdateNotification(event);
           break;
         case "GLOBAL_STATUS_UPDATE":
-          this.globalStatusUpdateNotifications(event);
+          await this.globalStatusUpdateNotifications(event);
           break;
         case "CUSTOM_NOTIFICATION":
-          this.customNotification(event);
+          await this.customNotification(event);
           break;
         case "CALL_BACK_REQUEST":
-          this.callBackRequest(event);
+          await this.callBackRequest(event);
           break;
         default:
           break;
@@ -70,7 +70,7 @@ class EventHandlerController {
           {
             $lookup: {
               from: "user_devices",
-              localField: "user._id",
+              localField: "contact",
               foreignField: "user",
               as: "device",
             },
@@ -100,7 +100,7 @@ class EventHandlerController {
                 },
               };
 
-              this.sendNotificationToUsers(userArn, payload);
+              await this.sendNotificationToUsers(userArn, payload);
             }
           }
         }
@@ -126,7 +126,7 @@ class EventHandlerController {
                   sound: process.env.SOUND,
                 },
               };
-              this.sendNotificationToUsers(userArn, payload);
+              await this.sendNotificationToUsers(userArn, payload);
             }
           }
         }
@@ -178,7 +178,7 @@ class EventHandlerController {
           },
         };
         let device = users[index].user_device;
-        this.sendNotificationToUsers(device.arn, payload);
+        await this.sendNotificationToUsers(device.arn, payload);
       }
     }
   }
@@ -206,7 +206,7 @@ class EventHandlerController {
             },
           };
           let device = users[index].user_device;
-          this.sendNotificationToUsers(device.arn, payload);
+          await this.sendNotificationToUsers(device.arn, payload);
         }
       }
     } else {
@@ -242,7 +242,7 @@ class EventHandlerController {
             },
           };
           let device = users[index].device.user_device;
-          this.sendNotificationToUsers(device.arn, payload);
+          await this.sendNotificationToUsers(device.arn, payload);
         }
       }
     }
@@ -310,9 +310,9 @@ class EventHandlerController {
     }
   }
 
-  sendNotificationToUsers(userArn: string, data: any) {
+  async sendNotificationToUsers(userArn: string, data: any) {
     console.log(`Sending push notification to and targetArn: ${userArn}.`);
-    snsClient.pushNotification(userArn, data);
+    await snsClient.pushNotification(userArn, data);
   }
 }
 
