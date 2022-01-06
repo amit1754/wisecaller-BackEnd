@@ -10,8 +10,7 @@ import express, {
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
-// import {Connection} from "./config/db/connection";
-import { logRequest } from "@wisecaller/logger";
+import Connection from "@wisecaller/mongo";
 export default class App {
   app: Express = express();
 
@@ -37,8 +36,8 @@ export default class App {
     this.app.use(cors());
     // this.app.use(logRequest);
   }
-   async setupDbConnection() {
-    import("./config/db/connection");
+ async setupDbConnection() {
+    Connection.getDbConnection();
   }
   async setupRoutes() {
     try {

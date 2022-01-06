@@ -22,7 +22,6 @@ class generalStatusController {
   }
   async update(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
       let body: any = req.body;
       let id = req.params.id;
 

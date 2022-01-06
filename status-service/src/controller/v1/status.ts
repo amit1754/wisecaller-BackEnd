@@ -1,4 +1,4 @@
-import e, { Request, Response } from "express";
+import  { Request, Response } from "express";
 import { IStatus, ISubStatus } from "../../interfaces/status";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
@@ -10,7 +10,7 @@ class StatusController {
     try {
       
       const reqPayload: any = req;
-      const loggedInUser: any = req.user;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser.role === "ADMIN") {
         const payload: IStatus = {
           ...req.body,
@@ -40,7 +40,7 @@ class StatusController {
   }
   async getAll(req: Request, res: Response) {
     try {
-      console.log('true :>> ', true);
+      
       const global_status = await globalTypeModel.aggregate([
         { $match: {} },
         {
@@ -72,8 +72,8 @@ class StatusController {
   }
   async update(req: Request, res: Response) {
     try {
-      const reqPayload: any = req;
-      const loggedInUser: any = req.user;
+   const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser.role === "ADMIN") {
         const { id }: any = req.params;
         let statusFind = await UserStatus.findById(id);
@@ -119,8 +119,9 @@ class StatusController {
 
   async delete(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
-      if (loginUser.role != "ADMIN") {
+      const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
+      if (loggedInUser.role != "ADMIN") {
         res.status(401).json({
           success: false,
           message: "you are not access to this resource",
@@ -142,7 +143,8 @@ class StatusController {
 
   async addSubStatus(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+    const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser?.role === "ADMIN") {
         const reqPayload: any = req;
         const payload: ISubStatus = {
@@ -168,7 +170,7 @@ class StatusController {
   async updateSubStatus(req: Request, res: Response) {
     try {
       const reqPayload: any = req;
-      const loggedInUser: any = req.user;
+      const loggedInUser: any = reqPayload.user;
       if (loggedInUser?.role === "ADMIN") {
         const { id }: any = req.params;
         let payload: any = {
@@ -208,8 +210,9 @@ class StatusController {
   }
   async deleteSub(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
-      if (loginUser.role != "ADMIN") {
+       const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
+      if (loggedInUser.role != "ADMIN") {
         res.status(401).json({
           success: false,
           message: "you are not access to this resource",

@@ -5,7 +5,9 @@ import { WorkLifeBalance } from "../../models/worklIfe";
 class CustomStatusController {
   async add(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      
+       const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       let body: any = req.body;
       const length: number = body.length;
       for (let i = 0; i < length; i++) {
@@ -43,7 +45,8 @@ class CustomStatusController {
   }
   async update(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+     const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       let body: any = req.body;
       if (body.status && body.status.length) {
         const length: number = body.status.length;
@@ -93,7 +96,8 @@ class CustomStatusController {
   }
   async delteStatus(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+     const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       await customStatus.findOneAndUpdate(
         { _id: req.params.id, user: loggedInUser._id },
         { is_deleted: true },
@@ -123,7 +127,8 @@ class CustomStatusController {
         };
       }
 
-      const loggedInUser: any = req.user;
+      const reqPayload: any = req;
+      const loggedInUser: any = reqPayload.user;
       const getStatus: any = await customStatus.aggregate([
         {
           $match: {

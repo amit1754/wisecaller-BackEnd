@@ -30,7 +30,8 @@ class NotesController {
 
   async add(req: Request, res: Response) {
     try {
-      let loggedInUser: any = req.user;
+      const request:any=req
+      const loggedInUser: any = request.user;
       let payload: any = {};
       if (req.body?.is_admin) {
         Object.assign(payload, { ...req.body });

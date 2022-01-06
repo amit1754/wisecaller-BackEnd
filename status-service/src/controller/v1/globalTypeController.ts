@@ -17,7 +17,8 @@ class GlobalTypeController {
   }
   async update(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      const request:any=req
+      const loggedInUser: any = request.user;
       let body: any = req.body;
       let id = req.params.id;
 
