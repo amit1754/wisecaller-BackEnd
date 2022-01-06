@@ -18,9 +18,9 @@ class CouponController {
       if (req.query.coupon_code) {
         Object.assign(criteria, { coupon_code: req.query.coupon_code });
       }
-      console.log('criteria :>> ', criteria);
-      let coupons = await Coupon.find(criteria);
-      console.log('data :>> ', true);
+      
+      let coupons = await Coupon.findOne(criteria);
+      
        res.status(200).json({ success: true, data: [] });
     } catch (error: any) {
        res.status(200).json({ success: false, message: error.message });

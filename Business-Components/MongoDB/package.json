@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/mongo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Mongo client for Wise Caller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,7 @@
   "author": "WiseCaller Technologies Private Limited",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^5.13.2"
+    "mongoose": "^6.1.5"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
