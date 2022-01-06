@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../../model/user";
+import { getUserBll} from "@wisecaller/user-service";
 import VerifyJWTToken from "../../utils/verify-jwt";
 import RazorPay from "razorpay";
 import moment from "moment";
@@ -13,7 +13,7 @@ class PaymentController {
     try {
       let token: any = req.headers.authorization;
       let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
-      let user: any = await User.findOne({ _id: vefied_token._id });
+      let user: any = await getUserBll.findOneUser({ _id: vefied_token._id });
       let loggedInUser = req.body.user;
       let payload = {
         ...req.body,
@@ -45,7 +45,7 @@ class PaymentController {
             new: true,
           }
         );
-        await User.findOneAndUpdate(
+        await getUserBll.findOneAndUpdate(
           { _id: user._id },
           { organization_subscription: organization_subscription },
           { upsert: true, new: true }
@@ -73,7 +73,7 @@ class PaymentController {
             new: true,
           }
         );
-        await User.findOneAndUpdate(
+        await getUserBll.findOneAndUpdate(
           { _id: user._id },
           { user_subscription: user_subscription },
           { upsert: true, new: true }

@@ -1,6 +1,6 @@
 import express from "express";
 import { workLifeRoutes } from './workLifeRoutes'
-import { authorization } from "../middlewares";
+import { authorization } from "@wisecaller/authorizer";
 const router = express.Router();
 
 

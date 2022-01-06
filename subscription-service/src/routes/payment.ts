@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Payment } from "../controller";
-import { authorization } from "../middlewares";
+import { authorization } from "@wisecaller/authorizer";
 
 const router = Router();
 

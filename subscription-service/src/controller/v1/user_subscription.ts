@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { Coupon } from "../../model/coupon";
 import { Subscription } from "../../model/subscription";
-import { User } from "../../model/user";
+import { getUserBll } from "@wisecaller/user-service";
 import { UserSubscription } from "../../model/user_subscription";
 import VerifyJWTToken from "../../utils/verify-jwt";
 import moment from "moment";
@@ -25,7 +24,7 @@ class UserSubscriptionController {
       };
       let token: any = req.headers.authorization;
       let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
-      let user: any = await User.findOne({ _id: vefied_token._id });
+      let user: any = await getUserBll.findOneUser({ _id: vefied_token._id });
       let subscription = await Subscription.findById(payload.subscription);
 
       payload = {
@@ -47,7 +46,7 @@ class UserSubscriptionController {
             new: true,
           }
         );
-        await User.findOneAndUpdate(
+        await getUserBll.findOneAndUpdate(
           { _id: user._id },
           { organization_subscription: organization_subscription },
           { upsert: true, new: true }
@@ -61,7 +60,7 @@ class UserSubscriptionController {
             new: true,
           }
         );
-        await User.findOneAndUpdate(
+        await getUserBll.findOneAndUpdate(
           { _id: user._id },
           { user_subscription: user_subscription },
           { upsert: true, new: true }
@@ -78,7 +77,7 @@ class UserSubscriptionController {
     try {
       let token: any = req.headers.authorization;
       let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
-      let user: any = await User.findOne({ _id: vefied_token._id });
+      let user: any = await getUserBll.findOneUser({ _id: vefied_token._id });
       await UserSubscription.findOneAndUpdate(
         {
           user: user._id,
@@ -98,7 +97,7 @@ class UserSubscriptionController {
       } else {
         Object.assign(user_payload, { user_subscription: null });
       }
-      await User.findOneAndUpdate({ _id: user._id }, user_payload, {
+      await getUserBll.findOneAndUpdate({ _id: user._id }, user_payload, {
         upsert: true,
         new: true,
       });
