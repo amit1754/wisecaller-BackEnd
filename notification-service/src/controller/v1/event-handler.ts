@@ -98,7 +98,7 @@ class EventHandlerController {
                 },
               };
 
-              this.sendNotificationToUsers(userArn, payload);
+              await this.sendNotificationToUsers(userArn, payload);
             }
           }
         }
@@ -124,7 +124,7 @@ class EventHandlerController {
                   sound: process.env.SOUND,
                 },
               };
-              this.sendNotificationToUsers(userArn, payload);
+              await this.sendNotificationToUsers(userArn, payload);
             }
           }
         }
@@ -176,7 +176,7 @@ class EventHandlerController {
           },
         };
         let device = users[index].user_device;
-        this.sendNotificationToUsers(device.arn, payload);
+        await this.sendNotificationToUsers(device.arn, payload);
       }
     }
   }
@@ -204,7 +204,7 @@ class EventHandlerController {
             },
           };
           let device = users[index].user_device;
-          this.sendNotificationToUsers(device.arn, payload);
+          await this.sendNotificationToUsers(device.arn, payload);
         }
       }
     } else {
@@ -240,7 +240,7 @@ class EventHandlerController {
             },
           };
           let device = users[index].device.user_device;
-          this.sendNotificationToUsers(device.arn, payload);
+          await this.sendNotificationToUsers(device.arn, payload);
         }
       }
     }
@@ -308,9 +308,9 @@ class EventHandlerController {
     }
   }
 
-  sendNotificationToUsers(userArn: string, data: any) {
+  async sendNotificationToUsers(userArn: string, data: any) {
     console.log(`Sending push notification to and targetArn: ${userArn}.`);
-    snsClient.pushNotification(userArn, data);
+    await snsClient.pushNotification(userArn, data);
   }
 }
 
