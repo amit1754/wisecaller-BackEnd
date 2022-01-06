@@ -96,6 +96,7 @@ class EventHandlerController {
                 notification: {
                   title: event.title,
                   body: event.user,
+                  type: event.type,
                   sound: process.env.SOUND,
                 },
               };
@@ -123,6 +124,7 @@ class EventHandlerController {
                 notification: {
                   title: event.title,
                   body: event.user,
+                  type: event.type,
                   sound: process.env.SOUND,
                 },
               };
@@ -174,6 +176,7 @@ class EventHandlerController {
           notification: {
             title: event.title,
             body: event.user,
+            type: event.type,
             sound: process.env.SOUND,
           },
         };
@@ -202,6 +205,7 @@ class EventHandlerController {
             notification: {
               title: event.title,
               body: event.user,
+              type: event.type,
               sound: process.env.SOUND,
             },
           };
@@ -238,6 +242,7 @@ class EventHandlerController {
             notification: {
               title: event.title,
               body: event.user,
+              type: event.type,
               sound: process.env.SOUND,
             },
           };
@@ -293,6 +298,7 @@ class EventHandlerController {
           notification: {
             title: event.title,
             body: event.user,
+            type: event.type,
             sound: process.env.SOUND,
           },
         };
