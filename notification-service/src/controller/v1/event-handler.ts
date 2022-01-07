@@ -96,7 +96,7 @@ class EventHandlerController {
                 notification: {
                   title: event.title,
                   body: event.user,
-                  type: event.type,
+                  type: "SILENT",
                   sound: process.env.SOUND,
                 },
               };
@@ -124,7 +124,7 @@ class EventHandlerController {
                 notification: {
                   title: event.title,
                   body: event.user,
-                  type: event.type,
+                  type: "SILENT",
                   sound: process.env.SOUND,
                 },
               };
@@ -176,7 +176,7 @@ class EventHandlerController {
           notification: {
             title: event.title,
             body: event.user,
-            type: event.type,
+            type: "SILENT",
             sound: process.env.SOUND,
           },
         };
