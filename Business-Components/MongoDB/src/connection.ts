@@ -15,13 +15,13 @@ export default class Connection {
   static async getDbConnection() {
 
     const dbConfig:any= {
-      maxPoolSize: 10, // Maintain up to 10 socket connections
-      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      // maxPoolSize: 10, // Maintain up to 10 socket connections
+      // serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+      // socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
       useNewUrlParser: true,
       useFindAndModify: false,
       useUnifiedTopology: true,
-      useCreateIndex: true,
+      // useCreateIndex: true,
     };
     try {
       this._con = await mongoose
