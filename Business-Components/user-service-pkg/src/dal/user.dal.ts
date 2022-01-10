@@ -84,3 +84,7 @@ export const createUserDevice = async (payload: any):Promise<any>=> {
   await devices.save();
   return devices;
 };
+
+export const getuser =async ()=>{
+  return await User.find()
+}

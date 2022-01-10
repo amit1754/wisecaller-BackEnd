@@ -64,6 +64,9 @@ export default class UserBLL {
     return await userdal.createUserDevice(payload);
   }
 
+    async getAllUser() {
+    return await userdal.getuser();
+  }
   async getUserDetails(id: any) {
     let user: any = await userdal.getUserById(id);
     if (user?.user_status?.status?.applicable_types) {
