@@ -17,13 +17,12 @@
   "dependencies": {
     "@wisecaller/authorizer": "0.0.7",
     "@wisecaller/logger": "0.0.3",
-    "@wisecaller/mongo": "0.0.3",
+    "@wisecaller/mongo": "0.0.4",
     "@wisecaller/user-service": "0.0.9",
     "aws-sdk": "^2.1052.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
-    "mongoose": "^6.1.4",
     "serverless-http": "^2.7.0"
   },
   "devDependencies": {
@@ -32,7 +31,7 @@
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/morgan": "^1.9.3",
-    "@types/node": "^17.0.8",
+    "@types/node": "^16.11.7",
     "nodemon": "^2.0.15",
     "serverless-plugin-typescript": "^2.1.0",
     "ts-node": "^10.4.0",

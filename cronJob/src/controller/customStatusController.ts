@@ -1,11 +1,12 @@
+
 import { Types } from "mongoose";
 
 import { Request, Response } from "express";
 import { User } from "../models/user.model";
 import { CallHistory } from "../models/callHistory";
 import moment from "moment";
-class CallHistoryController {
-  async removeHistory(request: Request, response: Response) {
+class customStatusController {
+  async removeStatus(request: Request, response: Response) {
     try {
       // create data before days
       let dateFrom = moment().subtract(process.env.CALLHISTORYDAYS, "d");
@@ -25,4 +26,4 @@ class CallHistoryController {
     }
   }
 }
-export default CallHistoryController;
+export default customStatusController;

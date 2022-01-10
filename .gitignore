@@ -17,6 +17,7 @@ callmanagement-service/node_modules
 wisecaller-all/node_modules
 workingHrsService/node_modules
 subscription-service/node_modules
+cron_job/node_modules
 
 
 auth-service/package-lock.json
@@ -127,3 +128,4 @@ package-lock.json
 organization-service/yarn-error.log
 organization-service/yarn.lock
 remaninig.txt
+Business-Components

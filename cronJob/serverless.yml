@@ -1,4 +1,4 @@
-service: aws-wisecaller-call-service
+service: aws-wisecaller-cronJob
 
 frameworkVersion: '2'
 useDotenv: true
