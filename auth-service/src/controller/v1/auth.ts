@@ -1,12 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { IOtp, IUser } from "../../interfaces/auth";
 import jwt from "jsonwebtoken";
-import {
-  MobileNoCheckUtils,
-  jwtVerify,
-  device_register
-} from "../../utils";
-import {getUserBll,getauthTokenBll} from "@wisecaller/user-service";
+import { MobileNoCheckUtils, jwtVerify, device_register } from "../../utils";
+import { getUserBll, getauthTokenBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 import SNSClient from "@wisecaller/sns";
 class AuthController {
@@ -23,7 +19,7 @@ class AuthController {
       req.body.user = user;
       next();
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 
@@ -35,7 +31,7 @@ class AuthController {
 
       next();
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 
@@ -52,10 +48,14 @@ class AuthController {
       let token;
       const userOtpDe = await getauthTokenBll.getTokenByPhone(reqData.mobileNo);
       if (userOtpDe) {
-        token = await getauthTokenBll.findOneAndUpdate(reqData.mobileNo, {...payload},{
-          upsert: true,
-          new: true,
-        });
+        token = await getauthTokenBll.findOneAndUpdate(
+          reqData.mobileNo,
+          { ...payload },
+          {
+            upsert: true,
+            new: true,
+          }
+        );
       } else {
         token = await getauthTokenBll.createToken(payload);
       }
@@ -66,7 +66,7 @@ class AuthController {
         otp: token.otp,
       });
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 
@@ -75,7 +75,7 @@ class AuthController {
       const { mobileNo, otp, user_device } = req.body;
 
       let userDetails: any;
-      let userFind: any = await  getUserBll.findUserByPhone(mobileNo);
+      let userFind: any = await getUserBll.findUserByPhone(mobileNo);
       let auth_token: any = await getauthTokenBll.getTokenByPhone(mobileNo);
       if (auth_token) {
         if (auth_token?.otp === otp) {
@@ -100,7 +100,11 @@ class AuthController {
             }
 
             var updtedValue = { phones: phones };
-            userDetails = await getUserBll.findOneAndUpdate( userFind._id,{...updtedValue},{});
+            userDetails = await getUserBll.findOneAndUpdate(
+              userFind._id,
+              { ...updtedValue },
+              {}
+            );
           }
         } else {
           throw new Error("otp is invalid");
@@ -142,7 +146,7 @@ class AuthController {
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
   async resendOtp(req: Request, res: Response, next: NextFunction) {
@@ -150,10 +154,10 @@ class AuthController {
       const { mobileNo } = req.body;
       const checkMobileNo = await MobileNoCheckUtils.verify(mobileNo);
       if (!checkMobileNo) throw new Error("mobile number is not valid");
-      let user = await getauthTokenBll.getTokenByPhone( mobileNo);
+      let user = await getauthTokenBll.getTokenByPhone(mobileNo);
       next();
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 
@@ -200,16 +204,19 @@ class AuthController {
         token_expires_at,
       });
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 
   async logout(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      let requestData: any = req;
+      const loggedInUser: any = requestData?.user;
       let tokenData = await getUserBll.findUserDeviceById(loggedInUser._id);
       for (let i = 0; i < tokenData.length; i++) {
-        await SNSClient.deRegisterPushNotificationService(tokenData[i].user_device?.arn);
+        await SNSClient.deRegisterPushNotificationService(
+          tokenData[i].user_device?.arn
+        );
       }
       await getUserBll.findOneAndRemoveById(loggedInUser._id);
       return res.status(200).json({
@@ -217,7 +224,7 @@ class AuthController {
         message: "success",
       });
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 }

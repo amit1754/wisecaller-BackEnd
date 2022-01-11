@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { WorkLifeBalance } from "../../models/work-life-balance";
-import {getUserBll,getStatusBll} from "@wisecaller/user-service";
+import { getUserBll, getStatusBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 
 class WorkLifeBalanceController {
   async update(req: Request, res: Response) {
     try {
-      const loggedInUser: any = req.user;
+      let requestData: any = req;
+      const loggedInUser: any = requestData?.user;
       let payload = {
         ...req.body,
         user: loggedInUser._id,
@@ -44,10 +45,14 @@ class WorkLifeBalanceController {
         },
       };
 
-      await getUserBll.findOneAndUpdate(loggedInUser._id,{ modes: user_payload },{ upsert: true, new: true });
+      await getUserBll.findOneAndUpdate(
+        loggedInUser._id,
+        { modes: user_payload },
+        { upsert: true, new: true }
+      );
       return res.status(200).json({ success: true, data: updated_work_life });
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 }

@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { RoadSafety } from "../../models/road-safety";
-import {getUserBll,getStatusBll} from "@wisecaller/user-service";
+import { getUserBll, getStatusBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 
 class RoadSafetyController {
   async update(req: Request, res: Response) {
     try {
-      let loggedInUser: any = req.user;
+      let requestData: any = req;
+      const loggedInUser: any = requestData?.user;
       let roadSafety: any = {};
       let isExist = await RoadSafety.findOne({ user: loggedInUser._id });
       if (!isExist) {
@@ -28,7 +29,7 @@ class RoadSafetyController {
       });
       let defaultStatus = await getStatusBll.getStatusByPayload({
         applicable_types: road_safety_type._id,
-      })
+      });
 
       let user = await getUserBll.findOneUserLean({ _id: loggedInUser._id });
       let modesPayload = {
@@ -45,14 +46,18 @@ class RoadSafetyController {
           },
         },
       };
-      await getUserBll.findOneAndUpdate(loggedInUser._id, { modes: modesPayload },{ upsert: true, new: false });
+      await getUserBll.findOneAndUpdate(
+        loggedInUser._id,
+        { modes: modesPayload },
+        { upsert: true, new: false }
+      );
       return res.status(200).json({
         success: true,
         message: "Roadsafety updated successfully",
         data: modesPayload.roadSafety,
       });
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 }

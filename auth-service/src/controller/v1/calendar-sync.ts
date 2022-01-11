@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 
 import { UserCalender } from "../../models/calenderSync";
-import {getUserBll,getStatusBll} from "@wisecaller/user-service";
+import { getUserBll, getStatusBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 
 class CalenderSyncController {
   async add(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
+      let requestData: any = req;
+      const loginUser: any = requestData?.user;
       const userFind = await UserCalender.findOne({ user: loginUser._id });
       let calenderEvent: any = req.body;
 
@@ -30,8 +31,12 @@ class CalenderSyncController {
         await UserCalender.findOneAndUpdate({ _id: userFind._id }, payload);
       }
 
-      let status: any = await getStatusBll.getStatusByFindId(calenderEvent.status);
-      let subStatus: any = await getStatusBll.getSubstatusByFindId(calenderEvent.subStatus);
+      let status: any = await getStatusBll.getStatusByFindId(
+        calenderEvent.status
+      );
+      let subStatus: any = await getStatusBll.getSubstatusByFindId(
+        calenderEvent.subStatus
+      );
 
       status = {
         ...status._doc,
@@ -48,15 +53,20 @@ class CalenderSyncController {
         },
       };
 
-      await getUserBll.findOneAndUpdate(loginUser._id, { modes: modesPayload },{ upsert: true, new: false });
+      await getUserBll.findOneAndUpdate(
+        loginUser._id,
+        { modes: modesPayload },
+        { upsert: true, new: false }
+      );
       res.status(200).json({ success: true, message: "Sucess", data: [] });
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
   async getAll(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
+      let requestData: any = req;
+      const loginUser: any = requestData?.user;
 
       const userContactFind = await UserCalender.findOne(
         {
@@ -72,12 +82,13 @@ class CalenderSyncController {
         data: userContactFind,
       });
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
   async deleteEmail(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
+      let requestData: any = req;
+      const loginUser: any = requestData?.user;
       const userFind = await UserCalender.findOne({ user: loginUser?._id });
       if (userFind != null) {
         let removeEmail = await UserCalender.findOneAndUpdate(
@@ -97,7 +108,7 @@ class CalenderSyncController {
         throw new Error("Calender Event not found");
       }
     } catch (error: any) {
-      return logError(error,req,res);
+      return logError(error, req, res);
     }
   }
 }
