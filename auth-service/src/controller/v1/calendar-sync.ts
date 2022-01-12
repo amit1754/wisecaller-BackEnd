@@ -34,7 +34,7 @@ class CalenderSyncController {
       let subStatus: any = await getStatusBll.getSubstatusByFindId(calenderEvent.subStatus);
 
       status = {
-        ...status._doc,
+        ...status,
         subStatus,
       };
 
