@@ -7,7 +7,7 @@ import { globalTypeModel } from "../../models/globalType.Model";
 import { UserSubStatus } from "../../models/subStatus";
 import { getUserBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
-
+import SnsService from '@wisecaller/sns'
 class EventHandlerController {
   async index(event: any) {
     try {
@@ -318,7 +318,8 @@ class EventHandlerController {
 
   async sendNotificationToUsers(userArn: string, data: any) {
     console.log(`Sending push notification to and targetArn: ${userArn}.`);
-    await snsClient.pushNotification(userArn, data);
+    await SnsService.sendPushNotification(userArn,data)
+    
   }
 }
 

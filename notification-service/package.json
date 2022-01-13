@@ -28,7 +28,8 @@
   "dependencies": {
     "@wisecaller/authorizer": "0.0.7",
     "@wisecaller/logger": "0.0.3",
-    "@wisecaller/mongo": "0.0.2",
+    "@wisecaller/mongo": "^0.0.5",
+    "@wisecaller/sns": "^0.0.4",
     "@wisecaller/sns-notification-handler": "^0.0.1",
     "@wisecaller/user-service": "0.0.8",
     "aws-sdk": "^2.1039.0",
