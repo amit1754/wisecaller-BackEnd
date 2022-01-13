@@ -85,6 +85,14 @@ export const createUserDevice = async (payload: any):Promise<any>=> {
   return devices;
 };
 
+export const removeUserDevice=async(payload:any):Promise<any>=>{
+  let userToken =  await UserDevices.find({user:payload.user})
+  for (let i = 0; i < userToken.length; i++) {
+    await UserDevices.findOneAndRemove({_id:userToken[i]._id})
+    
+  }
+  return true
+}
 export const getuser =async ()=>{
   return await User.find()
 }

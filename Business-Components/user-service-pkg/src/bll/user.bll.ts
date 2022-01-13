@@ -63,6 +63,9 @@ export default class UserBLL {
   async createUserDevice(payload: any): Promise<any> {
     return await userdal.createUserDevice(payload);
   }
+  async removeUserDevice(payload:any){
+    return await userdal.removeUserDevice(payload);
+  }
 
     async getAllUser() {
     return await userdal.getuser();
