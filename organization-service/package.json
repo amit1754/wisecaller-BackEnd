@@ -32,7 +32,9 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^7.4.6",
+    "@wisecaller/authorizer": "^0.0.7",
     "@wisecaller/logger": "0.0.3",
+    "@wisecaller/mongo": "^0.0.5",
     "@wisecaller/sns": "0.0.4",
     "@wisecaller/user-service": "0.0.8",
     "aws-sdk": "^2.958.0",

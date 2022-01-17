@@ -11,5 +11,10 @@ router.post(
   [authorization],
   Payment.paymentForOrganization
 );
+router.post(
+  "/demo",
+  
+  Payment.demo
+);
 
 export const PaymentRoutes = router;
