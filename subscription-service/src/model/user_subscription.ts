@@ -17,6 +17,7 @@ const UserSubscriptionSchema = new Schema({
   },
   user: {
     type: Schema.Types.ObjectId,
+    ref: "User",
   },
   is_revoked: {
     type: Boolean,

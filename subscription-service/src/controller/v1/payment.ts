@@ -236,7 +236,8 @@ class PaymentController {
                 .status(500)
                 .json({ success: false, message: true, paymentDetails });
             } else {
-              let upload :any= await fileUpload(file.filename, filename);
+              let upload: any = await fileUpload(file.filename, filename);
+              console.log("::::", upload);
               // let attachment = fs.readFileSync(file.filename).toString("base64");
 
               // const msg :any= {
@@ -253,16 +254,105 @@ class PaymentController {
               //     }
               //   ]
               // };
-              
+
               // let mail_body = `<h3>COUPON CODE:  ${payload.coupon_code}`;
               // await emailClient.Send(msg);
-                res.status(200).send({ success: true, message: "success" });
-              
+              res.status(200).send({ success: true, message: "success" });
             }
           }
         );
     } catch (err: any) {
       res.status(500).send({ success: false, message: err.message });
+    }
+  }
+
+  async generateInvoice(req: Request, res: Response) {
+    try {
+      let payment = await Payment.findOne({ _id: req.body.invoice }).populate({
+        path: "subscription",
+        populate: [
+          { path: "subscription" },
+          { path: "user" },
+          { path: "organization" },
+        ],
+      });
+
+      let subscription = payment.subscription.subscription;
+      let payload = {
+        id: payment._id,
+        payment_date: moment(payment.createdAt).format("DD-MM-YYYY"),
+        plan_name: subscription.title,
+        subscription_price: subscription.original_price,
+        gst: (subscription.original_price * subscription.gst_percentage) / 100,
+        total_amount:
+          subscription.original_price +
+          (subscription.original_price * subscription.gst_percentage) / 100,
+      };
+
+      let html = fs.readFileSync("./assets/invoices/invoice.html", "utf-8");
+      let template = handlebars.compile(html);
+      let compiledTemplate = template(payload);
+
+      pdf
+        .create(compiledTemplate, { format: "A4" })
+        .toStream((error: any, stream: any) => {
+          if (error) {
+            return res
+              .status(200)
+              .json({ success: false, message: error.message });
+          }
+          let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
+          return res.status(200).json({ success: true, data: data });
+        });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async getAllTransacation(req: Request, res: Response) {
+    try {
+      let request: any = req;
+      let loggedInUser = request.user;
+      if (loggedInUser.role !== "ADMIN") {
+        throw new Error("UNAUTHORIZE");
+      }
+
+      // let payment = await Payment.aggregate([
+      //   {
+      //     $lookup: {
+      //       from: "users",
+      //       localField: "user",
+      //       foreignField: "_id",
+      //       as: "user",
+      //     },
+      //   },
+      //   {
+      //     $unwind: "$user",
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "subscriptions",
+      //       localField: "subscription",
+      //       foreignField: "_id",
+      //       as: "subscription",
+      //     },
+      //   },
+      //   {
+      //     $unwind: { path: "$subscription" ,preserveNullAndEmptyArrays:true},
+      //   },
+      // ]);
+      let payment = await Payment.find().populate("subscription");
+      return res.status(200).json({
+        success: true,
+        message: "all transcation get successfully",
+        data: payment,
+      });
+    } catch (err: any) {
+      if (err.message === "UNAUTHORIZE") {
+        res.status(401).json({ success: false, message: err.message });
+      } else {
+        res.status(500).json({ success: false, message: err.message });
+      }
     }
   }
 }

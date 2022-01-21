@@ -107,41 +107,19 @@
           <td colspan="2">
             <table>
               <tr>
-                <td class="title">Payment INVOICE</td>
+                <td class="title">INVOICE</td>
 
                 <td></td>
               </tr>
               <tr>
                 <td>
                   Invoice #: {{id}}<br />
-                  Date: {{orderDate}}<br />
+                  Date: {{payment_date}}<br />
                 </td>
               </tr>
             </table>
           </td>
         </tr>
-
-        <tr class="information">
-          <td colspan="2">
-            <table>
-              <tr>
-                <td>
-                    Organazation Name
-                </td>
-
-                <td>
-                  {organazationName}
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr class="heading">
-          <td>Payment Method</td>
-          <td>{{paymentType}}</td>
-        </tr>
-
     
 
         <tr class="heading">
@@ -151,15 +129,15 @@
         </tr>
 
         <tr class="item">
-          <td>{{product.name}}</td>
+          <td>{{plan_name}}</td>
 
-          <td>{{product.price}}.00</td>
+          <td>{{subscription_price}}.00</td>
         </tr>
 
         <tr class="item">
           <td></td>
 
-          <td>Sub Total: {{subTotal}}.00</td>
+          <td>Sub Total: {{subscription_price}}.00</td>
         </tr>
         <tr class="item">
           <td></td>
@@ -169,7 +147,7 @@
         <tr class="item">
           <td></td>
 
-          <td>Total: {{total}}.00</td>
+          <td>Total: {{total_amount}}.00</td>
         </tr>
       </table>
     </div>

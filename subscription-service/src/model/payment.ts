@@ -28,6 +28,10 @@ let PaymentSchema = new Schema(
     payment_date: {
       type: Date,
     },
+    invoceUrl: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

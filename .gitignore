@@ -19,6 +19,21 @@ workingHrsService/node_modules
 subscription-service/node_modules
 cron_job/node_modules
 
+auth-service/.npmrc
+call-service/.npmrc
+contact-sync-service/.npmrc
+notification-service/.npmrc
+event-service/.npmrc
+order-service/.npmrc
+package-service/.npmrc
+status-service/.npmrc
+api-doc-service/.npmrc
+wisecaller_modules/.npmrc
+callmanagement-service/.npmrc
+wisecaller-all/.npmrc
+workingHrsService/.npmrc
+subscription-service/.npmrc
+cron_job/.npmrc
 
 auth-service/package-lock.json
 call-service/package-lock.json
@@ -129,3 +144,6 @@ organization-service/yarn-error.log
 organization-service/yarn.lock
 remaninig.txt
 Business-Components
+subscription-service/assets/pdfs
+Business-Components/Authorizer/.npmrc
+auth-service/.npmrc
