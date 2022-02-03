@@ -18,6 +18,7 @@ wisecaller-all/node_modules
 workingHrsService/node_modules
 subscription-service/node_modules
 cron_job/node_modules
+wisecaller-admin-front/node_modules
 
 
 auth-service/package-lock.json
@@ -33,6 +34,7 @@ callmanagement-service/package-lock.json
 workingHrsService/package-lock.json
 wisecaller_modules/package-lock.json
 subscription-service/package-lock.json
+wisecaller-admin-front/package-lock.json
 
 auth-service/yarn.lock
 call-service/yarn.lock
@@ -45,6 +47,7 @@ api-doc-service/yarn.lock
 contact-sync-service/yarn.lock
 workingHrsService/yarn.lock
 subscription-service/yarn.lock
+wisecaller-admin-front/yarn.lock
 
 
 auth-service/yarn-error.log
@@ -58,6 +61,7 @@ status-service/yarn-error.log
 api-doc-service/yarn-error.log
 workingHrsService/yarn-error.log
 subscription-service/yarn-error.log
+wisecaller-admin-front/yarn-error.log
 
 auth-service/bin
 call-service/bin
@@ -84,6 +88,7 @@ status-service/build
 api-doc-service/build
 workingHrsService/build
 subscription-service/build
+wisecaller-admin-front/build
 
 auth-service/.serverless
 call-service/.serverless
