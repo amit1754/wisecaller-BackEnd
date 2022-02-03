@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import {getUserBll} from "@wisecaller/user-service";
-import { default as jwtVerify } from "./util/verifyJWTToken";
+import {User} from '../model/user.model'
+import { JWTVerfiy } from "../utils";
 
 export const authorization = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
@@ -15,7 +16,7 @@ export const authorization = async (
       authorization && authorization.startsWith("Bearer ")
         ? authorization.slice(7, authorization.length)
         : authorization;
-    const verifyToken: any = jwtVerify(token);
+    const verifyToken: any = JWTVerfiy(token);
 
     if (!verifyToken) throw new Error("token is invalid");
 
@@ -24,10 +25,11 @@ export const authorization = async (
     if (currentDate > verifyToken?.exp) {
       throw new Error("token is expired");
     }
-    const data: any = await getUserBll.findUserById(verifyToken._id);
+    const data: any = await User.findById(verifyToken._id);
     if (data) {
       
-      req.push({user:data})
+        
+        req.user =data
       req.body.token = token;
       next();
     } else {

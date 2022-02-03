@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-
+import { User } from "../models/user.model";
 const UserSubscriptionSchema = new Schema({
   subscription: {
     type: Schema.Types.ObjectId,
@@ -17,7 +17,7 @@ const UserSubscriptionSchema = new Schema({
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: User,
   },
   is_revoked: {
     type: Boolean,

@@ -16,13 +16,16 @@
   "license": "ISC",
   "dependencies": {
     "@wisecaller/authorizer": "0.0.7",
+    "@wisecaller/email": "^0.0.4",
     "@wisecaller/logger": "0.0.3",
-    "@wisecaller/mongo": "0.0.4",
-    "@wisecaller/user-service": "0.0.9",
+    "@wisecaller/mongo": "^0.0.5",
+    "@wisecaller/sns": "^0.0.4",
+    "@wisecaller/user-service": "^0.0.9",
     "aws-sdk": "^2.1052.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "moment": "^2.29.1",
     "serverless-http": "^2.7.0"
   },
   "devDependencies": {

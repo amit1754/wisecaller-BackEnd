@@ -33,7 +33,7 @@ const getS3Key = function(fileType: string) {
   } else if (fileType == "STATUS_LOGO") {
     return 'status_images/';
   } else {
-    return null;
+    return 'invoice/';
   }
 }
 

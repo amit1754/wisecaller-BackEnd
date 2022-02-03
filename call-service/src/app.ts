@@ -39,7 +39,7 @@ export default class App {
   }
 
   async setupDbConnection() {
-    Connection.getDbConnection();
+    await Connection.getDbConnection();
   }
 
   async setupRoutes() {

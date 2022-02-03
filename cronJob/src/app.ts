@@ -1,5 +1,3 @@
-
-
 import express, {
   Express,
   Request,
@@ -9,7 +7,7 @@ import express, {
   urlencoded,
 } from "express";
 import routes from "./routes";
-import Connection from '@wisecaller/mongo'
+import Connection from "@wisecaller/mongo";
 
 export default class App {
   app: Express = express();
@@ -30,14 +28,13 @@ export default class App {
 
   async setupMiddleware() {
     this.app.use(json());
-  
+
     this.app.use(urlencoded({ extended: false }));
     this.app.use(json());
-  
   }
 
   async setupDbConnection() {
-   Connection.getDbConnection()
+    await Connection.getDbConnection();
   }
 
   async setupRoutes() {

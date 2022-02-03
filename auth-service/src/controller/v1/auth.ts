@@ -110,7 +110,9 @@ class AuthController {
           throw new Error("otp is invalid");
         }
         if (user_device) {
+          await getUserBll.removeUserDevice({user:userDetails._id})
           await device_register.addDevices(user_device, userDetails._id);
+
         }
         let secret: any = process.env.JWT_SECRET,
           tokenTime: any = process.env.TOKENTIME,

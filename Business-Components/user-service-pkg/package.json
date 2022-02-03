@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/user-service",
-  "version": "0.0.9",
+  "version": "0.1.1",
   "description": "user-service package by Wise Caller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,11 +17,11 @@
   "author": "Wise Caller Technologies Private Limited",
   "license": "ISC",
   "devDependencies": {
-    "aws-sdk": "2.609.0",
     "@tsconfig/node14": "^1.0.1",
     "@types/cors": "^2.8.12",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/node": "^16.11.8",
+    "aws-sdk": "2.609.0",
     "nodemon": "^2.0.12",
     "prettier": "^2.4.1",
     "rimraf": "3.0.0",
@@ -36,6 +36,7 @@
     "cors": "2.8.5",
     "dotenv": "8.1.0",
     "express": "4.17.1",
+    "moment": "^2.29.1",
     "morgan": "1.9.1",
     "reflect-metadata": "0.1.13",
     "request": "2.88.0",

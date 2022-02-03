@@ -39,7 +39,7 @@ class CalenderSyncController {
       );
 
       status = {
-        ...status._doc,
+        ...status,
         subStatus,
       };
 

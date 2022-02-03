@@ -1,11 +1,15 @@
 import * as userdal from "../dal/user.dal";
 import { globalTypeModel } from "../models/globalType.Model";
 import StatusBLL from "./status.bll";
+import UserSubscriptionBLL from "./user-subscription.bll";
 
 export const statusBLL = new StatusBLL();
+export const userSubscriptionBll = new UserSubscriptionBLL();
 export default class UserBLL {
   async createUser(payload: any): Promise<any> {
-    return await userdal.createUser(payload);
+    let user = await userdal.createUser(payload);
+    await userSubscriptionBll.createUserSubscrption(user._id);
+    return user;
   }
 
   async findUserByPhone(mobileNo: any): Promise<any> {
@@ -21,15 +25,14 @@ export default class UserBLL {
   async findOneUserLean(payload: any): Promise<any> {
     let user = await userdal.findOneUserLean(payload);
     return user;
-  } 
+  }
 
-  
   async findOneUser(payload: any): Promise<any> {
     let user = await userdal.findOneUser(payload);
     return user;
-  } 
+  }
 
-  async getUserByPhoneAndId(id:any, mobileNo: any): Promise<any> {
+  async getUserByPhoneAndId(id: any, mobileNo: any): Promise<any> {
     let user = await userdal.getUserByPhoneAndId(id, mobileNo);
     return user;
   }
@@ -38,8 +41,8 @@ export default class UserBLL {
     let user = await userdal.getUserById(id);
     return user;
   }
-  async findOneAndUpdate(id: any,obj: any,options:any): Promise<any> {
-    let user = await userdal.findOneAndUpdate(id, obj,options);
+  async findOneAndUpdate(id: any, obj: any, options: any): Promise<any> {
+    let user = await userdal.findOneAndUpdate(id, obj, options);
     return user;
   }
 
@@ -52,19 +55,25 @@ export default class UserBLL {
     await userdal.findOneAndRemoveById(id);
   }
 
-  
-  async findOneDeviceByTokenById(id: any, token:any): Promise<any> {
+  async findOneDeviceByTokenById(id: any, token: any): Promise<any> {
     return await userdal.findOneDeviceByTokenById(id, token);
   }
-  
-  async findOneDeviceAndUpdateById(id:any, payload:any,options:any):Promise<void> {
-    await userdal.findOneDeviceAndUpdateById(id, payload,options);
+
+  async findOneDeviceAndUpdateById(
+    id: any,
+    payload: any,
+    options: any
+  ): Promise<void> {
+    await userdal.findOneDeviceAndUpdateById(id, payload, options);
   }
   async createUserDevice(payload: any): Promise<any> {
     return await userdal.createUserDevice(payload);
   }
+  async removeUserDevice(payload: any) {
+    return await userdal.removeUserDevice(payload);
+  }
 
-    async getAllUser() {
+  async getAllUser() {
     return await userdal.getuser();
   }
   async getUserDetails(id: any) {
@@ -87,19 +96,19 @@ export default class UserBLL {
       user.modes.roadSafetyStatus.data.status.applicable_types =
         await globalTypeModel.find({
           _id: {
-            $in: user?.modes?.roadSafetyStatus?.data?.status
-              ?.applicable_types,
+            $in: user?.modes?.roadSafetyStatus?.data?.status?.applicable_types,
           },
         });
     }
 
     if (user?.user_status?.status?.status_notes?.id) {
-      let notesData = await statusBLL.getNotesById(user?.user_status?.status?.status_notes?.id)
+      let notesData = await statusBLL.getNotesById(
+        user?.user_status?.status?.status_notes?.id
+      );
       if (notesData) {
         user.user_status.status.status_notes.notes = notesData;
       }
     }
     return user;
   }
-
 }

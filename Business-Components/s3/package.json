@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/s3",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "S3 client by wisecaller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,13 +17,14 @@
   "author": "wisecaller Technologies Private Limited",
   "license": "ISC",
   "dependencies": {
-    "multer": "^1.4.3",
-    "multer-s3": "^2.9.0",
+    "@wisecaller/s3": "^0.0.6",
     "aws-sdk": "^2.958.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "multer": "^1.4.3",
+    "multer-s3": "^2.9.0"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.1",
