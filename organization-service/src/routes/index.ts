@@ -7,5 +7,4 @@ const router = Router();
 router.use("/auth", AuthRoutes);
 router.use("/organization", authorization, OrganazationRoutes);
 
-
 export default router;

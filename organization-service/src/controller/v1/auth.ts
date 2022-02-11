@@ -71,7 +71,6 @@ class AuthController {
       return res.status(200).json({
         success: true,
         message: "message send successful",
-        otp: token.otp,
       });
     } catch (error: any) {
       return logError(error, req, res);

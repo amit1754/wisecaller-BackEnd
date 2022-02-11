@@ -39,7 +39,8 @@ export default class App {
   }
 
   async setupDbConnection() {
-    await Connection.getDbConnection();
+    import("./config/db/connection");
+    // await Connection.getDbConnection();
   }
 
   async setupRoutes() {

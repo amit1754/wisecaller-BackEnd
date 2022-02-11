@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { Request, Response } from "express";
 import { Organization } from "../../models/organization";
 import { UserSubscription } from "../../models/user_subscription";
-import { Coupon} from '../../models/coupon'
+import { Coupon } from "../../models/coupon";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -75,14 +75,13 @@ class OrganizationController {
       let _id = requestParams.id;
 
       await Organization.findByIdAndRemove(_id);
-    return  res
+      return res
         .status(200)
         .json({ success: true, message: "Organization deleted successful" });
     } catch (err: any) {
-      if(err.message==='UNAUTHORIZE'){
+      if (err.message === "UNAUTHORIZE") {
         res.status(401).json({ success: false, message: err.message });
-      }
-      else{
+      } else {
         res.status(500).json({ success: false, message: err.message });
       }
     }
@@ -93,7 +92,7 @@ class OrganizationController {
       const user = request.user;
       if (user.role === "ADMIN") {
         let { id } = request.params;
-        let organazation: any =await UserSubscription.find({
+        let organazation: any = await UserSubscription.find({
           organization: Types.ObjectId(id),
         });
         res
@@ -103,22 +102,21 @@ class OrganizationController {
         throw new Error("UNAUTHORIZE");
       }
     } catch (err: any) {
-      if(err.message==='UNAUTHORIZE'){
+      if (err.message === "UNAUTHORIZE") {
         res.status(401).json({ success: false, message: err.message });
-      }
-      else{
+      } else {
         res.status(500).json({ success: false, message: err.message });
       }
     }
   }
-  async organazationCoupon(req:Request,res:Response){
+  async organazationCoupon(req: Request, res: Response) {
     try {
       const request: any = req;
       const user = request.user;
       if (user.role === "ADMIN") {
         let { id } = request.params;
-        
-        let organazation: any =await Coupon.find({
+
+        let organazation: any = await Coupon.find({
           organization: Types.ObjectId(id),
         });
         res
@@ -128,14 +126,22 @@ class OrganizationController {
         throw new Error("UNAUTHORIZE");
       }
     } catch (err: any) {
-      console.log('err :>> ', err);
-      if(err.message==='UNAUTHORIZE'){
+      console.log("err :>> ", err);
+      if (err.message === "UNAUTHORIZE") {
         res.status(401).json({ success: false, message: err.message });
-      }
-      else{
+      } else {
         res.status(500).json({ success: false, message: err.message });
       }
-      
+    }
+  }
+
+  async getOrganizationProfile(req: Request, res: Response) {
+    try {
+      let request: any = req;
+      console.log(request.user);
+      return res.status(200).json({ success: true });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, error: error.message });
     }
   }
 }
