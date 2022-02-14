@@ -10,9 +10,16 @@ const AuthTokenSchema = new Schema(
     mobileNo: {
       type: String,
     },
+    email: {
+      type: String,
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    organization: {
+      type: Schema.Types.ObjectId,
+      ref: "Organization"
     },
     expiresAt: {
       type: Date,
