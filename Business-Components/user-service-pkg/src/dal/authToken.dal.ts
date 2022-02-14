@@ -2,14 +2,21 @@
 
 import { AuthToken } from "../models/auth-token";
 
-export const getTokenByPhone = async (phone: any):Promise<any>=> {
+export const getUserToken = async (username: any):Promise<any>=> {
   return await AuthToken.findOne({
-    mobileNo: phone,
+    $or: [
+      { mobileNo: username },
+      { email: username}
+    ]
   });
 };
-export const findOneAndUpdate = async (phone: any, payload:any,options:any):Promise<any>=> {
+
+export const findOneAndUpdate = async (username: any, payload:any,options:any):Promise<any>=> {
   return await AuthToken.findOneAndUpdate(
-    { mobileNo: phone },
+    { $or: [
+      { mobileNo: username },
+      { email: username}
+    ] },
     payload,
     options
   );
