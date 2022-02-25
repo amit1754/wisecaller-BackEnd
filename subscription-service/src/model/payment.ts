@@ -9,6 +9,10 @@ let PaymentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "UserSubscription",
     },
+    plan: {
+      type: Schema.Types.ObjectId,
+      ref: "Plan",
+    },
     amount: {
       type: Number,
     },

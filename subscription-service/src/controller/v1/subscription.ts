@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Subscription } from "../../model/subscription";
+import { Organization } from "../../model/organization";
 class SubscriptionController {
   async index(req: Request, res: Response) {
     try {
@@ -31,6 +32,15 @@ class SubscriptionController {
       return res.status(200).json({ success: true });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async organizationSubscription(req: Request, res: Response) {
+    try {
+      let organization = new Organization({ ...req.body });
+      return res.status(200).json({ success: true });
+    } catch (error: any) {
+      return res.status(200).json({ succes: false, message: error.message });
     }
   }
 }

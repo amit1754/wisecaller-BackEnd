@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document, PaginateModel } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 const SubscriptionSchema = new Schema(
   {
@@ -39,4 +40,11 @@ const SubscriptionSchema = new Schema(
   { timestamps: true }
 );
 
-export const Subscription = model("Subscription", SubscriptionSchema);
+SubscriptionSchema.plugin(paginate);
+
+interface SubscriptionDocument extends Document {}
+
+export const Subscription = model<
+  SubscriptionDocument,
+  PaginateModel<SubscriptionDocument>
+>("Subscription", SubscriptionSchema, "subscriptions");

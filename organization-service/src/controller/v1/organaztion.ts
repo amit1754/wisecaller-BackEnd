@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { Organization } from "../../models/organization";
 import { UserSubscription } from "../../models/user_subscription";
 import { Coupon } from "../../models/coupon";
+import { User } from "../../models/user";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -134,14 +135,35 @@ class OrganizationController {
       }
     }
   }
-
   async getOrganizationProfile(req: Request, res: Response) {
     try {
-      let request: any = req;
-      console.log(request.user);
-      return res.status(200).json({ success: true });
+      let request: any = req.body;
+      let organization = await Organization.findOne({ _id: request.user._id });
+      return res.status(200).json({ success: true, data: organization });
     } catch (error: any) {
       return res.status(200).json({ success: false, error: error.message });
+    }
+  }
+
+  async index(req: Request, res: Response) {
+    try {
+      let sort_key = req.body.sort_key || "name";
+      let sort_direction = req.body.sort_direction === "DESC" ? -1 : 1;
+      let criteria = {};
+
+      let options = {
+        sort: { [sort_key]: sort_direction },
+        page: Number(req.body.page) || 1,
+        limit: Number(req.body.limit) || 10,
+      };
+
+      const organizations =
+        req.body.page || req.body.limit
+          ? await Organization.paginate(criteria, options)
+          : await Organization.find(criteria);
+      return res.status(200).json({ success: true, data: organizations });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
     }
   }
 }

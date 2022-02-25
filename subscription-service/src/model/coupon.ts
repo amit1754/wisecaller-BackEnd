@@ -16,7 +16,7 @@ const CouponSchema = new Schema(
     },
     organization: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Organization",
     },
     subscription: {
       type: Schema.Types.ObjectId,

@@ -1,43 +1,59 @@
 import { NextFunction, Request, Response } from "express";
 import { Organization } from "../../models/organization";
 import { Iorganization } from "../../interface/organization";
-import { MobileNoCheckUtils, jwtVerify } from "../../utils";
+import { MobileNoCheckUtils, VerifyJWT } from "../../utils";
 import SNSClient from "@wisecaller/sns";
 import { getUserBll, getauthTokenBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 import jwt from "jsonwebtoken";
+import { AuthToken } from "../../models/auth-token";
+import emailClient from "@wisecaller/email";
 class AuthController {
   async create(req: Request, res: Response) {
     try {
-      let payload: Iorganization = {
+      let payload = {
         ...req.body,
+        address_details: {
+          address: req.body.address || "",
+          city: req.body.city || "",
+          state: req.body.state || "",
+          country: req.body.country || "",
+        },
+        contact_information: {
+          name: req.body.contact_name || "",
+          email: req.body.contact_email || "",
+          phone_no: req.body.contact_phone || "",
+        },
       };
-      let checkPhoneNo: any = MobileNoCheckUtils.verify(req.body.phone_no);
-      if (checkPhoneNo) {
-        let saveOrganization = new Organization(payload);
-        await saveOrganization.save();
 
-        return res.status(200).json({ success: true });
+      let isExist = await Organization.findOne({ email: payload.email });
+      if (!isExist) {
+        let organization = new Organization(payload);
+        await organization.save();
+        return res.status(200).json({ success: true, data: organization });
       } else {
-        throw new Error("phone number is invalid");
+        return res
+          .status(200)
+          .json({ success: false, message: "Email already exists." });
       }
     } catch (error: any) {
-      if (error.code === 11000) {
-        error.message = error.keyValue.email
-          ? "email is already in used"
-          : "phone_no is already in used";
-        res.status(200).json({ success: false, message: error.message });
-      } else res.status(200).json({ success: false, message: error.message });
+      res.status(200).json({ success: false, message: error.message });
     }
   }
   async login(req: Request, res: Response, next: NextFunction) {
     try {
-      let bodyData: any = req.body;
-      let checkPhoneNo: any = MobileNoCheckUtils.verify(bodyData.phone_no);
-      if (checkPhoneNo) {
+      let payload = {
+        ...req.body,
+      };
+
+      let isExist = await Organization.findOne({ email: payload.email });
+      if (isExist) {
         next();
       } else {
-        throw new Error("phone number is not valid");
+        return res.status(200).json({
+          success: false,
+          message: "User not found!",
+        });
       }
     } catch (error: any) {
       res.status(200).json({ success: false, message: error.message });
@@ -46,61 +62,67 @@ class AuthController {
   async generateOtp(req: Request, res: Response) {
     try {
       const otp = Math.floor(1000 + Math.random() * 9000);
-      const reqData: any = req.body;
-
       let payload = {
+        email: req.body.email,
         otp: otp,
-        mobileNo: reqData.phone_no,
       };
-      await SNSClient.sendOTP(reqData.mobileNo, otp);
-      let token;
-      const userOtpDe = await getauthTokenBll.getTokenByPhone(reqData.phone_no);
-      if (userOtpDe) {
-        token = await getauthTokenBll.findOneAndUpdate(
-          reqData.mobileNo,
-          { ...payload },
+
+      let token: any = {};
+      const tokenExist = await AuthToken.findOne({ email: payload.email });
+      if (tokenExist) {
+        token = await AuthToken.findOneAndUpdate(
+          { email: payload.email },
+          payload,
           {
             upsert: true,
             new: true,
           }
         );
       } else {
-        token = await getauthTokenBll.createToken(payload);
+        token = new AuthToken(payload);
+        await token.save();
       }
 
+      let mail_body = `<h3>Your verification OTP is ${token.otp}`;
+      await emailClient.Send(payload.email, "Wisecaller OTP", mail_body);
       return res.status(200).json({
         success: true,
+        data: token.otp,
         message: "message send successful",
       });
     } catch (error: any) {
       return logError(error, req, res);
     }
   }
+
   async verifyOtp(req: Request, res: Response) {
     try {
-      const { phone_no, otp } = req.body;
+      let payload = {
+        ...req.body,
+      };
 
-      let userDetails: any;
-      userDetails = await Organization.findOne({ phone_no: phone_no });
-
-      let auth_token: any = await getauthTokenBll.getTokenByPhone(phone_no);
-
+      let organization: any = await Organization.findOne({
+        email: payload.email,
+      });
+      let auth_token = await AuthToken.findOne({ email: organization.email });
       if (auth_token) {
         let secret: any = process.env.JWT_SECRET,
           tokenTime: any = process.env.TOKENTIME,
           tokenRefreshTime = process.env.REFRESHTOKENTIME;
 
         let token = jwt.sign(
-          { _id: userDetails.id, mobileNo: userDetails.phone_no },
+          { _id: organization._id, email: organization.email },
           secret,
           { expiresIn: tokenTime }
         );
-        const refreshToken = jwt.sign(
-          { _id: userDetails.id, mobileNo: userDetails.phone_no },
+
+        let refresh_token = jwt.sign(
+          { _id: organization._id, email: organization.email },
           secret,
           { expiresIn: tokenRefreshTime }
         );
-        let verify: any = await jwtVerify(token);
+
+        let verify: any = await VerifyJWT(token);
         let time: number = verify.exp;
         let token_expires_at: any = new Date(time * 1000);
 
@@ -109,7 +131,7 @@ class AuthController {
           success: true,
           data: {
             token,
-            refreshToken,
+            refresh_token,
             token_expires_at,
           },
         });

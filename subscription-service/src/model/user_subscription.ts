@@ -7,7 +7,7 @@ const UserSubscriptionSchema = new Schema({
   },
   organization: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Organization",
   },
   coupon_code: {
     type: String,

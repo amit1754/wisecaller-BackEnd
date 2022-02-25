@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PaginateModel, Document } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 const CouponSchema = new Schema(
   {
@@ -33,4 +34,12 @@ const CouponSchema = new Schema(
   { timestamps: true }
 );
 
-export const Coupon = model("Coupon", CouponSchema);
+CouponSchema.plugin(paginate);
+
+interface CouponDocument extends Document {}
+
+export const Coupon = model<CouponDocument, PaginateModel<CouponDocument>>(
+  "Coupon",
+  CouponSchema,
+  "coupons"
+);
