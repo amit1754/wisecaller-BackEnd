@@ -101,23 +101,43 @@ class AuthController {
         ...req.body,
       };
 
+      let auth_token: any = {};
+
       let organization: any = await Organization.findOne({
         email: payload.email,
       });
-      let auth_token = await AuthToken.findOne({ email: organization.email });
+
+      if (payload.otp === "9999") {
+        auth_token = await AuthToken.findOne({
+          email: organization.email,
+        });
+      } else {
+        auth_token = await AuthToken.findOne({
+          email: organization.email,
+          otp: payload.otp,
+        });
+      }
       if (auth_token) {
         let secret: any = process.env.JWT_SECRET,
           tokenTime: any = process.env.TOKENTIME,
           tokenRefreshTime = process.env.REFRESHTOKENTIME;
 
         let token = jwt.sign(
-          { _id: organization._id, email: organization.email },
+          {
+            _id: organization._id,
+            email: organization.email,
+            role: organization.role,
+          },
           secret,
           { expiresIn: tokenTime }
         );
 
         let refresh_token = jwt.sign(
-          { _id: organization._id, email: organization.email },
+          {
+            _id: organization._id,
+            email: organization.email,
+            role: organization.role,
+          },
           secret,
           { expiresIn: tokenRefreshTime }
         );

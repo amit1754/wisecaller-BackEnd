@@ -14,6 +14,10 @@ class SubscriptionController {
         limit: Number(req.body.limit) || 10,
       };
 
+      if (req.body?.type === "ORGANIZATION") {
+        Object.assign(criteria, { type: req.body.type });
+      }
+
       const subscriptions =
         req.body.page || req.body.limit
           ? await Subscription.paginate(criteria, options)

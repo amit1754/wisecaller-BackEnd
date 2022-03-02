@@ -48,6 +48,14 @@ const OrganizationSchema = new Schema(
       enum: ["ORGANIZATION", "ADMIN"],
       default: "ORGANIZATION",
     },
+    subscription: {
+      type: Schema.Types.ObjectId,
+      ref: "Subscription",
+    },
+    plan: {
+      type: Schema.Types.ObjectId,
+      ref: "Plan",
+    },
   },
   { timestamps: true }
 );

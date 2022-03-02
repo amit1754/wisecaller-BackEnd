@@ -18,7 +18,6 @@ class UserController {
       };
 
       let criteria = {};
-      // console.log(req.body);
 
       if (req.body.role === "ORGANIZATION") {
         let subscriptions = await UserSubscription.find(
@@ -27,17 +26,66 @@ class UserController {
           },
           { user: 1, organization: 1 }
         );
-        // console.log(subscriptions);
 
         subscriptions = subscriptions.map((item: any) => item.user);
 
-        // console.log(subscriptions);
-
         Object.assign(criteria, { _id: { $in: subscriptions } });
       }
-      console.log("criteria :" + JSON.stringify(criteria));
-      let demoData = await User.find(criteria);
-      console.log(demoData);
+
+      if (req.body.search) {
+        req.body.search = req.body.search.replace("+", "");
+        Object.assign(criteria, {
+          $or: [
+            { first_name: { $regex: req.body.search, $options: "i" } },
+            { last_name: { $regex: req.body.search, $options: "i" } },
+            { phone: { $regex: req.body.search, $options: "i" } },
+            { email: { $regex: req.body.search, $options: "i" } },
+          ],
+        });
+      }
+
+      if (req.body.subscription) {
+        Object.assign(criteria, {
+          "organization_subscription.subscription": req.body.subscription,
+        });
+      }
+
+      if (req.body.coupon_code) {
+        Object.assign(criteria, {
+          "organization_subscription.coupon_code": req.body.coupon_code,
+        });
+      }
+
+      if (req.body.road_safety) {
+        Object.assign(criteria, {
+          "modes.roadSafety.is_active": req.body.road_safety,
+        });
+      }
+
+      if (req.body.calender_sync) {
+        Object.assign(criteria, {
+          "modes.syncCalender.is_active": req.body.calender_sync,
+        });
+      }
+
+      if (req.body.work_life_balance) {
+        Object.assign(criteria, {
+          "modes.workLifeBalance.is_active": req.body.work_life_balance,
+        });
+      }
+
+      if (req.body.registered_date) {
+        Object.assign(criteria, {
+          createdAt: req.body.registered_date,
+        });
+      }
+
+      if (req.body.subscribed_date) {
+        Object.assign(criteria, {
+          "organization_subscription.subscription_created_date":
+            req.body.subscription_created_date,
+        });
+      }
 
       let users =
         req.body.page || req.body.limit

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import moment from "moment";
 import { Coupon } from "../../models/coupon";
 
 class CouponController {
@@ -12,12 +13,42 @@ class CouponController {
         sort: { [sort_key]: sort_direction },
         page: Number(req.body.page) || 1,
         limit: Number(req.body.limit) || 10,
+        populate: {
+          path: "subscription",
+        },
       };
 
       let criteria = {};
 
-      if (req.body.role === "ORGANIZATION") {
+      if (req.body?.role === "ORGANIZATION") {
         Object.assign(criteria, { organization: req.body.user._id });
+      }
+
+      if (req.body.search) {
+        Object.assign(criteria, {
+          coupon_code: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
+      if (req.body.subscription) {
+        Object.assign(criteria, {
+          subscription: req.body.subscription,
+        });
+      }
+
+      if (req.body.generated_date) {
+        Object.assign(criteria, {
+          generated_date: {
+            $gt: moment(req.body.generated_date)
+              .startOf("day")
+              .utc(false)
+              .toISOString(),
+            $lt: moment(req.body.generated_date)
+              .endOf("day")
+              .utc(false)
+              .toISOString(),
+          },
+        });
       }
 
       let coupons =
