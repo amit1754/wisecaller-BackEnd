@@ -166,6 +166,36 @@ class OrganizationController {
       return res.status(200).json({ success: false, message: error.message });
     }
   }
+
+  async updateOrganizationProfile(req: Request, res: Response) {
+    try {
+      let loggedInUser: any = req.body.user;
+      let payload = {
+        ...req.body,
+        address_details: {
+          address: req.body.address || "",
+          city: req.body.city || "",
+          state: req.body.state || "",
+          country: req.body.country || "",
+        },
+        contact_information: {
+          name: req.body.contact_name || "",
+          email: req.body.contact_email || "",
+          phone_no: req.body.contact_phone || "",
+        },
+      };
+      delete payload.user;
+
+      let organization = await Organization.findOneAndUpdate(
+        { _id: loggedInUser._id },
+        payload,
+        { upsert: true, new: true }
+      );
+      return res.status(200).json({ success: true, data: organization });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
 }
 
 export default OrganizationController;

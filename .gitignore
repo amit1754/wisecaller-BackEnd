@@ -19,6 +19,7 @@ workingHrsService/node_modules
 subscription-service/node_modules
 cron_job/node_modules
 wisecaller-admin-front/node_modules
+wisecaller_modules/node_modules
 
 auth-service/.npmrc
 call-service/.npmrc

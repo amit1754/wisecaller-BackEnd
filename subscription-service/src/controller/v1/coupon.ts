@@ -8,7 +8,6 @@ import { UserSubscription } from "../../model/user_subscription";
 class CouponController {
   async index(req: Request, res: Response) {
     try {
-      
       let criteria = {};
 
       if (req.query.type) {
@@ -18,12 +17,12 @@ class CouponController {
       if (req.query.coupon_code) {
         Object.assign(criteria, { coupon_code: req.query.coupon_code });
       }
-      
+
       let coupons = await Coupon.findOne(criteria);
-      
-       res.status(200).json({ success: true, data: [] });
+
+      res.status(200).json({ success: true, data: [] });
     } catch (error: any) {
-       res.status(200).json({ success: false, message: error.message });
+      res.status(200).json({ success: false, message: error.message });
     }
   }
 
@@ -38,7 +37,7 @@ class CouponController {
       } else {
         await Coupon.findOneAndUpdate(
           { coupon_code: payload.coupon_code },
-          payload,
+          { ...payload, total_subscription: payload.can_use_for },
           { upsert: true, new: true }
         );
       }
@@ -110,7 +109,7 @@ class CouponController {
             );
             coupon = await Coupon.findOneAndUpdate(
               { coupon_code: req.body.coupon_code },
-              { $inc: { can_use_for: -1 } },
+              { $inc: { can_use_for: -1, used_subscription: 1 } },
               { upsert: true, new: true }
             );
           } else {
@@ -121,7 +120,7 @@ class CouponController {
         } else {
           coupon = await Coupon.findOneAndUpdate(
             { coupon_code: req.body.coupon_code },
-            { $inc: { can_use_for: -1 } },
+            { $inc: { can_use_for: -1, used_subscription: 1 } },
             { upsert: true, new: true }
           );
         }

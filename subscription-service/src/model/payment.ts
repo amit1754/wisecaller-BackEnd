@@ -7,6 +7,10 @@ let PaymentSchema = new Schema(
     },
     subscription: {
       type: Schema.Types.ObjectId,
+      ref: "Subscription",
+    },
+    user_subscription: {
+      type: Schema.Types.ObjectId,
       ref: "UserSubscription",
     },
     plan: {
@@ -28,6 +32,11 @@ let PaymentSchema = new Schema(
     },
     user: {
       type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    organization: {
+      type: Schema.Types.ObjectId,
+      ref: "Organization",
     },
     payment_date: {
       type: Date,

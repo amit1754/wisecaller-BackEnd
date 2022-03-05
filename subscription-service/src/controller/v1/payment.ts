@@ -142,9 +142,23 @@ class PaymentController {
         expires_at: payload.coupon_expiry_date,
       };
 
+      let user_subscription_payload = {
+        subscription: payload.subscription,
+        organization: loggedInUser._id,
+        coupon_code: payload.coupon_code,
+        quantity: payload.quantity,
+        subscription_created_date: moment().toISOString(),
+        subscription_end_date: payload.coupon_expiry_date,
+      };
+
+      let user_subscription = new UserSubscription(user_subscription_payload);
+      await user_subscription.save();
+
       let payment_payload = {
         ...req.body,
-        user: loggedInUser._id,
+        subscription: payload.subscription,
+        user_subscription: user_subscription._id,
+        organization: loggedInUser._id,
         payment_date: moment().toISOString(),
       };
 
@@ -354,6 +368,64 @@ class PaymentController {
       } else {
         res.status(500).json({ success: false, message: err.message });
       }
+    }
+  }
+
+  async renewSubscriptionForOrganization(req: Request, res: Response) {
+    try {
+      let payload = {
+        ...req.body,
+      };
+      let loggedInUser = req.body.user;
+      delete payload.user;
+
+      let coupon = await Coupon.findOneAndUpdate(
+        { _id: payload.coupon._id },
+        {
+          $inc: {
+            total_subscription: payload.quantity,
+            can_use_for: payload.quantity,
+          },
+        },
+        { upsert: true, new: true }
+      );
+
+      let user_subscription = await UserSubscription.findOneAndUpdate(
+        { coupon_code: payload.coupon.coupon_code },
+        {
+          subscription_end_date: moment()
+            .add(payload.subscription.duration, "months")
+            .toISOString(),
+          subscription: payload.subscription._id,
+        },
+        { upsert: true, new: true }
+      );
+
+      let payment_payload = {
+        transactionId: payload.id,
+        subscription: payload.subscription._id,
+        user_subscription: user_subscription._id,
+        plan: payload.plan._id,
+        amount: payload.total_amount,
+        paymentFor: "Renew Organization Subscription ",
+        status: "SUCCESS",
+        mode: "ONLINE",
+        organization: loggedInUser._id,
+        payment_date: moment().toISOString(),
+      };
+
+      await Payment.findOneAndUpdate(
+        { user: loggedInUser._id, transactionId: payload.transactionId },
+        payment_payload,
+        { upsert: true, new: true }
+      );
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Subscription renewed successfully" });
+    } catch (error: any) {
+      console.log(error);
+      return res.status(200).json({ success: false, message: error.message });
     }
   }
 }

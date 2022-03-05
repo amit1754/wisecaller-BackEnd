@@ -11,15 +11,13 @@ router.post(
   [authorization],
   Payment.paymentForOrganization
 );
+router.post("/demo", Payment.demo);
+router.post("/generate-invoice", Payment.generateInvoice);
+router.get("/getall-transacation", [authorization], Payment.getAllTransacation);
 router.post(
-  "/demo",
-  Payment.demo
-);
-router.post("/generate-invoice", Payment.generateInvoice)
-router.get(
-  "/getall-transacation",
+  "/renew-organization-subscription",
   [authorization],
-  Payment.getAllTransacation
+  Payment.renewSubscriptionForOrganization
 );
 
 export const PaymentRoutes = router;

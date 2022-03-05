@@ -11,6 +11,11 @@ router.get(
   [authorization],
   Organization.getOrganizationProfile
 );
+router.post(
+  "/update-organization-profile",
+  [authorization],
+  Organization.updateOrganizationProfile
+);
 router.put("/update/:id", Organization.updateOrganization);
 router.delete("/delete/:id", Organization.deleteOrganization);
 router.get("/subscribers/:id", Organization.reportOrganization); //organazation subscriber report
