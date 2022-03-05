@@ -60,11 +60,14 @@ class AuthController {
         token = await getauthTokenBll.createToken(payload);
       }
 
-      return res.status(200).json({
+      var resObj = {
         success: true,
         message: "message send successful",
-        otp: token.otp,
-      });
+        otp: token.otp
+      }
+      if (process.env.STAGE == "prod")
+        delete resObj.otp;
+      return res.status(200).json(resObj);
     } catch (error: any) {
       return logError(error, req, res);
     }
