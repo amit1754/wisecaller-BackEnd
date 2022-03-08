@@ -8,6 +8,9 @@ const NoteSchema = new Schema(
       type: String,
       default: null,
     },
+    createdAt: {
+      type: Date
+    }
   },
   { timestamps: true }
 );

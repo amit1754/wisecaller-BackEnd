@@ -27,6 +27,30 @@ class NoteController {
       return res.status(200).json({ success: false, message: error.message });
     }
   }
+  async createNotes(req: Request, res: Response) {
+    try {
+      let request: any = req;
+      if (request.user.role != "ADMIN") {
+        throw new Error("unauthorized");
+      }
+      const requestParams = req.params;
+      let _id = requestParams.id;
+      let updatePayload = req.body;
+      Note.findOneAndUpdate(
+        { _id },
+        { ...updatePayload },
+        {
+          upsert: true,
+          new: false,
+        }
+      );
+      res
+        .status(200)
+        .json({ success: true, message: "Note create successful" });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  }
 }
 
 export default NoteController;
