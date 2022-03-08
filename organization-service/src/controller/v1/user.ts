@@ -8,6 +8,7 @@ class UserController {
       let sort_key: any = req.body.sort_key || "first_name";
       let sort_direction: any =
         req.body.sort_direction && req.body.sort_direction === "DESC" ? -1 : 1;
+      let loggedInUser: any = req.body.user;
       let options = {
         sort: { [sort_key]: sort_direction },
         page: Number(req.body.page) || 1,
@@ -17,7 +18,11 @@ class UserController {
         },
       };
 
-      let criteria = {};
+      let criteria = {
+        organization_subscription: { $exists: true, $ne: null },
+        // "organization_subscription.organization": loggedInUser._id,
+        // "organization_subscription.is_revoked": false,
+      };
 
       if (req.body.role === "ORGANIZATION") {
         let subscriptions = await UserSubscription.find(

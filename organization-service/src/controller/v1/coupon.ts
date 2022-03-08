@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import moment from "moment";
 import { Coupon } from "../../models/coupon";
+import { User } from "../../models/user";
 
 class CouponController {
   async index(req: Request, res: Response) {
@@ -56,6 +57,28 @@ class CouponController {
           ? await Coupon.paginate(criteria, options)
           : await Coupon.find(criteria);
       return res.status(200).json({ success: true, data: coupons });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async deactivateCoupon(req: Request, res: Response) {
+    try {
+      let loggedInUser: any = req.body.user;
+      let coupon: any = await Coupon.findOne({ _id: req.params.coupon });
+      await User.findOneAndUpdate(
+        {
+          organization_subscription: { $exists: true, $ne: null },
+          "organization_subscription.organization": loggedInUser._id,
+          "organization_subscription.coupon_code": coupon?.coupon_code,
+        },
+        { organization_subscription: null },
+        { upsert: true, new: true }
+      );
+      await Coupon.findOneAndDelete({ _id: req.params.coupon });
+      return res
+        .status(200)
+        .json({ success: true, message: "Coupon deactivated" });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });
     }

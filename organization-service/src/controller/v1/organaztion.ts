@@ -196,6 +196,45 @@ class OrganizationController {
       return res.status(200).json({ success: false, message: error.message });
     }
   }
+
+  async organizationOverviewSummary(req: Request, res: Response) {
+    try {
+      let getTotalEmployees = User.find({}).count();
+      let getTotalCoupons = Coupon.find({}).count();
+      let getTotalWorkLifeBalance = User.find({
+        "modes.workLifeBalance.is_active": true,
+      }).count();
+      let getTotalRoadSafety = User.find({
+        "modes.roadSafety.is_active": true,
+      }).count();
+      let getTotalCalenderSync = User.find({
+        "modes.syncCalender.is_active": true,
+      }).count();
+      let [
+        totalEmployees,
+        totalCoupons,
+        totalWorkLifeBalance,
+        totalRoadSafety,
+        totalCalendarSync,
+      ] = await Promise.all([
+        getTotalEmployees,
+        getTotalCoupons,
+        getTotalWorkLifeBalance,
+        getTotalRoadSafety,
+        getTotalCalenderSync,
+      ]);
+      let data = {
+        totalEmployees,
+        totalCoupons,
+        totalWorkLifeBalance,
+        totalRoadSafety,
+        totalCalendarSync,
+      };
+      return res.status(200).json({ success: true, data });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
 }
 
 export default OrganizationController;
