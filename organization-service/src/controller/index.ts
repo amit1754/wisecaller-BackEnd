@@ -7,6 +7,7 @@ import SubscriptionController from "./v1/subscription";
 import NotesController from "./v1/note";
 import StatusController from "./v1/status";
 import UserController from "./v1/user";
+import GlobalTypesController from "./v1/global-types";
 
 export const Auth = new AuthController();
 export const Organization = new OrganizationController();
@@ -17,3 +18,4 @@ export const Notes = new NotesController();
 export const Status = new StatusController();
 export const Plan = new PlanController();
 export const Pages = new PagesController();
+export const GlobalTypes = new GlobalTypesController();
