@@ -11,6 +11,11 @@ router.get(
   [authorization],
   Organization.getOrganizationProfile
 );
+router.get(
+  "/overview",
+  [authorization],
+  Organization.organizationOverviewSummary
+);
 router.post(
   "/update-organization-profile",
   [authorization],

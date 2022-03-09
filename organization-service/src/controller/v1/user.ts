@@ -8,6 +8,7 @@ class UserController {
       let sort_key: any = req.body.sort_key || "first_name";
       let sort_direction: any =
         req.body.sort_direction && req.body.sort_direction === "DESC" ? -1 : 1;
+      let loggedInUser: any = req.body.user;
       let options = {
         sort: { [sort_key]: sort_direction },
         page: Number(req.body.page) || 1,
@@ -29,7 +30,12 @@ class UserController {
 
         subscriptions = subscriptions.map((item: any) => item.user);
 
-        Object.assign(criteria, { _id: { $in: subscriptions } });
+        Object.assign(criteria, {
+          _id: { $in: subscriptions },
+          organization_subscription: { $exists: true, $ne: null },
+          "organization_subscription.organization": loggedInUser._id,
+          "organization_subscription.is_revoked": false,
+        });
       }
 
       if (req.body.search) {
