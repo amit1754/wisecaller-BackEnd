@@ -18,11 +18,7 @@ class UserController {
         },
       };
 
-      let criteria = {
-        organization_subscription: { $exists: true, $ne: null },
-        // "organization_subscription.organization": loggedInUser._id,
-        // "organization_subscription.is_revoked": false,
-      };
+      let criteria = {};
 
       if (req.body.role === "ORGANIZATION") {
         let subscriptions = await UserSubscription.find(
@@ -34,7 +30,12 @@ class UserController {
 
         subscriptions = subscriptions.map((item: any) => item.user);
 
-        Object.assign(criteria, { _id: { $in: subscriptions } });
+        Object.assign(criteria, {
+          _id: { $in: subscriptions },
+          organization_subscription: { $exists: true, $ne: null },
+          "organization_subscription.organization": loggedInUser._id,
+          "organization_subscription.is_revoked": false,
+        });
       }
 
       if (req.body.search) {
