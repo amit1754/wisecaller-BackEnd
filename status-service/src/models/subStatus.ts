@@ -10,7 +10,7 @@ const SatusSubSchema = new Schema(
     },
     parentId: {
       type: Schema.Types.ObjectId,
-      ref: "UserSatus",
+      ref: "UserStatus",
     },
     icon_style: {
       type: String,

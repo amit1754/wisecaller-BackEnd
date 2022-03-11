@@ -67,4 +67,4 @@ SatusSchema.post("find", function (doc) {
   return doc;
 });
 
-export const UserStatus = model("UserSatus", SatusSchema);
+export const UserStatus = model("UserStatus", SatusSchema);

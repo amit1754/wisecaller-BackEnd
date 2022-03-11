@@ -45,7 +45,7 @@ class StatusController {
         { $match: {} },
         {
           $lookup: {
-            from: "usersatus",
+            from: "userstatus",
             localField: "_id",
             foreignField: "applicable_types",
             as: "global_statuses",

@@ -4,6 +4,8 @@ import { Organization } from "../../models/organization";
 import { UserSubscription } from "../../models/user_subscription";
 import { Coupon } from "../../models/coupon";
 import { User } from "../../models/user";
+import moment from "moment";
+import { CustomStatus } from "../../models/custom-status";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -199,37 +201,95 @@ class OrganizationController {
 
   async organizationOverviewSummary(req: Request, res: Response) {
     try {
-      let getTotalEmployees = User.find({}).count();
-      let getTotalCoupons = Coupon.find({}).count();
+      let loggedInUser = req.body.user;
+      let payload = {
+        ...req.body,
+      };
+
+      delete payload.user;
+      delete payload.token;
+      let user_criteria = {};
+      let coupon_criteria = {};
+
+      if (payload.role === "ORGANIZATION") {
+        Object.assign(user_criteria, {
+          organization_subscription: { $exists: true, $ne: null },
+          "organization_subscription.organization": loggedInUser._id,
+        });
+
+        Object.assign(coupon_criteria, {
+          organization: loggedInUser._id,
+        });
+      }
+
+      let getTotalEmployees = User.find(user_criteria, { _id: 1 });
+      let getTotalCoupons = Coupon.find(coupon_criteria).count();
       let getTotalWorkLifeBalance = User.find({
+        ...user_criteria,
         "modes.workLifeBalance.is_active": true,
       }).count();
       let getTotalRoadSafety = User.find({
+        ...user_criteria,
         "modes.roadSafety.is_active": true,
       }).count();
+
       let getTotalCalenderSync = User.find({
+        ...user_criteria,
         "modes.syncCalender.is_active": true,
       }).count();
+
+      let getMonthlyUsers = User.aggregate([
+        {
+          $match: {
+            ...user_criteria,
+            createdAt: {
+              $gte: new Date(
+                moment().startOf("year").utc(true).startOf("day").toISOString()
+              ),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { month: { $month: "$createdAt" } },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { "_id.month": 1 },
+        },
+      ]);
+
       let [
         totalEmployees,
         totalCoupons,
         totalWorkLifeBalance,
         totalRoadSafety,
         totalCalendarSync,
+        monthlyUsers,
       ] = await Promise.all([
         getTotalEmployees,
         getTotalCoupons,
         getTotalWorkLifeBalance,
         getTotalRoadSafety,
         getTotalCalenderSync,
+        getMonthlyUsers,
       ]);
+
+      let totalCustomStatus = await CustomStatus.find({
+        user: { $in: totalEmployees.map((item) => item._id) },
+      }).count();
+
       let data = {
-        totalEmployees,
+        totalEmployees: totalEmployees.length,
         totalCoupons,
         totalWorkLifeBalance,
         totalRoadSafety,
         totalCalendarSync,
+        monthlyUsers,
+        totalCustomStatus,
       };
+
       return res.status(200).json({ success: true, data });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });

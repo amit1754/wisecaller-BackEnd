@@ -11,7 +11,7 @@ const customStatusSchema = new Schema(
     time_zone: { type: String },
     status: {
       type: Schema.Types.ObjectId,
-      ref: "UserSatus",
+      ref: "UserStatus",
       default: null,
     },
     substatus: {

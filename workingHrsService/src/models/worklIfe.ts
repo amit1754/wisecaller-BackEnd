@@ -39,7 +39,7 @@ const WorkLifeSchema = new Schema(
     },
     userStatus: {
       type: Schema.Types.ObjectId,
-      ref: "UserSatus",
+      ref: "UserStatus",
       default: null,
     },
     userSubStatus: {

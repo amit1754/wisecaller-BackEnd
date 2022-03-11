@@ -67,7 +67,7 @@ class WorklifeController {
         { $match: { user: loggedInUser._id } },
         {
           $lookup: {
-            from: "usersatus",
+            from: "userstatus",
             localField: "userStatus",
             foreignField: "_id",
             as: "userStatus",

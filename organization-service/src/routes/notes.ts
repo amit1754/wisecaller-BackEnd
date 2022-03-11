@@ -4,10 +4,6 @@ import { authorization } from "../middlewares/authorization";
 
 const router = Router();
 
-router.post("/", Notes.index);
-router.post(
-   "create",
-   [authorization],
-   Notes.createNotes
- );
+router.post("/", [authorization], Notes.index);
+router.post("/update", [authorization], Notes.updateNotes);
 export const NotesRoutes = router;

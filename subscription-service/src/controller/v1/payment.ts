@@ -379,27 +379,29 @@ class PaymentController {
       let loggedInUser = req.body.user;
       delete payload.user;
 
-      let coupon = await Coupon.findOneAndUpdate(
-        { _id: payload.coupon._id },
-        {
-          $inc: {
-            total_subscription: payload.quantity,
-            can_use_for: payload.quantity,
-          },
-        },
-        { upsert: true, new: true }
-      );
+      let coupon_payload = {
+        coupon_code: payload.coupon_code,
+        can_use_for: payload.quantity,
+        organization: loggedInUser._id,
+        subscription: payload.subscription,
+        type: "ORGANIZATION",
+        expires_at: payload.coupon_expiry_date,
+      };
 
-      let user_subscription = await UserSubscription.findOneAndUpdate(
-        { coupon_code: payload.coupon.coupon_code },
-        {
-          subscription_end_date: moment()
-            .add(payload.subscription.duration, "months")
-            .toISOString(),
-          subscription: payload.subscription._id,
-        },
-        { upsert: true, new: true }
-      );
+      let user_subscription_payload = {
+        subscription: payload.subscription,
+        organization: loggedInUser._id,
+        coupon_code: payload.coupon_code,
+        quantity: payload.quantity,
+        subscription_created_date: moment().toISOString(),
+        subscription_end_date: payload.coupon_expiry_date,
+      };
+
+      let user_subscription = new UserSubscription(user_subscription_payload);
+      await user_subscription.save();
+
+      let coupon = new Coupon(coupon_payload);
+      await coupon.save();
 
       let payment_payload = {
         transactionId: payload.id,
@@ -418,6 +420,13 @@ class PaymentController {
         { user: loggedInUser._id, transactionId: payload.transactionId },
         payment_payload,
         { upsert: true, new: true }
+      );
+
+      let mail_body = `<h3>COUPON CODE:  ${payload.coupon_code}`;
+      await emailClient.Send(
+        loggedInUser.email,
+        "Organization Coupon",
+        mail_body
       );
 
       return res

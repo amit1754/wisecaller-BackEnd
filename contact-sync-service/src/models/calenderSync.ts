@@ -20,7 +20,7 @@ const CalenderSyncSchema = new Schema(
     },
     status: {
       type: Schema.Types.ObjectId,
-      ref: "UserSatus",
+      ref: "UserStatus",
     },
   },
   { timestamps: true }

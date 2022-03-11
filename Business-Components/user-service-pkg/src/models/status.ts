@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-const { Schema,model } = mongoose;
+const { Schema, model } = mongoose;
 import { globalTypeModel } from "./globalType.Model";
 
 const SatusSchema = new Schema(
@@ -66,4 +66,5 @@ SatusSchema.post("find", function (doc) {
   return doc;
 });
 
-export const UserStatus = mongoose.models.UserSatus|| model("UserSatus", SatusSchema);
+export const UserStatus =
+  mongoose.models.UserStatus || model("UserStatus", SatusSchema);

@@ -138,7 +138,7 @@ class CustomStatusController {
         },
         {
           $lookup: {
-            from: "usersatus",
+            from: "userstatus",
             localField: "status",
             foreignField: "_id",
             as: "userStatus",

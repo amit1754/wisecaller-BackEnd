@@ -17,4 +17,4 @@ interface GlobalTypesDocument extends Document {}
 export const GlobalTypes = model<
   GlobalTypesDocument,
   PaginateModel<GlobalTypesDocument>
->("GlobalTypes", GlobalTypesSchema, "gloabaltypes");
+>("GlobalTypes", GlobalTypesSchema, "globaltypes");
