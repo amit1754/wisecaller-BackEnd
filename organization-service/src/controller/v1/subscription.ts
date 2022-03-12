@@ -27,6 +27,39 @@ class SubscriptionController {
       return res.status(200).json({ success: false, message: error.message });
     }
   }
+
+async onUpdateSubscription(req: Request, res: Response) {
+    try {
+      let payload = {
+        ...req.body,
+      };
+   
+      let subscription: any;
+
+      if (payload.isDeleted) {
+        subscription = await Subscription.findOneAndDelete({ _id: payload._id });
+      } else {
+        if (payload._id) {
+          subscription = await Subscription.findOneAndUpdate(
+            { _id: payload._id },
+            { ...payload },
+            {
+              upsert: true,
+              new: true,
+            }
+          );
+        } else {
+          subscription = new Subscription(payload);
+          await subscription.save();
+        }
+      }
+   return res.status(200).json({ success: true, data: subscription });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  // }
+  }
+
 }
 
 export default SubscriptionController;
