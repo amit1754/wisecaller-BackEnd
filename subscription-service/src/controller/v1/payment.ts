@@ -8,11 +8,11 @@ import { UserSubscription } from "../../model/user_subscription";
 import { Subscription } from "../../model/subscription";
 import { Coupon } from "../../model/coupon";
 import emailClient from "@wisecaller/email";
-import path from "path/posix";
-const fs = require("fs");
-const handlebars = require("handlebars");
+import path from "path";
+import fs from "fs";
+import handlebars from "handlebars";
 import { v4 as uuidv4 } from "uuid";
-const pdf = require("html-pdf");
+import pdf from "html-pdf";
 import fileUpload from "../../middelware/s3";
 
 class PaymentController {

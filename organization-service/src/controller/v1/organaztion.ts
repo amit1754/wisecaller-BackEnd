@@ -159,6 +159,12 @@ class OrganizationController {
         limit: Number(req.body.limit) || 10,
       };
 
+      if (req.body.search) {
+        Object.assign(criteria, {
+          name: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
       const organizations =
         req.body.page || req.body.limit
           ? await Organization.paginate(criteria, options)

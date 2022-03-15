@@ -60,7 +60,7 @@ class CouponController {
   async redeemCouponCode(req: Request, res: Response) {
     try {
       const request: any = req;
-      let user: any = request?.body.user;
+      let user: any = request.user;
       let coupon = await Coupon.findOne({ coupon_code: req.body.coupon_code });
       let coupon_expiry_date = moment(coupon.expires_at)
         .utc(false)
@@ -92,7 +92,7 @@ class CouponController {
             is_revoked: false,
           });
 
-          if (user_active_subscriptions.coupon_code !== payload.coupon_code) {
+          if (user_active_subscriptions?.coupon_code !== payload.coupon_code) {
             let organization_subscription =
               await UserSubscription.findOneAndUpdate(
                 { user: user._id },
@@ -131,7 +131,7 @@ class CouponController {
           .json({ success: false, message: "Invalid coupon code!" });
       }
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      return res.status(200).json({ success: false, message: error });
     }
   }
 }
