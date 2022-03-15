@@ -1,3 +1,4 @@
+import Connection from "@wisecaller/mongo";
 import * as userdal from "../dal/user.dal";
 import { globalTypeModel } from "../models/globalType.Model";
 import StatusBLL from "./status.bll";
@@ -6,6 +7,15 @@ import UserSubscriptionBLL from "./user-subscription.bll";
 export const statusBLL = new StatusBLL();
 export const userSubscriptionBll = new UserSubscriptionBLL();
 export default class UserBLL {
+  constructor(){
+    try{
+    Connection.hasConfigurations();
+    Connection.getDbConnection();
+    }
+    catch(exception){
+      console.log("DbConnection Failed",exception);
+    }
+  }
   async createUser(payload: any): Promise<any> {
     let user = await userdal.createUser(payload);
     await userSubscriptionBll.createUserSubscrption(user._id);

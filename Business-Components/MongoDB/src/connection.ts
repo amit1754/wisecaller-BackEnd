@@ -12,7 +12,7 @@ export default class Connection {
     });
   }
 
-  static async getDbConnection() {
+  static getDbConnection() {
 
     const dbConfig:any= {
       // maxPoolSize: 10, // Maintain up to 10 socket connections
@@ -24,15 +24,17 @@ export default class Connection {
       // useCreateIndex: true,
     };
     try {
-      this._con = await mongoose
-        .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`, dbConfig);
+      if (!this._con){
+        this._con = mongoose
+          .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`, dbConfig);
+      }
       if (this._con) {
         console.log("MONGODB CONNECTED");
       }
     } catch (ex: any) {
       console.log(ex.message);
       this._con.Close();
-      this._con = await mongoose
+      this._con = mongoose
         .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`, dbConfig);
       console.log('Connection is not alive. Creatinng new connection.');
     };
