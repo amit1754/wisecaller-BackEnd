@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/mongo",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Mongo client for Wise Caller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
