@@ -24,12 +24,7 @@ class Connection {
                 console.log(error.message);
             });
         }
-        catch (ex) {
-            console.log(ex.message);
-            this._con.Close();
-            this._con = mongoose_1.default.connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`);
-            console.log('Connection is not alive. Creatinng new connection.');
-        }
+        catch (ex) { }
         return this._con;
     }
 }

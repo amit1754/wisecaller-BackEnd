@@ -1,12 +1,14 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
+mongoose.Promise = global.Promise;
+const { Schema, model } = mongoose;
 
-const UserSubscriptionSchema = new Schema({
+const UserSubscriptionSchema = new mongoose.Schema({
   subscription: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Subscription",
   },
   organization: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Organization",
   },
   coupon_code: {
@@ -16,7 +18,7 @@ const UserSubscriptionSchema = new Schema({
     type: Number,
   },
   user: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
   is_revoked: {
@@ -34,11 +36,9 @@ const UserSubscriptionSchema = new Schema({
   },
   is_active: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 });
-
-export const UserSubscription = model(
-  "UserSubscription",
-  UserSubscriptionSchema
-);
+export const UserSubscription =
+  mongoose.models.UserSubscription ||
+  model("UserSubscription", UserSubscriptionSchema);

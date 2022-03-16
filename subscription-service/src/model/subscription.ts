@@ -1,12 +1,13 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
+const { model } = mongoose;
 
-const SubscriptionSchema = new Schema(
+const SubscriptionSchema = new mongoose.Schema(
   {
     title: {
       type: String,
     },
     organization: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
     },
     original_price: {
@@ -19,7 +20,7 @@ const SubscriptionSchema = new Schema(
       type: Number,
     },
     features: {
-      type: Schema.Types.Mixed,
+      type: mongoose.Schema.Types.Mixed,
     },
     gst_percentage: {
       type: Number,
@@ -39,4 +40,5 @@ const SubscriptionSchema = new Schema(
   { timestamps: true }
 );
 
-export const Subscription = model("Subscription", SubscriptionSchema);
+export const Subscription =
+  mongoose.models.Subscription || model("Subscription", SubscriptionSchema);

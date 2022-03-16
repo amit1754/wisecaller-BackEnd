@@ -1,3 +1,5 @@
+
+import "@wisecaller/mongo";
 import UserBLL from "./bll/user.bll";
 import AuthTokenBLL from "./bll/authToken.bll";
 import StatusBLL from "./bll/status.bll";

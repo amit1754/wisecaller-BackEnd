@@ -10,8 +10,7 @@ import express, {
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
-import Connection from "@wisecaller/mongo";
-// import("./config/db/connection");
+
 
 export default class App {
   app: Express = express();
@@ -40,7 +39,7 @@ export default class App {
   }
 
   async setupDbConnection() {
-    await Connection.getDbConnection();
+    await import ("@wisecaller/mongo");
   }
 
   async setupRoutes() {
