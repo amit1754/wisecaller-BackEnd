@@ -25,9 +25,8 @@ export const authorization = async (
       throw new Error("token is expired");
     }
     const data: any = await getUserBll.findUserById(verifyToken._id);
-    if (data) {
-      
-      req.push({user:data})
+    if (data) {      
+      req.body.user =data;
       req.body.token = token;
       next();
     } else {

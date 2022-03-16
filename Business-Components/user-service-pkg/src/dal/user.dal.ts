@@ -44,7 +44,7 @@ export const createUser = async (payload: any): Promise<any> => {
 };
 
 export const getUserById = async (id: any): Promise<any> => {
-  let user: any = await User.findOne({ _id: id });
+  let user: any = await User.findOne({ _id: id }).lean();
   return user;
 };
 
