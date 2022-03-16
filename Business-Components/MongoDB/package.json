@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/mongo",
-  "version": "0.0.6",
+  "version": "0.0.9",
   "description": "Mongo client for Wise Caller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,6 +21,7 @@
   "author": "WiseCaller Technologies Private Limited",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "mongoose": "^6.1.5"
   },
   "devDependencies": {

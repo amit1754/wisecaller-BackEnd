@@ -25,7 +25,7 @@ class UserSubscriptionController {
       let token: any = req.headers.authorization;
       let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
       let user: any = await getUserBll.findOneUser({ _id: vefied_token._id });
-      let subscription = await Subscription.findById(payload.subscription);
+      let subscription: any = await Subscription.findById(payload.subscription);
 
       payload = {
         ...payload,

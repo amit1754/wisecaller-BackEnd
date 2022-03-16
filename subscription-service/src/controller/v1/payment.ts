@@ -28,7 +28,7 @@ class PaymentController {
 
       delete payload.user;
 
-      let subscription = await Subscription.findById(payload.subscription);
+      let subscription: any = await Subscription.findById(payload.subscription);
       let subscription_payload = {
         subscription: subscription._id,
         organization: subscription.organization,
@@ -58,7 +58,7 @@ class PaymentController {
           { upsert: true, new: true }
         );
       } else {
-        let user_active_subscriptions = await UserSubscription.findOne({
+        let user_active_subscriptions: any = await UserSubscription.findOne({
           user: loggedInUser._id,
           subscription: payload.subscription,
           subscription_end_date: { $gte: moment().toISOString() },
@@ -252,7 +252,6 @@ class PaymentController {
                 .json({ success: false, message: true, paymentDetails });
             } else {
               let upload: any = await fileUpload(file.filename, filename);
-              console.log("::::", upload);
               // let attachment = fs.readFileSync(file.filename).toString("base64");
 
               // const msg :any= {
@@ -283,7 +282,9 @@ class PaymentController {
 
   async generateInvoice(req: Request, res: Response) {
     try {
-      let payment = await Payment.findOne({ _id: req.body.invoice }).populate({
+      let payment: any = await Payment.findOne({
+        _id: req.body.invoice,
+      }).populate({
         path: "subscription",
         populate: [
           { path: "subscription" },

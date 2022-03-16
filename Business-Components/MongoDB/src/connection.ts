@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export default class Connection {
   static _con: any;
   static hasConfigurations() {
     const configurations = ['MONGOURL', 'MONGODB'];
 
-    configurations.forEach(config => {
+    configurations.forEach((config) => {
       if (!(config in process.env)) {
         throw new Error(`Environment variable ${config} is not defined.`);
       }
@@ -13,31 +13,16 @@ export default class Connection {
   }
 
   static getDbConnection() {
-
-    const dbConfig:any= {
-      // maxPoolSize: 10, // Maintain up to 10 socket connections
-      // serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-      // socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useUnifiedTopology: true,
-      // useCreateIndex: true,
-    };
     try {
-      if (!this._con){
-        this._con = mongoose
-          .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`, dbConfig);
-      }
-      if (this._con) {
-        console.log("MONGODB CONNECTED");
-      }
-    } catch (ex: any) {
-      console.log(ex.message);
-      this._con.Close();
-      this._con = mongoose
-        .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`, dbConfig);
-      console.log('Connection is not alive. Creatinng new connection.');
-    };
+      mongoose
+        .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`)
+        .then(() => {
+          console.log('MONGODB CONNECTED');
+        })
+        .catch((error: any) => {
+          console.log(error.message);
+        });
+    } catch (ex: any) {}
 
     return this._con;
   }

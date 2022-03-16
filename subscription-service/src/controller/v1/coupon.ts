@@ -61,15 +61,17 @@ class CouponController {
     try {
       const request: any = req;
       let user: any = request.user;
-      let coupon = await Coupon.findOne({ coupon_code: req.body.coupon_code });
-      let coupon_expiry_date = moment(coupon.expires_at)
+      let coupon: any = await Coupon.findOne({
+        coupon_code: req.body.coupon_code,
+      });
+      let coupon_expiry_date: string = moment(coupon.expires_at)
         .utc(false)
         .toISOString();
       let current_date = moment().utc(false).toISOString();
       let diff = moment(coupon_expiry_date).diff(moment(current_date), "days");
       if ((coupon && coupon.can_use_for > 0, diff >= 0)) {
         if (coupon.organization) {
-          let subscription = await Subscription.findOne({
+          let subscription: any = await Subscription.findOne({
             _id: coupon.subscription,
           });
 
@@ -85,7 +87,7 @@ class CouponController {
               .toISOString(),
           };
 
-          let user_active_subscriptions = await UserSubscription.findOne({
+          let user_active_subscriptions: any = await UserSubscription.findOne({
             user: user._id,
             subscription: payload.subscription,
             subscription_end_date: { $gte: moment().toISOString() },

@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/user-service",
-  "version": "0.1.4",
+  "version": "0.1.8",
   "description": "user-service package by Wise Caller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,7 +30,7 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "@wisecaller/mongo": "0.0.6",
+    "@wisecaller/mongo": "0.0.9",
     "aws-serverless-express": "3.3.6",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
