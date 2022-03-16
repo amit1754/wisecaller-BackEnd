@@ -38,4 +38,4 @@ const AuthTokenSchema = new Schema(
   { timestamps: true }
 );
 
-export const AuthToken = mongoose.models.AuthToken|| model("AuthToken", AuthTokenSchema);
+export const AuthToken = mongoose.models.AuthToken|| model("authtokens", AuthTokenSchema);

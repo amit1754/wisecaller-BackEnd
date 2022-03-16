@@ -16,7 +16,7 @@ class UserController {
         success: true,
         message: "User Profile details get successfully",
         data: user,
-      });
+      }); 
     } catch (error: any) {
       return logError(error, req, res);
     }
