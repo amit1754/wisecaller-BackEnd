@@ -10,7 +10,7 @@ class UserController {
   async show(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       let user: any = await getUserBll.getUserDetails(loggedInUser._id);
       res.status(200).json({
         success: true,
@@ -28,7 +28,7 @@ class UserController {
         ...req.body,
       };
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       const user = await getUserBll.findUserById(loggedInUser._id);
       let phones = user.phones;
       if (payload.secondary_no) {
@@ -78,7 +78,7 @@ class UserController {
     const reqPayload: any = req;
     try {
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       let payload: any;
 
       if (reqPayload.body.secondary_no) {
@@ -189,7 +189,7 @@ class UserController {
   async getcontactUs(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       if (loggedInUser.role != "ADMIN") {
         res.status(401).send("Unauthorized");
       } else {
@@ -209,7 +209,7 @@ class UserController {
     const reqPayload: any = req;
     try {
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       let payload: any = {
         devices: req.body.devices,
       };
@@ -235,7 +235,7 @@ class UserController {
   async updateUserStatus(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       let user: any = {};
       let payload: any = {
         name: "",
