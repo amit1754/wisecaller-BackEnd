@@ -13,9 +13,6 @@ class UserController {
         sort: { [sort_key]: sort_direction },
         page: Number(req.body.page) || 1,
         limit: Number(req.body.limit) || 10,
-        populate: {
-          path: "organization_subscription.subscription",
-        },
       };
 
       let criteria = {};
