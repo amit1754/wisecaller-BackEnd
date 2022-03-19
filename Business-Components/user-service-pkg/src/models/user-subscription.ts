@@ -5,11 +5,11 @@ const { Schema, model } = mongoose;
 const UserSubscriptionSchema = new mongoose.Schema({
   subscription: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Subscription",
+    ref: "subscriptions",
   },
   organization: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization",
+    ref: "organizations",
   },
   coupon_code: {
     type: String,
@@ -41,4 +41,4 @@ const UserSubscriptionSchema = new mongoose.Schema({
 });
 export const UserSubscription =
   mongoose.models.UserSubscription ||
-  model("UserSubscription", UserSubscriptionSchema);
+  model("usersubscriptions", UserSubscriptionSchema);

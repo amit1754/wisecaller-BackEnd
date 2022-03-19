@@ -11,11 +11,11 @@ const SatusSubSchema = new Schema(
     },
     parentId: {
       type: Schema.Types.ObjectId,
-      ref: "UserStatus",
+      ref: "userstatus",
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       default: null,
     },
     isDeleted: {
@@ -27,4 +27,4 @@ const SatusSubSchema = new Schema(
 );
 
 export const UserSubStatus =
-  mongoose.models.UserSubStatus || model("UserSubStatus", SatusSubSchema);
+  mongoose.models.usersubstatus || model("usersubstatus", SatusSubSchema);

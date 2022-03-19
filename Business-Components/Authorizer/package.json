@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/authorizer",
-  "version": "0.1.8",
+  "version": "0.2.2",
   "description": "Authorizer for Wise Caller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,6 @@
   "author": "WiseCaller Technologies Private Limited",
   "license": "ISC",
   "dependencies": {
-    "@wisecaller/user-service": "^0.2.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

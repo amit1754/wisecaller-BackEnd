@@ -5,7 +5,7 @@ const User_device = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
     },
     user_device: {
       type: mongoose.Schema.Types.Mixed,

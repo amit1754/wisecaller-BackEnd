@@ -26,4 +26,4 @@ router.post(
   contactSync_Controller.callBack
 );
 
-export const SyncRoutes = router;
+export const  SyncRoutes = router;

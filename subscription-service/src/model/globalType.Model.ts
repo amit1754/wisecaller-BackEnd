@@ -13,4 +13,4 @@ const globalTypeSchema = new Schema(
   { timestamps: true }
 );
 
-export const globalTypeModel = mongoose.models.globalType|| model("globalType", globalTypeSchema);
+export const globalTypeModel = mongoose.models.globaltypes|| model("globaltypes", globalTypeSchema);

@@ -40,5 +40,5 @@ const UserSubscriptionSchema = new mongoose.Schema({
   },
 });
 export const UserSubscription =
-  mongoose.models.UserSubscription ||
-  model("UserSubscription", UserSubscriptionSchema);
+  mongoose.models.usersubscriptions ||
+  model("usersubscriptions", UserSubscriptionSchema);

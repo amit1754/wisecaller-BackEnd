@@ -8,7 +8,7 @@ const SubscriptionSchema = new mongoose.Schema(
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: "organizations",
     },
     original_price: {
       type: Number,
@@ -41,4 +41,4 @@ const SubscriptionSchema = new mongoose.Schema(
 );
 
 export const Subscription =
-  mongoose.models.Subscription || model("Subscription", SubscriptionSchema);
+  mongoose.models.subscriptions || model("subscriptions", SubscriptionSchema);

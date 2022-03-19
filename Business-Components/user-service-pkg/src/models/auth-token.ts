@@ -15,11 +15,11 @@ const AuthTokenSchema = new Schema(
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
     },
     organization: {
       type: Schema.Types.ObjectId,
-      ref: "Organization"
+      ref: "organizations"
     },
     expiresAt: {
       type: Date,
@@ -38,4 +38,4 @@ const AuthTokenSchema = new Schema(
   { timestamps: true }
 );
 
-export const AuthToken = mongoose.models.AuthToken|| model("authtokens", AuthTokenSchema);
+export const AuthToken = mongoose.models.authtokens|| model("authtokens", AuthTokenSchema);

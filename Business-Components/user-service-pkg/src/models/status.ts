@@ -13,7 +13,7 @@ const SatusSchema = new Schema(
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       default: null,
     },
     priority: {
@@ -67,4 +67,4 @@ SatusSchema.post("find", function (doc) {
 });
 
 export const UserStatus =
-  mongoose.models.UserStatus || model("UserStatus", SatusSchema);
+  mongoose.models.userstatus || model("userstatus", SatusSchema);

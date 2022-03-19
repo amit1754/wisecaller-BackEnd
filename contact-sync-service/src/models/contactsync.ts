@@ -8,7 +8,7 @@ const ContactSyncSchema = new Schema(
     contact: {
       //for user contact identifier
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
     },
     first_name: {
       type: String,
@@ -50,4 +50,4 @@ const ContactSyncSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserContact = model("user_contact", ContactSyncSchema);
+export const UserContact = model("user_contacts", ContactSyncSchema);
