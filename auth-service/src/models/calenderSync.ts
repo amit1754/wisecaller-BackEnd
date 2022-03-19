@@ -25,4 +25,4 @@ const CalenderSyncSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserCalender = model("user_calender", CalenderSyncSchema);
+export const UserCalender = model("user_calenders", CalenderSyncSchema);
