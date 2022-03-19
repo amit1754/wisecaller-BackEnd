@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { generalStatusModel } from "../../models/generalStatus";
 import { Types } from "mongoose";
+import { logError } from "@wisecaller/logger";
 
 class generalStatusController {
   async add(req: Request, res: Response) {
     try {
       const data: any = req.body;
       for (let i = 0; i < data.applicable_types.length; i++) {
-        data.applicable_types[i] = Types.ObjectId(data.applicable_types[i]);
+        data.applicable_types[i] = new Types.ObjectId(data.applicable_types[i]);
       }
       const addData = new generalStatusModel(data);
       await addData.save();
@@ -17,7 +18,7 @@ class generalStatusController {
         data: [],
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async update(req: Request, res: Response) {
@@ -36,7 +37,7 @@ class generalStatusController {
         data: [],
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async delteType(req: Request, res: Response) {
@@ -51,7 +52,7 @@ class generalStatusController {
         data: [],
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async get(req: Request, res: Response) {
@@ -72,8 +73,7 @@ class generalStatusController {
         data: globalType,
       });
     } catch (error: any) {
-      console.log('error :>> ', error);
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }

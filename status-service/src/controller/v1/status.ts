@@ -3,14 +3,16 @@ import { IStatus, ISubStatus } from "../../interfaces/status";
 import { UserStatus } from "../../models/status";
 import { UserSubStatus } from "../../models/subStatus";
 import { globalTypeModel } from "../../models/globalType.Model";
-import { deletefile } from "../../middlewares/uploadService";
-import snsClient from "../../utils/snsClient";
+import { deletefile } from "@wisecaller/s3"
+import SNSClient from "@wisecaller/sns";
+import { logError } from "@wisecaller/logger";
+
 class StatusController {
   async addStatus(req: Request, res: Response) {
     try {
       
       const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role === "ADMIN") {
         const payload: IStatus = {
           ...req.body,
@@ -25,7 +27,7 @@ class StatusController {
           data: payload,
           title: "Global Status Update",
         };
-        await snsClient.publishToSNS(snsPayload);
+        await SNSClient.publishToSNS(snsPayload);
         res.status(200).json({
           success: true,
           message: "User status added successfully",
@@ -35,7 +37,7 @@ class StatusController {
         throw new Error("you are not authorize person to access this resource");
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async getAll(req: Request, res: Response) {
@@ -67,13 +69,13 @@ class StatusController {
         data: global_status,
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async update(req: Request, res: Response) {
     try {
    const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role === "ADMIN") {
         const { id }: any = req.params;
         let statusFind = await UserStatus.findById(id);
@@ -103,7 +105,7 @@ class StatusController {
           data: StatusUpdate,
           title: "Global Status Update",
         };
-        await snsClient.publishToSNS(snsPayload);
+        await SNSClient.publishToSNS(snsPayload);
         res.status(200).json({
           success: true,
           message: "global Status update successfully",
@@ -113,14 +115,14 @@ class StatusController {
         throw new Error("you are not authorize person to access this resource");
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async delete(req: Request, res: Response) {
     try {
       const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role != "ADMIN") {
         res.status(401).json({
           success: false,
@@ -137,14 +139,14 @@ class StatusController {
         });
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async addSubStatus(req: Request, res: Response) {
     try {
     const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser?.role === "ADMIN") {
         const reqPayload: any = req;
         const payload: ISubStatus = {
@@ -163,14 +165,14 @@ class StatusController {
         throw new Error("you are not authorize person to access this resource");
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async updateSubStatus(req: Request, res: Response) {
     try {
       const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser?.role === "ADMIN") {
         const { id }: any = req.params;
         let payload: any = {
@@ -204,14 +206,13 @@ class StatusController {
         throw new Error("you are not authorize person to access this resource");
       }
     } catch (error: any) {
-      console.log(error.message);
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async deleteSub(req: Request, res: Response) {
     try {
        const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role != "ADMIN") {
         res.status(401).json({
           success: false,
@@ -227,7 +228,7 @@ class StatusController {
         });
       }
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }

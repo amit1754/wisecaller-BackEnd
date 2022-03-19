@@ -11,17 +11,17 @@ const customStatusSchema = new Schema(
     time_zone: { type: String },
     status: {
       type: Schema.Types.ObjectId,
-      ref: "UserStatus",
+      ref: "userstatus",
       default: null,
     },
     substatus: {
       type: Schema.Types.ObjectId,
-      ref: "UserSubStatus",
+      ref: "usersubstatuses",
       default: null,
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       default: null,
     },
     notes: {
@@ -48,4 +48,4 @@ const customStatusSchema = new Schema(
   { timestamps: true }
 );
 
-export const customStatus = model("customStatus", customStatusSchema);
+export const customStatus = model("customStatuses", customStatusSchema);

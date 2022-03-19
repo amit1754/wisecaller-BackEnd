@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Notes } from "../../models/notes";
+import { logError } from "@wisecaller/logger";
 
 class NotesController {
   async index(req: Request, res: Response) {
@@ -24,14 +25,14 @@ class NotesController {
       });
       return res.status(200).json({ success: true, data: notes });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async add(req: Request, res: Response) {
     try {
       const request:any=req
-      const loggedInUser: any = request.user;
+      const loggedInUser: any = request.body.user;
       let payload: any = {};
       if (req.body?.is_admin) {
         Object.assign(payload, { ...req.body });
@@ -45,7 +46,7 @@ class NotesController {
         .status(200)
         .json({ success: true, message: "Notes saved successfully" });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
@@ -57,7 +58,7 @@ class NotesController {
       );
       return res.status(200).json({ success: true, data: details });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
@@ -70,7 +71,7 @@ class NotesController {
       );
       return res.status(200).json({ success: true, data: notes });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
@@ -81,7 +82,7 @@ class NotesController {
         .status(200)
         .json({ success: true, message: "Notes deleted successfully" });
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }

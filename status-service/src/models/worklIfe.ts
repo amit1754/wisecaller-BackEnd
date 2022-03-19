@@ -24,15 +24,15 @@ const WorkLifeBalanceSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
     },
     status: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "UserStatus",
+      ref: "userstatus",
     },
     sub_status: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "UserSubStatus",
+      ref: "usersubstatuses",
     },
     is_active: {
       type: Boolean,
@@ -44,6 +44,6 @@ const WorkLifeBalanceSchema = new mongoose.Schema(
 );
 
 export const WorkLifeBalance = mongoose.model(
-  "WorkLifeBalance",
+  "worklifebalances",
   WorkLifeBalanceSchema
 );

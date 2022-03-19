@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { globalTypeModel } from "../../models/globalType.Model";
+import { logError } from "@wisecaller/logger";
+
 class GlobalTypeController {
   async add(req: Request, res: Response) {
     try {
@@ -12,13 +14,13 @@ class GlobalTypeController {
         data: [],
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async update(req: Request, res: Response) {
     try {
       const request:any=req
-      const loggedInUser: any = request.user;
+      const loggedInUser: any = request.body.user;
       let body: any = req.body;
       let id = req.params.id;
 
@@ -33,7 +35,7 @@ class GlobalTypeController {
         data: [],
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async delteType(req: Request, res: Response) {
@@ -60,7 +62,7 @@ class GlobalTypeController {
         data: globalType,
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }
