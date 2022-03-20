@@ -14,6 +14,7 @@ import handlebars from "handlebars";
 import { v4 as uuidv4 } from "uuid";
 import pdf from "html-pdf";
 import fileUpload from "../../middelware/s3";
+import { Plan } from "../../model/plan";
 
 class PaymentController {
   async index(req: Request, res: Response) {
@@ -404,11 +405,27 @@ class PaymentController {
       let coupon = new Coupon(coupon_payload);
       await coupon.save();
 
+      let coupons = await Coupon.find({
+        organization: loggedInUser._id,
+        subscription: payload.subscription,
+      });
+      let coupon_quantity = 0;
+      for (const item of coupons) {
+        let coupon: any = item;
+        coupon_quantity += coupon.can_use_for;
+      }
+
+      let plan = await Plan.findOne({
+        subscription: payload.subscription,
+        minSlab: { $gte: coupon_quantity },
+        maxSlab: { $lte: coupon_quantity },
+      });
+
       let payment_payload = {
         transactionId: payload.id,
         subscription: payload.subscription._id,
         user_subscription: user_subscription._id,
-        plan: payload.plan._id,
+        plan: plan ? plan._id : payload.plan._id,
         amount: payload.total_amount,
         paymentFor: "Renew Organization Subscription ",
         status: "SUCCESS",

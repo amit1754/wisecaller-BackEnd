@@ -10,5 +10,6 @@ router.get(
   [authorization],
   Coupon.deactivateCoupon
 );
+router.post("/export-csv", [authorization], Coupon.exportCSV);
 
 export const CouponRoutes = router;

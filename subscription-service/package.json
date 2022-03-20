@@ -7,6 +7,7 @@
     "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts --ENVIRONMENT=dev'",
     "deploy": "AWS_PROFILE=wisecaller sls deploy",
     "build": "rimraf build/ && tsc --build",
+    "build-tsc": "tsc -p .",
     "clean": "rimraf /build && tsc --build --clean",
     "start": "ts-node src/index.ts",
     "pack": "rimraf \"../deploy/auth-service-deploy\" && (xcopy \"build\" \"../deploy/auth-service-deploy\" /S /I) && (xcopy package.json \"../deploy/auth-service-deploy\" /I) && (cd ../deploy/auth-service-deploy && npm install)",
