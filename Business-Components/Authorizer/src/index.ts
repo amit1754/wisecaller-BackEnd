@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import {getUserBll} from "@wisecaller/user-service";
 import { default as jwtVerify } from "./util/verifyJWTToken";
-
+import "./db/connection";
+import { User } from "./models/user.model";
 export const authorization = async (
   req: Request,
   res: Response,
@@ -24,7 +24,7 @@ export const authorization = async (
     if (currentDate > verifyToken?.exp) {
       throw new Error("token is expired");
     }
-    const data: any = await getUserBll.findUserById(verifyToken._id);
+    const data: any = await User.findOne({ _id: verifyToken._id }).lean();
     if (data) {      
       req.body.user =data;
       req.body.token = token;

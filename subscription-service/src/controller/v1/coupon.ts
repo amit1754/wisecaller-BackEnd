@@ -60,7 +60,7 @@ class CouponController {
   async redeemCouponCode(req: Request, res: Response) {
     try {
       const request: any = req;
-      let user: any = request.user;
+      let user: any = request.body.user;
       let coupon: any = await Coupon.findOne({
         coupon_code: req.body.coupon_code,
       });
@@ -82,9 +82,7 @@ class CouponController {
             quantity: 1,
             user: user._id,
             subscription_created_date: moment().toISOString(),
-            subscription_end_date: moment()
-              .add(subscription.duration, "months")
-              .toISOString(),
+            subscription_end_date: coupon_expiry_date,
           };
 
           let user_active_subscriptions: any = await UserSubscription.findOne({

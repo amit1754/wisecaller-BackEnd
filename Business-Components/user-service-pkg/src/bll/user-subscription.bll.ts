@@ -4,6 +4,9 @@ import * as userSubscriptionDal from "../dal/user-subscription.dal";
 import { getUserBll } from "../";
 
 export default class UserSubscriptionBLL {
+  async getSubscription (id:string){
+    return await subscriptionDal.getSubscriptionById(id);
+  }
   async createUserSubscrption(user_id: string) {
     let freeSubscription = await subscriptionDal.getFreeSubscripion();
     let payload = {

@@ -216,7 +216,7 @@ class AuthController {
   async logout(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       let tokenData = await getUserBll.findUserDeviceById(loggedInUser._id);
       for (let i = 0; i < tokenData.length; i++) {
         await SNSClient.deRegisterPushNotificationService(

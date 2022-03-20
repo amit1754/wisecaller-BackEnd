@@ -149,4 +149,4 @@ UserSchema.post("findOne", function (doc:any) {
 });
 
 
-export const User = mongoose.models.User || model("User", UserSchema);
+export const User = mongoose.models.users || model("users", UserSchema);

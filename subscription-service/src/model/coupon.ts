@@ -42,4 +42,4 @@ const CouponSchema = new Schema(
   { timestamps: true }
 );
 
-export const Coupon = model("Coupon", CouponSchema);
+export const Coupon = model("coupons", CouponSchema);

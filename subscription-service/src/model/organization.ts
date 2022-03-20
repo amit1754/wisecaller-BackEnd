@@ -49,4 +49,4 @@ const OrganizationSchema = new Schema(
   { timestamps: true }
 );
 
-export const Organization = model("Organization", OrganizationSchema);
+export const Organization = model("organizations", OrganizationSchema);

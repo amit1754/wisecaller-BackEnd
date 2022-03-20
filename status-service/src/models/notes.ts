@@ -22,7 +22,7 @@ const NotesSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
     },
     is_admin: {
       type: Boolean,
@@ -32,4 +32,4 @@ const NotesSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Notes = mongoose.model("Notes", NotesSchema);
+export const Notes = mongoose.model("notes", NotesSchema);

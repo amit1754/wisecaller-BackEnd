@@ -35,4 +35,4 @@ const RoadSafetySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const RoadSafety = mongoose.model("RoadSafety", RoadSafetySchema);
+export const RoadSafety = mongoose.model("roadsafeties", RoadSafetySchema);

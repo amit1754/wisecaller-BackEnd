@@ -26,4 +26,4 @@ const PlanSchema = new Schema(
   { timestamps: true }
 );
 
-export const Plan = model("Plan", PlanSchema);
+export const Plan = model("plans", PlanSchema);

@@ -13,4 +13,4 @@ const ContactUsSchema = new Schema(
     { timestamps: true }
 );
 
-export const ContactUs = model("ContactUs", ContactUsSchema);
+export const ContactUs = model("contactus", ContactUsSchema);

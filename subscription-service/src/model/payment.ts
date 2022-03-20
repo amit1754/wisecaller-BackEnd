@@ -49,4 +49,4 @@ let PaymentSchema = new Schema(
   { timestamps: true }
 );
 
-export const Payment = model("Payment", PaymentSchema);
+export const Payment = model("payments", PaymentSchema);

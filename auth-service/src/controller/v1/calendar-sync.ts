@@ -8,7 +8,7 @@ class CalenderSyncController {
   async add(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loginUser: any = requestData?.user;
+      const loginUser: any = requestData.body.user;
       const userFind = await UserCalender.findOne({ user: loginUser._id });
       let calenderEvent: any = req.body;
 
@@ -66,7 +66,7 @@ class CalenderSyncController {
   async getAll(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loginUser: any = requestData?.user;
+      const loginUser: any = requestData.body.user;
 
       const userContactFind = await UserCalender.findOne(
         {
@@ -88,7 +88,7 @@ class CalenderSyncController {
   async deleteEmail(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loginUser: any = requestData?.user;
+      const loginUser: any = requestData.body.user;
       const userFind = await UserCalender.findOne({ user: loginUser?._id });
       if (userFind != null) {
         let removeEmail = await UserCalender.findOneAndUpdate(

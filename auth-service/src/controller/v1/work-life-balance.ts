@@ -7,7 +7,7 @@ class WorkLifeBalanceController {
   async update(req: Request, res: Response) {
     try {
       let requestData: any = req;
-      const loggedInUser: any = requestData?.user;
+      const loggedInUser: any = requestData.body.user;
       let payload = {
         ...req.body,
         user: loggedInUser._id,

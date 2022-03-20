@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { customStatus } from "../../models/customStatus";
 import { WorkLifeBalance } from "../../models/worklIfe";
+import { logError } from "@wisecaller/logger";
 
 class CustomStatusController {
   async add(req: Request, res: Response) {
     try {
       
        const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       let body: any = req.body;
       const length: number = body.length;
       for (let i = 0; i < length; i++) {
@@ -35,18 +36,18 @@ class CustomStatusController {
       });
     } catch (error:any) {
       if (error.code === 11000) {
-        res
-          .status(500)
-          .json({ success: false, message: "customId is must be unique." });
+        var err = new Error("customId is must be unique.");
+        return logError(err, req, res);
+        
       } else {
-        res.status(500).json({ success: false, message: error.message });
+        return logError(error, req, res);
       }
     }
   }
   async update(req: Request, res: Response) {
     try {
      const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       let body: any = req.body;
       if (body.status && body.status.length) {
         const length: number = body.status.length;
@@ -90,14 +91,13 @@ class CustomStatusController {
         data: [],
       });
     } catch (error:any) {
-      console.log(error);
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async delteStatus(req: Request, res: Response) {
     try {
      const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       await customStatus.findOneAndUpdate(
         { _id: req.params.id, user: loggedInUser._id },
         { is_deleted: true },
@@ -112,7 +112,7 @@ class CustomStatusController {
         data: [],
       });
     } catch (error:any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async get(req: Request, res: Response) {
@@ -128,7 +128,7 @@ class CustomStatusController {
       }
 
       const reqPayload: any = req;
-      const loggedInUser: any = reqPayload.user;
+      const loggedInUser: any = reqPayload.body.user;
       const getStatus: any = await customStatus.aggregate([
         {
           $match: {
@@ -180,7 +180,7 @@ class CustomStatusController {
         },
       });
     } catch (error:any) {
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }

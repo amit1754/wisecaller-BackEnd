@@ -44,6 +44,6 @@ const WorkLifeBalanceSchema = new mongoose.Schema(
 );
 
 export const WorkLifeBalance = mongoose.model(
-  "WorkLifeBalance",
+  "worklifebalances",
   WorkLifeBalanceSchema
 );

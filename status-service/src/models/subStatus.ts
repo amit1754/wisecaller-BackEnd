@@ -10,14 +10,14 @@ const SatusSubSchema = new Schema(
     },
     parentId: {
       type: Schema.Types.ObjectId,
-      ref: "UserStatus",
+      ref: "userstatus",
     },
     icon_style: {
       type: String,
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       default: null,
     },
     isDeleted: {
@@ -28,4 +28,4 @@ const SatusSubSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserSubStatus = model("UserSubStatus", SatusSubSchema);
+export const UserSubStatus = model("usersubstatuses", SatusSubSchema);

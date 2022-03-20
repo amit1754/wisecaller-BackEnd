@@ -11,7 +11,7 @@ const SatusSchema = new Schema(
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
       default: null,
     },
     priority: {
@@ -67,4 +67,4 @@ SatusSchema.post("find", function (doc) {
   return doc;
 });
 
-export const UserStatus = model("UserStatus", SatusSchema);
+export const UserStatus = model("userstatus", SatusSchema);

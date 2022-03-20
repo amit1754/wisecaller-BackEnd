@@ -31,13 +31,13 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "@wisecaller/authorizer": "0.1.6",
+    "@wisecaller/authorizer": "0.2.2",
     "@wisecaller/email": "0.0.4",
     "@wisecaller/logger": "0.0.3",
     "@wisecaller/mongo": "0.1.3",
     "@wisecaller/s3": "0.0.5",
     "@wisecaller/sns": "0.0.4",
-    "@wisecaller/user-service": "^0.2.4",
+    "@wisecaller/user-service": "^0.3.0",
     "aws-sdk": "^2.958.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
