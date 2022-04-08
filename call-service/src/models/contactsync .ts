@@ -37,4 +37,4 @@ const ContactSyncSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserContact = model("user_contact", ContactSyncSchema);
+export const UserContact = model("user_contacts", ContactSyncSchema);

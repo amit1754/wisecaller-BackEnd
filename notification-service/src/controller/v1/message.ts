@@ -11,14 +11,14 @@ class MessageController {
       await EventHandler.index(event);
       return res.status(200).json({ success: true });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async callBack(req: Request, res: Response) {
     try {
       let request: any = req;
-      let loggedInUser: any = request.user;
+      let loggedInUser: any = request.body.user;
       let event = {
         type: "CALL_BACK_REQUEST",
         title: `${loggedInUser.first_name} ${loggedInUser.last_name} has requested for a callback.`,
@@ -29,15 +29,14 @@ class MessageController {
       await EventHandler.index(event);
       res.status(200).json({ success: true });
     } catch (error: any) {
-      logError(error, req, res);
-      res.status(200).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async customNotification(req: Request, res: Response) {
     try {
       let request: any = req;
-      let loggedInUser: any = request.user;
+      let loggedInUser: any = request.body.user;
       let event = {
         type: "CUSTOM_NOTIFICATION",
         title: req.body.title,
@@ -49,8 +48,7 @@ class MessageController {
       await snsClient.publishToSNS(event);
       res.status(200).json({ success: true });
     } catch (error: any) {
-      logError(error, req, res);
-      res.status(200).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }

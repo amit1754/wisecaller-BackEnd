@@ -13,6 +13,7 @@ import {
   handleSNSNotification,
   handleSNSNotificationHeader,
 } from "@wisecaller/sns-notification-handler";
+import { logRequest } from "@wisecaller/logger";
 
 export default class App {
   app: Express = express();
@@ -42,11 +43,12 @@ export default class App {
       handleSNSNotification(req, res, next)
     );
     this.app.use(morgan("dev"));
+    this.app.use(logRequest);
     this.app.use(cors());
   }
 
   async setupDbConnection() {
-    import("./config/db/connection");
+    await import ("@wisecaller/mongo");
   }
 
   async setupRoutes() {

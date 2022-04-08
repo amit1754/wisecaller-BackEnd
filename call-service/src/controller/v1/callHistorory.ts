@@ -4,7 +4,7 @@ import { logError } from "@wisecaller/logger";
 class callHistory {
   async add(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
+      const loginUser: any = req.body.user;
       let { body }: any = req;
 
       for (let index = 0; index < body.length; index++) {
@@ -30,14 +30,13 @@ class callHistory {
       }
       res.status(200).json({ success: true, message: "Sucess", data: [] });
     } catch (error: any) {
-      logError(error, req, res);
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);      
     }
   }
 
   async callDetails(req: Request, res: Response) {
     try {
-      const loginUser: any = req.user;
+      const loginUser: any = req.body.user;
 
       const contactDetails = await CallHistory.aggregate([
         { $match: { user: loginUser._id } },
@@ -85,17 +84,16 @@ class callHistory {
 
       res
         .status(200)
-        .json({ success: true, message: "Sucess", data: contactDetails });
+        .json({ success: true, message: "Success", data: contactDetails });
     } catch (error: any) {
-      logError(error, req, res);
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async addNumber(req: Request, res: Response) {
     try {
       let reqestData: any = req.body;
-      const loginUser: any = req.user;
+      const loginUser: any = req.body.user;
 
       let callerHistory: any = await CallHistory.findOne({
         phone: reqestData.phone,
@@ -144,14 +142,13 @@ class callHistory {
         .status(200)
         .json({ success: true, message: "success", callLogs: reqestData });
     } catch (error: any) {
-      logError(error, req, res);
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
   async deleteNumber(req: Request, res: Response) {
     try {
       const requestData: any = req;
-      const loginUser: any = req.user;
+      const loginUser: any = req.body.user;
       const id = requestData.params.id;
 
       await CallHistory.findOneAndRemove({
@@ -161,15 +158,14 @@ class callHistory {
 
       res.status(200).json({ success: true, message: "success", data: [] });
     } catch (error: any) {
-      logError(error, req, res);
-      res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
   async syncHistory(req: Request, res: Response) {
     try {
       let body: any = [...req.body];
-      let loggedInUser: any = req.user;
+      let loggedInUser: any = req.body.user;
 
       for (const item of body) {
         let is_existing = await CallHistory.findOne({
@@ -205,8 +201,7 @@ class callHistory {
         message: "Contact history synced successfully",
       });
     } catch (error: any) {
-      logError(error, req, res);
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 
@@ -221,7 +216,7 @@ class callHistory {
           time: { $gte: new Date(timestamp).toISOString() },
         };
       }
-      let loggedInUser: any = req.user;
+      let loggedInUser: any = req.body.user;
       // for update on fly
       const callHistory = await CallHistory.aggregate([
         { $match: { loggedin_user: loggedInUser._id, ...where } },
@@ -263,8 +258,7 @@ class callHistory {
         data: callHistory,
       });
     } catch (error: any) {
-      logError(error, req, res);
-      return res.status(500).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }

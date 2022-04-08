@@ -6,7 +6,6 @@ import snsClient from "../../utils/snsClient";
 import { globalTypeModel } from "../../models/globalType.Model";
 import { UserSubStatus } from "../../models/subStatus";
 import { getUserBll } from "@wisecaller/user-service";
-import { logError } from "@wisecaller/logger";
 import SnsService from "@wisecaller/sns";
 class EventHandlerController {
   async index(event: any) {
@@ -106,12 +105,12 @@ class EventHandlerController {
           }
         }
       } else {
-        let userContactFind = await UserContact.find({
+        let userContactFind:any = await UserContact.find({
           "phones.ph_no": { $in: event.to },
         });
         if (userContactFind) {
           for (let i = 0; i < userContactFind.length; i++) {
-            let userDevice = await UserDevices.find({
+            let userDevice:any = await UserDevices.find({
               user: userContactFind[i].contact,
               is_active: true,
             });
@@ -164,7 +163,7 @@ class EventHandlerController {
       }
     }
 
-    let users = await UserDevices.find({ is_active: true });
+    let users:any = await UserDevices.find({ is_active: true });
     for (let index = 0; index < users.length; index++) {
       if (users[index]?.user_device) {
         let payload = {
