@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
-
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 const ContactSyncSchema = new Schema(
   {
     contactId: {
@@ -50,4 +51,4 @@ const ContactSyncSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserContact = model("user_contact", ContactSyncSchema);
+export const UserContact  = mongoose.models.user_contacts|| model("user_contacts", ContactSyncSchema);

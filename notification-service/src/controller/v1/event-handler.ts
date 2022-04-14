@@ -165,7 +165,7 @@ class EventHandlerController {
       },
     ]);
 
-    for (const [key, status] of Object.entries(global_status)) {
+    for (const [key, status] of Object.entries<any>(global_status)) {
       for (const [key, global] of Object.entries(status.global_statuses)) {
         let temp: any = global;
         let sub = await UserSubStatus.find({ parentId: temp._id });

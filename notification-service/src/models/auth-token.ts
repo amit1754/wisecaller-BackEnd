@@ -1,13 +1,25 @@
-import { Schema, model } from "mongoose";
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+const { Schema,model } = mongoose;
 
 const AuthTokenSchema = new Schema(
   {
     otp: {
       type: Number,
     },
+    mobileNo: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "users",
+    },
+    organization: {
+      type: Schema.Types.ObjectId,
+      ref: "organizations"
     },
     expiresAt: {
       type: Date,
@@ -26,4 +38,4 @@ const AuthTokenSchema = new Schema(
   { timestamps: true }
 );
 
-export const AuthToken = model("AuthToken", AuthTokenSchema);
+export const AuthToken = mongoose.models.authtokens|| model("authtokens", AuthTokenSchema);
