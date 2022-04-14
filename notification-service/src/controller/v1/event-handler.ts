@@ -37,15 +37,14 @@ class EventHandlerController {
       let data: any = {
         title: event.title,
         text: event.text,
-        type: event.type,
-        user: user_details,
+        type: event.type
       };
 
       if (event.send_all) {
         let where: any = [];
-        if (data.user.phones) {
-          for (let i = 0; i < data.user.phones.length; i++) {
-            where.push({ "phones.ph_no": data.user.phones[i].no });
+        if (user_details.phones) {
+          for (let i = 0; i < user_details.phones.length; i++) {
+            where.push({ "phones.ph_no": user_details.phones[i].no });
           }
         }
 
@@ -87,14 +86,19 @@ class EventHandlerController {
             if (users[index]?.device.is_active) {
               let device = users[index];
               let userArn = device?.device?.user_device?.arn;
+              let payloadNotification = {
+                  "contactId": users[index].contactId,
+                  "phones":[...users[index].phones],
+                  "status":user_details.user_status
+                };
               let payload = {
                 data: {
                   ...data,
-                  user: users[index],
+                  user: payloadNotification
                 },
                 notification: {
                   title: event.title,
-                  body: event.user,
+                  body: "Status Updated",
                   type: "SILENT",
                   sound: process.env.SOUND,
                 },
@@ -114,11 +118,17 @@ class EventHandlerController {
               user: userContactFind[i].contact,
               is_active: true,
             });
+            let payloadNotification = {
+                  "contactId": userContactFind[i].contactId,
+                  "phones":[...userContactFind[i].phones],
+                  "status":user_details.user_status
+                };
             for (let i = 0; i < userDevice.length; i++) {
               let userArn = userDevice[i]?.user_device?.arn;
               let payload = {
                 data: {
                   ...data,
+                  user: payloadNotification
                 },
                 notification: {
                   title: event.title,
@@ -169,12 +179,11 @@ class EventHandlerController {
         let payload = {
           data: {
             ...data,
-            status: global_status,
-            user: users[index],
+            status: global_status
           },
           notification: {
             title: event.title,
-            body: event.user,
+            body: "Global Status Updated",
             type: "SILENT",
             sound: process.env.SOUND,
           },
@@ -203,7 +212,7 @@ class EventHandlerController {
             },
             notification: {
               title: event.title,
-              body: event.user,
+              body: event.text,
               type: event.type,
               sound: process.env.SOUND,
             },
@@ -235,12 +244,11 @@ class EventHandlerController {
         if (users[index]?.device?.user_device) {
           let payload = {
             data: {
-              ...data,
-              user: users[index],
+              ...data
             },
             notification: {
               title: event.title,
-              body: event.user,
+              body: event.text,
               type: event.type,
               sound: process.env.SOUND,
             },
@@ -283,32 +291,37 @@ class EventHandlerController {
             },
           },
         ]);
+        if (user_contact && user_contact.length){
+          // let notification_payload = {
+          //   type: event.type,
+          //   from_user: event.user._id,
+          //   to_user: users[0]._id,
+          //   title: event.title,
+          //   text: event.text,
+          // };
+          let payloadNotification = {
+            "contactId": user_contact[0].contactId,
+            "phones":{...user_contact[0].phones}
+          }
+                    
+          let payload = {
+            data: {contact: payloadNotification },
+            notification: {
+              title: event.title,
+              body: event.text,
+              type: event.type,
+              sound: process.env.SOUND,
+            },
+          };
 
-        let notification_payload = {
-          type: event.type,
-          from_user: event.user._id,
-          to_user: users[0]._id,
-          title: event.title,
-          text: event.text,
-        };
+          //let notification = new NotificationModel(notification_payload);
+          //await notification.save();
 
-        let payload = {
-          data: { user: event.user, contact: user_contact },
-          notification: {
-            title: event.title,
-            body: event.user,
-            type: event.type,
-            sound: process.env.SOUND,
-          },
-        };
-
-        let notification = new NotificationModel(notification_payload);
-        await notification.save();
-
-        await this.sendNotificationToUsers(
-          users[0].device.user_device.arn,
-          payload
-        );
+          await this.sendNotificationToUsers(
+            users[0].device.user_device.arn,
+            payload
+          );
+        }
       }
     } catch (error: any) {
       console.log(error);
