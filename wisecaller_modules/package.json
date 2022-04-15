@@ -2,7 +2,6 @@
   "dependencies": {
     "@wisecaller/sns-notification-handler": "^0.0.1",
     "@wisecaller/logger": "0.0.3",
-    "@sendgrid/mail": "^7.4.6",
     "@wisecaller/sns": "0.0.4",
     "aws-sdk": "^2.1084.0",
     "body-parser": "^1.19.2",
