@@ -4,7 +4,7 @@ import * as userSubscriptionDal from "../dal/user-subscription.dal";
 import { getUserBll } from "../";
 
 export default class UserSubscriptionBLL {
-  async getSubscription (id:string){
+  async getSubscription(id: string) {
     return await subscriptionDal.getSubscriptionById(id);
   }
   async createUserSubscrption(user_id: string) {
@@ -27,7 +27,7 @@ export default class UserSubscriptionBLL {
 
     await getUserBll.findOneAndUpdate(
       user_id,
-      { user_subscription: user_subscription },
+      { user_subscription: [user_subscription] },
       { upsert: true, new: true }
     );
 

@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, PaginateModel, Document } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 const PlanSchema = new Schema(
   {
@@ -26,4 +27,12 @@ const PlanSchema = new Schema(
   { timestamps: true }
 );
 
-export const Plan = model("Plan", PlanSchema);
+PlanSchema.plugin(paginate);
+
+interface PlanDocument extends Document {}
+
+export const Plan = model<PlanDocument, PaginateModel<PlanDocument>>(
+  "Plan",
+  PlanSchema,
+  "plans"
+);

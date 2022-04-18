@@ -4,7 +4,7 @@ import { GlobalTypes } from "../../models/global-types";
 class GlobalTypesController {
   async index(req: Request, res: Response) {
     try {
-      let sort_key = req.body.sort_key || "type";
+      let sort_key = req.body.sort_key || "order";
       let sort_direction = req.body.sort_direction === "DESC" ? -1 : 1;
       let criteria = {};
 
@@ -19,6 +19,7 @@ class GlobalTypesController {
           : await GlobalTypes.find(criteria);
       return res.status(200).json({ success: true, data: global_types });
     } catch (error: any) {
+      console.log(error);
       return res.status(200).json({ success: false, message: error.message });
     }
   }

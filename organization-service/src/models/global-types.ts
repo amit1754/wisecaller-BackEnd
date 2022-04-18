@@ -1,4 +1,5 @@
 import { Schema, model, Document, PaginateModel } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 const GlobalTypesSchema = new Schema(
   {
@@ -11,6 +12,8 @@ const GlobalTypesSchema = new Schema(
   },
   { timestamps: true }
 );
+
+GlobalTypesSchema.plugin(paginate);
 
 interface GlobalTypesDocument extends Document {}
 

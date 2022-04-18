@@ -104,7 +104,7 @@ class CouponController {
               );
             await getUserBll.findOneAndUpdate(
               { _id: user._id },
-              { organization_subscription: organization_subscription },
+              { organization_subscription: [organization_subscription] },
               { upsert: true, new: true }
             );
             coupon = await Coupon.findOneAndUpdate(

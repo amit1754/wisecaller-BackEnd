@@ -14,7 +14,7 @@ class SubscriptionController {
         limit: Number(req.body.limit) || 10,
       };
 
-      if (req.body?.type === "ORGANIZATION") {
+      if (req.body?.type) {
         Object.assign(criteria, { type: req.body.type });
       }
 
@@ -28,16 +28,18 @@ class SubscriptionController {
     }
   }
 
-async onUpdateSubscription(req: Request, res: Response) {
+  async onUpdateSubscription(req: Request, res: Response) {
     try {
       let payload = {
         ...req.body,
       };
-   
+
       let subscription: any;
 
       if (payload.isDeleted) {
-        subscription = await Subscription.findOneAndDelete({ _id: payload._id });
+        subscription = await Subscription.findOneAndDelete({
+          _id: payload._id,
+        });
       } else {
         if (payload._id) {
           subscription = await Subscription.findOneAndUpdate(
@@ -53,13 +55,11 @@ async onUpdateSubscription(req: Request, res: Response) {
           await subscription.save();
         }
       }
-   return res.status(200).json({ success: true, data: subscription });
+      return res.status(200).json({ success: true, data: subscription });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });
     }
-  // }
   }
-
 }
 
 export default SubscriptionController;

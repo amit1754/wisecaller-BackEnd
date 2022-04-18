@@ -21,10 +21,12 @@ router.post(
   [authorization],
   Organization.updateOrganizationProfile
 );
+router.post("/export-csv", [authorization], Organization.exportCSV);
 router.put("/update/:id", Organization.updateOrganization);
 router.post("/update", Organization.updateOrganization);
 router.delete("/delete/:id", Organization.deleteOrganization);
 router.get("/subscribers/:id", Organization.reportOrganization); //organazation subscriber report
 router.get("/coupon/:id", Organization.organazationCoupon); //organazation coupon
+router.delete("/delete-by-admin/:id", Organization.deleteAdminOrganizaion);
 
 export const OrganazationRoutes = router;
