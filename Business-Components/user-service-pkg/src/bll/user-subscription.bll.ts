@@ -27,7 +27,7 @@ export default class UserSubscriptionBLL {
 
     await getUserBll.findOneAndUpdate(
       user_id,
-      { user_subscription: [user_subscription] },
+      { $push: { user_subscription: user_subscription } },
       { upsert: true, new: true }
     );
 
