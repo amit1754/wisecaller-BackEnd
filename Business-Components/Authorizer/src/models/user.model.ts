@@ -1,7 +1,7 @@
-import { globalTypeModel } from "./globalType.Model";
+import { globalTypeModel } from './globalType.Model';
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const { Schema,model } = mongoose;
+const { Schema, model } = mongoose;
 
 const UserSchema = new Schema(
   {
@@ -47,8 +47,8 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["ADMIN", "USER", "ORGANIZATION"],
-      default: "USER",
+      enum: ['ADMIN', 'USER', 'ORGANIZATION'],
+      default: 'USER',
     },
     devices: {
       type: Object,
@@ -97,23 +97,53 @@ const UserSchema = new Schema(
     notification_arn: {
       type: String,
     },
-    organization_subscription: {
-      type: Schema.Types.Mixed,
-    },
-    user_subscription: {
-      type: Schema.Types.Mixed,
-    },
+    active_subscriptions: [
+      {
+        subscription: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Subscription',
+        },
+        organization: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Organization',
+        },
+        coupon_code: {
+          type: String,
+        },
+        quantity: {
+          type: Number,
+        },
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+        is_revoked: {
+          type: Boolean,
+          default: false,
+        },
+        revoked_reason: {
+          type: String,
+        },
+        subscription_created_date: {
+          type: Date,
+        },
+        subscription_end_date: {
+          type: Date,
+        },
+        is_active: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-UserSchema.post("find", function (doc) {
+UserSchema.post('find', function (doc) {
   if (doc) {
     doc.map((x: any) => {
-      x.profile_image =
-        x.profile_image == null
-          ? null
-          : `${process.env.IMAGE_PATH}${x.profile_image}`;
+      x.profile_image = x.profile_image == null ? null : `${process.env.IMAGE_PATH}${x.profile_image}`;
 
       delete x.notification_token;
       delete x.notification_arn;
@@ -129,14 +159,11 @@ UserSchema.post("find", function (doc) {
   }
   return doc;
 });
-UserSchema.post("findOne", function (doc) {
+UserSchema.post('findOne', function (doc) {
   if (doc) {
     delete doc.notification_token;
     delete doc.notification_arn;
-    doc.profile_image =
-      doc.profile_image == null
-        ? null
-        : `${process.env.IMAGE_PATH}${doc.profile_image}`;
+    doc.profile_image = doc.profile_image == null ? null : `${process.env.IMAGE_PATH}${doc.profile_image}`;
 
     if (doc?.user_status) {
       delete doc.user_status.status.logo;
@@ -148,5 +175,4 @@ UserSchema.post("findOne", function (doc) {
   return doc;
 });
 
-
-export const User = mongoose.models.users || model("users", UserSchema);
+export const User = mongoose.models.users || model('users', UserSchema);
