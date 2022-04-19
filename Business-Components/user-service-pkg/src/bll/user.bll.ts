@@ -110,8 +110,8 @@ export default class UserBLL {
       }
     }
 
-    if (user?.user_subscription?.length) {
-      for (const user_subscription of user?.user_subscription) {
+    if (user?.active_subscriptions?.length) {
+      for (const user_subscription of user?.active_subscriptions) {
         if (user_subscription?.subscription) {
           let subscription = await userSubscriptionBll.getSubscription(
             user_subscription?.subscription
