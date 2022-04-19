@@ -16,7 +16,7 @@ class UserController {
         success: true,
         message: "User Profile details get successfully",
         data: user,
-      }); 
+      });
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -158,6 +158,7 @@ class UserController {
       return logError(error, req, res);
     }
   }
+
   async contactUs(req: Request, res: Response) {
     try {
       const { email, message } = req.body;
@@ -186,6 +187,7 @@ class UserController {
       return logError(error, req, res);
     }
   }
+
   async getcontactUs(req: Request, res: Response) {
     try {
       let requestData: any = req;
@@ -359,5 +361,4 @@ class UserController {
   }
 }
 
-const controller = new UserController();
 export default UserController;

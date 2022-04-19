@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import pdf from "html-pdf";
 import fileUpload from "../../middelware/s3";
 import { Plan } from "../../model/plan";
+import { User } from "../../model/user.model";
 
 class PaymentController {
   async index(req: Request, res: Response) {
@@ -28,6 +29,7 @@ class PaymentController {
       };
 
       delete payload.user;
+      let user_subscription: any = {};
 
       let subscription: any = await Subscription.findById(payload.subscription);
       let subscription_payload = {
@@ -55,7 +57,7 @@ class PaymentController {
         );
         await getUserBll.findOneAndUpdate(
           { _id: user._id },
-          { organization_subscription: organization_subscription },
+          { organization_subscription: [organization_subscription] },
           { upsert: true, new: true }
         );
       } else {
@@ -73,7 +75,7 @@ class PaymentController {
         )
           .add(diff_days, "days")
           .toISOString();
-        let user_subscription = await UserSubscription.findOneAndUpdate(
+        user_subscription = await UserSubscription.findOneAndUpdate(
           { user: user._id, organization: { $exists: false } },
           subscription_payload,
           {
@@ -83,7 +85,7 @@ class PaymentController {
         );
         await getUserBll.findOneAndUpdate(
           { _id: user._id },
-          { user_subscription: user_subscription },
+          { user_subscription: [user_subscription] },
           { upsert: true, new: true }
         );
       }
@@ -91,6 +93,8 @@ class PaymentController {
       let payment_payload = {
         ...req.body,
         user: user._id,
+        subscription: payload.subscription,
+        user_subscription: user_subscription._id,
         payment_date: moment().toISOString(),
       };
 
@@ -283,8 +287,23 @@ class PaymentController {
 
   async generateInvoice(req: Request, res: Response) {
     try {
+      let payload = {
+        ...req.body,
+      };
+
+      let user = await User.findOne({ _id: payload.user_id });
+      let criteria = {
+        user: user._id,
+        subscription_created_date:
+          user?.user_subscription?.subscription_created_date,
+        subscription_end_date: user?.user_subscription?.subscription_end_date,
+        subscription: user?.user_subscription?.subscription,
+      };
+
+      let user_subscription = await UserSubscription.findOne(criteria);
+
       let payment: any = await Payment.findOne({
-        _id: req.body.invoice,
+        user_subscription: user_subscription._id,
       }).populate({
         path: "subscription",
         populate: [
@@ -295,7 +314,7 @@ class PaymentController {
       });
 
       let subscription = payment.subscription.subscription;
-      let payload = {
+      let data = {
         id: payment._id,
         payment_date: moment(payment.createdAt).format("DD-MM-YYYY"),
         plan_name: subscription.title,
@@ -308,7 +327,7 @@ class PaymentController {
 
       let html = fs.readFileSync("./assets/invoices/invoice.html", "utf-8");
       let template = handlebars.compile(html);
-      let compiledTemplate = template(payload);
+      let compiledTemplate = template(data);
 
       pdf
         .create(compiledTemplate, { format: "A4" })
@@ -318,10 +337,12 @@ class PaymentController {
               .status(200)
               .json({ success: false, message: error.message });
           }
-          let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
+          console.log(stream);
+          // let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
           return res.status(200).json({ success: true, data: data });
         });
     } catch (error: any) {
+      console.log(error);
       return res.status(200).json({ success: false, message: error.message });
     }
   }

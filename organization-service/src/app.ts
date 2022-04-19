@@ -3,10 +3,9 @@ import express, {
   Request,
   Response,
   NextFunction,
-  json,
-  urlencoded,
   text,
 } from "express";
+import { json, urlencoded } from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
 import routes from "./routes";
@@ -31,7 +30,7 @@ export default class App {
 
   async setupMiddleware() {
     this.app.use(json({ limit: "50mb" }));
-    this.app.use(urlencoded({ extended: false, limit: "50mb" }));
+    this.app.use(urlencoded({ extended: true, limit: "50mb" }));
 
     this.app.use(text());
     this.app.use(morgan("dev"));

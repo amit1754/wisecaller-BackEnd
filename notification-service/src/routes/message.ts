@@ -10,5 +10,10 @@ router.post(
   [authorization],
   Message.customNotification
 );
+router.post(
+  "/send-custom-notification",
+  [authorization],
+  Message.sendCustomNotification
+);
 
 export const MessageRoutes = router;

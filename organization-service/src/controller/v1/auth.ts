@@ -59,6 +59,7 @@ class AuthController {
       res.status(200).json({ success: false, message: error.message });
     }
   }
+
   async generateOtp(req: Request, res: Response) {
     try {
       const otp = Math.floor(1000 + Math.random() * 9000);
@@ -105,7 +106,7 @@ class AuthController {
 
       let organization: any = await Organization.findOne({
         email: payload.email,
-      });
+      }).lean();
 
       if (payload.otp === "9999") {
         auth_token = await AuthToken.findOne({
@@ -124,9 +125,7 @@ class AuthController {
 
         let token = jwt.sign(
           {
-            _id: organization._id,
-            email: organization.email,
-            role: organization.role,
+            ...organization,
           },
           secret,
           { expiresIn: tokenTime }
@@ -134,9 +133,7 @@ class AuthController {
 
         let refresh_token = jwt.sign(
           {
-            _id: organization._id,
-            email: organization.email,
-            role: organization.role,
+            ...organization,
           },
           secret,
           { expiresIn: tokenRefreshTime }

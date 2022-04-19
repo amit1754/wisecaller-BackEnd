@@ -109,9 +109,16 @@ export default class UserBLL {
         user.user_status.status.status_notes.notes = notesData;
       }
     }
-    if (user?.user_subscription?.subscription){
-      let subData = await userSubscriptionBll.getSubscription(user?.user_subscription?.subscription);
-      user.user_subscription.subscription = subData;
+
+    if (user?.active_subscriptions?.length) {
+      for (const user_subscription of user?.active_subscriptions) {
+        if (user_subscription?.subscription) {
+          let subscription = await userSubscriptionBll.getSubscription(
+            user_subscription?.subscription
+          );
+          user_subscription.subscription = subscription;
+        }
+      }
     }
     return user;
   }

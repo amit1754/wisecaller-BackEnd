@@ -45,6 +45,10 @@ const OrganizationSchema = new Schema(
       enum: ["ORGANIZATION"],
       default: "ORGANIZATION",
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

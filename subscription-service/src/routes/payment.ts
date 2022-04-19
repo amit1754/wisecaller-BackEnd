@@ -12,7 +12,7 @@ router.post(
   Payment.paymentForOrganization
 );
 router.post("/demo", Payment.demo);
-router.post("/generate-invoice", Payment.generateInvoice);
+router.post("/generate-invoice", [authorization], Payment.generateInvoice);
 router.get("/getall-transacation", [authorization], Payment.getAllTransacation);
 router.post(
   "/renew-organization-subscription",

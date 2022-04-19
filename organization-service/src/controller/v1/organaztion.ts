@@ -6,6 +6,11 @@ import { Coupon } from "../../models/coupon";
 import { User } from "../../models/user";
 import moment from "moment";
 import { CustomStatus } from "../../models/custom-status";
+import { UserDevices } from "../../models/user-device";
+import { Parser } from "json2csv";
+import node_fetch from "node-fetch";
+import { Usage } from "../../models/usage";
+import { CallActivity } from "../../models/call_activity";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -165,6 +170,18 @@ class OrganizationController {
         });
       }
 
+      if (req.body.register_start_date) {
+        Object.assign(criteria, {
+          cretedAt: { $gte: req.body.register_start_date },
+        });
+      }
+
+      if (req.body.register_end_date) {
+        Object.assign(criteria, {
+          cretedAt: { $gte: req.body.register_end_date },
+        });
+      }
+
       const organizations =
         req.body.page || req.body.limit
           ? await Organization.paginate(criteria, options)
@@ -193,6 +210,16 @@ class OrganizationController {
         },
       };
       delete payload.user;
+      if (payload.profile) {
+        try {
+          // let res = await node_fetch(payload.profile);
+          // let blob = await res.blob();
+          // console.log(blob);
+          // console.log(new File(blo, "profile", { type: "image/png" }));
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
       let organization = await Organization.findOneAndUpdate(
         { _id: loggedInUser._id },
@@ -214,11 +241,41 @@ class OrganizationController {
 
       delete payload.user;
       delete payload.token;
-      let user_criteria = {};
+      let user_criteria = {
+        isActive: true,
+      };
       let coupon_criteria = {};
+      let device_criteria = {};
+      let report_criteria = {
+        createdAt: {
+          $gte: new Date(
+            moment().startOf("year").utc(true).startOf("day").toISOString()
+          ),
+        },
+      };
 
-      if (payload.role === "ORGANIZATION") {
+      let usage_criteria = {
+        loggedOn: {
+          $gte: moment().startOf("month").utc(true).toDate(),
+          $lte: moment().endOf("month").utc(true).toDate(),
+        },
+      };
+      let activity_criteria = {
+        calledOn: {
+          $gte: moment().startOf("month").utc(true).toDate(),
+          $lte: moment().endOf("month").utc(true).toDate(),
+        },
+      };
+
+      let organization_criteria = {};
+
+      if (loggedInUser?.role === "ORGANIZATION") {
         Object.assign(user_criteria, {
+          organization_subscription: { $exists: true, $ne: null },
+          "organization_subscription.organization": loggedInUser._id,
+        });
+
+        Object.assign(report_criteria, {
           organization_subscription: { $exists: true, $ne: null },
           "organization_subscription.organization": loggedInUser._id,
         });
@@ -228,36 +285,56 @@ class OrganizationController {
         });
       }
 
+      if (payload.start_date && payload.end_date) {
+        Object.assign(report_criteria, {
+          createdAt: {
+            $gte: moment(payload.start_date).toDate(),
+            $lte: moment(payload.end_date).toDate(),
+          },
+        });
+      }
+
+      if (payload.organization) {
+        Object.assign(user_criteria, {
+          $or: [
+            { "user_subscription.organization": payload.organization },
+            { "organization_subscription.organization": payload.organization },
+          ],
+        });
+        Object.assign(coupon_criteria, { organization: payload.organization });
+        Object.assign(report_criteria, { _id: payload.organazation });
+      }
+
       let getTotalEmployees = User.find(user_criteria, { _id: 1 });
-      let getTotalCoupons = Coupon.find(coupon_criteria).count();
+      let getReportEmployees = User.find(report_criteria).countDocuments();
+      let getTotalCoupons = Coupon.find(coupon_criteria).countDocuments();
       let getTotalWorkLifeBalance = User.find({
         ...user_criteria,
         "modes.workLifeBalance.is_active": true,
-      }).count();
+      }).countDocuments();
       let getTotalRoadSafety = User.find({
         ...user_criteria,
         "modes.roadSafety.is_active": true,
-      }).count();
+      }).countDocuments();
 
       let getTotalCalenderSync = User.find({
         ...user_criteria,
-        "modes.syncCalender.is_active": true,
-      }).count();
+        "modes.syncCalender.calenders": { $ne: null },
+      }).countDocuments();
 
       let getMonthlyUsers = User.aggregate([
         {
           $match: {
             ...user_criteria,
-            createdAt: {
-              $gte: new Date(
-                moment().startOf("year").utc(true).startOf("day").toISOString()
-              ),
-            },
+            ...report_criteria,
           },
         },
         {
           $group: {
-            _id: { month: { $month: "$createdAt" } },
+            _id: {
+              month: { $month: "$createdAt" },
+              year: { $year: "$createdAt" },
+            },
             count: { $sum: 1 },
           },
         },
@@ -266,6 +343,68 @@ class OrganizationController {
         },
       ]);
 
+      let getTotalOrganizatiions = Organization.find(
+        organization_criteria
+      ).countDocuments();
+
+      let getMonthlyOrganizaion = Organization.aggregate([
+        {
+          $match: {
+            ...report_criteria,
+          },
+        },
+        {
+          $group: {
+            _id: {
+              month: { $month: "$createdAt" },
+              year: { $year: "$createdAt" },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { "_id.month": 1 },
+        },
+      ]);
+
+      let getDailyUsage = Usage.aggregate([
+        {
+          $match: {
+            ...usage_criteria,
+          },
+        },
+        {
+          $group: {
+            _id: { $dayOfMonth: "$loggedOn" },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ]);
+
+      let getTotalUsage = Usage.find(usage_criteria).countDocuments();
+      let getCallActivity = CallActivity.aggregate([
+        {
+          $match: {
+            ...activity_criteria,
+          },
+        },
+        {
+          $group: {
+            _id: { called_on: { $dayOfMonth: "$calledOn" }, status: "$status" },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ]);
+
+      let getTotalCallActivity =
+        CallActivity.find(activity_criteria).countDocuments();
+
       let [
         totalEmployees,
         totalCoupons,
@@ -273,6 +412,13 @@ class OrganizationController {
         totalRoadSafety,
         totalCalendarSync,
         monthlyUsers,
+        monthlyOrganization,
+        totalOrganization,
+        reportEmployees,
+        dailyUsage,
+        totalDailyUsage,
+        callActivity,
+        totalCallActivity,
       ] = await Promise.all([
         getTotalEmployees,
         getTotalCoupons,
@@ -280,11 +426,37 @@ class OrganizationController {
         getTotalRoadSafety,
         getTotalCalenderSync,
         getMonthlyUsers,
+        getMonthlyOrganizaion,
+        getTotalOrganizatiions,
+        getReportEmployees,
+        getDailyUsage,
+        getTotalUsage,
+        getCallActivity,
+        getTotalCallActivity,
       ]);
 
-      let totalCustomStatus = await CustomStatus.find({
-        user: { $in: totalEmployees.map((item) => item._id) },
-      }).count();
+      if (loggedInUser.role === "ORGANIZATION") {
+        Object.assign(device_criteria, {
+          user: { $in: totalEmployees.map((item) => item._id) },
+        });
+      }
+
+      let custom_statuses = await CustomStatus.find({});
+
+      let totalCustomStatus = await User.find({
+        ...user_criteria,
+        _id: { $in: custom_statuses.map((item: any) => item.user) },
+      }).countDocuments();
+
+      let deviceSummary = await UserDevices.aggregate([
+        { $match: device_criteria },
+        {
+          $group: {
+            _id: "$user_device.platform",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
 
       let data = {
         totalEmployees: totalEmployees.length,
@@ -294,9 +466,119 @@ class OrganizationController {
         totalCalendarSync,
         monthlyUsers,
         totalCustomStatus,
+        deviceSummary,
+        monthlyOrganization,
+        totalOrganization,
+        reportEmployees,
+        dailyUsage,
+        totalDailyUsage,
+        callActivity,
+        totalCallActivity,
       };
 
       return res.status(200).json({ success: true, data });
+    } catch (error: any) {
+      console.log(error);
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async deleteAdminOrganizaion(req: Request, res: Response) {
+    try {
+      let organization: any = await Organization.findOne({
+        _id: req.params.id,
+      });
+      await Coupon.deleteMany({ organization: organization._id });
+      await User.updateMany(
+        {
+          "organization_subscription.organization": organization._id,
+        },
+        { organization_subscription: null },
+        { upsert: true, new: true }
+      );
+      await Organization.findOneAndRemove({ _id: organization._id });
+      return res
+        .status(200)
+        .json({ success: true, message: "Organization deleted successfully" });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async exportCSV(req: Request, res: Response) {
+    try {
+      let criteria = {};
+
+      if (req.body.search) {
+        Object.assign(criteria, {
+          name: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
+      if (req.body.register_start_date) {
+        Object.assign(criteria, {
+          cretedAt: { $gte: req.body.register_start_date },
+        });
+      }
+
+      if (req.body.register_end_date) {
+        Object.assign(criteria, {
+          cretedAt: { $gte: req.body.register_end_date },
+        });
+      }
+
+      let organazations = await Organization.find(criteria);
+      let csv_data = [];
+      for (const item of organazations) {
+        let temp: any = item;
+        let organization = {
+          name: temp.name,
+          contact_name: temp.contact_information.name,
+          phone_no: temp.contact_information.phone_no,
+          email: temp.email,
+          gst: temp.gst,
+          pan: temp.pan,
+        };
+        csv_data.push(organization);
+      }
+
+      let fields = [
+        {
+          label: "NAME",
+          value: "name",
+          default: "",
+        },
+        {
+          label: "CONTACT NAME",
+          value: "contact_name",
+          default: "",
+        },
+        {
+          label: "PHONE",
+          value: "phone_no",
+          default: "",
+        },
+
+        {
+          label: "EMAIL",
+          value: "email",
+          default: "",
+        },
+        {
+          label: "GST",
+          value: "gst",
+          default: "",
+        },
+        {
+          label: "PAN",
+          value: "pan",
+          default: "",
+        },
+      ];
+
+      let parser = new Parser({ fields: fields });
+      let parsed_data = parser.parse(csv_data);
+      return res.status(200).json({ success: true, data: parsed_data });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });
     }

@@ -48,7 +48,7 @@ class UserSubscriptionController {
         );
         await getUserBll.findOneAndUpdate(
           { _id: user._id },
-          { organization_subscription: organization_subscription },
+          { organization_subscription: [organization_subscription] },
           { upsert: true, new: true }
         );
       } else {
@@ -62,7 +62,7 @@ class UserSubscriptionController {
         );
         await getUserBll.findOneAndUpdate(
           { _id: user._id },
-          { user_subscription: user_subscription },
+          { user_subscription: [user_subscription] },
           { upsert: true, new: true }
         );
       }

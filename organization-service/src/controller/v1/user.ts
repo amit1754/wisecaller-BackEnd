@@ -4,6 +4,9 @@ import { User } from "../../models/user";
 import { UserSubscription } from "../../models/user_subscription";
 import { Parser } from "json2csv";
 import { CustomStatus } from "../../models/custom-status";
+import moment from "moment";
+import RazorPay from "razorpay";
+import { Payment } from "../../models/payment";
 
 class UserController {
   async index(req: Request, res: Response) {
@@ -18,9 +21,11 @@ class UserController {
         limit: Number(req.body.limit) || 10,
       };
 
-      let criteria = {};
+      let criteria = {
+        isActive: true,
+      };
 
-      if (req.body.role === "ORGANIZATION") {
+      if (loggedInUser?.role === "ORGANIZATION") {
         let subscriptions = await UserSubscription.find(
           {
             organization: req.body.user._id,
@@ -35,6 +40,112 @@ class UserController {
           organization_subscription: { $exists: true, $ne: null },
           "organization_subscription.organization": loggedInUser._id,
           "organization_subscription.is_revoked": false,
+        });
+      }
+
+      if (req.body.search) {
+        req.body.search = req.body.search.replace("+", "");
+        Object.assign(criteria, {
+          $or: [
+            { first_name: { $regex: req.body.search, $options: "i" } },
+            { last_name: { $regex: req.body.search, $options: "i" } },
+            { phone: { $regex: req.body.search, $options: "i" } },
+            { email: { $regex: req.body.search, $options: "i" } },
+          ],
+        });
+      }
+
+      if (req.body.subscription) {
+        Object.assign(criteria, {
+          "organization_subscription.subscription": req.body.subscription,
+        });
+      }
+
+      if (req.body.coupon_code) {
+        Object.assign(criteria, {
+          "organization_subscription.coupon_code": req.body.coupon_code,
+        });
+      }
+
+      if (req.body.road_safety) {
+        Object.assign(criteria, {
+          "modes.roadSafety.is_active": req.body.road_safety,
+        });
+      }
+
+      if (req.body.calender_sync) {
+        Object.assign(criteria, {
+          "modes.syncCalender.calenders": { $ne: null },
+        });
+      }
+
+      if (req.body.work_life_balance) {
+        Object.assign(criteria, {
+          "modes.workLifeBalance.is_active": req.body.work_life_balance,
+        });
+      }
+
+      if (req.body.custom_status) {
+        let custom_statuses = await CustomStatus.find({});
+        let users = custom_statuses.map((item: any) => item.user);
+        Object.assign(criteria, { _id: { $in: users } });
+      }
+
+      if (req.body.registered_date) {
+        Object.assign(criteria, {
+          createdAt: req.body.registered_date,
+        });
+      }
+
+      if (req.body.subscribed_date) {
+        Object.assign(criteria, {
+          "organization_subscription.subscription_created_date":
+            req.body.subscription_created_date,
+        });
+      }
+
+      if (req.body.organization) {
+        Object.assign(criteria, {
+          "organization_subscription.organization": req.body.organization,
+        });
+      }
+
+      let users =
+        req.body.page || req.body.limit
+          ? await User.paginate(criteria, options)
+          : await User.find(criteria);
+      return res.status(200).json({ success: true, data: users });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async exportCSV(req: Request, res: Response) {
+    try {
+      let criteria = {};
+      let loggedInUser: any = req.body.user;
+
+      let subscription_criteria = {};
+
+      if (loggedInUser?.role === "ORGANIZATION") {
+        let subscriptions = await UserSubscription.find(
+          {
+            organization: loggedInUser._id,
+          },
+          { user: 1, organization: 1 }
+        );
+
+        subscriptions = subscriptions.map((item: any) => item.user);
+
+        Object.assign(criteria, {
+          _id: { $in: subscriptions },
+          organization_subscription: { $exists: true, $ne: null },
+          "organization_subscription.organization": loggedInUser._id,
+          "organization_subscription.is_revoked": false,
+        });
+
+        Object.assign(subscription_criteria, {
+          type: "ORGANIZATION",
         });
       }
 
@@ -99,45 +210,6 @@ class UserController {
         Object.assign(criteria, {
           "organization_subscription.subscription_created_date":
             req.body.subscription_created_date,
-        });
-      }
-
-      let users =
-        req.body.page || req.body.limit
-          ? await User.paginate(criteria, options)
-          : await User.find(criteria);
-      return res.status(200).json({ success: true, data: users });
-    } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
-    }
-  }
-
-  async exportCSV(req: Request, res: Response) {
-    try {
-      let criteria = {};
-      let loggedInUser: any = req.body.user;
-
-      let subscription_criteria = {};
-
-      if (loggedInUser?.role === "ORGANIZATION") {
-        let subscriptions = await UserSubscription.find(
-          {
-            organization: loggedInUser._id,
-          },
-          { user: 1, organization: 1 }
-        );
-
-        subscriptions = subscriptions.map((item: any) => item.user);
-
-        Object.assign(criteria, {
-          _id: { $in: subscriptions },
-          organization_subscription: { $exists: true, $ne: null },
-          "organization_subscription.organization": loggedInUser._id,
-          "organization_subscription.is_revoked": false,
-        });
-
-        Object.assign(subscription_criteria, {
-          type: "ORGANIZATION",
         });
       }
 
@@ -246,6 +318,136 @@ class UserController {
       let parser = new Parser({ fields: fields });
       let parsed_data = parser.parse(csv_data);
       return res.status(200).json({ success: true, data: parsed_data });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async deactivateUser(req: Request, res: Response) {
+    try {
+      await User.findOneAndUpdate(
+        { _id: req.body.user_id },
+        { isActive: false, deactivate_reason: req.body.deactivate_reason },
+        { upsert: true, new: true }
+      );
+      return res
+        .status(200)
+        .json({ success: true, message: "User deactivated" });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async changeUserPlan(req: Request, res: Response) {
+    try {
+      const payload = {
+        ...req.body,
+      };
+
+      let user: any = await User.findOneAndUpdate(
+        { _id: payload.user_id },
+        { isActive: false, deactivate_reason: req.body.deactivate_reason },
+        { upsert: true, new: true }
+      );
+
+      if (user) {
+        if (user?.user_subscription?.subscription === payload.subscription) {
+          return res.status(200).json({
+            success: false,
+            message: "User already subscribed with same plan",
+          });
+        } else {
+          let subscription: any = await Subscription.findOne({
+            _id: payload.subscription,
+          });
+
+          const instance = new RazorPay({
+            key_id: process.env.RAZORPAYKEY,
+            key_secret: process.env.RAZORPAYSECRET,
+          });
+
+          let options = {
+            amount: subscription.current_price * 100,
+            currency: "INR",
+            receipt: moment().toISOString(),
+          };
+
+          let order: any = await instance.orders.create(options);
+          let subscription_payload = {
+            subscription: subscription._id,
+            quantity: 1,
+            user: user._id,
+            subscription_created_date: moment().toISOString(),
+            subscription_end_date: moment()
+              .add(subscription.duration, "months")
+              .toISOString(),
+            is_active: true,
+            user_subscription_date: moment().toISOString(),
+          };
+
+          let active_subscription: any = await UserSubscription.findOne({
+            user: payload.user_id,
+            subscription: payload.subscription,
+            subscription_end_date: { $gte: moment().toISOString() },
+            is_revoked: false,
+          });
+
+          if (active_subscription) {
+            let diff_days = moment(
+              active_subscription.subscription_end_date
+            ).diff(moment(), "days");
+            subscription_payload.subscription_end_date = moment(
+              subscription_payload.subscription_end_date
+            )
+              .add(diff_days, "days")
+              .toISOString();
+          }
+
+          let user_subscription = await UserSubscription.findOneAndUpdate(
+            {
+              user: user._id,
+              organization: { $exists: false },
+            },
+            subscription_payload,
+            { upsert: true, new: true }
+          );
+
+          await User.findOneAndUpdate(
+            {
+              user: user._id,
+              transactionId: payload.transactionId,
+            },
+            user_subscription,
+            { upsert: true, new: true }
+          );
+
+          let payment_payload = {
+            transactionId: order.id,
+            subscription: subscription._id,
+            user_subscription: user_subscription._id,
+            amount: order?.amount / 100,
+            paymentFor: "Subscription",
+            status: "SUCCESS",
+            mode: "ONLINE",
+            user: user._id,
+            payment_date: moment().toISOString(),
+          };
+
+          await Payment.findOneAndUpdate(
+            { user: user._id, transactionId: payment_payload.transactionId },
+            payment_payload,
+            { upsert: true, new: true }
+          );
+
+          return res
+            .status(200)
+            .json({ success: true, message: "User plan changed" });
+        }
+      } else {
+        return res
+          .status(200)
+          .json({ success: false, message: "User not found" });
+      }
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });
     }
