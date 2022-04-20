@@ -21,7 +21,7 @@ export const authorization = async (req: Request, res: Response, next: NextFunct
       throw new Error('token is expired');
     }
     const data: any = await User.findOne({ _id: verifyToken._id })
-      .populate({ path: 'active_subscriptions.subscription' })
+      // .populate({ path: 'active_subscriptions.subscription' })
       .lean();
     if (data) {
       req.body.user = data;
