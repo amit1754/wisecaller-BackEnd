@@ -1,7 +1,7 @@
 import { globalTypeModel } from "./globalType.Model";
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-const { Schema,model } = mongoose;
+const { Schema, model } = mongoose;
 
 const UserSchema = new Schema(
   {
@@ -97,17 +97,50 @@ const UserSchema = new Schema(
     notification_arn: {
       type: String,
     },
-    organization_subscription: {
-      type: Schema.Types.Mixed,
-    },
-    user_subscription: {
-      type: Schema.Types.Mixed,
-    },
+    active_subscriptions: [
+      {
+        subscription: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Subscription",
+        },
+        organization: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Organization",
+        },
+        coupon_code: {
+          type: String,
+        },
+        quantity: {
+          type: Number,
+        },
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        is_revoked: {
+          type: Boolean,
+          default: false,
+        },
+        revoked_reason: {
+          type: String,
+        },
+        subscription_created_date: {
+          type: Date,
+        },
+        subscription_end_date: {
+          type: Date,
+        },
+        is_active: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
 
-UserSchema.post("find", function (doc:any) {
+UserSchema.post("find", function (doc: any) {
   if (doc) {
     doc.map((x: any) => {
       x.profile_image =
@@ -129,7 +162,7 @@ UserSchema.post("find", function (doc:any) {
   }
   return doc;
 });
-UserSchema.post("findOne", function (doc:any) {
+UserSchema.post("findOne", function (doc: any) {
   if (doc) {
     delete doc.notification_token;
     delete doc.notification_arn;
@@ -147,6 +180,5 @@ UserSchema.post("findOne", function (doc:any) {
   }
   return doc;
 });
-
 
 export const User = mongoose.models.User || model("User", UserSchema);

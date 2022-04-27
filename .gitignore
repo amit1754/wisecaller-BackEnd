@@ -90,6 +90,7 @@ status-service/bin
 api-doc-service/bin
 workingHrsService/bin
 subscription-service/bin
+cronJob/bin
 
 
 
@@ -118,6 +119,7 @@ api-doc-service/.serverless
 wisecaller_modules/.serverless
 callmanagement-service/.serverless
 workingHrsService/.serverless
+cronJob/.serverless
 
 auth-service/.build
 call-service/.build

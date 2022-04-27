@@ -57,14 +57,30 @@ class PlanController {
 
   async revokeOrganizationEmployeePlan(req: Request, res: Response) {
     try {
+      let payload = {
+        ...req.body,
+      };
+
+      delete payload.user;
+
+      let active_subscriptions = payload.active_subscriptions;
+
+      let index = active_subscriptions.findIndex(
+        (item: any) =>
+          item.subscription === payload.subscription &&
+          item.coupon_code === payload.coupon_code
+      );
+
+      active_subscriptions.splice(index, 1);
+
       await User.findOneAndUpdate(
         { _id: req.body.employee },
-        { organization_subscription: null },
+        { active_subscriptions: active_subscriptions },
         { upsert: true, new: true }
       );
 
       await Coupon.findOneAndUpdate(
-        { coupon_code: req.body.coupon },
+        { coupon_code: payload.coupon_code },
         { $inc: { used_subscription: -1, can_use_for: 1 } },
         { upsert: true, new: true }
       );

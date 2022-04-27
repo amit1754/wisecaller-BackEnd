@@ -37,9 +37,7 @@ class UserController {
 
         Object.assign(criteria, {
           _id: { $in: subscriptions },
-          organization_subscription: { $exists: true, $ne: null },
-          "organization_subscription.organization": loggedInUser._id,
-          "organization_subscription.is_revoked": false,
+          "active_subscriptions.organization": loggedInUser._id,
         });
       }
 
@@ -57,13 +55,13 @@ class UserController {
 
       if (req.body.subscription) {
         Object.assign(criteria, {
-          "organization_subscription.subscription": req.body.subscription,
+          "active_subscriptions.subscription": req.body.subscription,
         });
       }
 
       if (req.body.coupon_code) {
         Object.assign(criteria, {
-          "organization_subscription.coupon_code": req.body.coupon_code,
+          "active_subscriptions.coupon_code": req.body.coupon_code,
         });
       }
 
@@ -99,14 +97,14 @@ class UserController {
 
       if (req.body.subscribed_date) {
         Object.assign(criteria, {
-          "organization_subscription.subscription_created_date":
+          "active_subscriptions.subscription_created_date":
             req.body.subscription_created_date,
         });
       }
 
       if (req.body.organization) {
         Object.assign(criteria, {
-          "organization_subscription.organization": req.body.organization,
+          "active_subscriptions.organization": req.body.organization,
         });
       }
 
@@ -139,9 +137,7 @@ class UserController {
 
         Object.assign(criteria, {
           _id: { $in: subscriptions },
-          organization_subscription: { $exists: true, $ne: null },
-          "organization_subscription.organization": loggedInUser._id,
-          "organization_subscription.is_revoked": false,
+          "active_subscriptions.organization": loggedInUser._id,
         });
 
         Object.assign(subscription_criteria, {
@@ -163,13 +159,13 @@ class UserController {
 
       if (req.body.subscription) {
         Object.assign(criteria, {
-          "organization_subscription.subscription": req.body.subscription,
+          "active_subscriptions.subscription": req.body.subscription,
         });
       }
 
       if (req.body.coupon_code) {
         Object.assign(criteria, {
-          "organization_subscription.coupon_code": req.body.coupon_code,
+          "active_subscriptions.coupon_code": req.body.coupon_code,
         });
       }
 
@@ -208,7 +204,7 @@ class UserController {
 
       if (req.body.subscribed_date) {
         Object.assign(criteria, {
-          "organization_subscription.subscription_created_date":
+          "active_subscriptions.subscription_created_date":
             req.body.subscription_created_date,
         });
       }
@@ -223,21 +219,7 @@ class UserController {
           last_name: temp.last_name,
           phone_no: temp.phone,
           email: temp?.email ? temp.email : "",
-          plan: temp?.organization_subscription?.subscription
-            ? subscriptions.find(
-                (item: any) =>
-                  String(item._id) ==
-                  String(temp?.organization_subscription?.subscription)
-              ).title
-            : "",
-          redeem_coupon: temp.organization_subscription?.coupon_code
-            ? temp.organization_subscription.coupon_code
-            : "",
           registered_date: temp.createdAt,
-          subscribed_date: temp.organization_subscription
-            ?.subscription_created_date
-            ? temp.organization_subscription.subscription_created_date
-            : "",
           work_life_balance: temp?.modes?.workLifeBalance?.is_active
             ? "Active"
             : "Inactive",
@@ -357,7 +339,9 @@ class UserController {
         });
 
         let options = {
-          amount: subscription.current_price * 100,
+          amount: subscription.current_price
+            ? subscription.current_price * 100
+            : subscription.original_price,
           currency: "INR",
           receipt: moment().toISOString(),
         };

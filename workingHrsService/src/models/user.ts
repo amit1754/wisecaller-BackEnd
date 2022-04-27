@@ -95,12 +95,45 @@ const UserSchema = new Schema(
     notification_arn: {
       type: String,
     },
-    organization_subscription: {
-      type: Schema.Types.Mixed,
-    },
-    user_subscription: {
-      type: Schema.Types.Mixed,
-    },
+    active_subscriptions: [
+      {
+        subscription: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Subscription",
+        },
+        organization: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Organization",
+        },
+        coupon_code: {
+          type: String,
+        },
+        quantity: {
+          type: Number,
+        },
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        is_revoked: {
+          type: Boolean,
+          default: false,
+        },
+        revoked_reason: {
+          type: String,
+        },
+        subscription_created_date: {
+          type: Date,
+        },
+        subscription_end_date: {
+          type: Date,
+        },
+        is_active: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

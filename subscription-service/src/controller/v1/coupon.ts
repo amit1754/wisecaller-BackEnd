@@ -72,13 +72,14 @@ class CouponController {
       ) {
         if (redeemed_coupon?.organization) {
           let active_subscriptions = loggedInUser?.active_subscriptions;
+          let free_subscription = await Subscription.findOne({ type: "FREE" });
           let subscription: any = await Subscription.findOne({
             _id: redeemed_coupon.subscription,
           });
 
           let user_subscription_payload = {
             subscription: subscription._id,
-            organization: subscription?.organization,
+            organization: redeemed_coupon?.organization,
             coupon_code: redeemed_coupon?.coupon_code,
             quantity: 1,
             user: loggedInUser._id,
@@ -91,8 +92,18 @@ class CouponController {
           };
 
           if (active_subscriptions?.length) {
+            // Removed free subscription
+            let free_active_subscription_index = active_subscriptions.findIndex(
+              (item: any) =>
+                item.subscription === free_subscription._id.toString()
+            );
+
+            active_subscriptions.splice(free_active_subscription_index, 1);
+
             let user_active_subscription: any = active_subscriptions.find(
-              (item: any) => item.subscription === redeemed_coupon.subscription
+              (item: any) =>
+                item.subscription.toString() ===
+                redeemed_coupon.subscription.toString()
             );
 
             if (user_active_subscription) {

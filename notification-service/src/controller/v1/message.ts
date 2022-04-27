@@ -12,7 +12,7 @@ class MessageController {
       let event = { ...req.body };
       await EventHandler.index(event);
       return res.status(200).json({ success: true });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -30,7 +30,7 @@ class MessageController {
       };
       await EventHandler.index(event);
       res.status(200).json({ success: true });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -49,7 +49,7 @@ class MessageController {
       };
       await snsClient.publishToSNS(event);
       res.status(200).json({ success: true });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -85,9 +85,7 @@ class MessageController {
 
         Object.assign(criteria, {
           _id: { $in: subscriptions },
-          organization_subscription: { $exists: true, $ne: null },
-          "organization_subscription.organization": loggedInUser._id,
-          "organization_subscription.is_revoked": false,
+          "active_subscriptions.organization": loggedInUser._id,
         });
       }
 
@@ -105,13 +103,13 @@ class MessageController {
 
       if (req.body.subscription) {
         Object.assign(criteria, {
-          "organization_subscription.subscription": req.body.subscription,
+          "active_subscriptions.subscription": req.body.subscription,
         });
       }
 
       if (req.body.coupon_code) {
         Object.assign(criteria, {
-          "organization_subscription.coupon_code": req.body.coupon_code,
+          "active_subscriptions.coupon_code": req.body.coupon_code,
         });
       }
 
@@ -144,7 +142,7 @@ class MessageController {
 
       if (req.body.subscribed_date) {
         Object.assign(criteria, {
-          "organization_subscription.subscription_created_date":
+          "active_subscriptions.subscription_created_date":
             req.body.subscription_created_date,
         });
       }
@@ -158,8 +156,8 @@ class MessageController {
       }
       await snsClient.publishToSNS(event);
       res.status(200).json({ success: true });
-    } catch (error: any) {
-      res.status(200).json({ success: false, message: error.message });
+    } catch (error) {
+      res.status(200).json({ success: false, message: error });
     }
   }
 }

@@ -43,10 +43,10 @@ class SubscriptionController {
                             subscription_created_date: allSubscription[i].subscription_created_date,
                             subscription_end_date: allSubscription[i].subscription_end_date,
                             organazationDetails: {
-                                OrganizationName: organazationDetails.name,
-                                OrganizationEmail: organazationDetails.email,
-                                organazationWebsite: organazationDetails.website,
-                                organazationphone_no: organazationDetails.phone_no
+                                OrganizationName: organazationDetails === null || organazationDetails === void 0 ? void 0 : organazationDetails.name,
+                                OrganizationEmail: organazationDetails === null || organazationDetails === void 0 ? void 0 : organazationDetails.email,
+                                organazationWebsite: organazationDetails === null || organazationDetails === void 0 ? void 0 : organazationDetails.website,
+                                organazationphone_no: organazationDetails === null || organazationDetails === void 0 ? void 0 : organazationDetails.phone_no,
                             },
                         };
                         let userToken = yield user_devices_1.UserDevices.find({
@@ -65,9 +65,7 @@ class SubscriptionController {
                         yield email_1.default.Send(allSubscription[i].email, subject, emailContent);
                     }
                 }
-                response
-                    .status(200)
-                    .json({ success: true, message: "success" });
+                response.status(200).json({ success: true, message: "success" });
             }
             catch (err) {
                 console.log("err :>> ", err);

@@ -156,7 +156,9 @@ class OrganizationController {
     try {
       let sort_key = req.body.sort_key || "name";
       let sort_direction = req.body.sort_direction === "DESC" ? -1 : 1;
-      let criteria = {};
+      let criteria = {
+        role: "ORGANIZATION",
+      };
 
       let options = {
         sort: { [sort_key]: sort_direction },
@@ -271,13 +273,11 @@ class OrganizationController {
 
       if (loggedInUser?.role === "ORGANIZATION") {
         Object.assign(user_criteria, {
-          organization_subscription: { $exists: true, $ne: null },
-          "organization_subscription.organization": loggedInUser._id,
+          "active_subscriptions.organization": loggedInUser._id,
         });
 
         Object.assign(report_criteria, {
-          organization_subscription: { $exists: true, $ne: null },
-          "organization_subscription.organization": loggedInUser._id,
+          "active_subscriptions.organization": loggedInUser._id,
         });
 
         Object.assign(coupon_criteria, {
@@ -297,8 +297,8 @@ class OrganizationController {
       if (payload.organization) {
         Object.assign(user_criteria, {
           $or: [
-            { "user_subscription.organization": payload.organization },
-            { "organization_subscription.organization": payload.organization },
+            { "active_subscriptions.organization": payload.organization },
+            { "active_subscriptions.organization": payload.organization },
           ],
         });
         Object.assign(coupon_criteria, { organization: payload.organization });
@@ -491,9 +491,11 @@ class OrganizationController {
       await Coupon.deleteMany({ organization: organization._id });
       await User.updateMany(
         {
-          "organization_subscription.organization": organization._id,
+          "active_subscriptions.organization": organization._id,
         },
-        { organization_subscription: null },
+        {
+          $pull: { active_subscriptions: { organization: organization._id } },
+        },
         { upsert: true, new: true }
       );
       await Organization.findOneAndRemove({ _id: organization._id });

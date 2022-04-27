@@ -161,7 +161,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/aws-wisecaller-cronJob/dev/1651035472443-2022-04-27T04:57:52.443Z/api.zip"
+          "S3Key": "serverless/aws-wisecaller-cronJob/dev/1651067342090-2022-04-27T13:49:02.090Z/api.zip"
         },
         "Handler": "bin/handler.api",
         "Runtime": "nodejs14.x",
@@ -179,14 +179,14 @@
         "ApiLogGroup"
       ]
     },
-    "ApiLambdaVersionpNiB6MaeH1lEc1c1kagWDwUf8tkQxsSE9yUsgkelHMM": {
+    "ApiLambdaVersionHJZ6A1sjW0gLjhnFikFuDj8tLCK8aN2QJlzNHOUrFU": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "ZxmCKtoIlm23KCjmkw1NOcMHtbqRunOGQ/oH42XC4Yc="
+        "CodeSha256": "OsbCggZvAAs74behn4RnycaPANenmEZVw6g2uqKReDg="
       }
     },
     "ApiGatewayRestApi": {
@@ -311,7 +311,7 @@
         "ApiLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1651035462910": {
+    "ApiGatewayDeployment1651067332956": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -374,7 +374,7 @@
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionpNiB6MaeH1lEc1c1kagWDwUf8tkQxsSE9yUsgkelHMM"
+        "Ref": "ApiLambdaVersionHJZ6A1sjW0gLjhnFikFuDj8tLCK8aN2QJlzNHOUrFU"
       },
       "Export": {
         "Name": "sls-aws-wisecaller-cronJob-dev-ApiLambdaFunctionQualifiedArn"

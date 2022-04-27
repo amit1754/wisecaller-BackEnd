@@ -92,11 +92,17 @@ class CouponController {
       let coupon: any = await Coupon.findOne({ _id: req.params.coupon });
       await User.findOneAndUpdate(
         {
-          organization_subscription: { $exists: true, $ne: null },
-          "organization_subscription.organization": loggedInUser._id,
-          "organization_subscription.coupon_code": coupon?.coupon_code,
+          "active_subscriptions.organization": loggedInUser._id,
+          "active_subscriptions.coupon_code": coupon?.coupon_code,
         },
-        { organization_subscription: null },
+        {
+          $pull: {
+            active_subscriptions: {
+              organization: loggedInUser._id,
+              coupon_code: coupon?.coupon_code,
+            },
+          },
+        },
         { upsert: true, new: true }
       );
       await Coupon.findOneAndDelete({ _id: req.params.coupon });
