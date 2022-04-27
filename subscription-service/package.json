@@ -33,7 +33,7 @@
     "@wisecaller/email": "^0.0.4",
     "@wisecaller/mongo": "^0.1.4",
     "@wisecaller/s3": "^0.0.6",
-    "@wisecaller/user-service": "0.3.4",
+    "@wisecaller/user-service": "0.3.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",

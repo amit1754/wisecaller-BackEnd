@@ -27,8 +27,8 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@wisecaller/authorizer": "^0.0.7",
-    "@wisecaller/user-service": "^0.0.8",
+    "@wisecaller/authorizer": "^0.2.5",
+    "@wisecaller/user-service": "^0.3.5",
     "aws-sdk": "^2.958.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

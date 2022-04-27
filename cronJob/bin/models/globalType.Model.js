@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.globalTypeModel = void 0;
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-const { Schema, model } = mongoose;
-const globalTypeSchema = new Schema({
+const mongoose_1 = require("mongoose");
+const globalTypeSchema = new mongoose_1.Schema({
     type: {
         type: String,
     },
@@ -12,4 +10,4 @@ const globalTypeSchema = new Schema({
         type: Number,
     },
 }, { timestamps: true });
-exports.globalTypeModel = mongoose.models.globalType || model("globalType", globalTypeSchema);
+exports.globalTypeModel = (0, mongoose_1.model)("globaltypes", globalTypeSchema);

@@ -1,4 +1,4 @@
-service: wisecaller-auth-layer-service-test
+service: aws-wisecaller-auth-service
 
 frameworkVersion: "2"
 useDotenv: true
@@ -11,8 +11,8 @@ plugins:
 package:
   individually: true
   patterns:
-    - 'env.dev'
-    - '!node_modules'
+    - "env.dev"
+    - "!node_modules"
 provider:
   name: aws
   runtime: nodejs14.x
