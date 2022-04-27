@@ -340,109 +340,85 @@ class UserController {
 
   async changeUserPlan(req: Request, res: Response) {
     try {
-      const payload = {
+      let payload = {
         ...req.body,
       };
 
-      let user: any = await User.findOneAndUpdate(
-        { _id: payload.user_id },
-        { isActive: false, deactivate_reason: req.body.deactivate_reason },
-        { upsert: true, new: true }
-      );
-
+      let user: any = await User.findOne({ _id: payload.user_id });
+      let active_subscriptions = user.active_subscriptions;
       if (user) {
-        if (user?.user_subscription?.subscription === payload.subscription) {
-          return res.status(200).json({
-            success: false,
-            message: "User already subscribed with same plan",
-          });
-        } else {
-          let subscription: any = await Subscription.findOne({
-            _id: payload.subscription,
-          });
+        let subscription: any = await Subscription.findOne({
+          _id: payload.subscription,
+        });
 
-          const instance = new RazorPay({
-            key_id: process.env.RAZORPAYKEY,
-            key_secret: process.env.RAZORPAYSECRET,
-          });
+        const instance = new RazorPay({
+          key_id: process.env.RAZORPAYKEY,
+          key_secret: process.env.RAZORPAYSECRET,
+        });
 
-          let options = {
-            amount: subscription.current_price * 100,
-            currency: "INR",
-            receipt: moment().toISOString(),
-          };
+        let options = {
+          amount: subscription.current_price * 100,
+          currency: "INR",
+          receipt: moment().toISOString(),
+        };
 
-          let order: any = await instance.orders.create(options);
-          let subscription_payload = {
-            subscription: subscription._id,
-            quantity: 1,
-            user: user._id,
-            subscription_created_date: moment().toISOString(),
-            subscription_end_date: moment()
-              .add(subscription.duration, "months")
-              .toISOString(),
-            is_active: true,
-            user_subscription_date: moment().toISOString(),
-          };
+        let order: any = await instance.orders.create(options);
 
-          let active_subscription: any = await UserSubscription.findOne({
-            user: payload.user_id,
-            subscription: payload.subscription,
-            subscription_end_date: { $gte: moment().toISOString() },
-            is_revoked: false,
-          });
+        let user_subscription_payload: any = {
+          subscription: subscription._id,
+          quantity: 1,
+          user: user._id,
+          subscription_created_date: moment().toISOString(),
+          subscription_end_date: moment()
+            .add(subscription.duration, "months")
+            .toISOString(),
+          is_active: true,
+          user_subscription_date: moment().toISOString(),
+        };
 
-          if (active_subscription) {
-            let diff_days = moment(
-              active_subscription.subscription_end_date
-            ).diff(moment(), "days");
-            subscription_payload.subscription_end_date = moment(
-              subscription_payload.subscription_end_date
-            )
-              .add(diff_days, "days")
-              .toISOString();
+        let user_subscription: any = new UserSubscription(
+          user_subscription_payload
+        );
+        await user_subscription.save();
+
+        active_subscriptions.map((item: any) => {
+          if (
+            item.subscription.toString() === payload.subscription.toString()
+          ) {
+            item.subscription_created_date =
+              user_subscription.subscription_created_date;
+            item.subscription_end_date =
+              user_subscription.subscription_end_date;
           }
+        });
 
-          let user_subscription = await UserSubscription.findOneAndUpdate(
-            {
-              user: user._id,
-              organization: { $exists: false },
-            },
-            subscription_payload,
-            { upsert: true, new: true }
-          );
+        await User.findOneAndUpdate(
+          { _id: payload.user_id },
+          { active_subscriptions: active_subscriptions },
+          { upsert: true, new: true }
+        );
 
-          await User.findOneAndUpdate(
-            {
-              user: user._id,
-              transactionId: payload.transactionId,
-            },
-            user_subscription,
-            { upsert: true, new: true }
-          );
+        let payment_payload = {
+          transactionId: order.id,
+          subscription: subscription._id,
+          user_subscription: user_subscription._id,
+          amount: order?.amount / 100,
+          paymentFor: "Change Subscription",
+          status: "SUCCESS",
+          mode: "ONLINE",
+          user: user._id,
+          payment_date: moment().toISOString(),
+        };
 
-          let payment_payload = {
-            transactionId: order.id,
-            subscription: subscription._id,
-            user_subscription: user_subscription._id,
-            amount: order?.amount / 100,
-            paymentFor: "Subscription",
-            status: "SUCCESS",
-            mode: "ONLINE",
-            user: user._id,
-            payment_date: moment().toISOString(),
-          };
+        await Payment.findOneAndUpdate(
+          { user: user._id, transactionId: payment_payload.transactionId },
+          payment_payload,
+          { upsert: true, new: true }
+        );
 
-          await Payment.findOneAndUpdate(
-            { user: user._id, transactionId: payment_payload.transactionId },
-            payment_payload,
-            { upsert: true, new: true }
-          );
-
-          return res
-            .status(200)
-            .json({ success: true, message: "User plan changed" });
-        }
+        return res
+          .status(200)
+          .json({ success: true, message: "User plan changed" });
       } else {
         return res
           .status(200)

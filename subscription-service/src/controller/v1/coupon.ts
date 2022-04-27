@@ -59,72 +59,73 @@ class CouponController {
 
   async redeemCouponCode(req: Request, res: Response) {
     try {
-      const request: any = req;
-      let user: any = request.body.user;
-      let coupon: any = await Coupon.findOne({
+      let loggedInUser = JSON.parse(JSON.stringify(req.body.user));
+      delete req.body.user;
+      let redeemed_coupon = await Coupon.findOne({
         coupon_code: req.body.coupon_code,
       });
-      let coupon_expiry_date: string = moment(coupon.expires_at)
-        .utc(false)
-        .toISOString();
-      let current_date = moment().utc(false).toISOString();
-      let diff = moment(coupon_expiry_date).diff(moment(current_date), "days");
-      if ((coupon && coupon.can_use_for > 0, diff >= 0)) {
-        if (coupon.organization) {
+
+      if (
+        redeemed_coupon &&
+        moment(redeemed_coupon.expires_at) > moment() &&
+        redeemed_coupon?.can_use_for > 0
+      ) {
+        if (redeemed_coupon?.organization) {
+          let active_subscriptions = loggedInUser?.active_subscriptions;
           let subscription: any = await Subscription.findOne({
-            _id: coupon.subscription,
+            _id: redeemed_coupon.subscription,
           });
 
-          let payload = {
-            subscription: coupon.subscription,
-            organization: coupon.organization,
-            coupon_code: coupon.coupon_code,
+          let user_subscription_payload = {
+            subscription: subscription._id,
+            organization: subscription?.organization,
+            coupon_code: redeemed_coupon?.coupon_code,
             quantity: 1,
-            user: user._id,
+            user: loggedInUser._id,
             subscription_created_date: moment().toISOString(),
-            subscription_end_date: coupon_expiry_date,
+            subscription_end_date: moment()
+              .add(subscription.duration, "months")
+              .toISOString(),
+            is_active: true,
+            user_subscription_date: moment().toISOString(),
           };
 
-          let user_active_subscriptions: any = await UserSubscription.findOne({
-            user: user._id,
-            subscription: payload.subscription,
-            subscription_end_date: { $gte: moment().toISOString() },
-            is_revoked: false,
-          });
+          if (active_subscriptions?.length) {
+            let user_active_subscription: any = active_subscriptions.find(
+              (item: any) => item.subscription === redeemed_coupon.subscription
+            );
 
-          if (user_active_subscriptions?.coupon_code !== payload.coupon_code) {
-            let organization_subscription =
-              await UserSubscription.findOneAndUpdate(
-                { user: user._id },
-                payload,
-                {
-                  upsert: true,
-                  new: true,
-                }
-              );
-            await getUserBll.findOneAndUpdate(
-              { _id: user._id },
-              { organization_subscription: [organization_subscription] },
-              { upsert: true, new: true }
-            );
-            coupon = await Coupon.findOneAndUpdate(
-              { coupon_code: req.body.coupon_code },
-              { $inc: { can_use_for: -1, used_subscription: 1 } },
-              { upsert: true, new: true }
-            );
-          } else {
-            return res
-              .status(200)
-              .json({ success: false, message: "Coupon already used!" });
+            if (user_active_subscription) {
+              let diff_days = moment(
+                user_active_subscription.subscription_end_date
+              ).diff(moment(), "days");
+              user_subscription_payload.subscription_end_date = moment(
+                user_subscription_payload.subscription_end_date
+              )
+                .add(diff_days, "days")
+                .toISOString();
+            }
           }
-        } else {
-          coupon = await Coupon.findOneAndUpdate(
-            { coupon_code: req.body.coupon_code },
-            { $inc: { can_use_for: -1, used_subscription: 1 } },
+
+          let user_subscription = new UserSubscription(
+            user_subscription_payload
+          );
+          await user_subscription.save();
+
+          active_subscriptions.push(user_subscription);
+
+          await getUserBll.findOneAndUpdate(
+            { _id: loggedInUser._id },
+            { active_subscriptions: active_subscriptions },
             { upsert: true, new: true }
           );
         }
-        return res.status(200).json({ success: true, data: coupon });
+        let updated_coupon = await Coupon.findOneAndUpdate(
+          { coupon_code: req.body.coupon_code },
+          { $inc: { can_use_for: -1, used_subscription: 1 } },
+          { upsert: true, new: true }
+        );
+        return res.status(200).json({ success: true, data: updated_coupon });
       } else {
         return res
           .status(200)

@@ -4,11 +4,11 @@ const { Schema, model } = mongoose;
 
 const UserSubscriptionSchema = new mongoose.Schema({
   subscription: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Subscription",
   },
   organization: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Organization",
   },
   coupon_code: {
@@ -18,7 +18,7 @@ const UserSubscriptionSchema = new mongoose.Schema({
     type: Number,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
   is_revoked: {

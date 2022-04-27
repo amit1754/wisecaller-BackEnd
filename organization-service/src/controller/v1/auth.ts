@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Organization } from "../../models/organization";
-import { Iorganization } from "../../interface/organization";
-import { MobileNoCheckUtils, VerifyJWT } from "../../utils";
-import SNSClient from "@wisecaller/sns";
-import { getUserBll, getauthTokenBll } from "@wisecaller/user-service";
+import { VerifyJWT } from "../../utils";
 import { logError } from "@wisecaller/logger";
 import jwt from "jsonwebtoken";
 import { AuthToken } from "../../models/auth-token";

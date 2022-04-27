@@ -7,7 +7,7 @@ const UserSubscriptionSchema = new Schema({
   },
   organization: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Organization",
   },
   coupon_code: {
     type: String,
@@ -17,7 +17,7 @@ const UserSubscriptionSchema = new Schema({
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: User,
+    ref: "User",
   },
   is_revoked: {
     type: Boolean,

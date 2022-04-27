@@ -19,53 +19,52 @@ class UserSubscriptionController {
 
   async update(req: Request, res: Response) {
     try {
+      let loggedInUser = req.body.user;
+      delete req.body.user;
+
       let payload = {
         ...req.body,
       };
-      let token: any = req.headers.authorization;
-      let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
-      let user: any = await getUserBll.findOneUser({ _id: vefied_token._id });
-      let subscription: any = await Subscription.findById(payload.subscription);
 
-      payload = {
+      let subscription = await Subscription.findById(payload.subscription);
+      let active_subscriptions = loggedInUser.active_subscriptions;
+
+      let user_subscription_payload = {
         ...payload,
         quantity: 1,
-        user: user._id,
-        subscription_created_date: moment().toISOString(),
+        user: loggedInUser._id,
+        subscription_created_date: moment().toDate(),
         subscription_end_date: moment()
           .add(subscription.duration, "months")
-          .toISOString(),
+          .toDate(),
       };
 
-      if (payload.organization) {
-        let organization_subscription = await UserSubscription.findOneAndUpdate(
-          { user: user._id, organization: { $exists: true } },
-          payload,
-          {
-            upsert: true,
-            new: true,
-          }
-        );
-        await getUserBll.findOneAndUpdate(
-          { _id: user._id },
-          { organization_subscription: [organization_subscription] },
-          { upsert: true, new: true }
-        );
-      } else {
-        let user_subscription = await UserSubscription.findOneAndUpdate(
-          { user: user._id, organization: { $exists: false } },
-          payload,
-          {
-            upsert: true,
-            new: true,
-          }
-        );
-        await getUserBll.findOneAndUpdate(
-          { _id: user._id },
-          { user_subscription: [user_subscription] },
-          { upsert: true, new: true }
-        );
-      }
+      active_subscriptions.map((item: any) => {
+        if (item.subscription.toString() === payload.subscription) {
+          Object.assign(item, {
+            subscription_created_date:
+              user_subscription_payload.subscription_created_date,
+            subscription_end_date:
+              user_subscription_payload.subscription_end_date,
+          });
+        }
+      });
+
+      await UserSubscription.findOneAndUpdate(
+        {
+          user: loggedInUser._id,
+          subscription: payload.subscription,
+          is_revoked: false,
+        },
+        user_subscription_payload,
+        { upsert: true, new: true }
+      );
+
+      await getUserBll.findOneAndUpdate(
+        loggedInUser._id,
+        { active_subscriptions: active_subscriptions },
+        { upsert: true, new: true }
+      );
 
       return res.status(200).json({ success: true });
     } catch (error: any) {
@@ -75,32 +74,44 @@ class UserSubscriptionController {
 
   async revoke(req: Request, res: Response) {
     try {
-      let token: any = req.headers.authorization;
-      let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
-      let user: any = await getUserBll.findOneUser({ _id: vefied_token._id });
+      let loggedInUser = req.body.user;
+      delete req.body.user;
+
+      let payload = {
+        ...req.body,
+      };
+
+      let active_subscriptions = loggedInUser.active_subscriptions;
+
+      if (active_subscriptions?.length) {
+        let subscription_index = active_subscriptions.findIndex(
+          (item: any) => item.subscription.toString() === payload.subscription
+        );
+        active_subscriptions.splice(subscription_index, 1);
+      }
+
       await UserSubscription.findOneAndUpdate(
         {
-          user: user._id,
-          organization: {
-            $exists: req.body.type === "ORGANIZATION" ? true : false,
-          },
+          user: loggedInUser._id,
+          subscription: payload.subscription,
+          is_revoked: false,
         },
         {
           is_revoked: true,
-          revoked_reason: req.body.reason,
+          revoked_reason: payload.reason,
         },
+        {
+          upsert: true,
+          new: true,
+        }
+      );
+
+      await getUserBll.findOneAndUpdate(
+        loggedInUser,
+        { active_subscriptions: active_subscriptions },
         { upsert: true, new: true }
       );
-      let user_payload = {};
-      if (req.body.type === "ORGANIZATION") {
-        Object.assign(user_payload, { organization_subscription: null });
-      } else {
-        Object.assign(user_payload, { user_subscription: null });
-      }
-      await getUserBll.findOneAndUpdate({ _id: user._id }, user_payload, {
-        upsert: true,
-        new: true,
-      });
+
       return res.status(200).json({ success: true });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });

@@ -29,11 +29,11 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@wisecaller/authorizer": "^0.2.2",
+    "@wisecaller/authorizer": "^0.2.5",
     "@wisecaller/email": "^0.0.4",
-    "@wisecaller/mongo": "^0.1.3",
+    "@wisecaller/mongo": "^0.1.4",
     "@wisecaller/s3": "^0.0.6",
-    "@wisecaller/user-service": "0.3.0",
+    "@wisecaller/user-service": "0.3.4",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",

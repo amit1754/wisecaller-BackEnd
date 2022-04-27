@@ -20,24 +20,23 @@ import { User } from "../../model/user.model";
 class PaymentController {
   async index(req: Request, res: Response) {
     try {
-      let token: any = req.headers.authorization;
-      let vefied_token: any = VerifyJWTToken(token.split("Bearer ")[1]);
-      let user: any = await getUserBll.findOneUser({ _id: vefied_token._id });
-      let loggedInUser = req.body.user;
+      let loggedInUser: any = JSON.parse(JSON.stringify(req.body.user));
+      delete req.body.user;
+
       let payload = {
         ...req.body,
       };
 
-      delete payload.user;
-      let user_subscription: any = {};
+      let active_subscriptions = loggedInUser?.active_subscriptions;
 
-      let subscription: any = await Subscription.findById(payload.subscription);
-      let subscription_payload = {
+      let free_subscription = await Subscription.findOne({ type: "FREE" });
+      let subscription = await Subscription.findById(payload.subscription);
+      let user_subscription_payload = {
         subscription: subscription._id,
-        organization: subscription.organization,
-        coupon_code: payload.coupon_code,
+        organization: subscription?.organization,
+        coupon_code: payload?.coupon_code,
         quantity: 1,
-        user: user._id,
+        user: loggedInUser._id,
         subscription_created_date: moment().toISOString(),
         subscription_end_date: moment()
           .add(subscription.duration, "months")
@@ -46,60 +45,51 @@ class PaymentController {
         user_subscription_date: moment().toISOString(),
       };
 
-      if (subscription.organization) {
-        let organization_subscription = await UserSubscription.findOneAndUpdate(
-          { user: user._id, organization: { $exists: true } },
-          subscription_payload,
-          {
-            upsert: true,
-            new: true,
-          }
+      if (active_subscriptions?.length) {
+        // Removed free subscription
+        let free_active_subscription_index = active_subscriptions.findIndex(
+          (item: any) => item.subscription === free_subscription._id.toString()
         );
-        await getUserBll.findOneAndUpdate(
-          { _id: user._id },
-          { organization_subscription: [organization_subscription] },
-          { upsert: true, new: true }
+
+        active_subscriptions.splice(free_active_subscription_index, 1);
+
+        let user_active_subscription: any = active_subscriptions.find(
+          (item: any) => item.subscription === payload.subscription
         );
-      } else {
-        let user_active_subscriptions: any = await UserSubscription.findOne({
-          user: loggedInUser._id,
-          subscription: payload.subscription,
-          subscription_end_date: { $gte: moment().toISOString() },
-          is_revoked: false,
-        });
-        let diff_days = moment(
-          user_active_subscriptions.subscription_end_date
-        ).diff(moment(), "days");
-        subscription_payload.subscription_end_date = moment(
-          subscription_payload.subscription_end_date
-        )
-          .add(diff_days, "days")
-          .toISOString();
-        user_subscription = await UserSubscription.findOneAndUpdate(
-          { user: user._id, organization: { $exists: false } },
-          subscription_payload,
-          {
-            upsert: true,
-            new: true,
-          }
-        );
-        await getUserBll.findOneAndUpdate(
-          { _id: user._id },
-          { user_subscription: [user_subscription] },
-          { upsert: true, new: true }
-        );
+
+        if (user_active_subscription) {
+          let diff_days = moment(
+            user_active_subscription.subscription_end_date
+          ).diff(moment(), "days");
+          user_subscription_payload.subscription_end_date = moment(
+            user_subscription_payload.subscription_end_date
+          )
+            .add(diff_days, "days")
+            .toISOString();
+        }
       }
+
+      let user_subscription = new UserSubscription(user_subscription_payload);
+      await user_subscription.save();
+
+      active_subscriptions.push(user_subscription);
+
+      await getUserBll.findOneAndUpdate(
+        loggedInUser._id,
+        { active_subscriptions: active_subscriptions },
+        { upsert: true, new: true }
+      );
 
       let payment_payload = {
         ...req.body,
-        user: user._id,
+        user: loggedInUser._id,
         subscription: payload.subscription,
         user_subscription: user_subscription._id,
         payment_date: moment().toISOString(),
       };
 
       let payment = await Payment.findOneAndUpdate(
-        { user: user._id, transactionId: payload.transactionId },
+        { user: loggedInUser._id, transactionId: payload.transactionId },
         payment_payload,
         { upsert: true, new: true }
       );
@@ -291,13 +281,14 @@ class PaymentController {
         ...req.body,
       };
 
-      let user = await User.findOne({ _id: payload.user_id });
+      delete payload.user;
+
+      let user: any = await User.findOne({ _id: payload.user_id });
       let criteria = {
         user: user._id,
-        subscription_created_date:
-          user?.user_subscription?.subscription_created_date,
-        subscription_end_date: user?.user_subscription?.subscription_end_date,
-        subscription: user?.user_subscription?.subscription,
+        subscription_created_date: payload?.subscription_created_date,
+        subscription_end_date: payload?.subscription_end_date,
+        subscription: payload?.subscription,
       };
 
       let user_subscription = await UserSubscription.findOne(criteria);
@@ -337,8 +328,7 @@ class PaymentController {
               .status(200)
               .json({ success: false, message: error.message });
           }
-          console.log(stream);
-          // let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
+          let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
           return res.status(200).json({ success: true, data: data });
         });
     } catch (error: any) {

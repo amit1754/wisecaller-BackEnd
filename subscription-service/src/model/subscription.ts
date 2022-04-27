@@ -30,7 +30,7 @@ const SubscriptionSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["USER", "ORGANIZATION"],
+      enum: ["USER", "ORGANIZATION", "FREE"],
       default: "USER",
     },
     duration: {
