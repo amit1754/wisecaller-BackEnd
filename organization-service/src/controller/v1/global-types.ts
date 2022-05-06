@@ -12,6 +12,9 @@ class GlobalTypesController {
         sort: { [sort_key]: sort_direction },
         page: Number(req.body.page) || 1,
         limit: Number(req.body.limit) || 10,
+        populate: {
+          path: "statuses",
+        },
       };
       let global_types =
         req.body.page || req.body.limit
@@ -29,14 +32,19 @@ class GlobalTypesController {
       let payload = {
         ...req.body,
       };
+      let global_types: any = {};
 
-      let global_types = await GlobalTypes.findOneAndUpdate(
-        {
-          type: payload.type,
-        },
-        payload,
-        { upsert: true, new: true }
-      );
+      if (payload.isDeleted) {
+        await GlobalTypes.findOneAndDelete({ _id: payload._id });
+      } else {
+        let global_types = await GlobalTypes.findOneAndUpdate(
+          {
+            type: payload.type,
+          },
+          payload,
+          { upsert: true, new: true }
+        );
+      }
       return res.status(200).json({ success: true, data: global_types });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });

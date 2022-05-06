@@ -9,6 +9,12 @@ const GlobalTypesSchema = new Schema(
     order: {
       type: Number,
     },
+    statuses: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "UserStatus",
+      },
+    ],
   },
   { timestamps: true }
 );
