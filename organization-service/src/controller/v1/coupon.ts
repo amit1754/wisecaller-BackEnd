@@ -70,7 +70,7 @@ class CouponController {
         });
       }
 
-      if (req.body.organazation) {
+      if (req.body.organization) {
         Object.assign(criteria, {
           organization: req.body.organization,
         });

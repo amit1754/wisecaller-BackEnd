@@ -91,14 +91,19 @@ class UserController {
 
       if (req.body.registered_date) {
         Object.assign(criteria, {
-          createdAt: req.body.registered_date,
+          createdAt: {
+            $gte: req.body.registered_date[0],
+            $lte: req.body.registered_date[1],
+          },
         });
       }
 
       if (req.body.subscribed_date) {
         Object.assign(criteria, {
-          "active_subscriptions.subscription_created_date":
-            req.body.subscription_created_date,
+          "active_subscriptions.subscription_created_date": {
+            $gte: req.body.subscribed_date[0],
+            $lte: req.body.subscribed_date[1],
+          },
         });
       }
 

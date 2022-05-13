@@ -11,6 +11,7 @@ import { Parser } from "json2csv";
 import node_fetch from "node-fetch";
 import { Usage } from "../../models/usage";
 import { CallActivity } from "../../models/call_activity";
+import { uploadBase64Image } from "../../utils/aws";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -172,9 +173,12 @@ class OrganizationController {
         });
       }
 
-      if (req.body.register_start_date) {
+      if (req.body.filtered_date) {
         Object.assign(criteria, {
-          cretedAt: { $gte: req.body.register_start_date },
+          cretedAt: {
+            $gte: req.body.filtered_date[0],
+            $lte: req.body.filtered_date[1],
+          },
         });
       }
 
@@ -212,15 +216,9 @@ class OrganizationController {
         },
       };
       delete payload.user;
-      if (payload.profile) {
-        try {
-          // let res = await node_fetch(payload.profile);
-          // let blob = await res.blob();
-          // console.log(blob);
-          // console.log(new File(blo, "profile", { type: "image/png" }));
-        } catch (error) {
-          console.log(error);
-        }
+      if (payload.profile?.length) {
+        let imageUrl = await uploadBase64Image(payload.profile);
+        Object.assign(payload, { profile: imageUrl });
       }
 
       let organization = await Organization.findOneAndUpdate(
@@ -285,11 +283,11 @@ class OrganizationController {
         });
       }
 
-      if (payload.start_date && payload.end_date) {
+      if (payload.filtered_date) {
         Object.assign(report_criteria, {
           createdAt: {
-            $gte: moment(payload.start_date).toDate(),
-            $lte: moment(payload.end_date).toDate(),
+            $gte: moment(payload.filtered_date[0]).toDate(),
+            $lte: moment(payload.filtered_date[1]).toDate(),
           },
         });
       }

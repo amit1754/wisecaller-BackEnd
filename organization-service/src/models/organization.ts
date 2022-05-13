@@ -56,6 +56,9 @@ const OrganizationSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Plan",
     },
+    profile: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
