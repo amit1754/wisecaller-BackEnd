@@ -26,7 +26,7 @@ class EventHandlerController {
         default:
           break;
       }
-    } catch (error: any) {
+    } catch (error) {
       return false;
     }
   }
@@ -37,7 +37,7 @@ class EventHandlerController {
       let data: any = {
         title: event.title,
         text: event.text,
-        type: event.type
+        type: event.type,
       };
 
       if (event.send_all) {
@@ -87,14 +87,14 @@ class EventHandlerController {
               let device = users[index];
               let userArn = device?.device?.user_device?.arn;
               let payloadNotification = {
-                  "contactId": users[index].contactId,
-                  "phones":[...users[index].phones],
-                  "status":user_details.user_status
-                };
+                contactId: users[index].contactId,
+                phones: [...users[index].phones],
+                status: user_details.user_status,
+              };
               let payload = {
                 data: {
                   ...data,
-                  user: payloadNotification
+                  user: payloadNotification,
                 },
                 notification: {
                   title: event.title,
@@ -109,26 +109,26 @@ class EventHandlerController {
           }
         }
       } else {
-        let userContactFind:any = await UserContact.find({
+        let userContactFind: any = await UserContact.find({
           "phones.ph_no": { $in: event.to },
         });
         if (userContactFind) {
           for (let i = 0; i < userContactFind.length; i++) {
-            let userDevice:any = await UserDevices.find({
+            let userDevice: any = await UserDevices.find({
               user: userContactFind[i].contact,
               is_active: true,
             });
             let payloadNotification = {
-                  "contactId": userContactFind[i].contactId,
-                  "phones":[...userContactFind[i].phones],
-                  "status":user_details.user_status
-                };
+              contactId: userContactFind[i].contactId,
+              phones: [...userContactFind[i].phones],
+              status: user_details.user_status,
+            };
             for (let i = 0; i < userDevice.length; i++) {
               let userArn = userDevice[i]?.user_device?.arn;
               let payload = {
                 data: {
                   ...data,
-                  user: payloadNotification
+                  user: payloadNotification,
                 },
                 notification: {
                   title: event.title,
@@ -173,13 +173,13 @@ class EventHandlerController {
       }
     }
 
-    let users:any = await UserDevices.find({ is_active: true });
+    let users: any = await UserDevices.find({ is_active: true });
     for (let index = 0; index < users.length; index++) {
       if (users[index]?.user_device) {
         let payload = {
           data: {
             ...data,
-            status: global_status
+            status: global_status,
           },
           notification: {
             title: event.title,
@@ -244,7 +244,7 @@ class EventHandlerController {
         if (users[index]?.device?.user_device) {
           let payload = {
             data: {
-              ...data
+              ...data,
             },
             notification: {
               title: event.title,
@@ -291,7 +291,7 @@ class EventHandlerController {
             },
           },
         ]);
-        if (user_contact && user_contact.length){
+        if (user_contact && user_contact.length) {
           // let notification_payload = {
           //   type: event.type,
           //   from_user: event.user._id,
@@ -300,12 +300,12 @@ class EventHandlerController {
           //   text: event.text,
           // };
           let payloadNotification = {
-            "contactId": user_contact[0].contactId,
-            "phones":{...user_contact[0].phones}
-          }
-                    
+            contactId: user_contact[0].contactId,
+            phones: { ...user_contact[0].phones },
+          };
+
           let payload = {
-            data: {contact: payloadNotification },
+            data: { contact: payloadNotification },
             notification: {
               title: event.title,
               body: event.text,
@@ -323,7 +323,7 @@ class EventHandlerController {
           );
         }
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
     }
   }

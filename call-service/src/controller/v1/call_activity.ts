@@ -4,7 +4,7 @@ import { CallActivity } from "../../models/call_activity";
 export default class CallActivityController {
   async update(req: Request, res: Response) {
     try {
-      let loggedInUser: any = req.user;
+      let loggedInUser: any = req.body.user;
       let payload = {
         ...req.body,
         user: loggedInUser._id,
@@ -14,6 +14,7 @@ export default class CallActivityController {
       call_activity.save();
       return res.status(200).json({ success: true, data: call_activity });
     } catch (error: any) {
+      console.log(error);
       return res.status(200).json({ success: false, message: error.message });
     }
   }
