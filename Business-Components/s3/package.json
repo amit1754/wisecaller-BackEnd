@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/s3",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "S3 client by wisecaller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

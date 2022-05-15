@@ -140,6 +140,8 @@ class UserController {
       }
       delete payload.phone;
       delete payload.role;
+      delete payload.user;
+      delete payload.token;
       payload.phones = loggedInUser.phones;
       let updatedObject = { ...payload, is_new_user: false };
       await getUserBll.findOneAndUpdate(
