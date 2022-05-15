@@ -1,6 +1,6 @@
 {
   "name": "@wisecaller/s3",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "S3 client by wisecaller Technologies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,6 @@
   "author": "wisecaller Technologies Private Limited",
   "license": "ISC",
   "dependencies": {
-    "@wisecaller/s3": "^0.0.6",
     "aws-sdk": "^2.958.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

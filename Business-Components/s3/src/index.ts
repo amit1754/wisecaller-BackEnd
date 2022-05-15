@@ -92,11 +92,14 @@ export const deletefile = async (filename: string) => {
 const filesizeChecker = (req: Request, res: Response, next: NextFunction) => {
   try {
     let requestData: any = req;
+    
+    var reqBodyBefore = req.body;
     const fileSize = parseInt(requestData.headers["content-length"]);
     if (fileSize > MAX_FILE_SIZE) {
       throw new Error("file is less than 3 mb");
     } else {
       next();
+      req.body = reqBodyBefore;
     }
   } catch (error: any) {
     res.status(400).json({ success: false, message: error.message });
