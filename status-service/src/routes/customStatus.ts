@@ -12,5 +12,6 @@ router.delete(
   Custom_status_Controller.delteStatus
 );
 router.get("/get", authorization,Custom_status_Controller.get);
+router.post("/triggerStatusperday", Custom_status_Controller.expandAndSetRuleForCustomStatus);
 
 export const CustomStatusRoutes = router;

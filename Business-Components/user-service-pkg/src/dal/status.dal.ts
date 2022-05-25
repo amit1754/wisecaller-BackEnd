@@ -56,6 +56,14 @@ export const getCustomStatusById = async (id: any):Promise<any>=> {
     customId: id,
   });
 };
+
+export const updateCustomStatusById = async (id: any,
+  payload: any,
+  options: any
+):Promise<any>=> {
+  return await customStatus.findByIdAndUpdate(id, payload,options );
+}
+
 export const getGlobalType = async (payload: any):Promise<any>=> {
   return await customStatus.findOne(payload);
 };

@@ -34,6 +34,11 @@ const WorkLifeBalanceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserSubStatus",
     },
+    notes: {
+      is_custom: { type: String },
+      text: { type: String },
+      noteId: { type: mongoose.Schema.Types.ObjectId, default: null }, //ref of notes
+    },
     is_active: {
       type: Boolean,
       default: true,

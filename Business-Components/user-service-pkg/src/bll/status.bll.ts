@@ -49,4 +49,7 @@ async getGlobalTypeLean(payload:any){
 async getCustomStatusById(id:any){
   return await status.getCustomStatusById(id);
 }
+async updateCustomStatusById (id:any, payload:any,options:any){
+  return await status.updateCustomStatusById(id,payload,options);
+}
 }

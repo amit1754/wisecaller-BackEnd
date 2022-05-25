@@ -9,7 +9,8 @@ const customStatusSchema = new Schema(
     start_date: { type: Date },
     end_date: { type: Date },
     is_allday_status: { type: Boolean, default: false },
-    RRULE: { type: String },
+    RRULE:  { type: Object },
+    has_processed: { type: Boolean, default: false },
     time_zone: { type: String },
     status: {
       type: Schema.Types.ObjectId,

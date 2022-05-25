@@ -11,12 +11,10 @@ const ContactSyncSchema = new Schema(
       ref: "users",
     },
     first_name: {
-      type: String,
-      required: true,
+      type: String
     },
     last_name: {
-      type: String,
-      required: true,
+      type: String
     },
     profile_image: {
       type: String,

@@ -11,6 +11,9 @@ class EventHandlerController {
   async index(event: any) {
     try {
       switch (event.type) {
+        case "TRIGGER_STATUS":
+          await this.sendStatusTrigger(event);
+          break;
         case "STATUS_UPDATE":
           await this.statusUpdateNotification(event);
           break;
@@ -28,6 +31,37 @@ class EventHandlerController {
       }
     } catch (error) {
       return false;
+    }
+  }
+
+  async sendStatusTrigger(event: any) {
+    try {
+      var triggerData = event.data;
+      let userDevices = await getUserBll.findUserDeviceById(triggerData.user);
+      let data: any = {
+        type: event.type,
+        data:triggerData      
+      };
+      if (userDevices){
+        for (let index = 0; index < userDevices.length; index++) {
+          if (userDevices[index]?.is_active) {      
+              let device = userDevices[index];
+              let userArn = device?.device?.user_device?.arn;
+              let payload = {
+                data: {
+                  ...data,
+                },
+                notification: {
+                  type: "SILENT",
+                  sound: process.env.SOUND,
+                },
+              };
+              await this.sendNotificationToUsers(userArn, payload);            
+          }
+        }
+      }        
+    } catch (error) {
+      console.log(error);
     }
   }
 
