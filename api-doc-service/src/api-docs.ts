@@ -4675,6 +4675,12 @@ export default {
           subStatusId: {
             type: "string",
           },
+          rule:{
+            type:"string",
+          },
+          end_date:{
+            type:"string",
+          },
           notes: {
             $ref: "#/components/schemas/Notes",
           },
@@ -4683,11 +4689,14 @@ export default {
           customStatusId: "61950368448ab7e5f7775ce0",
           statusId: "6195004219517edbb9a32dde",
           subStatusId: "6195023525c96ee17567830d",
+          rule:"the rulname coming in from a scheduled process",
+          end_date:"the status end date, either from scheduled process or calculated",
           notes: {
             id: "619e258c5be4d7298bc74696",
             is_custom: false,
             text: "",
           },
+          is_deleted: false,
         },
       },
       Notes: {
