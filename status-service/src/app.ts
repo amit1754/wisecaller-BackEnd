@@ -40,7 +40,7 @@ export default class App {
       handleSNSNotificationHeader(req, res, next)
     );
     this.app.use(urlencoded({ extended: false }));
-    this.app.use(text());
+    this.app.use(json());
     this.app.use("/", (req: Request, res: Response, next: NextFunction) =>
       handleSNSNotification(req, res, next)
     );

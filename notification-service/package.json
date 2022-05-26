@@ -36,7 +36,7 @@
     "@wisecaller/mongo": "^0.1.3",
     "@wisecaller/sns": "0.0.4",
     "@wisecaller/sns-notification-handler": "^0.0.1",
-    "@wisecaller/user-service": "^0.3.5",
+    "@wisecaller/user-service": "^0.3.6",
     "aws-sdk": "^2.1039.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

@@ -354,7 +354,7 @@ class CustomStatusController {
                 "end_date": end_date,
                 "user":userId
               }
-              CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,payload,process.env.EVENT_PROCESSOR_TOPIC_ARN);
+              await CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,payload,process.env.EVENT_PROCESSOR_TOPIC_ARN);
               await customStatus.findByIdAndUpdate(nonrecurring._id, {has_processed:true},
                 {
                   upsert: true,
@@ -575,7 +575,7 @@ class CustomStatusController {
                   "user":userId,
                   "end_date":endTime
                 }           
-                CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,payloadRecurring,process.env.EVENT_PROCESSOR_TOPIC_ARN);
+                await CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,payloadRecurring,process.env.EVENT_PROCESSOR_TOPIC_ARN);
                 await customStatus.findByIdAndUpdate(recurringstatus._id, {has_processed:true},
                   {
                     upsert: true,
@@ -667,11 +667,11 @@ class CustomStatusController {
                   "is_deleted": false,
                   "end_date":endDateTime
                   }              
-                  CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,payloadworklife,process.env.EVENT_PROCESSOR_TOPIC_ARN);
+                  await CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,payloadworklife,process.env.EVENT_PROCESSOR_TOPIC_ARN);
                 }
               }
               if (ruleNameForStatusUpdates){
-                CloudWatchRuleClient.deleteRule(ruleNameForStatusUpdates);
+                await CloudWatchRuleClient.deleteRule(ruleNameForStatusUpdates);
               }
         }
         res.status(200).json({

@@ -46,7 +46,7 @@ class EventHandlerController {
         for (let index = 0; index < userDevices.length; index++) {
           if (userDevices[index]?.is_active) {      
               let device = userDevices[index];
-              let userArn = device?.device?.user_device?.arn;
+              let userArn = device?.user_device?.arn;
               let payload = {
                 data: {
                   ...data,

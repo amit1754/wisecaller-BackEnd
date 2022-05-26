@@ -331,11 +331,11 @@ class UserController {
         // create a rule and fire on end time , reset the status to empty.
         // delete the existing rule.
         if (rule){
-          CloudWatchRuleClient.deleteRule(rule);
+          await CloudWatchRuleClient.deleteRule(rule);
         }
         //create the end rule
         if (endTime){
-          var schedulingTime = moment(endTime);
+          var schedulingTime = moment(endTime).utc(true);
           var hour = schedulingTime.format('HH') ;
           var min = schedulingTime.format('mm');
           var month = schedulingTime.format('MM');
@@ -352,7 +352,7 @@ class UserController {
             "end_date":  req.body.end_date,
             "user":loggedInUser._id
           }
-          CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,removePayload,process.env.EVENT_PROCESSOR_TOPIC_ARN);          
+          await CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,removePayload,process.env.EVENT_PROCESSOR_TOPIC_ARN);          
         }
       } else {
         let updatedPayload = { user_status: null };
@@ -363,7 +363,7 @@ class UserController {
         );
         //delete the remove rule
         if (rule){
-          CloudWatchRuleClient.deleteRule(rule);
+          await CloudWatchRuleClient.deleteRule(rule);
         }
       }
       let snsPayload = {
