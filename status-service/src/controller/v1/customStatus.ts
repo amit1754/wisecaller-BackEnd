@@ -27,14 +27,16 @@ class CustomStatusController {
             customId: body[i].customId,
             user: loggedInUser._id,
           });
-        } else {
-          
+        } else {          
           if (body[i].RRULE){
             const rruleData: any = body[i].RRULE;
-            let date1 = rruleData.excludeDates.map((x: any) =>
-              new Date(x).toISOString()
-            );
-            body[i].RRULE.excludeDates = date1;
+            if (rruleData.excludeDates!= null && rruleData.excludeDates.length >0)
+            {
+              let date1 = rruleData.excludeDates.map((x: any) =>
+                new Date(x).toISOString()
+              );
+              body[i].RRULE.excludeDates = date1;
+            }
           }
           var payload = {
             ...body[i],
@@ -58,8 +60,8 @@ class CustomStatusController {
                                 ||
                                 (
                                   body[i].RRULE !=null && 
-                                  moment(body[i].RRULE.end_date) > utcDate &&
-                                  body[i].RRULE.excludeDates.indexOf(moment(today).toDate()) == -1
+                                  (body[i].RRULE.end_date == null || body[i].RRULE.end_date == "" ||  moment(body[i].RRULE.end_date) > utcDate) &&
+                                  (body[i].RRULE.excludeDates == null || body[i].RRULE.excludeDates.length == 0 || body[i].RRULE.excludeDates.indexOf(moment(today).toDate()) == -1)
                                 )
                               )
           var ruleName  =dateName+"_" +(loggedInUser._id?"_"+loggedInUser._id:"")+"_"+(body[i].customId?body[i].customId:(custStatus.status+"_"+custStatus.substatus));              
@@ -153,8 +155,8 @@ class CustomStatusController {
                                 ||
                                 (
                                   body.status[i].RRULE !=null && 
-                                  moment(body.status[i].RRULE.end_date) > utcDate &&
-                                  body.status[i].RRULE.excludeDates.indexOf(moment(today).toDate()) == -1
+                                  (body.status[i].RRULE.end_date == null || body.status[i].RRULE.end_date == "" ||  moment(body.status[i].RRULE.end_date) > utcDate) &&
+                                  (body.status[i].RRULE.excludeDates == null || body.status[i].RRULE.excludeDates.length == 0 || body.status[i].RRULE.excludeDates.indexOf(moment(today).toDate()) == -1)
                                 )
                               )
           var ruleName  =dateName+"_" +(loggedInUser._id?"_"+loggedInUser._id:"")+"_"+(body.status[i].customId?body.status[i].customId:(body.status[i].status+"_"+body.status[i].substatus));                        
@@ -374,10 +376,21 @@ class CustomStatusController {
                   {has_processed: { $exists: false } },
                   {has_processed :false}
                   ]
-              },
+                },
                 {_id:(refStatusId?refStatusId:{ $exists: true })},
-                {"RRULE.end_date" : { $gte: utcDate.toDate() }},
-                {"RRULE.excludeDates":{$nin:[moment(today).toDate()]}},
+                {
+                  $or:[
+                  {"RRULE.end_date": { $exists: false } },
+                  {"RRULE.end_date": "" },
+                  {"RRULE.end_date" : { $gte: utcDate.toDate() }}
+                  ]
+                },
+                {
+                  $or:[
+                  {"RRULE.excludeDates":{ $exists: false }},
+                  {"RRULE.excludeDates":{$nin:[moment(today).toDate()]}}
+                  ]
+                },
                 {user: (createdUserId?createdUserId:{ $exists: true })}
               ]
             }
