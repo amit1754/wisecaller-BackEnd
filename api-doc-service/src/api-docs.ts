@@ -1050,6 +1050,53 @@ export default {
         deprecated: false,
       },
     },
+    "/call-service/api/v1/call-activity": {
+      post: {
+        tags: ["Call History"],
+        summary: "activity of the calls",
+        operationId: "call activity",
+        requestBody: {
+          description: "",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/addnumberfromcallhistoryrequest",
+              },
+              example: {
+                status: "busy",
+                receiver: "626919b33999ad43b951ce09",
+              },
+            },
+          },
+          required: true,
+        },
+        responses: {
+          "200": {
+            description: "OK",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                  message: "success",
+                  data: {
+                    status: "busy",
+                    receiver: "626919b33999ad43b951ce09",
+                    user: "626919b33999ad43b951ce09",
+                    caller: "626919b33999ad43b951ce09",
+                    calledOn: "2022-05-28T00:40:11.003Z",
+                  },
+                },
+              },
+            },
+          },
+        },
+        deprecated: false,
+      },
+    },
     "/contact-sync-service/api/v1/contact/sync": {
       post: {
         tags: ["Contact sync"],
@@ -1713,6 +1760,34 @@ export default {
           200: {
             description: "",
             headers: {},
+          },
+        },
+        deprecated: false,
+      },
+    },
+    "/auth-service/api/v1/usage": {
+      get: {
+        tags: ["Auth service"],
+        summary: "Usage",
+        operationId: "Usage",
+        parameters: [],
+        requestBody: {
+          description: "",
+        },
+        responses: {
+          200: {
+            description: "",
+            headers: {},
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/m2001",
+                },
+                example: {
+                  success: true,
+                },
+              },
+            },
           },
         },
         deprecated: false,

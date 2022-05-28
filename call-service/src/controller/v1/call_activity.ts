@@ -14,7 +14,6 @@ export default class CallActivityController {
       call_activity.save();
       return res.status(200).json({ success: true, data: call_activity });
     } catch (error: any) {
-      console.log(error);
       return res.status(200).json({ success: false, message: error.message });
     }
   }
