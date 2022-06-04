@@ -102,10 +102,14 @@ class CalenderSyncController {
             data: [],
           });
         } else {
-          throw new Error("Email is not removed ");
+          return res
+            .status(400)
+            .json({ success: false, message: "Email is not removed" });
         }
       } else {
-        throw new Error("Calender Event not found");
+        return res
+          .status(400)
+          .json({ success: false, message: "Calender Event not found" });
       }
     } catch (error: any) {
       return logError(error, req, res);

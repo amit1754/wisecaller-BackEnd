@@ -10,7 +10,10 @@ class AuthController {
     try {
       const { mobileNo } = req.body;
       const checkMobileNo = await MobileNoCheckUtils.verify(mobileNo);
-      if (!checkMobileNo) throw new Error("mobile number is not valid");
+      if (!checkMobileNo)
+        return res
+          .status(400)
+          .json({ success: false, message: "mobile number is not valid" });
       const payload: IUser = {
         ...req.body,
       };
@@ -27,7 +30,10 @@ class AuthController {
     try {
       const { mobileNo } = req.body;
       const checkMobileNo = await MobileNoCheckUtils.verify(mobileNo);
-      if (!checkMobileNo) throw new Error("mobile number is not valid");
+      if (!checkMobileNo)
+        return res
+          .status(400)
+          .json({ success: false, message: "mobile number is not valid" });
 
       next();
     } catch (error: any) {
@@ -63,10 +69,9 @@ class AuthController {
       var resObj = {
         success: true,
         message: "message send successful",
-        otp: token.otp
-      }
-      if (process.env.STAGE == "prod")
-        delete resObj.otp;
+        otp: token.otp,
+      };
+      if (process.env.STAGE == "prod") delete resObj.otp;
       return res.status(200).json(resObj);
     } catch (error: any) {
       return logError(error, req, res);
@@ -110,12 +115,13 @@ class AuthController {
             );
           }
         } else {
-          throw new Error("otp is invalid");
+          return res
+            .status(400)
+            .json({ success: false, message: "otp is invalid" });
         }
         if (user_device) {
-          await getUserBll.removeUserDevice({user:userDetails._id})
+          await getUserBll.removeUserDevice({ user: userDetails._id });
           await device_register.addDevices(user_device, userDetails._id);
-
         }
         let secret: any = process.env.JWT_SECRET,
           tokenTime: any = process.env.TOKENTIME,
@@ -147,7 +153,7 @@ class AuthController {
         });
       } else {
         return res
-          .status(200)
+          .status(400)
           .json({ success: false, message: "Otp is invalid" });
       }
     } catch (error: any) {
@@ -158,7 +164,10 @@ class AuthController {
     try {
       const { mobileNo } = req.body;
       const checkMobileNo = await MobileNoCheckUtils.verify(mobileNo);
-      if (!checkMobileNo) throw new Error("mobile number is not valid");
+      if (!checkMobileNo)
+        return res
+          .status(400)
+          .json({ success: false, message: "mobile number is not valid" });
       let user = await getauthTokenBll.getTokenByPhone(mobileNo);
       next();
     } catch (error: any) {

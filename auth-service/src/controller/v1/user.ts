@@ -52,11 +52,11 @@ class UserController {
             phones.push(phone_payload);
           } else {
             return res
-              .status(200)
+              .status(409)
               .json({ success: false, message: "Phone no is already added!" });
           }
         } else {
-          return res.status(200).json({
+          return res.status(400).json({
             success: false,
             message: "Secondary number already exists!",
           });
@@ -105,6 +105,10 @@ class UserController {
             payload.phones.length === 2 ? payload.phones.pop() : "";
             payload.phones.push(updatePhone);
           } else {
+            return res.status(400).json({
+              success: false,
+              message: "Second phone no already exists",
+            });
             throw new Error("second phoneno already exist!");
           }
         } else {
@@ -315,6 +319,10 @@ class UserController {
               };
               Object.assign(payload.status, { status_notes: notes });
             } else {
+              return res.status(400).json({
+                success: false,
+                message: "Notes is not available",
+              });
               throw new Error("notes is not avalible");
             }
           } else {
