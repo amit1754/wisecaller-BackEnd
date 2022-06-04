@@ -22,7 +22,7 @@ function createErrorLogger(transports) {
     });
     return function logError(err, req, res,next) {
         errLogger.error({Error: `${err.message}`,body:`${JSON.stringify(req.body)}`});
-        res.status(200).json({ success: false, message: err.message })
+        res.status(500).json({ success: false, message: err.message })
     };
 }
 function getRequestLogFormatter() {

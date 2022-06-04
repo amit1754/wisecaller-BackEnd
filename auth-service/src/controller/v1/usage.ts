@@ -20,7 +20,7 @@ export default class UsageController {
       }
       return res.status(200).json({ success: true });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      return res.status(500).json({ success: false, message: error.message });
     }
   }
 }

@@ -7,6 +7,7 @@ import { getUserBll, getStatusBll } from "@wisecaller/user-service";
 import { logError } from "@wisecaller/logger";
 import CloudWatchRuleClient from "@wisecaller/cloudwatcheventrule";
 import moment from "moment";
+import { device_register } from "../../utils";
 
 class UserController {
   async show(req: Request, res: Response) {
@@ -242,7 +243,7 @@ class UserController {
     try {
       let requestData: any = req;
       const loggedInUser: any = requestData.body.user;
-      var rule:any  = requestData.body.rule;
+      var rule: any = requestData.body.rule;
       let user: any = {};
       let payload: any = {
         name: "",
@@ -250,15 +251,15 @@ class UserController {
           sub_status: {},
         },
       };
-      var ruleName  =(loggedInUser._id?"_"+loggedInUser._id:"");
+      var ruleName = loggedInUser._id ? "_" + loggedInUser._id : "";
       var endTime = req.body.end_date;
       if (!req.body.is_deleted) {
         if (req.body.customStatusId) {
           let userCustomStatus = await getStatusBll.getCustomStatusById(
             req.body.customStatusId
           );
-          ruleName += userCustomStatus.id+"_Remove";
-          if (!endTime){
+          ruleName += userCustomStatus.id + "_Remove";
+          if (!endTime) {
             endTime = userCustomStatus.end_date;
           }
           let userStatus = await getStatusBll.getStatusByFindId(
@@ -274,8 +275,10 @@ class UserController {
             );
             Object.assign(payload, { sub_status: userSubStatus });
           }
-          if(userCustomStatus != null ){
-            await getStatusBll.updateCustomStatusById(userCustomStatus._id, {has_processed:false},
+          if (userCustomStatus != null) {
+            await getStatusBll.updateCustomStatusById(
+              userCustomStatus._id,
+              { has_processed: false },
               {
                 upsert: true,
                 new: true,
@@ -291,7 +294,7 @@ class UserController {
           Object.assign(payload, {
             status: { ...payload.status, ...userStatus },
           });
-          ruleName += req.body.statusId+"_Remove";
+          ruleName += req.body.statusId + "_Remove";
         }
 
         if (req.body.subStatusId) {
@@ -330,29 +333,46 @@ class UserController {
         );
         // create a rule and fire on end time , reset the status to empty.
         // delete the existing rule.
-        if (rule){
+        if (rule) {
           await CloudWatchRuleClient.deleteRule(rule);
         }
         //create the end rule
-        if (endTime){
+        if (endTime) {
           var schedulingTime = moment(endTime).utc(true);
-          var hour = schedulingTime.format('HH') ;
-          var min = schedulingTime.format('mm');
-          var month = schedulingTime.format('MM');
-          var day = schedulingTime.format('DD');
-          var year = schedulingTime.format('YYYY');          
-          
-          var exp = 'cron('+min+' '+hour+' '+day+' '+month+' ? '+year+')';  
-          var removePayload = {"rule":ruleName,
-            "status_type":(req.body.customStatusId?"CUSTOM":"GENERAL_STATUS"),
-            "customStatusId":req.body.customStatusId,
-            "statusId": req.body.statusId,
-            "subStatusId": req.body.subStatusId,            
-            "is_deleted": true,
-            "end_date":  req.body.end_date,
-            "user":loggedInUser._id
-          }
-          await CloudWatchRuleClient.createCloudWatchEvent(ruleName,exp,removePayload,process.env.EVENT_PROCESSOR_TOPIC_ARN);          
+          var hour = schedulingTime.format("HH");
+          var min = schedulingTime.format("mm");
+          var month = schedulingTime.format("MM");
+          var day = schedulingTime.format("DD");
+          var year = schedulingTime.format("YYYY");
+
+          var exp =
+            "cron(" +
+            min +
+            " " +
+            hour +
+            " " +
+            day +
+            " " +
+            month +
+            " ? " +
+            year +
+            ")";
+          var removePayload = {
+            rule: ruleName,
+            status_type: req.body.customStatusId ? "CUSTOM" : "GENERAL_STATUS",
+            customStatusId: req.body.customStatusId,
+            statusId: req.body.statusId,
+            subStatusId: req.body.subStatusId,
+            is_deleted: true,
+            end_date: req.body.end_date,
+            user: loggedInUser._id,
+          };
+          await CloudWatchRuleClient.createCloudWatchEvent(
+            ruleName,
+            exp,
+            removePayload,
+            process.env.EVENT_PROCESSOR_TOPIC_ARN
+          );
         }
       } else {
         let updatedPayload = { user_status: null };
@@ -362,7 +382,7 @@ class UserController {
           { upsert: true, new: true }
         );
         //delete the remove rule
-        if (rule){
+        if (rule) {
           await CloudWatchRuleClient.deleteRule(rule);
         }
       }
@@ -405,6 +425,21 @@ class UserController {
       } else {
         return logError(err, req, res);
       }
+    }
+  }
+
+  async userDevice(req: Request, res: Response) {
+    try {
+      let { user_device, user } = req.body;
+      await getUserBll.removeUserDevice({ user: user._id });
+      await device_register.addDevices(user_device, user._id);
+      return res
+        .status(200)
+        .json({ success: true, message: "Device register successfully" });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Something went wrong!" });
     }
   }
 }

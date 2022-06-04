@@ -34,7 +34,7 @@
     "@wisecaller/authorizer": "0.2.5",
     "@wisecaller/cloudwatcheventrule": "0.0.8",
     "@wisecaller/email": "0.0.4",
-    "@wisecaller/logger": "0.0.3",
+    "@wisecaller/logger": "0.0.4",
     "@wisecaller/mongo": "0.1.3",
     "@wisecaller/s3": "0.0.8",
     "@wisecaller/sns": "0.0.4",
