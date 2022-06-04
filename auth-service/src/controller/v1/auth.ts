@@ -13,7 +13,7 @@ class AuthController {
       if (!checkMobileNo)
         return res
           .status(400)
-          .json({ success: false, message: "mobile number is not valid" });
+          .json({ error: "mobile number is not valid" });
       const payload: IUser = {
         ...req.body,
       };
@@ -33,7 +33,7 @@ class AuthController {
       if (!checkMobileNo)
         return res
           .status(400)
-          .json({ success: false, message: "mobile number is not valid" });
+          .json({ error: "mobile number is not valid" });
 
       next();
     } catch (error: any) {
@@ -67,8 +67,6 @@ class AuthController {
       }
 
       var resObj = {
-        success: true,
-        message: "message send successful",
         otp: token.otp,
       };
       if (process.env.STAGE == "prod") delete resObj.otp;
@@ -117,7 +115,7 @@ class AuthController {
         } else {
           return res
             .status(400)
-            .json({ success: false, message: "otp is invalid" });
+            .json({ error: "OTP is invalid" });
         }
         if (user_device) {
           await getUserBll.removeUserDevice({ user: userDetails._id });
@@ -142,19 +140,16 @@ class AuthController {
         let token_expires_at: any = new Date(time * 1000);
 
         await auth_token.remove();
-        return res.status(200).json({
-          success: true,
-          data: {
+        return res.status(200).json({          
             token,
             refreshToken,
             token_expires_at,
-            is_new_user: userFind ? userFind.is_new_user : true,
-          },
+            is_new_user: userFind ? userFind.is_new_user : true,          
         });
       } else {
         return res
           .status(400)
-          .json({ success: false, message: "Otp is invalid" });
+          .json({ error: "OTP is invalid" });
       }
     } catch (error: any) {
       return logError(error, req, res);
@@ -167,7 +162,7 @@ class AuthController {
       if (!checkMobileNo)
         return res
           .status(400)
-          .json({ success: false, message: "mobile number is not valid" });
+          .json({error: "mobile number is not valid" });
       let user = await getauthTokenBll.getTokenByPhone(mobileNo);
       next();
     } catch (error: any) {
@@ -212,8 +207,6 @@ class AuthController {
       let time: number = verify.exp;
       let token_expires_at: any = new Date(time * 1000);
       res.status(200).json({
-        success: true,
-        message: "token refresh sucessfully",
         token: token,
         token_expires_at,
       });
@@ -233,10 +226,7 @@ class AuthController {
         );
       }
       await getUserBll.findOneAndRemoveById(loggedInUser._id);
-      return res.status(200).json({
-        success: true,
-        message: "success",
-      });
+      return res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }

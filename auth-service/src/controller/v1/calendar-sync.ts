@@ -58,7 +58,7 @@ class CalenderSyncController {
         { modes: modesPayload },
         { upsert: true, new: false }
       );
-      res.status(200).json({ success: true, message: "Sucess", data: [] });
+      res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -76,11 +76,7 @@ class CalenderSyncController {
       ).populate("status");
 
       delete userContactFind.status.logo;
-      res.status(200).json({
-        success: true,
-        message: "calenderEvent list get successfully",
-        data: userContactFind,
-      });
+      res.status(200).json(userContactFind);
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -96,20 +92,16 @@ class CalenderSyncController {
           { email: null }
         );
         if (removeEmail) {
-          res.status(200).json({
-            success: true,
-            message: "Email Remove Successfully",
-            data: [],
-          });
+          res.status(201).json();
         } else {
           return res
             .status(400)
-            .json({ success: false, message: "Email is not removed" });
+            .json({ error: "Email is not removed" });
         }
       } else {
         return res
           .status(400)
-          .json({ success: false, message: "Calender Event not found" });
+          .json({ error: "Calender Event not found" });
       }
     } catch (error: any) {
       return logError(error, req, res);

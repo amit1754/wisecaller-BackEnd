@@ -18,9 +18,9 @@ export default class UsageController {
         let usage = new Usage({ user: loggedInUser._id });
         await usage.save();
       }
-      return res.status(200).json({ success: true });
+      return res.status(201).json();
     } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({ error: error.message });
     }
   }
 }

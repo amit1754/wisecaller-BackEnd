@@ -51,11 +51,7 @@ class RoadSafetyController {
         { modes: modesPayload },
         { upsert: true, new: false }
       );
-      return res.status(200).json({
-        success: true,
-        message: "Roadsafety updated successfully",
-        data: modesPayload.roadSafety,
-      });
+      return res.status(200).json(modesPayload.roadSafety);
     } catch (error: any) {
       return logError(error, req, res);
     }

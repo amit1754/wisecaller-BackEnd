@@ -129,7 +129,7 @@ class WorkLifeBalanceController {
         { modes: user_payload },
         { upsert: true, new: true }
       );
-      return res.status(200).json({ success: true, data: updated_work_life });
+      return res.status(200).json(updated_work_life);
     } catch (error: any) {
       return logError(error, req, res);
     }

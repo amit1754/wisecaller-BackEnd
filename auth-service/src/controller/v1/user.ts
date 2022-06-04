@@ -15,11 +15,7 @@ class UserController {
       let requestData: any = req;
       const loggedInUser: any = requestData.body.user;
       let user: any = await getUserBll.getUserDetails(loggedInUser._id);
-      res.status(200).json({
-        success: true,
-        message: "User Profile details get successfully",
-        data: user,
-      });
+      res.status(200).json(user);
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -53,13 +49,10 @@ class UserController {
           } else {
             return res
               .status(409)
-              .json({ success: false, message: "Phone no is already added!" });
+              .json({ error: "Phone number already added!" });
           }
         } else {
-          return res.status(400).json({
-            success: false,
-            message: "Secondary number already exists!",
-          });
+          return res.status(409).json({error: "Secondary number already exists!"});
         }
       } else {
         if (payload.secondary_no === "") {
@@ -71,7 +64,7 @@ class UserController {
       }
       Object.assign(payload, { phones: phones });
 
-      return res.status(200).json({ success: true, data: user });
+      return res.status(200).json( user);
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -105,11 +98,9 @@ class UserController {
             payload.phones.length === 2 ? payload.phones.pop() : "";
             payload.phones.push(updatePhone);
           } else {
-            return res.status(400).json({
-              success: false,
-              message: "Second phone no already exists",
+            return res.status(409).json({
+              error: "Second phone no already exists",
             });
-            throw new Error("second phoneno already exist!");
           }
         } else {
           let phonesLength = loggedInUser.phones.length;
@@ -160,9 +151,7 @@ class UserController {
         }
       );
 
-      return res
-        .status(200)
-        .json({ success: true, message: "user update successfully", data: [] });
+      return res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -186,11 +175,11 @@ class UserController {
       });
       const saveResponse = await saveObj.save();
       if (saveResponse) {
-        res.status(200).json({ success: true, message: "success", data: [] });
+        res.status(201).json();
       } else {
         res
-          .status(400)
-          .json({ success: false, message: "Email is not send", data: [] });
+          .status(410)
+          .json({ error: "Email not send"});
       }
     } catch (error: any) {
       return logError(error, req, res);
@@ -205,11 +194,7 @@ class UserController {
         res.status(401).send("Unauthorized");
       } else {
         let contactUs: any = await ContactUs.find().sort({ createdAt: -1 });
-        res.status(200).json({
-          success: true,
-          data: contactUs,
-          message: "contactUs details get sucess fully",
-        });
+        res.status(200).json(contactUs);
       }
     } catch (error: any) {
       return logError(error, req, res);
@@ -233,11 +218,7 @@ class UserController {
           new: true,
         }
       );
-      return res.status(200).json({
-        success: true,
-        message: "devices added successfully",
-        data: [],
-      });
+      return res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -319,11 +300,7 @@ class UserController {
               };
               Object.assign(payload.status, { status_notes: notes });
             } else {
-              return res.status(400).json({
-                success: false,
-                message: "Notes is not available",
-              });
-              throw new Error("notes is not avalible");
+              return res.status(400).json({error: "Notes is not available"});
             }
           } else {
             let notes = {
@@ -402,7 +379,7 @@ class UserController {
       };
       await snsClient.publishToSNS(snsPayload);
 
-      return res.status(200).json({ success: true, data: user });
+      return res.status(200).json(user);
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -419,17 +396,10 @@ class UserController {
         ...payload,
       });
 
-      res.status(200).json({
-        success: true,
-        message: "data get successful",
-        data: userContactFind,
-      });
+      res.status(200).json(userContactFind);
     } catch (err: any) {
       if (err.code === 51091) {
-        res.status(400).json({
-          success: false,
-          message: "please find with phone number only",
-        });
+        res.status(400).json({error: "please find with phone number only"});
       } else {
         return logError(err, req, res);
       }
@@ -442,12 +412,9 @@ class UserController {
       await getUserBll.removeUserDevice({ user: user._id });
       await device_register.addDevices(user_device, user._id);
       return res
-        .status(200)
-        .json({ success: true, message: "Device register successfully" });
+        .status(201).json();
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Something went wrong!" });
+      return logError(error, req, res);
     }
   }
 }
