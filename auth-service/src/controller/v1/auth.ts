@@ -83,8 +83,14 @@ class AuthController {
       let userDetails: any;
       let userFind: any = await getUserBll.findUserByPhone(mobileNo);
       let auth_token: any = await getauthTokenBll.getTokenByPhone(mobileNo);
-      if (auth_token) {
-        if (auth_token?.otp === otp) {
+      let dummyPhones:any = process.env.SAMPLE_PHONES;
+      let arrPhones:string[] = dummyPhones?.split(',');
+      let bypassValidation = false;
+      if (arrPhones.indexOf(mobileNo)>=0 && otp == process.env.SAMPLE_OTP){
+        bypassValidation = true;
+      }
+      if (auth_token || bypassValidation) {
+        if (auth_token?.otp === otp || bypassValidation) {
           if (!userFind) {
             const payload: IUser = {
               phones: {
@@ -138,8 +144,8 @@ class AuthController {
         let verify: any = await jwtVerify(token);
         let time: number = verify.exp;
         let token_expires_at: any = new Date(time * 1000);
-
-        await auth_token.remove();
+        if (auth_token!=null)
+          await auth_token.remove();
         return res.status(200).json({          
             token,
             refreshToken,
