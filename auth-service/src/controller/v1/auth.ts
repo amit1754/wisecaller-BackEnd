@@ -175,41 +175,51 @@ class AuthController {
       const postData = req.body;
 
       let token;
+      let refreshToken;
       const decodedMainToken: any = jwt.decode(postData.token, {
         complete: true,
       });
-      const decodedRefreshToken: any = jwt.decode(postData.token, {
+      const decodedRefreshToken: any = jwt.decode(postData.refreshToken, {
         complete: true,
       });
-      const currentDate = Math.floor(Date.now() / 1000);
 
-      if (currentDate > decodedMainToken?.payload.exp) {
-        let secret: any = process.env.JWT_SECRET,
-          tokentime = process.env.TOKENTIME;
+      var date = new Date();
+      date.setDate(date.getDate() + 5)
 
-        if (currentDate > decodedRefreshToken?.payload?.exp) {
-          token = jwt.sign(
-            {
-              _id: decodedMainToken?.payload?._id,
-              mobileNo: decodedMainToken?.payload.mobileNo,
-            },
-            secret,
-            { expiresIn: tokentime }
-          );
-        } else {
-          token = postData.refreshToken;
-        }
-      } else {
-        token = postData.token;
-      }
+      const currentDate = Math.floor(date.getTime() / 1000);
+
+      let secret: any = process.env.JWT_SECRET,
+      tokentime = process.env.TOKENTIME;
+      let tokenRefreshTime = process.env.REFRESHTOKENTIME;
+      token = jwt.sign(
+        {
+          _id: decodedMainToken?.payload?._id,
+          mobileNo: decodedMainToken?.payload.mobileNo,
+        },
+        secret,
+        { expiresIn: tokentime }
+      );
+      if (currentDate > decodedRefreshToken?.payload?.exp) {
+        refreshToken =  jwt.sign(
+          { _id: decodedMainToken?.payload?._id,
+            mobileNo: decodedMainToken?.payload.mobileNo },
+          secret,
+          { expiresIn: tokenRefreshTime }
+        );
+      } 
       let verify: any = await jwtVerify(token);
 
       let time: number = verify.exp;
       let token_expires_at: any = new Date(time * 1000);
-      res.status(200).json({
+      var payloadData = {
         token: token,
+        refreshToken:refreshToken,
         token_expires_at,
-      });
+      }
+      if (refreshToken == null){
+        delete payloadData.refreshToken;
+      }
+      res.status(200).json(payloadData);
     } catch (error: any) {
       return logError(error, req, res);
     }

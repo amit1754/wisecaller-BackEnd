@@ -8,6 +8,7 @@ import { logError } from "@wisecaller/logger";
 import CloudWatchRuleClient from "@wisecaller/cloudwatcheventrule";
 import moment from "moment";
 import { device_register } from "../../utils";
+import { Usage } from "../../models/usage";
 
 class UserController {
   async show(req: Request, res: Response) {
@@ -411,6 +412,18 @@ class UserController {
       let { user_device, user } = req.body;
       await getUserBll.removeUserDevice({ user: user._id });
       await device_register.addDevices(user_device, user._id);
+      let isExist = await Usage.findOne({
+        loggedOn: {
+          $gte: moment().startOf("day").utc(true).toDate(),
+          $lte: moment().endOf("day").utc(true).toDate(),
+        },
+        user: user._id,
+      });
+
+      if (!isExist) {
+        let usage = new Usage({ user: user._id });
+        await usage.save();
+      }
       return res
         .status(201).json();
     } catch (error) {
