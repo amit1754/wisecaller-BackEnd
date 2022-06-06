@@ -41,11 +41,7 @@ class ContactSyncController {
           }
         }
       }
-      res.status(200).json({
-        success: true,
-        message: "contact update successfully",
-        data: [],
-      });
+      res.status(201).json();
     } catch (error: any) {
       if (error.code === 11000) {
         return res
@@ -82,11 +78,7 @@ class ContactSyncController {
 
         const contactSave = new UserContact(contactupdate);
         await contactSave.save();
-        res.status(200).json({
-          success: true,
-          message: "contact added successfully",
-          data: [],
-        });
+        res.status(201).json();
       }
     } catch (error: any) {
       if (error.code === 11000) {
@@ -129,11 +121,7 @@ class ContactSyncController {
         { $skip: page > 0 ? +limit * (+page - 1) : 0 },
         { $sort: { first_name: 1 } },
       ]);
-      res.status(200).json({
-        success: true,
-        message: "contact list get successfully",
-        data: contctTime,
-      });
+      res.status(200).json(contctTime);
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -170,11 +158,7 @@ class ContactSyncController {
           );
         }
       }
-      res.status(200).json({
-        success: true,
-        messgae: "contact update successful",
-        data: [],
-      });
+      res.status(201).json();
     } catch (err: any) {
       return logError(err, req, res);
     }
@@ -208,11 +192,7 @@ class ContactSyncController {
         },
       ]);
 
-      res.status(200).json({
-        success: true,
-        message: "data get successful",
-        data: userContactFind,
-      });
+      res.status(200).json(userContactFind);
     } catch (err: any) {
       if (err.code === 51091) {
         return res
@@ -234,11 +214,7 @@ class ContactSyncController {
         _id: id,
         user: loggedInUser._id,
       });
-      res.status(200).json({
-        success: true,
-        message: "contact delete successfully",
-        data: [],
-      });
+      res.status(201).json();
     } catch (err: any) {
       return logError(err, req, res);
     }
@@ -254,7 +230,7 @@ class ContactSyncController {
         { is_favorite }
       );
 
-      res.status(200).json({ success: true, message: "Sucess", data: [] });
+      res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -269,7 +245,7 @@ class ContactSyncController {
         { is_blocked }
       );
 
-      res.status(200).json({ success: true, message: "Sucess", data: [] });
+      res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -286,7 +262,7 @@ class ContactSyncController {
         text: req.body.message,
       };
       await snsClient.publishToSNS(event);
-      return res.status(200).json({ success: true });
+      return res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
