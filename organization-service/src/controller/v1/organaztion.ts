@@ -8,10 +8,11 @@ import moment from "moment";
 import { CustomStatus } from "../../models/custom-status";
 import { UserDevices } from "../../models/user-device";
 import { Parser } from "json2csv";
-import node_fetch from "node-fetch";
 import { Usage } from "../../models/usage";
 import { CallActivity } from "../../models/call_activity";
 import { uploadBase64Image } from "../../utils/aws";
+import jwt from "jsonwebtoken";
+import WisecallerEmail from "@wisecaller/email";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -135,7 +136,6 @@ class OrganizationController {
         throw new Error("UNAUTHORIZE");
       }
     } catch (err: any) {
-      console.log("err :>> ", err);
       if (err.message === "UNAUTHORIZE") {
         res.status(401).json({ success: false, message: err.message });
       } else {
@@ -201,6 +201,7 @@ class OrganizationController {
   async updateOrganizationProfile(req: Request, res: Response) {
     try {
       let loggedInUser: any = req.body.user;
+      let organization: any = {};
       let payload = {
         ...req.body,
         address_details: {
@@ -221,13 +222,38 @@ class OrganizationController {
         Object.assign(payload, { profile: imageUrl });
       }
 
-      let organization = await Organization.findOneAndUpdate(
-        { _id: loggedInUser._id },
-        payload,
-        { upsert: true, new: true }
-      );
+      if (loggedInUser?.role === "ADMIN") {
+        organization = new Organization(payload);
+        let secret: any = process.env.JWT_SECRET;
+        let paymentToken = jwt.sign(
+          {
+            _id: organization._id,
+            email: organization.email,
+            name: organization.name,
+          },
+          secret,
+          {
+            expiresIn: "24h",
+          }
+        );
+
+        let message: string = `<p>Here is the payment link for the further procedure\n Url: ${process.env.FRONTEND_URL}organization/payment?token=${paymentToken}</p>`;
+
+        await WisecallerEmail.Send(
+          organization.email,
+          "Welcome to Wisecaller",
+          message
+        );
+      } else {
+        organization = await Organization.findOneAndUpdate(
+          { _id: loggedInUser._id },
+          payload,
+          { upsert: true, new: true }
+        );
+      }
       return res.status(200).json({ success: true, data: organization });
     } catch (error: any) {
+      console.log(error);
       return res.status(200).json({ success: false, message: error.message });
     }
   }
@@ -476,7 +502,6 @@ class OrganizationController {
 
       return res.status(200).json({ success: true, data });
     } catch (error: any) {
-      console.log(error);
       return res.status(200).json({ success: false, message: error.message });
     }
   }
