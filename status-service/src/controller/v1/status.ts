@@ -27,15 +27,10 @@ class StatusController {
           title: "Global Status Update",
         };
         await SNSClient.publishToSNS(snsPayload);
-        res.status(200).json({
-          success: true,
-          message: "User status added successfully",
-          data: [],
-        });
+        res.status(201).json();
       } else {
         return res.status(400).json({
-          success: false,
-          message: "You are not authorize person to access this resource",
+          error: "You are not authorize person to access this resource",
         });
         throw new Error("you are not authorize person to access this resource");
       }
@@ -115,8 +110,7 @@ class StatusController {
         });
       } else {
         return res.status(400).json({
-          success: false,
-          message: "You are not authorize person to access this resource",
+          error: "You are not authorize person to access this resource",
         });
         throw new Error("you are not authorize person to access this resource");
       }
@@ -131,8 +125,7 @@ class StatusController {
       const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role != "ADMIN") {
         return res.status(400).json({
-          success: false,
-          message: "You are not authorize person to access this resource",
+          error: "You are not authorize person to access this resource",
         });
         res.status(401).json({
           success: false,
@@ -166,15 +159,10 @@ class StatusController {
         };
         const status = new UserSubStatus(payload);
         status.save();
-        res.status(200).json({
-          success: true,
-          message: "global Sub-Status added sucessfully",
-          data: [],
-        });
+        res.status(201).json();
       } else {
         return res.status(400).json({
-          success: false,
-          message: "You are not authorize person to access this resource",
+          error: "You are not authorize person to access this resource",
         });
         throw new Error("you are not authorize person to access this resource");
       }
@@ -218,8 +206,7 @@ class StatusController {
         });
       } else {
         return res.status(400).json({
-          success: false,
-          message: "You are not authorize person to access this resource",
+          error: "You are not authorize person to access this resource",
         });
         throw new Error("you are not authorize person to access this resource");
       }
@@ -233,8 +220,7 @@ class StatusController {
       const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role != "ADMIN") {
         return res.status(400).json({
-          success: false,
-          message: "You are not authorize person to access this resource",
+          error: "You are not authorize person to access this resource",
         });
         res.status(401).json({
           success: false,
@@ -243,11 +229,7 @@ class StatusController {
       } else {
         const { id }: any = req.params;
         let user = await UserSubStatus.findByIdAndDelete(id);
-        res.status(200).json({
-          success: true,
-          message: "Global Sub Status delete sucessfully",
-          data: [],
-        });
+        res.status(201).json();
       }
     } catch (error) {
       return logError(error, req, res);

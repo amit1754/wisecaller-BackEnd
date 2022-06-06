@@ -24,14 +24,14 @@ class NotesController {
         auto_sms: 0,
       });
       return res.status(200).json({ success: true, data: notes });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }
 
   async add(req: Request, res: Response) {
     try {
-      const request:any=req
+      const request: any = req;
       const loggedInUser: any = request.body.user;
       let payload: any = {};
       if (req.body?.is_admin) {
@@ -42,10 +42,8 @@ class NotesController {
 
       let notes = new Notes(payload);
       await notes.save();
-      return res
-        .status(200)
-        .json({ success: true, message: "Notes saved successfully" });
-    } catch (error: any) {
+      return res.status(200).json();
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -57,7 +55,7 @@ class NotesController {
         { is_custom: 0, is_admin: 0, createdAt: 0, updatedAt: 0 }
       );
       return res.status(200).json({ success: true, data: details });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -70,7 +68,7 @@ class NotesController {
         { upsert: true, new: true }
       );
       return res.status(200).json({ success: true, data: notes });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -78,10 +76,8 @@ class NotesController {
   async remove(req: Request, res: Response) {
     try {
       await Notes.findOneAndRemove({ _id: req.params.id });
-      return res
-        .status(200)
-        .json({ success: true, message: "Notes deleted successfully" });
-    } catch (error: any) {
+      return res.status(201).json();
+    } catch (error) {
       return logError(error, req, res);
     }
   }

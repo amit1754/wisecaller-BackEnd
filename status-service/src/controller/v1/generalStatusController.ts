@@ -12,12 +12,8 @@ class generalStatusController {
       }
       const addData = new generalStatusModel(data);
       await addData.save();
-      res.status(200).json({
-        success: true,
-        message: "general status added successfully",
-        data: [],
-      });
-    } catch (error: any) {
+      res.status(201).json();
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -31,12 +27,8 @@ class generalStatusController {
         new: true,
       });
 
-      res.status(200).json({
-        success: true,
-        message: "general status update successfully",
-        data: [],
-      });
-    } catch (error: any) {
+      res.status(201).json();
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -46,12 +38,8 @@ class generalStatusController {
 
       await generalStatusModel.findOneAndDelete({ _id: id });
 
-      res.status(200).json({
-        success: true,
-        message: "general status deleted successfully",
-        data: [],
-      });
-    } catch (error: any) {
+      res.status(201).json({});
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -72,7 +60,7 @@ class generalStatusController {
         message: "general status get successful",
         data: globalType,
       });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }

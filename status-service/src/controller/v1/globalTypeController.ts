@@ -8,18 +8,14 @@ class GlobalTypeController {
       const data: any = req.body;
       const addData = new globalTypeModel(data);
       await addData.save();
-      res.status(200).json({
-        success: true,
-        message: "gobal type added successfully",
-        data: [],
-      });
-    } catch (error: any) {
+      res.status(201).json();
+    } catch (error) {
       return logError(error, req, res);
     }
   }
   async update(req: Request, res: Response) {
     try {
-      const request:any=req
+      const request: any = req;
       const loggedInUser: any = request.body.user;
       let body: any = req.body;
       let id = req.params.id;
@@ -29,12 +25,8 @@ class GlobalTypeController {
         new: true,
       });
 
-      res.status(200).json({
-        success: true,
-        message: "global Type update successfully",
-        data: [],
-      });
-    } catch (error: any) {
+      res.status(201).json();
+    } catch (error) {
       return logError(error, req, res);
     }
   }
@@ -44,13 +36,9 @@ class GlobalTypeController {
 
       await globalTypeModel.findOneAndDelete({ _id: id });
 
-      res.status(200).json({
-        success: true,
-        message: "Global type deleted successfully",
-        data: [],
-      });
-    } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      res.status(201).json();
+    } catch (error) {
+      logError(error, req, res);
     }
   }
   async get(req: Request, res: Response) {
@@ -61,7 +49,7 @@ class GlobalTypeController {
         message: "global type get successful",
         data: globalType,
       });
-    } catch (error: any) {
+    } catch (error) {
       return logError(error, req, res);
     }
   }

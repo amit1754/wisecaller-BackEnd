@@ -15,16 +15,11 @@ class WorklifeController {
       };
       const workLife = new WorkLife(payload);
       await workLife.save();
-      return res.status(200).json({
-        success: true,
-        message: "workingdays Added successfully",
-        data: [],
-      });
+      return res.status(201).json();
     } catch (error: any) {
       if (error.code === 11000) {
         res.status(400).json({
-          success: false,
-          message: "workingHrs already exists",
+          error: "workingHrs already exists",
         });
       } else {
         res.status(500).json({ success: false, message: error.message });
@@ -42,16 +37,11 @@ class WorklifeController {
         upsert: true,
         new: true,
       });
-      return res.status(200).json({
-        success: true,
-        message: "workingdays update successfully",
-        data: [],
-      });
+      return res.status(201).json();
     } catch (error: any) {
       if (error.code === 11000) {
         res.status(400).json({
-          success: false,
-          message: "WoekingHrs already exists",
+          error: "WoekingHrs already exists",
         });
       } else {
         res.status(500).json({ success: false, message: error.message });
@@ -101,15 +91,12 @@ class WorklifeController {
     try {
       const { id } = req.params;
       if (!isValidObjectId(id)) {
+        return res.status(400).json({ error: "Id is invalid" });
         throw new Error("id is invalid");
       }
 
       await WorkLife.deleteOne({ _id: Types.ObjectId(id) });
-      return res.status(200).json({
-        success: true,
-        message: "workingdays delete successfully",
-        data: [],
-      });
+      return res.status(201).json();
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }

@@ -122,12 +122,14 @@ class CustomStatusController {
         data: [],
       });
     } catch (error) {
-      if (error.code === 11000) {
-        var err = new Error("customId is must be unique.");
-        return logError(err, req, res);
-      } else {
-        return logError(error, req, res);
-      }
+      return logError(error, req, res);
+      // if (error?.code === 11000) {
+      //   return res.status(500).json({ error: "CustomID is must be unique" });
+      //   var err = new Error("customId is must be unique.");
+      //   return logError(err, req, res);
+      // } else {
+      //   return logError(error, req, res);
+      // }
     }
   }
   async update(req: Request, res: Response) {
@@ -267,11 +269,7 @@ class CustomStatusController {
         );
       }
 
-      res.status(200).json({
-        success: true,
-        message: "User status update successfully",
-        data: [],
-      });
+      res.status(201).json();
     } catch (error) {
       return logError(error, req, res);
     }
@@ -288,11 +286,7 @@ class CustomStatusController {
           new: true,
         }
       );
-      res.status(200).json({
-        success: true,
-        message: "User status deleted successfully",
-        data: [],
-      });
+      res.status(201).json();
     } catch (error) {
       return logError(error, req, res);
     }
@@ -878,10 +872,7 @@ class CustomStatusController {
           await CloudWatchRuleClient.deleteRule(ruleNameForStatusUpdates);
         }
       }
-      res.status(200).json({
-        sucess: true,
-        message: "triggered rules successfully",
-      });
+      res.status(201).json();
     } catch (error) {
       return logError(error, req, res);
     }

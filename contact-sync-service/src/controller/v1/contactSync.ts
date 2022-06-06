@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IContactSync } from "../../interfaces/contactSync";
 import { UserContact } from "../../models/contactsync";
 import { logError } from "@wisecaller/logger";
-import {getUserBll} from "@wisecaller/user-service";
+import { getUserBll } from "@wisecaller/user-service";
 
 import snsClient from "../../utils/snsClient";
 import UserBLL from "@wisecaller/user-service/dist/bll/user.bll";
@@ -24,16 +24,6 @@ class ContactSyncController {
           if (data[i].is_deleted) {
             await UserContact.findByIdAndRemove(userContactFind.id);
           } else {
-            // if (data[i]?.phones) {
-            //   let contact: any = data[i]?.phones;
-            //   for (let j = 0; j < contact.length; j++) {
-            //     const userContactGet = await User.findOne({
-            //       "phones.no": contact[j].ph_no,
-            //     });
-
-            //     if (userContactGet) data[i].user = userContactGet._id;
-            //   }
-            // }
             delete data[i].contact;
             await UserContact.findOneAndUpdate(
               { _id: userContactFind._id },
@@ -41,16 +31,6 @@ class ContactSyncController {
             );
           }
         } else {
-          // if (data[i]?.phones) {
-          //   let contact: any = data[i]?.phones;
-          //   for (let j = 0; j < contact.length; j++) {
-          //     const userContactGet = await User.findOne({
-          //       "phones.no": contact[j].ph_no,
-          //     });
-
-          //     if (userContactGet) data[i].user = userContactGet._id;
-          //   }
-          // }
           data[i].contact = loginUser._id;
           if (
             data[i]?.is_deleted == false ||
@@ -68,7 +48,10 @@ class ContactSyncController {
       });
     } catch (error: any) {
       if (error.code === 11000) {
-        var err = new Error("contact already exists with contactId");        
+        return res
+          .status(409)
+          .json({ error: "contact already exists with contactId" });
+        var err = new Error("contact already exists with contactId");
         return logError(err, req, res);
       } else {
         return logError(error, req, res);
@@ -87,6 +70,9 @@ class ContactSyncController {
         ],
       });
       if (findContact.length >= 1) {
+        return res.status(409).json({
+          error: "contact is avaliable with same name in youe contact list",
+        });
         throw new Error(
           "contact is avaliable with same name in youe contact list"
         );
@@ -104,7 +90,10 @@ class ContactSyncController {
       }
     } catch (error: any) {
       if (error.code === 11000) {
-        var err = new Error("contact already exists with contactId"); 
+        return res
+          .status(409)
+          .json({ error: "contact already exists with contactId" });
+        var err = new Error("contact already exists with contactId");
         return logError(err, req, res);
       } else {
         return logError(error, req, res);
@@ -118,7 +107,7 @@ class ContactSyncController {
       let limit: any = req.query.limit;
 
       let loggedInUser: any = req.body.user;
-var user = await getUserBll.getUserDetails(loggedInUser._id);
+      var user = await getUserBll.getUserDetails(loggedInUser._id);
       // for update on fly
       let contctTime = await UserContact.aggregate([
         { $match: { contact: loggedInUser._id } },
@@ -164,15 +153,6 @@ var user = await getUserBll.getUserDetails(loggedInUser._id);
         } else {
           data[i].contact = loginUser._id;
           let contact: any = data[i];
-
-          // if (contact?.phone) {
-          //   for (let j = 0; j < contact?.phones?.length; j++) {
-          //     const userContactFind = await User.findOne({
-          //       "phones.no": contact.phones[j].ph_no,
-          //     });
-          //     // if (userContactFind) data[i].user = userContactFind._id;
-          //   }
-          // }
           const dda = await UserContact.findOneAndUpdate(
             {
               $and: [
@@ -235,7 +215,10 @@ var user = await getUserBll.getUserDetails(loggedInUser._id);
       });
     } catch (err: any) {
       if (err.code === 51091) {
-        var error = new Error("please find with phone number only"); 
+        return res
+          .status(400)
+          .json({ error: "please find with phone number only" });
+        var error = new Error("please find with phone number only");
         return logError(error, req, res);
       } else {
         return logError(err, req, res);

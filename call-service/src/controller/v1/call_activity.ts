@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CallActivity } from "../../models/call_activity";
+import { logError } from "@wisecaller/logger";
 
 export default class CallActivityController {
   async update(req: Request, res: Response) {
@@ -14,7 +15,7 @@ export default class CallActivityController {
       call_activity.save();
       return res.status(200).json({ success: true, data: call_activity });
     } catch (error: any) {
-      return res.status(200).json({ success: false, message: error.message });
+      return logError(error, req, res);
     }
   }
 }
