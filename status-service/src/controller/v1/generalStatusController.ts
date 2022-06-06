@@ -55,11 +55,7 @@ class generalStatusController {
           },
         },
       ]);
-      res.status(200).json({
-        success: true,
-        message: "general status get successful",
-        data: globalType,
-      });
+      res.status(200).json(globalType);
     } catch (error) {
       return logError(error, req, res);
     }

@@ -44,11 +44,7 @@ class GlobalTypeController {
   async get(req: Request, res: Response) {
     try {
       let globalType = await globalTypeModel.find().sort({ order: 1 });
-      res.status(200).json({
-        success: true,
-        message: "global type get successful",
-        data: globalType,
-      });
+      res.status(200).json(globalType);
     } catch (error) {
       return logError(error, req, res);
     }

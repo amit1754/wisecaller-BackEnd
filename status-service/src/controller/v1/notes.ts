@@ -23,7 +23,7 @@ class NotesController {
         display_to: 0,
         auto_sms: 0,
       });
-      return res.status(200).json({ success: true, data: notes });
+      return res.status(200).json(notes);
     } catch (error) {
       return logError(error, req, res);
     }
@@ -42,7 +42,7 @@ class NotesController {
 
       let notes = new Notes(payload);
       await notes.save();
-      return res.status(200).json();
+      return res.status(201).json();
     } catch (error) {
       return logError(error, req, res);
     }
@@ -54,7 +54,7 @@ class NotesController {
         { _id: req.params.id },
         { is_custom: 0, is_admin: 0, createdAt: 0, updatedAt: 0 }
       );
-      return res.status(200).json({ success: true, data: details });
+      return res.status(200).json(details);
     } catch (error) {
       return logError(error, req, res);
     }
@@ -67,7 +67,7 @@ class NotesController {
         req.body,
         { upsert: true, new: true }
       );
-      return res.status(200).json({ success: true, data: notes });
+      return res.status(200).json(notes );
     } catch (error) {
       return logError(error, req, res);
     }

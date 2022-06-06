@@ -60,11 +60,7 @@ class StatusController {
         }
       }
 
-      res.status(200).json({
-        success: true,
-        message: "global status get successfully",
-        data: global_status,
-      });
+      res.status(200).json(global_status);
     } catch (error) {
       return logError(error, req, res);
     }
@@ -103,11 +99,7 @@ class StatusController {
           title: "Global Status Update",
         };
         await SNSClient.publishToSNS(snsPayload);
-        res.status(200).json({
-          success: true,
-          message: "global Status update successfully",
-          data: StatusUpdate,
-        });
+        res.status(200).json(StatusUpdate);
       } else {
         return res.status(400).json({
           error: "You are not authorize person to access this resource",
@@ -124,22 +116,14 @@ class StatusController {
       const reqPayload: any = req;
       const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role != "ADMIN") {
-        return res.status(400).json({
+        return res.status(401).json({
           error: "You are not authorize person to access this resource",
-        });
-        res.status(401).json({
-          success: false,
-          message: "you are not access to this resource",
         });
       } else {
         const { id }: any = req.params;
 
         let user = await UserStatus.findByIdAndDelete(id);
-        res.status(200).json({
-          success: true,
-          message: "Global Status delete sucessfully",
-          data: user,
-        });
+        res.status(200).json(user);
       }
     } catch (error) {
       return logError(error, req, res);
@@ -199,16 +183,11 @@ class StatusController {
             new: true,
           }
         );
-        res.status(200).json({
-          success: true,
-          message: "global sub status update successfully",
-          data: StatusUpdate,
-        });
+        res.status(200).json(StatusUpdate);
       } else {
-        return res.status(400).json({
+        return res.status(401).json({
           error: "You are not authorize person to access this resource",
         });
-        throw new Error("you are not authorize person to access this resource");
       }
     } catch (error) {
       return logError(error, req, res);
@@ -219,12 +198,8 @@ class StatusController {
       const reqPayload: any = req;
       const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role != "ADMIN") {
-        return res.status(400).json({
+        return res.status(401).json({
           error: "You are not authorize person to access this resource",
-        });
-        res.status(401).json({
-          success: false,
-          message: "you are not access to this resource",
         });
       } else {
         const { id }: any = req.params;

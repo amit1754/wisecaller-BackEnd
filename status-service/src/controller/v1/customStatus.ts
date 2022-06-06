@@ -116,11 +116,7 @@ class CustomStatusController {
         }
       }
 
-      res.status(200).json({
-        success: true,
-        message: "User status added successfully",
-        data: [],
-      });
+      res.status(201).json();
     } catch (error) {
       return logError(error, req, res);
       // if (error?.code === 11000) {
@@ -346,14 +342,10 @@ class CustomStatusController {
       );
 
       res.status(200).json({
-        sucess: true,
-        message: "getdata successfully",
-        data: {
           status: getStatus,
           worklife: {
             excluded_dates: worklife ? worklife.excluded_dates : null,
-          },
-        },
+          }
       });
     } catch (error) {
       return logError(error, req, res);
