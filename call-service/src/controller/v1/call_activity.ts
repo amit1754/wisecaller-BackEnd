@@ -13,7 +13,7 @@ export default class CallActivityController {
       };
       let call_activity = new CallActivity(payload);
       call_activity.save();
-      return res.status(200).json({ success: true, data: call_activity });
+      return res.status(200).json( call_activity);
     } catch (error: any) {
       return logError(error, req, res);
     }

@@ -28,7 +28,7 @@ class callHistory {
           });
         }
       }
-      res.status(200).json({ success: true, message: "Sucess", data: [] });
+      res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);      
     }
@@ -84,7 +84,7 @@ class callHistory {
 
       res
         .status(200)
-        .json({ success: true, message: "Success", data: contactDetails });
+        .json(contactDetails);
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -140,7 +140,7 @@ class callHistory {
 
       res
         .status(200)
-        .json({ success: true, message: "success", callLogs: reqestData });
+        .json({callLogs: reqestData });
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -156,7 +156,7 @@ class callHistory {
         user: loginUser._id,
       });
 
-      res.status(200).json({ success: true, message: "success", data: [] });
+      res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -196,10 +196,7 @@ class callHistory {
         }
       }
 
-      return res.status(200).json({
-        success: true,
-        message: "Contact history synced successfully",
-      });
+      return res.status(201).json();
     } catch (error: any) {
       return logError(error, req, res);
     }
@@ -253,10 +250,7 @@ class callHistory {
         { $skip: page > 0 ? +limit * (+page - 1) : 0 },
       ]);
 
-      return res.status(200).json({
-        success: true,
-        data: callHistory,
-      });
+      return res.status(200).json(callHistory);
     } catch (error: any) {
       return logError(error, req, res);
     }
