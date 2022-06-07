@@ -8,6 +8,7 @@ import NotesController from "./v1/notes";
 import UserController from "./v1/user";
 import GlobalTypesController from "./v1/global-types";
 import UserStatusController from "./v1/user-status";
+import TemplateController from "./v1/template";
 
 export const Auth = new AuthController();
 export const Organization = new OrganizationController();
@@ -19,3 +20,4 @@ export const Plan = new PlanController();
 export const Pages = new PagesController();
 export const GlobalTypes = new GlobalTypesController();
 export const UserStatus = new UserStatusController();
+export const Template = new TemplateController();

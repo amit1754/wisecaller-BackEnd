@@ -9,6 +9,7 @@ import { NotesRoutes } from "./notes";
 import { UserRoutes } from "./user";
 import { GlobalRoutes } from "./global-types";
 import { UserStatusRoutes } from "./user-status";
+import { TemplatesRoutes } from "./template";
 
 const router = Router();
 
@@ -22,4 +23,5 @@ router.use("/plan", PlanRoutes);
 router.use("/pages", PagesRoutes);
 router.use("/global-types", GlobalRoutes);
 router.use("/user-status", UserStatusRoutes);
+router.use("/template", TemplatesRoutes);
 export default router;

@@ -466,6 +466,62 @@ class PaymentController {
       return res.status(200).json({ success: false, message: error.message });
     }
   }
+
+  async directOrganizationPayment(req: Request, res: Response) {
+    try {
+      let payload = {
+        ...req.body,
+      };
+
+      let coupon_payload = {
+        coupon_code: payload.coupon_code,
+        can_use_for: payload.quantity,
+        organization: payload.user,
+        subscription: payload.subscription,
+        type: "ORGANIZATION",
+        expires_at: payload.coupon_expiry_date,
+      };
+
+      let user_subscription_payload = {
+        subscription: payload.subscription,
+        organization: payload.user,
+        coupon_code: payload.coupon_code,
+        quantity: payload.quantity,
+        subscription_created_date: moment().toISOString(),
+        subscription_end_date: payload.coupon_expiry_date,
+      };
+
+      let user_subscription = new UserSubscription(user_subscription_payload);
+      await user_subscription.save();
+
+      let payment_payload = {
+        ...req.body,
+        subscription: payload.subscription,
+        user_subscription: user_subscription._id,
+        organization: payload.user,
+        payment_date: moment().toISOString(),
+      };
+
+      let payment = await Payment.findOneAndUpdate(
+        { user: payload.user, transactionId: payload.transactionId },
+        payment_payload,
+        { upsert: true, new: true }
+      );
+
+      await Coupon.findOneAndUpdate(
+        { coupon_code: payload.coupon_code },
+        coupon_payload,
+        { upsert: true, new: true }
+      );
+
+      let mail_body = `<h3>COUPON CODE:  ${payload.coupon_code}`;
+      await emailClient.Send(payload.email, "Organization Coupon", mail_body);
+      return res.status(200).json({ success: true, data: payment });
+    } catch (error: any) {
+      console.log(error);
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
 }
 
 export default PaymentController;

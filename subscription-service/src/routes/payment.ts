@@ -19,5 +19,6 @@ router.post(
   [authorization],
   Payment.renewSubscriptionForOrganization
 );
+router.post("/direct-payment", Payment.directOrganizationPayment);
 
 export const PaymentRoutes = router;

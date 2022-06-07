@@ -202,6 +202,7 @@ class OrganizationController {
     try {
       let loggedInUser: any = req.body.user;
       let organization: any = {};
+      let paymentUrl: string = "";
       let payload = {
         ...req.body,
         address_details: {
@@ -228,8 +229,7 @@ class OrganizationController {
         let paymentToken = jwt.sign(
           {
             _id: organization._id,
-            email: organization.email,
-            name: organization.name,
+            ...payload,
           },
           secret,
           {
@@ -237,7 +237,9 @@ class OrganizationController {
           }
         );
 
-        let message: string = `<p>Here is the payment link for the further procedure\n Url: ${process.env.FRONTEND_URL}organization/payment?token=${paymentToken}</p>`;
+        organization.save();
+        paymentUrl = `${process.env.FRONTEND_URL}organization/payment?token=${paymentToken}`;
+        let message: string = `<p>Here is the payment link for the further procedure\n Url: ${paymentUrl}</p>`;
 
         await WisecallerEmail.Send(
           organization.email,
@@ -251,7 +253,9 @@ class OrganizationController {
           { upsert: true, new: true }
         );
       }
-      return res.status(200).json({ success: true, data: organization });
+      return res
+        .status(200)
+        .json({ success: true, data: organization, paymentUrl: paymentUrl });
     } catch (error: any) {
       console.log(error);
       return res.status(200).json({ success: false, message: error.message });
