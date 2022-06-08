@@ -13,6 +13,7 @@ import { CallActivity } from "../../models/call_activity";
 import { uploadBase64Image } from "../../utils/aws";
 import jwt from "jsonwebtoken";
 import WisecallerEmail from "@wisecaller/email";
+import { logError } from "@wisecaller/logger";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -610,6 +611,40 @@ class OrganizationController {
       return res.status(200).json({ success: true, data: parsed_data });
     } catch (error: any) {
       return res.status(200).json({ success: false, message: error.message });
+    }
+  }
+
+  async regeneratePaymentToken(req: Request, res: Response) {
+    try {
+      let secret: any = process.env.JWT_SECRET;
+      let paymentUrl: string = "";
+      let payload = {
+        ...req.body,
+      };
+      delete payload.user;
+
+      Object.assign(payload, {
+        address: payload.address_details.address,
+        city: payload.address_details.city,
+        state: payload.address_details.state,
+        country: payload.address_details.country,
+      });
+
+      let paymentToken = jwt.sign(
+        {
+          _id: payload._id,
+          ...payload,
+        },
+        secret,
+        {
+          expiresIn: "24h",
+        }
+      );
+
+      paymentUrl = `${process.env.FRONTEND_URL}organization/payment?token=${paymentToken}`;
+      return res.status(200).json({ success: true, paymentUrl: paymentUrl });
+    } catch (error) {
+      logError(error, req, res);
     }
   }
 }

@@ -22,6 +22,11 @@ router.post(
   Organization.updateOrganizationProfile
 );
 router.post("/export-csv", [authorization], Organization.exportCSV);
+router.post(
+  "/regenerate-payment-token",
+  [authorization],
+  Organization.regeneratePaymentToken
+);
 router.put("/update/:id", Organization.updateOrganization);
 router.post("/update", Organization.updateOrganization);
 router.delete("/delete/:id", Organization.deleteOrganization);
