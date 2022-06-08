@@ -189,6 +189,14 @@ class AuthController {
         complete: true,
       });
 
+      if (decodedMainToken?.payload?._id != decodedRefreshToken?.payload?._id){
+        res.status(409).json({error:"Invalid Refresh Token"});
+        return;
+      }
+      if (decodedRefreshToken?.payload?.exp < Math.floor(Date.now() / 1000)){
+        res.status(409).json({error:"Refresh token has expired."});
+        return;
+      }
       var date = new Date();
       date.setDate(date.getDate() + 5)
 
@@ -197,6 +205,7 @@ class AuthController {
       let secret: any = process.env.JWT_SECRET,
       tokentime = process.env.TOKENTIME;
       let tokenRefreshTime = process.env.REFRESHTOKENTIME;
+
       token = jwt.sign(
         {
           _id: decodedMainToken?.payload?._id,
