@@ -10,10 +10,11 @@ import { UserDevices } from "../../models/user-device";
 import { Parser } from "json2csv";
 import { Usage } from "../../models/usage";
 import { CallActivity } from "../../models/call_activity";
-import { uploadBase64Image } from "../../utils/aws";
+import { uploadImage } from "../../utils/aws";
 import jwt from "jsonwebtoken";
 import WisecallerEmail from "@wisecaller/email";
 import { logError } from "@wisecaller/logger";
+import fs from "fs";
 
 class OrganizationController {
   async getOrganization(req: Request, res: Response) {
@@ -219,8 +220,9 @@ class OrganizationController {
         },
       };
       delete payload.user;
-      if (payload.profile?.length) {
-        let imageUrl = await uploadBase64Image(payload.profile);
+      if (req.file && req.file instanceof Object) {
+        let imageUrl = await uploadImage(req.file.path, req.file.filename);
+        fs.unlinkSync(req.file.path);
         Object.assign(payload, { profile: imageUrl });
       }
 
@@ -247,16 +249,17 @@ class OrganizationController {
           "Welcome to Wisecaller",
           message
         );
+        return res
+          .status(200)
+          .json({ success: true, data: organization, paymentUrl: paymentUrl });
       } else {
         organization = await Organization.findOneAndUpdate(
-          { _id: loggedInUser._id },
+          { _id: payload._id },
           payload,
           { upsert: true, new: true }
         );
+        return res.status(200).json({ success: true, data: organization });
       }
-      return res
-        .status(200)
-        .json({ success: true, data: organization, paymentUrl: paymentUrl });
     } catch (error: any) {
       console.log(error);
       return res.status(200).json({ success: false, message: error.message });
@@ -283,6 +286,7 @@ class OrganizationController {
             moment().startOf("year").utc(true).startOf("day").toISOString()
           ),
         },
+        role: "ORGANIZATION",
       };
 
       let usage_criteria = {
@@ -298,7 +302,9 @@ class OrganizationController {
         },
       };
 
-      let organization_criteria = {};
+      let organization_criteria = {
+        role: "ORGANIZATION",
+      };
 
       if (loggedInUser?.role === "ORGANIZATION") {
         Object.assign(user_criteria, {
@@ -332,6 +338,7 @@ class OrganizationController {
         });
         Object.assign(coupon_criteria, { organization: payload.organization });
         Object.assign(report_criteria, { _id: payload.organazation });
+        Object.assign(organization_criteria, { _id: payload.organization });
       }
 
       let getTotalEmployees = User.find(user_criteria, { _id: 1 });

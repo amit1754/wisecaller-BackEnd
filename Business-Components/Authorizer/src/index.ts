@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { default as jwtVerify } from './util/verifyJWTToken';
 import './db/connection';
 import { User } from './models/user.model';
+import { Organization } from './models/organization';
 export const authorization = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const reqData: any = req.headers;
@@ -20,9 +21,15 @@ export const authorization = async (req: Request, res: Response, next: NextFunct
     if (currentDate > verifyToken?.exp) {
       throw new Error('token is expired');
     }
-    const data: any = await User.findOne({ _id: verifyToken._id })
-      // .populate({ path: 'active_subscriptions.subscription' })
-      .lean();
+
+    let data: any = {};
+
+    if (verifyToken.role === 'ORGANIZATION' || verifyToken.role === 'ADMIN') {
+      data = await Organization.find({ _id: verifyToken._id }).lean();
+    } else {
+      data = await User.findOne({ _id: verifyToken._id }).lean();
+    }
+
     if (data) {
       req.body.user = data;
       req.body.token = token;

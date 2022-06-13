@@ -31,7 +31,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@wisecaller/authorizer": "^0.2.5",
+    "@wisecaller/authorizer": "^0.2.7",
     "@wisecaller/logger": "0.0.5",
     "@wisecaller/mongo": "^0.1.3",
     "@wisecaller/sns": "0.0.4",

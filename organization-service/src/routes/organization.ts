@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Organization } from "../controller";
 import { authorization } from "../middlewares/authorization";
+import { upload } from "../utils";
 
 const router = Router();
 
@@ -18,7 +19,7 @@ router.post(
 );
 router.post(
   "/update-organization-profile",
-  [authorization],
+  [authorization, upload.single("profile")],
   Organization.updateOrganizationProfile
 );
 router.post("/export-csv", [authorization], Organization.exportCSV);

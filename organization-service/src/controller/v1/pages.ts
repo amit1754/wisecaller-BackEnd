@@ -46,6 +46,15 @@ class PagesController {
       return res.status(200).json({ success: true, data: page });
     } catch (error) {}
   }
+
+  async geByName(req: Request, res: Response) {
+    try {
+      let page = await Pages.findOne({ name: req.params.name });
+      return res.status(200).json({ success: true, data: page });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
+    }
+  }
 }
 
 export default PagesController;

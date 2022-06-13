@@ -48,7 +48,7 @@ export default class App {
   }
 
   async setupDbConnection() {
-    await import ("@wisecaller/mongo");
+    import("./config/db/connection");
   }
 
   async setupRoutes() {
@@ -56,7 +56,7 @@ export default class App {
       let router = express.Router();
       this.app.use(`/notification-service/api/v1`, router);
       router.use("/", routes);
-      this.app.use(function (req: Request, res: Response, next: NextFunction) {
+      this.app.use(function(req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");
         res.status(404);
         next(error);

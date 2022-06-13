@@ -57,7 +57,7 @@ class MessageController {
   async sendCustomNotification(req: Request, res: Response) {
     try {
       let request: any = req;
-      let loggedInUser: any = request.user;
+      let loggedInUser: any = request.body.user;
       let event: any = {
         type: "CUSTOM_NOTIFICATION",
         title: req.body.title,
@@ -65,6 +65,7 @@ class MessageController {
         to: [],
         send_all: req.body.send_all,
         text: req.body.text,
+        thumbnail: loggedInUser.profile,
       };
 
       let criteria = {};
@@ -157,6 +158,7 @@ class MessageController {
       await snsClient.publishToSNS(event);
       res.status(200).json({ success: true });
     } catch (error) {
+      console.log(error);
       res.status(200).json({ success: false, message: error });
     }
   }
