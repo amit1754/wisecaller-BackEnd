@@ -56,7 +56,7 @@ class StatusController {
         for (const [key, global] of Object.entries(status.global_statuses)) {
           let temp: any = global;
           let sub = await UserSubStatus.find({ parentId: temp._id });
-          Object.assign(global, { sub_status: sub });
+          Object.assign(temp, { sub_status: sub });
         }
       }
 
@@ -71,7 +71,7 @@ class StatusController {
       const loggedInUser: any = reqPayload.body.user;
       if (loggedInUser.role === "ADMIN") {
         const { id }: any = req.params;
-        let statusFind = await UserStatus.findById(id);
+        let statusFind: any = await UserStatus.findById(id);
         let payload: any = {
           ...reqPayload.body,
         };
@@ -169,7 +169,7 @@ class StatusController {
             ...payload,
             logo: reqPayload.file.key,
           };
-          let statusFind = await UserSubStatus.findById(id);
+          let statusFind: any = await UserSubStatus.findById(id);
           if (statusFind.logo) {
             await deletefile(statusFind.logo);
           }

@@ -283,54 +283,58 @@ class PaymentController {
 
       delete payload.user;
 
-      let user: any = await User.findOne({ _id: payload.user_id });
-      let criteria = {
-        user: user._id,
-        subscription_created_date: payload?.subscription_created_date,
-        subscription_end_date: payload?.subscription_end_date,
-        subscription: payload?.subscription,
-      };
+      if (!payload?.active_subscription?.organization) {
+        let criteria = {
+          user: payload.user_id,
+          subscription: payload?.active_subscription?.subscription,
+        };
 
-      let user_subscription = await UserSubscription.findOne(criteria);
-
-      let payment: any = await Payment.findOne({
-        user_subscription: user_subscription._id,
-      }).populate({
-        path: "subscription",
-        populate: [
-          { path: "subscription" },
-          { path: "user" },
-          { path: "organization" },
-        ],
-      });
-
-      let subscription = payment.subscription.subscription;
-      let data = {
-        id: payment._id,
-        payment_date: moment(payment.createdAt).format("DD-MM-YYYY"),
-        plan_name: subscription.title,
-        subscription_price: subscription.original_price,
-        gst: (subscription.original_price * subscription.gst_percentage) / 100,
-        total_amount:
-          subscription.original_price +
-          (subscription.original_price * subscription.gst_percentage) / 100,
-      };
-
-      let html = fs.readFileSync("./assets/invoices/invoice.html", "utf-8");
-      let template = handlebars.compile(html);
-      let compiledTemplate = template(data);
-
-      pdf
-        .create(compiledTemplate, { format: "A4" })
-        .toStream((error: any, stream: any) => {
-          if (error) {
-            return res
-              .status(200)
-              .json({ success: false, message: error.message });
-          }
-          let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
-          return res.status(200).json({ success: true, data: data });
+        let user_subscription = await UserSubscription.findOne(criteria);
+        let payment: any = await Payment.findOne({
+          user_subscription: user_subscription._id,
         });
+
+        let payment_subscription = await Subscription.findOne({
+          _id: payment?.subscription,
+        });
+
+        // let subscription = payment?.subscription?.subscription;
+        let data = {
+          id: payment._id,
+          payment_date: moment(payment.createdAt).format("DD-MM-YYYY"),
+          plan_name: payment_subscription.title,
+          subscription_price: payment_subscription.original_price,
+          gst:
+            (payment_subscription.original_price *
+              payment_subscription.gst_percentage) /
+            100,
+          total_amount:
+            payment_subscription.original_price +
+            (payment_subscription.original_price *
+              payment_subscription.gst_percentage) /
+              100,
+        };
+
+        let html = fs.readFileSync("./assets/invoices/invoice.html", "utf-8");
+        let template = handlebars.compile(html);
+        let compiledTemplate = template(data);
+
+        pdf
+          .create(compiledTemplate, { format: "A4" })
+          .toStream((error: any, stream: any) => {
+            if (error) {
+              return res
+                .status(200)
+                .json({ success: false, message: error.message });
+            }
+            let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
+            return res.status(200).json({ success: true, data: data });
+          });
+      } else {
+        return res
+          .status(400)
+          .json({ success: false, message: "Something went wrong!" });
+      }
     } catch (error: any) {
       console.log(error);
       return res.status(200).json({ success: false, message: error.message });

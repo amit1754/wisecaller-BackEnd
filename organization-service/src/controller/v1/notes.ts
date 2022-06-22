@@ -19,6 +19,12 @@ class NoteController {
         Object.assign(criteria, { type: req.body.type });
       }
 
+      if (req.body.search) {
+        Object.assign(criteria, {
+          text: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
       const notes =
         req.body.page || req.body.limit
           ? await Notes.paginate(criteria, options)

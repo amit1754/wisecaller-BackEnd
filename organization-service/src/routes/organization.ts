@@ -34,5 +34,10 @@ router.delete("/delete/:id", Organization.deleteOrganization);
 router.get("/subscribers/:id", Organization.reportOrganization); //organazation subscriber report
 router.get("/coupon/:id", Organization.organazationCoupon); //organazation coupon
 router.delete("/delete-by-admin/:id", Organization.deleteAdminOrganizaion);
+router.post(
+  "/upload-image-aws",
+  [upload.single("image")],
+  Organization.uploadImageAws
+);
 
 export const OrganazationRoutes = router;

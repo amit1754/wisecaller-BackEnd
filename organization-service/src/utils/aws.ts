@@ -25,14 +25,25 @@ export const uploadBase64Image = async (image: string) => {
   return Location;
 };
 
-export const uploadImage = async (path: string, filename: string) => {
+export const uploadImage = async (
+  path: string,
+  filename: string,
+  type: string = "template"
+) => {
   let image = fs.readFileSync(path);
   let payload = {
-    Key: `template/${moment.now().toString()}-${filename}`,
+    Key: `${type}/${moment.now().toString()}-${filename}`,
     Body: image,
     Bucket: String(process.env.AWS_S3_BUCKET),
   };
 
   const { Location, Key } = await S3.upload(payload).promise();
   return Location;
+};
+
+export const deleteImage = async (path: string) => {
+  S3.deleteObject({
+    Bucket: String(process.env.AWS_S3_BUCKET),
+    Key: path,
+  }).promise();
 };

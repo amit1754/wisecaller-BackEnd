@@ -327,6 +327,27 @@ class OrganizationController {
             $lte: moment(payload.filtered_date[1]).toDate(),
           },
         });
+
+        Object.assign(user_criteria, {
+          createdAt: {
+            $gte: moment(payload.filtered_date[0]).toDate(),
+            $lte: moment(payload.filtered_date[1]).toDate(),
+          },
+        });
+
+        Object.assign(organization_criteria, {
+          createdAt: {
+            $gte: moment(payload.filtered_date[0]).toDate(),
+            $lte: moment(payload.filtered_date[1]).toDate(),
+          },
+        });
+
+        Object.assign(coupon_criteria, {
+          createdAt: {
+            $gte: moment(payload.filtered_date[0]).toDate(),
+            $lte: moment(payload.filtered_date[1]).toDate(),
+          },
+        });
       }
 
       if (payload.organization) {
@@ -362,7 +383,6 @@ class OrganizationController {
         {
           $match: {
             ...user_criteria,
-            ...report_criteria,
           },
         },
         {
@@ -524,15 +544,20 @@ class OrganizationController {
         _id: req.params.id,
       });
       await Coupon.deleteMany({ organization: organization._id });
-      await User.updateMany(
-        {
-          "active_subscriptions.organization": organization._id,
-        },
-        {
-          $pull: { active_subscriptions: { organization: organization._id } },
-        },
-        { upsert: true, new: true }
-      );
+      let users = await User.find({
+        "active_subscriptions.organization": organization._id,
+      });
+      if (users.length) {
+        await User.updateMany(
+          {
+            "active_subscriptions.organization": organization._id,
+          },
+          {
+            $pull: { active_subscriptions: { organization: organization._id } },
+          },
+          { upsert: true, new: true }
+        );
+      }
       await Organization.findOneAndRemove({ _id: organization._id });
       return res
         .status(200)
@@ -544,7 +569,9 @@ class OrganizationController {
 
   async exportCSV(req: Request, res: Response) {
     try {
-      let criteria = {};
+      let criteria = {
+        role: "ORGANIZATION",
+      };
 
       if (req.body.search) {
         Object.assign(criteria, {
@@ -652,6 +679,21 @@ class OrganizationController {
       return res.status(200).json({ success: true, paymentUrl: paymentUrl });
     } catch (error) {
       logError(error, req, res);
+    }
+  }
+
+  async uploadImageAws(req: Request, res: Response) {
+    try {
+      let url = await uploadImage(
+        String(req.file?.path),
+        String(req.file?.filename),
+        req.body.type
+      );
+
+      fs.unlinkSync(String(req.file?.path));
+      return res.status(200).json({ success: true, data: url });
+    } catch (error: any) {
+      return res.status(200).json({ success: false, message: error.message });
     }
   }
 }

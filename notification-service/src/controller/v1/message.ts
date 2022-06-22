@@ -68,6 +68,10 @@ class MessageController {
         thumbnail: loggedInUser.profile,
       };
 
+      let payload = {
+        ...req.body,
+      };
+
       let criteria = {};
 
       if (req.body.selected_users) {
@@ -90,66 +94,72 @@ class MessageController {
         });
       }
 
-      if (req.body.search) {
-        req.body.search = req.body.search.replace("+", "");
+      if (payload.filters.search) {
+        payload.filters.search = payload.filters.search.replace("+", "");
         Object.assign(criteria, {
           $or: [
-            { first_name: { $regex: req.body.search, $options: "i" } },
-            { last_name: { $regex: req.body.search, $options: "i" } },
-            { phone: { $regex: req.body.search, $options: "i" } },
-            { email: { $regex: req.body.search, $options: "i" } },
+            { first_name: { $regex: payload.filters.search, $options: "i" } },
+            { last_name: { $regex: payload.filters.search, $options: "i" } },
+            { phone: { $regex: payload.filters.search, $options: "i" } },
+            { email: { $regex: payload.filters.search, $options: "i" } },
           ],
         });
       }
 
-      if (req.body.subscription) {
+      if (payload.filters.subscription) {
         Object.assign(criteria, {
-          "active_subscriptions.subscription": req.body.subscription,
+          "active_subscriptions.subscription": payload.filters.subscription,
         });
       }
 
-      if (req.body.coupon_code) {
+      if (payload.filters.coupon_code) {
         Object.assign(criteria, {
-          "active_subscriptions.coupon_code": req.body.coupon_code,
+          "active_subscriptions.coupon_code": payload.filters.coupon_code,
         });
       }
 
-      if (req.body.road_safety) {
+      if (payload.filters.road_safety) {
         Object.assign(criteria, {
-          "modes.roadSafety.is_active": req.body.road_safety,
+          "modes.roadSafety.is_active": payload.filters.road_safety,
         });
       }
 
-      if (req.body.calender_sync) {
+      if (payload.filters.calender_sync) {
         Object.assign(criteria, {
           $and: [
             { "modes.syncCalender.is_active": { $exists: true } },
-            { "modes.syncCalender.is_active": req.body.calender_sync },
+            { "modes.syncCalender.is_active": payload.filters.calender_sync },
           ],
         });
       }
 
-      if (req.body.work_life_balance) {
+      if (payload.filters.work_life_balance) {
         Object.assign(criteria, {
-          "modes.workLifeBalance.is_active": req.body.work_life_balance,
+          "modes.workLifeBalance.is_active": payload.filters.work_life_balance,
         });
       }
 
-      if (req.body.registered_date) {
+      if (payload.filters.registered_date) {
         Object.assign(criteria, {
-          createdAt: req.body.registered_date,
+          createdAt: {
+            $gte: payload.filters.registered_date[0],
+            $lte: payload.filters.registered_date[1],
+          },
         });
       }
 
-      if (req.body.subscribed_date) {
+      if (payload.filters.subscribed_date) {
         Object.assign(criteria, {
-          "active_subscriptions.subscription_created_date":
-            req.body.subscription_created_date,
+          "active_subscriptions.subscription_created_date": {
+            $gte: payload.filters.subscribed_date[0],
+            $lte: payload.filters.subscribed_date[1],
+          },
         });
       }
 
       let users = await User.find(criteria);
-      for (const user of users) {
+      for (const item of users) {
+        let user: any = item;
         for (const item of user.phones) {
           let phone: any = item;
           event.to.push(phone.no);

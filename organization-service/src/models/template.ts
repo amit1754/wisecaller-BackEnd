@@ -8,6 +8,9 @@ const TemplateSchema = new Schema({
   template: {
     type: String,
   },
+  section: {
+    type: String,
+  },
   isActive: {
     type: Boolean,
     default: true,

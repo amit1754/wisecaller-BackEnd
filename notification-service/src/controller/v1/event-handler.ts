@@ -40,26 +40,26 @@ class EventHandlerController {
       let userDevices = await getUserBll.findUserDeviceById(triggerData.user);
       let data: any = {
         type: event.type,
-        data:triggerData      
+        data: triggerData,
       };
-      if (userDevices){
+      if (userDevices) {
         for (let index = 0; index < userDevices.length; index++) {
-          if (userDevices[index]?.is_active) {      
-              let device = userDevices[index];
-              let userArn = device?.user_device?.arn;
-              let payload = {
-                data: {
-                  ...data,
-                },
-                notification: {
-                  type: "SILENT",
-                  sound: process.env.SOUND,
-                },
-              };
-              await this.sendNotificationToUsers(userArn, payload);            
+          if (userDevices[index]?.is_active) {
+            let device = userDevices[index];
+            let userArn = device?.user_device?.arn;
+            let payload = {
+              data: {
+                ...data,
+              },
+              notification: {
+                type: "SILENT",
+                sound: process.env.SOUND,
+              },
+            };
+            await this.sendNotificationToUsers(userArn, payload);
           }
         }
-      }        
+      }
     } catch (error) {
       console.log(error);
     }
@@ -203,7 +203,7 @@ class EventHandlerController {
       for (const [key, global] of Object.entries(status.global_statuses)) {
         let temp: any = global;
         let sub = await UserSubStatus.find({ parentId: temp._id });
-        Object.assign(global, { sub_status: sub });
+        Object.assign(temp, { sub_status: sub });
       }
     }
 

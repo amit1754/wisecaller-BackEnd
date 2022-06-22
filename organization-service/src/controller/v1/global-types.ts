@@ -16,6 +16,13 @@ class GlobalTypesController {
           path: "statuses",
         },
       };
+
+      if (req.body.search) {
+        Object.assign(criteria, {
+          type: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
       let global_types =
         req.body.page || req.body.limit
           ? await GlobalTypes.paginate(criteria, options)

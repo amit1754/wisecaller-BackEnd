@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Template } from "../../models/template";
-import { uploadImage } from "../../utils/aws";
+import { deleteImage, uploadImage } from "../../utils/aws";
 import fs from "fs";
 
 class TemplateController {
@@ -45,17 +45,21 @@ class TemplateController {
 
       let template: any = {};
 
-      if (payload?.isDeleted) {
+      if (payload?.deleted) {
+        await deleteImage(payload.template);
         await Template.findOneAndDelete({ name: payload.name });
-      } else {
+      } else if (payload._id) {
         template = await Template.findOneAndUpdate(
-          { name: payload.name },
+          { _id: payload._id },
           payload,
           {
             upsert: true,
             new: true,
           }
         );
+      } else {
+        let template = new Template(payload);
+        template.save();
       }
       return res.status(200).json({ success: true, data: template });
     } catch (error) {}

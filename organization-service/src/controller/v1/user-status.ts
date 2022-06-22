@@ -14,6 +14,12 @@ class UserStatusController {
         limit: Number(req.body.limit) || 10,
       };
 
+      if (req.body.search) {
+        Object.assign(criteria, {
+          status: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
       const user_statuses =
         req.body.page || req.body.limit
           ? await UserStatus.paginate(criteria, options)

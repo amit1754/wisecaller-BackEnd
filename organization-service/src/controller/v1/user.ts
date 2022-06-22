@@ -22,7 +22,7 @@ class UserController {
       };
 
       let criteria = {
-        isActive: true,
+        // isActive: true,
       };
 
       if (loggedInUser?.role === "ORGANIZATION") {
@@ -110,6 +110,12 @@ class UserController {
       if (req.body.organization) {
         Object.assign(criteria, {
           "active_subscriptions.organization": req.body.organization,
+        });
+      }
+
+      if (req.body.is_active) {
+        Object.assign(criteria, {
+          isActive: Boolean(req.body.is_active),
         });
       }
 
@@ -338,6 +344,18 @@ class UserController {
           _id: payload.subscription,
         });
 
+        let free_subscription: any = await Subscription.findOne({
+          type: "FREE",
+        });
+
+        //remove free subscription
+        let index = active_subscriptions.findIndex(
+          (item: any) =>
+            item.subscription.toString() === free_subscription._id.toString()
+        );
+
+        active_subscriptions.splice(index, 1);
+
         const instance = new RazorPay({
           key_id: process.env.RAZORPAYKEY,
           key_secret: process.env.RAZORPAYSECRET,
@@ -346,7 +364,7 @@ class UserController {
         let options = {
           amount: subscription.current_price
             ? subscription.current_price * 100
-            : subscription.original_price,
+            : subscription.original_price * 100,
           currency: "INR",
           receipt: moment().toISOString(),
         };
@@ -381,6 +399,10 @@ class UserController {
           }
         });
 
+        if (!active_subscriptions.length) {
+          active_subscriptions.push(user_subscription);
+        }
+
         await User.findOneAndUpdate(
           { _id: payload.user_id },
           { active_subscriptions: active_subscriptions },
@@ -414,6 +436,7 @@ class UserController {
           .json({ success: false, message: "User not found" });
       }
     } catch (error: any) {
+      console.log(error);
       return res.status(200).json({ success: false, message: error.message });
     }
   }

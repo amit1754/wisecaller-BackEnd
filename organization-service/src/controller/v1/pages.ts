@@ -16,8 +16,14 @@ class PagesController {
 
       let criteria = {};
 
+      if (req.body.search) {
+        Object.assign(criteria, {
+          name: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
       let pages =
-        req.query.page || req.query.limit
+        req.body.page || req.body.limit
           ? await Pages.paginate(criteria, options)
           : await Pages.find(criteria);
 

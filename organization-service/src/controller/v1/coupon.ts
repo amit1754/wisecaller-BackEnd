@@ -18,7 +18,9 @@ class CouponController {
         populate: [
           {
             path: "subscription",
-            populate: [{ path: "organization" }],
+          },
+          {
+            path: "organization",
           },
         ],
       };
@@ -58,6 +60,21 @@ class CouponController {
         });
       }
 
+      if (req.body.expiry_date) {
+        Object.assign(criteria, {
+          expires_at: {
+            $gt: moment(req.body.expiry_date[0])
+              .startOf("day")
+              .utc(false)
+              .toISOString(),
+            $lt: moment(req.body.expiry_date[1])
+              .endOf("day")
+              .utc(false)
+              .toISOString(),
+          },
+        });
+      }
+
       if (req.body.type) {
         Object.assign(criteria, {
           type: req.body.type,
@@ -76,6 +93,12 @@ class CouponController {
         });
       }
 
+      if (req.body.subscription) {
+        Object.assign(criteria, {
+          subscription: req.body.subscription,
+        });
+      }
+
       let coupons =
         req.body.page || req.body.limit
           ? await Coupon.paginate(criteria, options)
@@ -90,21 +113,27 @@ class CouponController {
     try {
       let loggedInUser: any = req.body.user;
       let coupon: any = await Coupon.findOne({ _id: req.params.coupon });
-      await User.findOneAndUpdate(
-        {
-          "active_subscriptions.organization": loggedInUser._id,
-          "active_subscriptions.coupon_code": coupon?.coupon_code,
-        },
-        {
-          $pull: {
-            active_subscriptions: {
-              organization: loggedInUser._id,
-              coupon_code: coupon?.coupon_code,
+      let users = await User.find({
+        "active_subscriptions.organization": loggedInUser._id,
+        "active_subscriptions.coupon_code": coupon?.coupon_code,
+      });
+      if (users.length) {
+        await User.updateMany(
+          {
+            "active_subscriptions.organization": loggedInUser._id,
+            "active_subscriptions.coupon_code": coupon?.coupon_code,
+          },
+          {
+            $pull: {
+              active_subscriptions: {
+                organization: loggedInUser._id,
+                coupon_code: coupon?.coupon_code,
+              },
             },
           },
-        },
-        { upsert: true, new: true }
-      );
+          { upsert: true, new: true }
+        );
+      }
       await Coupon.findOneAndDelete({ _id: req.params.coupon });
       return res
         .status(200)

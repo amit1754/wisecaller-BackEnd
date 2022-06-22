@@ -11,6 +11,9 @@ class PlanController {
         req.body.sort_direction && req.body.sort_direction === "DESC" ? -1 : 1;
 
       let criteria = {};
+      let payload: any = {
+        ...req.body,
+      };
       let options = {
         sort: { [sort_key]: sort_direction },
         page: Number(req.body.page) || 1,
@@ -19,6 +22,10 @@ class PlanController {
           path: "subscription",
         },
       };
+
+      if (payload.subscription) {
+        Object.assign(criteria, { subscription: payload.subscription });
+      }
 
       let plans =
         req.body.page || req.body.limit
@@ -39,15 +46,16 @@ class PlanController {
       let plan: any = {};
       let selected_id = payload._id;
 
-      delete payload._id;
-
       if (payload?.isDeleted) {
         await Plan.findOneAndDelete({ name: payload.name });
-      } else {
+      } else if (payload?._id) {
         plan = await Plan.findOneAndUpdate({ _id: selected_id }, payload, {
           upsert: true,
           new: true,
         });
+      } else {
+        plan = new Plan(payload);
+        plan.save();
       }
       return res.status(200).json({ success: true, data: plan });
     } catch (error: any) {

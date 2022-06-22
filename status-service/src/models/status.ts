@@ -34,7 +34,7 @@ const SatusSchema = new Schema(
   { timestamps: true }
 );
 
-SatusSchema.post("aggregate", function (doc: any) {
+SatusSchema.post("aggregate", function(doc: any) {
   if (doc) {
     doc.map((x: any) => {
       x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
@@ -49,14 +49,14 @@ SatusSchema.post("aggregate", function (doc: any) {
   }
   return doc;
 });
-SatusSchema.post("findOne", function (doc: any) {
+SatusSchema.post("findOne", function(doc: any) {
   if (doc) {
     doc.logo = doc.logo == null ? null : `${process.env.IMAGE_PATH}${doc.logo}`;
   }
 
   return doc;
 });
-SatusSchema.post("find", function (doc) {
+SatusSchema.post("find", function(doc: any) {
   if (doc) {
     doc.map((x: any) => {
       x.logo = x.logo == null ? null : `${process.env.IMAGE_PATH}${x.logo}`;
