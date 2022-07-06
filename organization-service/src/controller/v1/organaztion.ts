@@ -105,7 +105,7 @@ class OrganizationController {
       if (user.role === "ADMIN") {
         let { id } = request.params;
         let organazation: any = await UserSubscription.find({
-          organization: Types.ObjectId(id),
+          organization: id,
         });
         res
           .status(200)
@@ -129,7 +129,7 @@ class OrganizationController {
         let { id } = request.params;
 
         let organazation: any = await Coupon.find({
-          organization: Types.ObjectId(id),
+          organization: id,
         });
         res
           .status(200)
@@ -352,14 +352,16 @@ class OrganizationController {
 
       if (payload.organization) {
         Object.assign(user_criteria, {
-          $or: [
-            { "active_subscriptions.organization": payload.organization },
-            { "active_subscriptions.organization": payload.organization },
-          ],
+          $or: [{ "active_subscriptions.organization": payload.organization }],
         });
         Object.assign(coupon_criteria, { organization: payload.organization });
         Object.assign(report_criteria, { _id: payload.organazation });
         Object.assign(organization_criteria, { _id: payload.organization });
+        let users = await User.find(user_criteria, { _id: 1 });
+        console.log(users);
+        Object.assign(activity_criteria, {
+          $or: [{ caller: { $in: users } }, { receiver: { $in: users } }],
+        });
       }
 
       let getTotalEmployees = User.find(user_criteria, { _id: 1 });

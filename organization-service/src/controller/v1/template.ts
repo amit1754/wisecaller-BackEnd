@@ -18,8 +18,14 @@ class TemplateController {
 
       let criteria = {};
 
+      if (req.body.search) {
+        Object.assign(criteria, {
+          name: { $regex: req.body.search, $options: "i" },
+        });
+      }
+
       let templates =
-        req.query.page || req.query.limit
+        req.body.page || req.body.limit
           ? await Template.paginate(criteria, options)
           : await Template.find(criteria);
 
