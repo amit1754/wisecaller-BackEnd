@@ -48,13 +48,14 @@ export default class App {
     this.app.use(logRequest);
     this.app.use(cors());
   }
- async setupDbConnection() {
-    await import ("@wisecaller/mongo");
+  async setupDbConnection() {
+    await import("./config/db/connection");
+    // await import ("@wisecaller/mongo");
   }
   async setupRoutes() {
     try {
       let router = express.Router();
- this.app.use(`/status-service/api/v1`, router);
+      this.app.use(`/status-service/api/v1`, router);
       router.use("/", routes);
       this.app.use(function(req: Request, res: Response, next: NextFunction) {
         const error = new Error("The requested endpoint is not found.");

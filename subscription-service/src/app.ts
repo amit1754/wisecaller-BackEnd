@@ -38,7 +38,8 @@ export default class App {
   }
 
   async setupDbConnection() {
-    await import("@wisecaller/mongo");
+    await import("./config/db/connection");
+    // await import("@wisecaller/mongo");
   }
 
   async setupRoutes() {

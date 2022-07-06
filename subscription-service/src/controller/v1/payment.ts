@@ -16,6 +16,7 @@ import pdf from "html-pdf";
 import fileUpload from "../../middelware/s3";
 import { Plan } from "../../model/plan";
 import { User } from "../../model/user.model";
+import { Buffer } from "buffer";
 
 class PaymentController {
   async index(req: Request, res: Response) {
@@ -321,14 +322,16 @@ class PaymentController {
 
         pdf
           .create(compiledTemplate, { format: "A4" })
-          .toStream((error: any, stream: any) => {
+          .toBuffer((error: any, buffer: any) => {
             if (error) {
               return res
                 .status(200)
                 .json({ success: false, message: error.message });
             }
-            let data = stream.pipe(fs.createWriteStream("./foo.pdf"));
-            return res.status(200).json({ success: true, data: data });
+            // let data = stream.pipe();
+            return res
+              .status(200)
+              .json({ success: true, data: Buffer.from(buffer) });
           });
       } else {
         return res

@@ -37,8 +37,8 @@ export default class App {
   async setupMiddleware() {
     this.app.use(json({ limit: "50mb" }));
     this.app.use("/", (req: Request, res: Response, next: NextFunction) =>
-    handleSNSNotificationHeader(req, res, next)
-  );
+      handleSNSNotificationHeader(req, res, next)
+    );
     this.app.use(urlencoded({ extended: false, limit: "50mb" }));
 
     this.app.use(text());
@@ -51,6 +51,7 @@ export default class App {
   }
 
   async setupDbConnection() {
+    // await import("./config/db/connection");
     await import("@wisecaller/mongo");
   }
 

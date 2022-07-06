@@ -1,6 +1,6 @@
 service: aws-wisecaller-call-service
 
-frameworkVersion: "3"
+frameworkVersion: "2"
 useDotenv: true
 configValidationMode: warn
 environment:

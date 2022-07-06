@@ -29,7 +29,9 @@ export const authorization = async (
 
     let data: any = {};
     const user: any = await User.findById(verifyToken._id);
-    const organization: any = await Organization.findById(verifyToken._id);
+    const organization: any = await Organization.findOne({
+      _id: verifyToken._id,
+    });
     data = user ? user : organization;
     if (data) {
       req.body.user = data;

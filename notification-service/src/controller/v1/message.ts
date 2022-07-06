@@ -66,6 +66,7 @@ class MessageController {
         send_all: req.body.send_all,
         text: req.body.text,
         thumbnail: loggedInUser.profile,
+        notification_type: req.body.type,
       };
 
       let payload = {
