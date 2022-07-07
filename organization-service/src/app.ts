@@ -14,11 +14,11 @@ export default class App {
   app: Express = express();
 
   init() {
-    const dbConnection = this.setupDbConnection();
+    //const dbConnection = this.setupDbConnection();
     const middlewares = this.setupMiddleware();
     const routes = this.setupRoutes();
 
-    Promise.all([dbConnection, middlewares, routes])
+    Promise.all([middlewares, routes])
       .then(() => {
         console.log("INIT COMPLETE");
       })
@@ -37,8 +37,7 @@ export default class App {
   }
 
   async setupDbConnection() {
-    await import("./config/db/connection");
-    // await import("@wisecaller/mongo");
+    await import("@wisecaller/mongo");
   }
 
   async setupRoutes() {
