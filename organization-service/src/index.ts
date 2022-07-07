@@ -3,6 +3,8 @@ import { config } from "dotenv";
 process.env.ENVIRONMENT = "dev";
 config({ path: `.env.${process.env.ENVIRONMENT}` });
 
+import Connection from "@wisecaller/mongo";
+Connection.ConnectDb();
 const application = new Application();
 application.init();
 

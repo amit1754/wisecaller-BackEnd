@@ -1,9 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 class Connection {
     static hasConfigurations() {
         const configurations = ['MONGOURL', 'MONGODB'];
@@ -13,19 +11,22 @@ class Connection {
             }
         });
     }
-    static getDbConnection() {
+    static ConnectDb() {
         try {
-            mongoose_1.default
-                .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`)
-                .then(() => {
-                console.log('MONGODB CONNECTED');
-            })
-                .catch((error) => {
-                console.log(error.message);
-            });
+            if (this.isConnected) {
+                console.log('=> using existing database connection');
+                return Promise.resolve();
+            }
+            console.log('=> using new database connection');
+            return mongoose.connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`).then(db => {
+                this.isConnected = db.connections[0].readyState;
+                console.log("DB Connected success");
+            }, err => { console.log("Error creating DB connection", err); });
         }
-        catch (ex) { }
-        return this._con;
+        catch (ex) {
+            console.log("Error creating DB connection", ex);
+        }
+        return this.isConnected;
     }
 }
 exports.default = Connection;

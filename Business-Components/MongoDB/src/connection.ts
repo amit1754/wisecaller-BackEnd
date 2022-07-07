@@ -1,7 +1,8 @@
-import mongoose from 'mongoose';
 
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 export default class Connection {
-  static _con: any;
+  static isConnected: any;
   static hasConfigurations() {
     const configurations = ['MONGOURL', 'MONGODB'];
 
@@ -12,18 +13,20 @@ export default class Connection {
     });
   }
 
-  static getDbConnection() {
+  static ConnectDb() {
     try {
-      mongoose
-        .connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`)
-        .then(() => {
-          console.log('MONGODB CONNECTED');
-        })
-        .catch((error: any) => {
-          console.log(error.message);
-        });
-    } catch (ex: any) {}
+      if (this.isConnected) {
+        console.log('=> using existing database connection');
+        return Promise.resolve();
+    }
+    
+    console.log('=> using new database connection');
+    return mongoose.connect(`${process.env.MONGOURL}${process.env.MONGODB}?authSource=admin`).then(db => {
+        this.isConnected = db.connections[0].readyState;
+        console.log("DB Connected success");
+    }, err =>{console.log("Error creating DB connection", err)})
+    } catch (ex: any) {console.log("Error creating DB connection", ex)}
 
-    return this._con;
+    return this.isConnected;
   }
 }

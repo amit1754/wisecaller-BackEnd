@@ -38,7 +38,7 @@
     "@wisecaller/authorizer": "^0.2.5",
     "@wisecaller/email": "^0.0.4",
     "@wisecaller/logger": "0.0.3",
-    "@wisecaller/mongo": "^0.1.4",
+    "@wisecaller/mongo": "^0.1.7",
     "@wisecaller/s3": "^0.0.6",
     "@wisecaller/sns": "0.0.4",
     "@wisecaller/user-service": "0.3.5",

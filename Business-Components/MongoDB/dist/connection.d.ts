@@ -1,5 +1,5 @@
 export default class Connection {
-    static _con: any;
+    static isConnected: any;
     static hasConfigurations(): void;
-    static getDbConnection(): any;
+    static ConnectDb(): any;
 }
