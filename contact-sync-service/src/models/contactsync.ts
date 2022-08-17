@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
+
 import { Schema, model } from "mongoose";
 
 const ContactSyncSchema = new Schema(
@@ -11,10 +14,10 @@ const ContactSyncSchema = new Schema(
       ref: "users",
     },
     first_name: {
-      type: String
+      type: String,
     },
     last_name: {
-      type: String
+      type: String,
     },
     profile_image: {
       type: String,

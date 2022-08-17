@@ -6,7 +6,7 @@ import { authorization } from "@wisecaller/authorizer";
 router.post("/sync", [authorization], contactSync_Controller.sync);
 router.post("/search", [authorization], contactSync_Controller.searchContact);
 
-router.get("/get", [authorization], contactSync_Controller.getAll);
+router.get("/get",[authorization], contactSync_Controller.getAll);
 router.put("/update", [authorization], contactSync_Controller.updtateContact);
 router.delete(
   "/delete/:id",
@@ -25,5 +25,7 @@ router.post(
   [authorization],
   contactSync_Controller.callBack
 );
+router.get("/getDetail", contactSync_Controller.getDetail);
+router.post("/getMobileNo", contactSync_Controller.getMobileNo);
 
-export const  SyncRoutes = router;
+export const SyncRoutes = router;
